@@ -12,15 +12,13 @@ export interface PublicRequirementSummary {
 
 export interface PublicCheck {
   id: string;
-  category: string;
-  lane?: string;
-  group?: string | null;
+  category: "gate" | "requirement";
+  lane?: "measured" | "judged";
+  group?: string;
   label?: string;
-  description?: string;
-  outcome?: string | null;
-  evidence?: string;
-  reason?: string;
-  error?: string;
+  outcome: "pass" | "fail" | "not_evaluated" | "grader_error";
+  /** Sanitized result explanation. Never a private criterion, prompt, path or unfiltered evaluator output. */
+  explanation?: string;
 }
 
 export interface PublicUsage {

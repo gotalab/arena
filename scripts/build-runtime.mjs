@@ -15,8 +15,8 @@ const env = {
   VITE_PUBLIC_ARTIFACTS: "false",
   VITE_ARTIFACT_ORIGIN: artifactOrigin,
   VITE_RUNTIME_API: "true",
-  VITE_WEBMCP_PROBE: "true",
-  VITE_WEBMCP_PROBE_ARTIFACT: "true",
+  VITE_WEBMCP_PROBE: process.env.VITE_WEBMCP_PROBE ?? "true",
+  VITE_WEBMCP_PROBE_ARTIFACT: process.env.VITE_WEBMCP_PROBE_ARTIFACT ?? "true",
 };
 function run(command, args, label) {
   const result = spawnSync(command, args, { cwd: root, env, encoding: "utf8" });
@@ -36,6 +36,9 @@ for (const path of [join(dist, "artifacts"), join(dist, "__webmcp_probe")]) {
 }
 const scripts = readdirSync(join(dist, "assets")).filter((name) => name.endsWith(".js")).map((name) => readFileSync(join(dist, "assets", name), "utf8"));
 if (!scripts.some((source) => source.includes(artifactOrigin))) throw new Error("runtime_build:artifact_origin_missing");
+if (env.VITE_WEBMCP_PROBE !== "true" && scripts.some((source) => source.includes("Agent route check") || source.includes("Run the three-action contract"))) {
+  throw new Error("runtime_build:main_contains_probe_ui");
+}
 if (existsSync(join(dist, "artifacts")) || existsSync(join(dist, "__webmcp_probe"))) throw new Error("runtime_build:main_contains_artifact_or_probe");
 scanPublicTreeSync(dist, { ignoreDirectories: [], maxFileBytes: 4 * 1024 * 1024, maxTreeBytes: 32 * 1024 * 1024 });
 console.log(`Built isolated Main assets for ${artifactOrigin}.`);

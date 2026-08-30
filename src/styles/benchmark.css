@@ -28,6 +28,20 @@
 
 .task-actions { margin: 22px 0 0; }
 
+.benchmark-filters {
+  margin-top: clamp(24px, 3vw, 34px);
+  margin-bottom: 8px;
+}
+.benchmark-filter-summary {
+  margin: 0 0 clamp(18px, 2.5vw, 28px);
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+}
+.check-filters {
+  margin-top: clamp(26px, 3vw, 38px);
+  margin-bottom: 8px;
+}
+
 /* The answer: the chart gets the largest, quietest surface on the page. */
 .answer {
   margin-top: var(--sect-gap, clamp(40px, 5vw, 64px));
@@ -649,6 +663,17 @@ th.board__rank { width: 34px; }
   padding: 9px 16px 9px 0;
   border-bottom: 1px solid var(--line);
   vertical-align: top;
+}
+.checks__table tbody tr.is-different > th,
+.checks__table tbody tr.is-different > td {
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}
+.checks__empty {
+  margin: 12px 0 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
 }
 .checks__table tbody th { font-weight: 500; min-width: 0; white-space: normal; }
 .checks__label { display: block; min-width: 0; overflow-wrap: break-word; }

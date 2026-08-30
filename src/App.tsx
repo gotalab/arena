@@ -13,12 +13,26 @@ import { useComparison } from "./hooks/useComparison";
 import { useArenaWebMcpTools } from "./hooks/useArenaWebMcpTools";
 import { useTheme } from "./hooks/useTheme";
 import { nextUnjudgedGame } from "./lib/blind";
+import {
+  BENCHMARK_CHART_COMBINED,
+  benchmarkOverviewQueryString,
+  normalizeBenchmarkOverviewState,
+  parseBenchmarkOverviewSearchParams,
+  type BenchmarkOverviewState,
+} from "./lib/benchmark-view";
 import { configurationParts } from "./lib/configurations";
 import { knownHtmlPath } from "./lib/match-path";
 import { buildBySlug, buildSlug, comparePath, taskPath } from "./lib/paths";
+import {
+  normalizeTaskComparisonState,
+  parseTaskComparisonSearchParams,
+  serializeTaskComparisonSearchParams,
+  type TaskComparisonState,
+} from "./lib/task-comparison";
 import { blindRelease, games as tasks, publication, taskManifests } from "./lib/publication";
 import type { PublicBuild, PublicRelease } from "./public-types";
 import type { ArenaToolRoute } from "./lib/arena-tools";
+import type { ArenaBenchmarkController } from "./lib/benchmark-controller";
 
 const navItems = [
   { id: "play", label: "Play" },
@@ -89,11 +103,30 @@ export function App() {
   const { comparison, assignmentFor, battlesRemaining, nextBattle, saveChoice, revealWithoutPlaying } = useComparison(blindRelease);
   const [namedRelease, setNamedRelease] = useState<PublicRelease | null>(null);
   const [browseRequestedTask, setBrowseRequestedTask] = useState<string | null>(null);
+  const [historyRevision, setHistoryRevision] = useState(0);
+  const [benchmarkState, setBenchmarkState] = useState<BenchmarkOverviewState>({
+    taskIds: [],
+    harnesses: [],
+    models: [],
+    efforts: [],
+    playableOnly: false,
+    chartTaskId: BENCHMARK_CHART_COMBINED,
+  });
+  const [taskComparisonState, setTaskComparisonState] = useState<TaskComparisonState>({
+    buildIds: [],
+    harnesses: [],
+    models: [],
+    efforts: [],
+    check: { categories: [], groups: [], outcomes: [], blockingOnly: false, differencesOnly: false },
+  });
   const webMcpProbe = (import.meta.env.DEV || import.meta.env.VITE_WEBMCP_PROBE === "true")
     && new URLSearchParams(window.location.search).get("webmcp-probe") === "1";
 
   useEffect(() => {
-    const onPopState = () => setLocation(readLocation());
+    const onPopState = () => {
+      setLocation(readLocation());
+      setHistoryRevision((current) => current + 1);
+    };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
@@ -119,6 +152,32 @@ export function App() {
     });
     return () => { current = false; };
   }, [needsNamedRelease, namedRelease]);
+
+  useEffect(() => {
+    if (route !== "benchmark" || !namedRelease) return;
+    setBenchmarkState(parseBenchmarkOverviewSearchParams(window.location.search, namedRelease, tasks));
+  }, [historyRevision, namedRelease, route]);
+
+  useEffect(() => {
+    if (!["task", "build"].includes(route) || !namedRelease || !slugTask) return;
+    setTaskComparisonState(parseTaskComparisonSearchParams(window.location.search, namedRelease, slugTask.id));
+  }, [historyRevision, namedRelease, route, slugTask]);
+
+  const updateBenchmarkState = useCallback((next: BenchmarkOverviewState) => {
+    if (!namedRelease || route !== "benchmark") return;
+    const normalized = normalizeBenchmarkOverviewState(next, namedRelease, tasks);
+    const query = benchmarkOverviewQueryString(normalized, namedRelease, tasks);
+    window.history.replaceState(null, "", `${locationPath(location)}${query ? `?${query}` : ""}`);
+    setBenchmarkState(normalized);
+  }, [location, namedRelease, route]);
+
+  const updateTaskComparisonState = useCallback((next: TaskComparisonState) => {
+    if (!namedRelease || !slugTask || !["task", "build"].includes(route)) return;
+    const normalized = normalizeTaskComparisonState(next, namedRelease, slugTask.id);
+    const query = serializeTaskComparisonSearchParams(normalized, namedRelease, slugTask.id).toString();
+    window.history.replaceState(null, "", `${locationPath(location)}${query ? `?${query}` : ""}`);
+    setTaskComparisonState(normalized);
+  }, [location, namedRelease, route, slugTask]);
 
   // The global record names every configuration. Preserve that provenance so
   // a later comparison is playable but cannot be recorded as a blind choice.
@@ -154,10 +213,13 @@ export function App() {
       slug,
       buildSlug: trial ? buildSlug(trial) : null,
     };
-    window.history.pushState(null, "", locationPath(target));
+    const preserveTaskSearch = ["task", "build"].includes(route)
+      && ["task", "build"].includes(location.route)
+      && location.slug === slug;
+    window.history.pushState(null, "", `${locationPath(target)}${preserveTaskSearch ? window.location.search : ""}`);
     setLocation(target);
     window.scrollTo(0, 0);
-  }, []);
+  }, [location]);
 
   const openTask = (taskId: string) => navigate("task", taskId);
   const openCompare = (taskId: string) => navigate("compare", taskId);
@@ -174,9 +236,14 @@ export function App() {
     || (route === "compare" && slugTask && comparison.choices[slugTask.id])
   ));
   const activeToolTaskId = ["task", "build", "compare"].includes(route) ? slugTask?.id ?? null : null;
-  const toolAuthorizationKey = `${webMcpProbe ? "probe" : route}:${activeToolTaskId ?? "all"}:${identityAvailable}:${namedRelease?.releaseId ?? ""}`;
+  const visibleToolState = route === "benchmark" ? benchmarkState : ["task", "build"].includes(route) ? taskComparisonState : null;
+  const toolAuthorizationKey = `${webMcpProbe ? "probe" : route}:${activeToolTaskId ?? "all"}:${identityAvailable}:${namedRelease?.releaseId ?? ""}:${JSON.stringify(visibleToolState)}`;
   const toolAuthorizationRef = useRef(toolAuthorizationKey);
   toolAuthorizationRef.current = toolAuthorizationKey;
+  const benchmarkController = useMemo<ArenaBenchmarkController>(() => ({
+    overview: { state: benchmarkState, setState: updateBenchmarkState },
+    task: { state: taskComparisonState, setState: updateTaskComparisonState },
+  }), [benchmarkState, taskComparisonState, updateBenchmarkState, updateTaskComparisonState]);
   const arenaToolContext = useMemo(() => ({
     route: (webMcpProbe ? "not-found" : route) as ArenaToolRoute,
     activeTaskId: activeToolTaskId,
@@ -184,13 +251,15 @@ export function App() {
     games: tasks,
     taskManifests,
     release: namedRelease,
+    benchmarkController,
+    openTask: (taskId: string) => navigate("task", taskId),
     openBuild: (taskId: string, buildId: string) => {
       const build = namedRelease?.builds.find((candidate) => candidate.id === buildId && candidate.taskId === taskId);
       if (!build) throw new Error("public build not found");
       navigate("build", taskId, build);
     },
     authorized: () => toolAuthorizationRef.current === toolAuthorizationKey,
-  }), [activeToolTaskId, identityAvailable, namedRelease, navigate, route, toolAuthorizationKey, webMcpProbe]);
+  }), [activeToolTaskId, benchmarkController, identityAvailable, namedRelease, navigate, route, toolAuthorizationKey, webMcpProbe]);
   useArenaWebMcpTools(arenaToolContext);
 
   if (!artifactAccessReady) {
@@ -298,14 +367,18 @@ export function App() {
             onOpenBenchmark={() => navigate("benchmark")}
             onOpenBuild={(trial) => openBuild(slugTask.id, trial)}
             onReveal={revealWithoutPlaying}
+            onStateChange={benchmarkController.task.setState}
             release={namedRelease}
+            state={benchmarkController.task.state}
             task={slugTask}
           />
         )}
         {route === "benchmark" && namedRelease && (
           <ResultsView
             onOpenGame={openTask}
+            onStateChange={benchmarkController.overview.setState}
             release={namedRelease}
+            state={benchmarkController.overview.state}
             tasks={tasks}
           />
         )}

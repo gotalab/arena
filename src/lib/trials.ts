@@ -50,7 +50,7 @@ export interface TrialSummary {
     rateLabel: string;
     qualifier: string;
   };
-  missing: Array<{ id?: string; label: string; description?: string }>;
+  missing: Array<{ id?: string; label: string; explanation?: string }>;
   checks: PublicCheck[];
   metrics: { seconds: string; tokens: string; estimatedCost: string; billedCost: string };
   raw: {
@@ -173,7 +173,7 @@ export function trialSummary(trial: PublicBuild): TrialSummary {
     missing: requirements.missing.map((check) => ({
       id: check.id,
       label: checkLabel(check),
-      description: check.description,
+      explanation: check.explanation,
     })),
     checks: trial.checks ?? [],
     metrics: {

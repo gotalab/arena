@@ -1,4 +1,6 @@
 export const PUBLIC_SCHEMA = "arena.public-release.v1";
+export const MAX_CHECK_EXPLANATION_CHARS = 1024;
+export const MAX_CHECK_METADATA_CHARS = 256;
 const RUNTIME_EXTENSIONS = new Set([".html", ".js", ".mjs", ".css", ".json", ".svg", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".mp3", ".ogg", ".wav", ".woff", ".woff2"]);
 const OMIT_PATH_PARTS = new Set(["test", "tests", "__tests__"]);
 const OMIT_BASENAMES = new Set(["README.md", "AGENTS.md"]);
@@ -9,6 +11,29 @@ export const PROTECTED_TEXT = [
   { code: "private_path", pattern: /(?:\/Users\/|[A-Za-z]:\\Users\\|(?:pool|tasks|engine\/dist)\/)/i },
   { code: "credential", pattern: /(?:BEGIN [A-Z ]*PRIVATE KEY|\bsk-[A-Za-z0-9_-]{16,}|\bapi[_-]?key\s*[:=])/i },
   { code: "evaluation_control", pattern: /(?:judge prompt|system prompt|promptSha256|rubric\.ya?ml|raw[_-]?log)/i },
+];
+
+// Check explanations are result-derived prose, not a second channel for the
+// evaluator's structured record. These markers are checked on the projected
+// string only; public catalogue controls and other legitimate contract fields
+// are intentionally outside this boundary.
+export const CHECK_EXPLANATION_PROTECTED_TEXT = [
+  ...PROTECTED_TEXT,
+  { code: "private_path", pattern: /(?:^|[\s"'`(])(?:shots|evidence|verdicts?|logs?|fixtures?|artifacts?)[\\/][^\s"'`<>)]*/i },
+  { code: "evaluation_control", pattern: /(?:^|[\s"'`{,])(?:raw[_ -]?(?:evidence|reason|error|log)|reason|evidence|error|prompt|judgePrompt|systemPrompt|developerPrompt|rubric|verifier|seed|control)s?\s*["'`]?\s*[:=]/i },
+  { code: "evaluation_control", pattern: /(?:^|[\s"'`{,])(?:sourcePath|privateSourcePath|trialId|configurationRef|configurationDigest|artifactSha256|promptSha256|evaluatorControl|rawLog)\s*["'`]?\s*[:=]/i },
+  { code: "evaluation_control", pattern: /\bseed(?:ed|ing|s)?\b/i },
+];
+
+// Labels and groups can name a public behavior such as deterministic seeding,
+// but cannot carry a concrete seed, a path, an internal field, or evaluator
+// instructions. This is deliberately narrower than explanation scanning.
+export const CHECK_METADATA_PROTECTED_TEXT = [
+  ...PROTECTED_TEXT,
+  { code: "private_path", pattern: /(?:^|[\s"'`(])(?:shots|evidence|verdicts?|logs?|fixtures?|artifacts?)[\\/][^\s"'`<>)]*/i },
+  { code: "evaluation_control", pattern: /(?:^|[\s"'`{,])(?:raw[_ -]?(?:evidence|reason|error|log)|reason|evidence|error|prompt|judgePrompt|systemPrompt|developerPrompt|rubric|verifier|seed|control)s?\s*["'`]?\s*[:=]/i },
+  { code: "evaluation_control", pattern: /(?:^|[\s"'`{,])(?:sourcePath|privateSourcePath|trialId|configurationRef|configurationDigest|artifactSha256|promptSha256|evaluatorControl|rawLog)\s*["'`]?\s*[:=]/i },
+  { code: "evaluation_control", pattern: /\bseed(?:s)?(?:\(\s*s\s*\))?\s*(?:\(\s*\d+(?:\s*,\s*\d+)*\s*\)|[:=]?\s*\d+)/i },
 ];
 
 const ALLOWED_KEYS = {
@@ -27,6 +52,7 @@ const ALLOWED_KEYS = {
   control: new Set(["keys", "label"]),
   configuration: new Set(["id", "harnessId", "harness", "harnessVersion", "model", "effort"]),
   summary: new Set(["passed", "failed", "notEvaluated", "graderErrors", "evaluated", "applicable", "rate"]),
+  check: new Set(["id", "category", "lane", "group", "label", "outcome", "explanation"]),
   usage: new Set(["input_tokens", "cached_input_tokens", "cache_creation_input_tokens", "output_tokens", "reasoning_tokens"]),
   cost: new Set(["amount", "currency"]),
   meterSources: new Set(["time", "tokens", "cost"]),
@@ -58,6 +84,30 @@ function assertString(value, at) {
   if (typeof value !== "string" || !value) throw new Error(`public_schema:${at}:string_required`);
 }
 
+function assertEnum(value, allowed, at) {
+  if (!allowed.has(value)) throw new Error(`public_schema:${at}:invalid`);
+}
+
+export function validateCheckExplanation(value, at = "check.explanation") {
+  assertString(value, at);
+  if (!value.trim()) throw new Error(`public_schema:${at}:string_required`);
+  if ([...value].length > MAX_CHECK_EXPLANATION_CHARS) throw new Error(`public_schema:${at}:too_long`);
+  for (const protectedPattern of CHECK_EXPLANATION_PROTECTED_TEXT) {
+    protectedPattern.pattern.lastIndex = 0;
+    if (protectedPattern.pattern.test(value)) throw new Error(`public_schema:${at}:${protectedPattern.code}`);
+  }
+}
+
+export function validateCheckMetadata(value, at = "check.label") {
+  assertString(value, at);
+  if (!value.trim()) throw new Error(`public_schema:${at}:string_required`);
+  if ([...value].length > MAX_CHECK_METADATA_CHARS) throw new Error(`public_schema:${at}:too_long`);
+  for (const protectedPattern of CHECK_METADATA_PROTECTED_TEXT) {
+    protectedPattern.pattern.lastIndex = 0;
+    if (protectedPattern.pattern.test(value)) throw new Error(`public_schema:${at}:${protectedPattern.code}`);
+  }
+}
+
 function validateArtifact(artifact, at) {
   assertClosed(artifact, ALLOWED_KEYS.artifact, at);
   if (!/^[a-f0-9]{64}$/.test(artifact.sha256 ?? "")) throw new Error(`public_schema:${at}.sha256:invalid`);
@@ -76,6 +126,16 @@ function validateOptionalClosed(record, allowed, at) {
   assertClosed(record, allowed, at);
 }
 
+function validateCheck(check, at) {
+  assertClosed(check, ALLOWED_KEYS.check, at);
+  assertString(check.id, `${at}.id`);
+  assertEnum(check.category, new Set(["gate", "requirement"]), `${at}.category`);
+  if (check.lane !== undefined) assertEnum(check.lane, new Set(["measured", "judged"]), `${at}.lane`);
+  for (const key of ["group", "label"]) if (check[key] !== undefined) validateCheckMetadata(check[key], `${at}.${key}`);
+  assertEnum(check.outcome, new Set(["pass", "fail", "not_evaluated", "grader_error"]), `${at}.outcome`);
+  if (check.explanation !== undefined) validateCheckExplanation(check.explanation, `${at}.explanation`);
+}
+
 function validateBuild(build, at, named) {
   assertClosed(build, named ? ALLOWED_KEYS.namedBuild : ALLOWED_KEYS.blindBuild, at);
   if (!/^build_[a-f0-9]{20}$/.test(build.id ?? "")) throw new Error(`public_schema:${at}.id:invalid`);
@@ -84,7 +144,13 @@ function validateBuild(build, at, named) {
   validateArtifact(build.artifact, `${at}.artifact`);
   if (named) {
     assertString(build.configurationId, `${at}.configurationId`);
-    if (!Array.isArray(build.checks) || build.checks.length !== 0) throw new Error(`public_schema:${at}.checks:must_be_empty`);
+    if (!Array.isArray(build.checks)) throw new Error(`public_schema:${at}.checks:array_required`);
+    const checkIds = new Set();
+    build.checks.forEach((check, index) => {
+      validateCheck(check, `${at}.checks[${index}]`);
+      if (checkIds.has(check.id)) throw new Error(`public_schema:${at}.checks:duplicate_id`);
+      checkIds.add(check.id);
+    });
     validateOptionalClosed(build.requirementSummary, ALLOWED_KEYS.summary, `${at}.requirementSummary`);
     validateOptionalClosed(build.usage, ALLOWED_KEYS.usage, `${at}.usage`);
     validateOptionalClosed(build.estimatedApiCost, ALLOWED_KEYS.cost, `${at}.estimatedApiCost`);

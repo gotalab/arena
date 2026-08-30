@@ -17,7 +17,7 @@ export interface CheckOutcomeView {
 interface CheckRow {
   id: string;
   label: string;
-  description: string | null;
+  description: null;
   category: string;
   lane: string | null;
   group: string | null;
@@ -131,7 +131,7 @@ export function checkComparison(release: Release, taskId: string, trialIds: stri
   const rows: CheckRow[] = order.map((reference) => ({
     id: reference.id,
     label: checkLabel(reference),
-    description: reference.description ?? null,
+    description: null,
     category: reference.category ?? "requirement",
     lane: reference.lane ?? null,
     group: reference.group ?? null,
@@ -140,7 +140,7 @@ export function checkComparison(release: Release, taskId: string, trialIds: stri
       const outcome = checkOutcome(check?.outcome);
       return {
         ...outcome,
-        detail: check?.reason ?? check?.error ?? check?.evidence ?? null,
+        detail: check?.explanation ?? null,
       };
     }),
   }));

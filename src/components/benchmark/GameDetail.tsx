@@ -11,8 +11,15 @@ import { ConfigurationName } from "../ConfigurationName";
 import { Stage } from "../Stage";
 import { TaskIntro } from "../TaskIntro";
 import { ChecksTable } from "./ChecksTable";
-import { FilterSelect, toggleFilter } from "./FilterSelect";
+import { FilterSelect } from "./FilterSelect";
 import { TaskPrompt } from "./TaskPrompt";
+import {
+  createTaskCheckComparison,
+  normalizeTaskComparisonState,
+  selectTaskBuilds,
+  TASK_CHECK_OUTCOMES,
+  type TaskComparisonState,
+} from "../../lib/task-comparison";
 
 interface GameDetailProps {
   task: Game;
@@ -26,6 +33,8 @@ interface GameDetailProps {
   onOpenBenchmark: () => void;
   onReveal: (taskId: string) => void;
   release: Release;
+  state: TaskComparisonState;
+  onStateChange: (state: TaskComparisonState) => void;
 }
 
 const metricCoverage = (reported: number, runs: number) =>
@@ -42,7 +51,7 @@ const metricCoverage = (reported: number, runs: number) =>
  * come from the blind flow, and the page stays masked until the reader has
  * either played blind or explicitly asked to see results.
  */
-export function GameDetail({ task, comparison, initialBuild, initialBrowse = false, onBrowseHandled, onCompare, onOpenBenchmark, onOpenBuild, onReveal, release }: GameDetailProps) {
+export function GameDetail({ task, comparison, initialBuild, initialBrowse = false, onBrowseHandled, onCompare, onOpenBenchmark, onOpenBuild, onReveal, release, state, onStateChange }: GameDetailProps) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
@@ -52,12 +61,6 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
   const [compareTrialId, setCompareTrialId] = useState<string | null>(null);
   const [activeSide, setActiveSide] = useState(0);
   const [copied, setCopied] = useState(false);
-  // The same filter behavior as the chart: one multi-select per dimension,
-  // an empty selection means "no filter". Filtering narrows the table, the
-  // stage walk and the checks table together, so the page never shows two
-  // different rosters at once.
-  const [harnessFilter, setHarnessFilter] = useState<ReadonlySet<string>>(new Set());
-  const [modelFilter, setModelFilter] = useState<ReadonlySet<string>>(new Set());
   const all = buildsForTask(release, task.id);
   const ranked: Trial[] = [...all].sort((a, b) => compareByScore(
     { score: cellScoreForTrial(release, a) },
@@ -67,12 +70,42 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
   const partsOfTrial = (trial: Trial) => configurationParts(configurations.get(trial.configurationId));
   const harnessOptions = [...new Set(ranked.map((trial) => partsOfTrial(trial).harness))].sort();
   const modelOptions = [...new Set(ranked.map((trial) => partsOfTrial(trial).model))].sort();
-  const rows = ranked.filter((trial) => {
-    const parts = partsOfTrial(trial);
-    if (harnessFilter.size > 0 && !harnessFilter.has(parts.harness)) return false;
-    if (modelFilter.size > 0 && !modelFilter.has(parts.model)) return false;
-    return true;
-  });
+  const effortOptions = [...new Set(ranked.map((trial) => partsOfTrial(trial).effort))]
+    .sort()
+    .map((value) => ({ value, label: value || "No effort setting" }));
+  const normalizedState = normalizeTaskComparisonState(state, release, task.id);
+  const selectedBuildIds = new Set(selectTaskBuilds(release, task.id, normalizedState).map((build) => build.id));
+  const rows = ranked.filter((trial) => selectedBuildIds.has(trial.id));
+  const checkModel = createTaskCheckComparison(release, task.id, normalizedState);
+  const allCheckDefinitions = all.flatMap((trial) => trial.checks ?? []);
+  const categoryOptions = [...new Set(allCheckDefinitions.map((check) => check.category))].sort();
+  const groupOptions = [...new Set(allCheckDefinitions.map((check) => check.group).filter((value): value is string => Boolean(value)))].sort();
+  const updateState = (patch: Partial<TaskComparisonState>) => {
+    onStateChange(normalizeTaskComparisonState({ ...normalizedState, ...patch }, release, task.id));
+  };
+  const updateCheck = (patch: Partial<TaskComparisonState["check"]>) => {
+    updateState({ check: { ...normalizedState.check, ...patch } });
+  };
+  const toggleValue = (values: readonly string[], value: string): string[] => (
+    values.includes(value) ? values.filter((entry) => entry !== value) : [...values, value]
+  );
+  const explicitOrAllBuildIds = normalizedState.buildIds.length > 0
+    ? normalizedState.buildIds
+    : ranked.map((trial) => trial.id);
+  const hasActiveFilters = normalizedState.buildIds.length > 0
+    || normalizedState.harnesses.length > 0
+    || normalizedState.models.length > 0
+    || normalizedState.efforts.length > 0
+    || normalizedState.check.categories.length > 0
+    || normalizedState.check.groups.length > 0
+    || normalizedState.check.outcomes.length > 0
+    || normalizedState.check.blockingOnly
+    || normalizedState.check.differencesOnly;
+  const toggleBuild = (buildId: string) => {
+    const next = toggleValue(explicitOrAllBuildIds, buildId);
+    if (next.length === 0) return;
+    updateState({ buildIds: next.length === ranked.length ? [] : next });
+  };
   const hiddenCount = ranked.length - rows.length;
   const open = isTaskOpen(comparison, task.id);
   const played = Boolean(comparison.choices?.[task.id]) || hasBlindVerdict(comparison, task.id);
@@ -208,17 +241,38 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
             </div>
             <div aria-label="Filters" className="filter-row" role="group">
               <FilterSelect
+                label="Build"
+                onToggle={toggleBuild}
+                options={ranked.map((trial) => ({ value: trial.id, label: nameOf(trial) }))}
+                selected={new Set(explicitOrAllBuildIds)}
+              />
+              <FilterSelect
                 label="Harness"
-                onToggle={(value) => setHarnessFilter(toggleFilter(harnessFilter, value))}
+                onToggle={(value) => updateState({ harnesses: toggleValue(normalizedState.harnesses, value) })}
                 options={harnessOptions}
-                selected={harnessFilter}
+                selected={new Set(normalizedState.harnesses)}
               />
               <FilterSelect
                 label="Model"
-                onToggle={(value) => setModelFilter(toggleFilter(modelFilter, value))}
+                onToggle={(value) => updateState({ models: toggleValue(normalizedState.models, value) })}
                 options={modelOptions}
-                selected={modelFilter}
+                selected={new Set(normalizedState.models)}
               />
+              <FilterSelect
+                label="Effort"
+                onToggle={(value) => updateState({ efforts: toggleValue(normalizedState.efforts, value) })}
+                options={effortOptions}
+                selected={new Set(normalizedState.efforts)}
+              />
+              {hasActiveFilters ? (
+                <button
+                  className="link-plain"
+                  onClick={() => onStateChange(normalizeTaskComparisonState({}, release, task.id))}
+                  type="button"
+                >
+                  Clear filters
+                </button>
+              ) : null}
             </div>
             <div className="buildtable__scroll">
               <table className="buildtable">
@@ -383,7 +437,38 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
             ) : null}
 
             <div className="detail__evidence">
-              <ChecksTable release={release} taskId={task.id} taskName={task.name} trials={rows} />
+              <div aria-label="Evaluator check filters" className="filter-row check-filters" role="group">
+                <FilterSelect
+                  label="Check category"
+                  onToggle={(value) => updateCheck({ categories: toggleValue(normalizedState.check.categories, value) })}
+                  options={categoryOptions}
+                  selected={new Set(normalizedState.check.categories)}
+                />
+                <FilterSelect
+                  label="Check group"
+                  onToggle={(value) => updateCheck({ groups: toggleValue(normalizedState.check.groups, value) })}
+                  options={groupOptions}
+                  selected={new Set(normalizedState.check.groups)}
+                />
+                <FilterSelect
+                  label="Outcome"
+                  onToggle={(value) => updateCheck({ outcomes: toggleValue(normalizedState.check.outcomes, value) as TaskComparisonState["check"]["outcomes"] })}
+                  options={TASK_CHECK_OUTCOMES.map((value) => ({ value, label: value === "not_evaluated" ? "Not evaluated" : value === "grader_error" ? "Grader error" : value === "missing" ? "Not reported" : value[0].toUpperCase() + value.slice(1) }))}
+                  selected={new Set(normalizedState.check.outcomes)}
+                />
+                <label className="check-toggle">
+                  <input checked={normalizedState.check.blockingOnly} onChange={(event) => updateCheck({ blockingOnly: event.target.checked })} type="checkbox" />
+                  Blocking only
+                </label>
+                <label className="check-toggle">
+                  <input checked={normalizedState.check.differencesOnly} onChange={(event) => updateCheck({ differencesOnly: event.target.checked })} type="checkbox" />
+                  Differences only
+                </label>
+              </div>
+              <p aria-live="polite" className="benchmark-filter-summary">
+                Comparing {rows.length} {rows.length === 1 ? "Build" : "Builds"}; showing {checkModel.total} of {checkModel.totalBeforeFilters} evaluator checks.
+              </p>
+              <ChecksTable model={checkModel} taskName={task.name} />
               <TaskPrompt taskId={task.id} taskName={task.name} />
             </div>
           </>

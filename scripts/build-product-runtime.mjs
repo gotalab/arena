@@ -107,7 +107,18 @@ export async function buildProductRuntime(outputRoot) {
     for (const name of ["main-worker.js", "artifact-worker.js"]) {
       if (statSync(join(workerRoot, name)).size === 0) throw new Error(`product_runtime:empty_worker:${name}`);
     }
-    execFileSync(process.execPath, ["scripts/build-runtime.mjs"], { cwd: root, env: { PATH: process.env.PATH ?? "/usr/bin:/bin", HOME: process.env.HOME, TMPDIR: process.env.TMPDIR, VITE_ARTIFACT_ORIGIN: productionArtifactOrigin }, stdio: "inherit" });
+    execFileSync(process.execPath, ["scripts/build-runtime.mjs"], {
+      cwd: root,
+      env: {
+        PATH: process.env.PATH ?? "/usr/bin:/bin",
+        HOME: process.env.HOME,
+        TMPDIR: process.env.TMPDIR,
+        VITE_ARTIFACT_ORIGIN: productionArtifactOrigin,
+        VITE_WEBMCP_PROBE: "false",
+        VITE_WEBMCP_PROBE_ARTIFACT: "false",
+      },
+      stdio: "inherit",
+    });
     cpSync(join(root, "dist/public-client"), join(stage, "web-dist"), { recursive: true });
     cpSync(join(root, "public/__webmcp_probe"), join(stage, "webmcp-probe-artifact"), { recursive: true });
     const manifestBytes = json(manifest);

@@ -1,4 +1,5 @@
-import { configurationParts, configurationSummaries, rankedGames } from "../../lib/configurations";
+import { configurationParts, configurationSummaries } from "../../lib/configurations";
+import { selectRankableTasks } from "../../lib/benchmark-view";
 import type { ConfigurationSummary } from "../../lib/configurations";
 import { formatCost, formatSeconds, formatTokens } from "../../lib/format";
 import { compareByScore, scoreEvidence, scoreValue, speakScore } from "../../lib/score";
@@ -23,11 +24,25 @@ import { ConfigurationName } from "../ConfigurationName";
  * tie handling (a shared rank, or a "not separated" mark) is future work, and
  * needs the five-replica cohort before it would show anything.
  */
-export function Leaderboard({ tasks, release }: { tasks: Game[]; release: Release }) {
+export function Leaderboard({ tasks, release, configurationIds }: { tasks: Game[]; release: Release; configurationIds: readonly string[] }) {
   // Preview games (built by less than half the roster) stay out of the
   // aggregate: one early build must not flip every configuration to partial.
-  const ranked = rankedGames(release, tasks);
-  const all = configurationSummaries(release, ranked).slice().sort(compareByScore);
+  const ranked = selectRankableTasks(release, tasks);
+  if (ranked.length === 0) {
+    return (
+      <section className="board" aria-labelledby="leaderboard-heading">
+        <h2 id="leaderboard-heading">Leaderboard</h2>
+        <div className="mask">
+          <p>This task is published as a preview and does not yet have enough roster coverage for a combined ranking.</p>
+        </div>
+      </section>
+    );
+  }
+  const allowedConfigurations = new Set(configurationIds);
+  const all = configurationSummaries(release, ranked)
+    .filter((summary) => allowedConfigurations.has(summary.configuration.id))
+    .slice()
+    .sort(compareByScore);
   // Only a configuration that ran every game has a total the ranking can
   // compare; ranking a one-game total against two-game totals would reward
   // skipping games. Partial rows are still shown — unranked, coverage named —

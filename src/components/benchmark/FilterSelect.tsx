@@ -8,9 +8,14 @@ import { useEffect, useRef, useState } from "react";
  * Professional dropdown manners are handled here once: a click outside or
  * Escape closes the menu, and Escape hands focus back to the trigger.
  */
+export interface FilterSelectOption {
+  value: string;
+  label: string;
+}
+
 export function FilterSelect({ label, options, selected, onToggle }: {
   label: string;
-  options: string[];
+  options: Array<string | FilterSelectOption>;
   selected: ReadonlySet<string>;
   onToggle: (value: string) => void;
 }) {
@@ -51,16 +56,20 @@ export function FilterSelect({ label, options, selected, onToggle }: {
       </button>
       {open ? (
         <div className="select__menu">
-          {options.map((option) => (
-            <label className="select__option" key={option}>
+          {options.map((option) => {
+            const value = typeof option === "string" ? option : option.value;
+            const optionLabel = typeof option === "string" ? option : option.label;
+            return (
+            <label className="select__option" key={value}>
               <input
-                checked={selected.has(option)}
-                onChange={() => onToggle(option)}
+                checked={selected.has(value)}
+                onChange={() => onToggle(value)}
                 type="checkbox"
               />
-              {option}
+              {optionLabel}
             </label>
-          ))}
+            );
+          })}
         </div>
       ) : null}
     </div>

@@ -4,11 +4,14 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { canonicalDirectorySha256 } from "../public-contract/scan-public.mjs";
 
-test("production WebMCP probe requires the explicit composition flag", () => {
+test("WebMCP probe UI is local/CI-only while production keeps its sealed Artifact", () => {
   const source = readFileSync(resolve(import.meta.dirname, "../src/App.tsx"), "utf8");
   assert.match(source, /import\.meta\.env\.DEV \|\| import\.meta\.env\.VITE_WEBMCP_PROBE === "true"/);
   assert.match(source, /webmcp-probe/);
   assert.match(source, /requestArtifactAccess\(`\$\{window\.location\.pathname\}\$\{window\.location\.search\}`\)/);
+  const productBuild = readFileSync(resolve(import.meta.dirname, "../scripts/build-product-runtime.mjs"), "utf8");
+  assert.match(productBuild, /VITE_WEBMCP_PROBE: "false"/);
+  assert.match(productBuild, /VITE_WEBMCP_PROBE_ARTIFACT: "false"/);
 });
 
 test("production WebMCP probe is a declared content-addressed Artifact", () => {

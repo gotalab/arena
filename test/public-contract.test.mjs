@@ -52,3 +52,20 @@ test("invalid manifests and false evidence fail closed", () => {
   falseEvidence.release.builds[0].agentPlayEvidence = { status: "passed", receiptAvailable: true };
   assert.throws(() => validatePublicBundle(falseEvidence), /manifest_status_mismatch/);
 });
+
+test("public check labels and groups cannot carry private evaluation metadata", () => {
+  for (const [field, value] of [
+    ["label", "seed: 1701"],
+    ["group", ["private", "Source", "Path: /secret"].join("")],
+    ["label", "x".repeat(257)],
+  ]) {
+    const candidate = structuredClone(accepted);
+    candidate.release.builds[0].checks = [{
+      id: "task.private-metadata",
+      category: "requirement",
+      outcome: "fail",
+      [field]: value,
+    }];
+    assert.throws(() => validatePublicBundle(candidate), new RegExp(`${field}:(?:evaluation_control|too_long)`));
+  }
+});

@@ -19,7 +19,6 @@ import {
   type OfficialMark,
 } from "../../lib/configurations";
 import { formatCost } from "../../lib/format";
-import { FilterSelect, toggleFilter } from "./FilterSelect";
 import { formatScore, gateBadge, speakScore, type ScoreEvidenceUnit } from "../../lib/score";
 import type { PublicGame as Game, PublicRelease as Release } from "../../public-types";
 import { MarkChip } from "../ConfigurationName";
@@ -45,6 +44,9 @@ function useMeasuredWidth(fallback: number): [RefObject<HTMLDivElement | null>, 
 interface ComplianceChartProps {
   tasks: Game[];
   release: Release;
+  configurationIds: readonly string[];
+  view: string;
+  onViewChange: (view: string) => void;
 }
 
 /**
@@ -67,17 +69,8 @@ interface ComplianceChartProps {
  * and is never plotted: it is named under the chart and kept in the data table
  * with its counts.
  */
-export function ComplianceChart({ tasks, release }: ComplianceChartProps) {
+export function ComplianceChart({ tasks, release, configurationIds, view, onViewChange }: ComplianceChartProps) {
   const [ref, width] = useMeasuredWidth(560);
-  const [view, setView] = useState<string>(CHART_COMBINED);
-  // Filters narrow the same plot instead of spawning new surfaces: an empty
-  // selection means "no filter". Each dimension is a multi-select list, so
-  // the control keeps working when the roster grows past what a row of
-  // buttons could hold. Effort is deliberately not a filter — the effort
-  // walk is drawn as a line, not selected away.
-  const [harnessFilter, setHarnessFilter] = useState<ReadonlySet<string>>(new Set());
-  const [modelFilter, setModelFilter] = useState<ReadonlySet<string>>(new Set());
-  const [playableOnly, setPlayableOnly] = useState(false);
   // Hover / keyboard focus only. Never a click-to-open, never a tap modal.
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [focusedId, setFocusedId] = useState<string | null>(null);
@@ -91,22 +84,12 @@ export function ComplianceChart({ tasks, release }: ComplianceChartProps) {
   // Quiet series tint follows the model vendor (hue = vendor, step = tier).
   // Identity is the chip, not this fill.
   const tokenOf = (point: ChartPoint) => seriesTokenOf(byId.get(point.configurationId));
-  const visible = (point: ChartPoint) => {
-    const parts = partsOf(point);
-    if (harnessFilter.size > 0 && !harnessFilter.has(parts.harness)) return false;
-    if (modelFilter.size > 0 && !modelFilter.has(parts.model)) return false;
-    if (playableOnly && !point.score.gatesPassed) return false;
-    return true;
-  };
+  const allowedConfigurations = new Set(configurationIds);
+  const visible = (point: ChartPoint) => allowedConfigurations.has(point.configurationId);
   const points = model.points.filter(visible);
   const costless = model.costless.filter(visible);
   const unplotted = model.unplotted.filter(visible);
   const hiddenCount = model.points.length + model.costless.length - points.length - costless.length;
-
-  const allParts = [...model.points, ...model.costless, ...model.unplotted].map(partsOf);
-  const harnessOptions = [...new Set(allParts.map((parts) => parts.harness))].sort();
-  const modelOptions = [...new Set(allParts.map((parts) => parts.model))].sort();
-  const toggle = toggleFilter;
 
   // A labelled slot after the last cost tick holds scored marks whose cost
   // was not reported: their y is real, their x honestly does not exist. The
@@ -152,7 +135,7 @@ export function ComplianceChart({ tasks, release }: ComplianceChartProps) {
   useEffect(() => {
     setHoveredId(null);
     setFocusedId(null);
-  }, [view, harnessFilter, modelFilter, playableOnly, hoverable]);
+  }, [view, configurationIds, hoverable]);
   const x = (cost: number) => plotX(layout, cost);
   // The score axis trims to the data: when every mark sits high, a 0-anchored
   // axis crushes them into a band and the differences the chart exists to show
@@ -207,7 +190,7 @@ export function ComplianceChart({ tasks, release }: ComplianceChartProps) {
           <button
             aria-pressed={view === option.id}
             key={option.id}
-            onClick={() => setView(option.id)}
+            onClick={() => onViewChange(option.id)}
             type="button"
           >
             {option.label}
@@ -396,33 +379,6 @@ export function ComplianceChart({ tasks, release }: ComplianceChartProps) {
           ))}
         </ol>
       ) : null}
-
-      {/* Filters walk this plot: they sit under the share face (plot + key),
-          never on it. One multi-select list per dimension so twenty models
-          are a scrollable list, never a wall of buttons. An empty selection
-          is "everything". */}
-      <div aria-label="Chart filters" className="filter-row chart__filters" role="group">
-        <FilterSelect
-          label="Harness"
-          onToggle={(value) => setHarnessFilter(toggle(harnessFilter, value))}
-          options={harnessOptions}
-          selected={harnessFilter}
-        />
-        <FilterSelect
-          label="Model"
-          onToggle={(value) => setModelFilter(toggle(modelFilter, value))}
-          options={modelOptions}
-          selected={modelFilter}
-        />
-        <label className="check-toggle">
-          <input
-            checked={playableOnly}
-            onChange={(event) => setPlayableOnly(event.target.checked)}
-            type="checkbox"
-          />
-          Playable builds only
-        </label>
-      </div>
 
       <ol className={`chart__list${numbered.length > 0 ? " chart__list--numbered" : ""}`} aria-label="Score against cost">
         {scoreOrdered.map((point) => (

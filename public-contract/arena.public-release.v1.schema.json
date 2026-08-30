@@ -58,7 +58,7 @@
         "playability": { "type": ["string", "null"] },
         "artifact": { "$ref": "#/$defs/artifact" },
         "requirementSummary": { "oneOf": [{ "$ref": "#/$defs/requirementSummary" }, { "type": "null" }] },
-        "checks": { "type": "array", "maxItems": 0 },
+        "checks": { "type": "array", "items": { "$ref": "#/$defs/check" } },
         "replica": { "type": "integer", "minimum": 1 },
         "runResult": { "type": ["string", "null"] },
         "startedAt": { "type": ["string", "null"] },
@@ -161,6 +161,20 @@
         "notEvaluated": { "type": ["number", "null"] }, "graderErrors": { "type": ["number", "null"] },
         "evaluated": { "type": ["number", "null"] }, "applicable": { "type": ["number", "null"] },
         "rate": { "type": ["number", "null"] }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "outcome"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "category": { "enum": ["gate", "requirement"] },
+        "lane": { "enum": ["measured", "judged"] },
+        "group": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "label": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "outcome": { "enum": ["pass", "fail", "not_evaluated", "grader_error"] },
+        "explanation": { "type": "string", "minLength": 1, "maxLength": 1024 }
       }
     },
     "usage": {

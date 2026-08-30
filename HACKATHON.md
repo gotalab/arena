@@ -4,7 +4,7 @@ Arena existed before the WebMCP Challenge as a private benchmark that gave multi
 
 Work added during the August 25–September 3, 2026 submission period includes the clean public/evaluation repository boundary, route-scoped WebMCP exploration tools, the isolated `arena.game.v1` broker and probe, Agent Play capability evidence, public schemas and leak scanners, and the complete public Worker/D1 runtime. The clean export and all subsequent commits together carry this challenge delta relative to the attested private baseline.
 
-The private baseline identifiers below prove the cutoff without publishing the private tree. Its timestamp is August 25 at 3:42 a.m. Pacific, before the August 25 at 11:00 a.m. Pacific submission start. Before publication, the product history was consolidated to remove production identifiers; the public range is inspectable from the clean export root recorded below.
+The private baseline identifiers below prove the cutoff without publishing the private tree. Its timestamp is August 25 at 3:42 a.m. Pacific, before the August 25 at 11:00 a.m. Pacific submission start. Before publication, the product history was consolidated to remove production identifiers. Inspect the clean export with `git show 646f9164` and its subsequent attestations with `git log 646f9164..HEAD`.
 
 <!-- arena.hackathon.v1:start -->
 ```json
@@ -19,8 +19,8 @@ The private baseline identifiers below prove the cutoff without publishing the p
     "attestationSha256": "7f6abca3f3abb64289aed5b973cc256c27ff154742bd72a751e99125e5bbf5a7"
   },
   "publicHistory": {
-    "initialExportCommit": "0000000000000000000000000000000000000000",
-    "challengeRange": "0000000000000000000000000000000000000000..HEAD"
+    "initialExportCommit": "646f9164405f9001266cc77e1a633404d7c89f09",
+    "challengeRange": "646f9164405f9001266cc77e1a633404d7c89f09..HEAD"
   },
   "preExistingCapabilities": [
     "multi-configuration game benchmark",
@@ -29,14 +29,14 @@ The private baseline identifiers below prove the cutoff without publishing the p
     "published task and build catalogue"
   ],
   "challengePaths": [
-    { "path": "src/lib/arena-tools.ts", "preExisting": false, "firstPublicCommit": "0000000000000000000000000000000000000000" },
-    { "path": "src/lib/game-tools.ts", "preExisting": false, "firstPublicCommit": "0000000000000000000000000000000000000000" },
-    { "path": "src/platform/frame-game-channel.ts", "preExisting": false, "firstPublicCommit": "0000000000000000000000000000000000000000" },
-    { "path": "src/hooks/useArenaWebMcpTools.ts", "preExisting": false, "firstPublicCommit": "0000000000000000000000000000000000000000" },
-    { "path": "src/hooks/useWebMcpGameTools.ts", "preExisting": false, "firstPublicCommit": "0000000000000000000000000000000000000000" },
-    { "path": "public-contract/arena.public-release.v1.schema.json", "preExisting": false, "firstPublicCommit": "0000000000000000000000000000000000000000" },
-    { "path": "public-contract/validate-public-release.mjs", "preExisting": false, "firstPublicCommit": "0000000000000000000000000000000000000000" },
-    { "path": "public/__webmcp_probe/index.html", "preExisting": false, "firstPublicCommit": "0000000000000000000000000000000000000000" }
+    { "path": "src/lib/arena-tools.ts", "preExisting": false, "firstPublicCommit": "646f9164405f9001266cc77e1a633404d7c89f09" },
+    { "path": "src/lib/game-tools.ts", "preExisting": false, "firstPublicCommit": "646f9164405f9001266cc77e1a633404d7c89f09" },
+    { "path": "src/platform/frame-game-channel.ts", "preExisting": false, "firstPublicCommit": "646f9164405f9001266cc77e1a633404d7c89f09" },
+    { "path": "src/hooks/useArenaWebMcpTools.ts", "preExisting": false, "firstPublicCommit": "646f9164405f9001266cc77e1a633404d7c89f09" },
+    { "path": "src/hooks/useWebMcpGameTools.ts", "preExisting": false, "firstPublicCommit": "646f9164405f9001266cc77e1a633404d7c89f09" },
+    { "path": "public-contract/arena.public-release.v1.schema.json", "preExisting": false, "firstPublicCommit": "646f9164405f9001266cc77e1a633404d7c89f09" },
+    { "path": "public-contract/validate-public-release.mjs", "preExisting": false, "firstPublicCommit": "646f9164405f9001266cc77e1a633404d7c89f09" },
+    { "path": "public/__webmcp_probe/index.html", "preExisting": false, "firstPublicCommit": "646f9164405f9001266cc77e1a633404d7c89f09" }
   ]
 }
 ```

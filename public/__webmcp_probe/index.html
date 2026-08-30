@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WebMCP route probe</title>
+  <style>
+    :root { color-scheme: dark; font: 16px/1.45 ui-monospace, SFMono-Regular, monospace; background: #10151f; color: #f4f0df; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+    main { width: min(82vw, 330px); }
+    ol { list-style: none; padding: 0; display: grid; gap: 12px; }
+    li { padding: 14px; border: 2px solid #657087; background: #192131; }
+    li.done { border-color: #f4d35e; background: #3a331d; }
+    strong { display: block; font-size: 1.2rem; }
+    #receipt { min-height: 1.5em; color: #f4d35e; }
+  </style>
+</head>
+<body>
+  <main>
+    <p>ISOLATED GAME · arena.game.v1</p>
+    <h1>Route the signal</h1>
+    <ol>
+      <li id="step-0"><strong>1 · Scan</strong>Find a safe sector</li>
+      <li id="step-1"><strong>2 · Mark</strong>Mark the route</li>
+      <li id="step-2"><strong>3 · Commit</strong>Send the signal</li>
+    </ol>
+    <p id="receipt" aria-live="polite">Waiting for Arena…</p>
+  </main>
+  <script>
+    (() => {
+      "use strict";
+      const PROTOCOL = "arena.game.v1";
+      const actions = ["scan_sector", "mark_route", "commit_route"];
+      let revision = 0;
+      let sessionId = null;
+      let generation = null;
+
+      function state() {
+        return {
+          revision,
+          phase: revision === actions.length ? "complete" : "playing",
+          outcome: revision === actions.length ? "route_committed" : null,
+          progress: actions.slice(0, revision),
+          legalActions: revision === actions.length ? [] : [{ type: actions[revision] }],
+        };
+      }
+
+      function render(message) {
+        actions.forEach((_, index) => document.querySelector(`#step-${index}`).classList.toggle("done", index < revision));
+        document.querySelector("#receipt").textContent = message;
+      }
+
+      function response(request, accepted, error) {
+        return {
+          protocol: PROTOCOL,
+          type: "response",
+          requestId: request.requestId,
+          sessionId,
+          generation,
+          accepted,
+          revision,
+          state: state(),
+          ...(error ? { error } : {}),
+        };
+      }
+
+      window.addEventListener("message", (event) => {
+        const message = event.data;
+        if (event.source !== parent || !message || message.protocol !== PROTOCOL || message.type !== "connect") return;
+        const port = event.ports[0];
+        if (!port || typeof message.sessionId !== "string" || !Number.isSafeInteger(message.generation)) return;
+        sessionId = message.sessionId;
+        generation = message.generation;
+        port.onmessage = ({ data: request }) => {
+          if (!request || request.protocol !== PROTOCOL || request.type !== "request") return;
+          if (request.sessionId !== sessionId || request.generation !== generation) return;
+          if (request.command === "observe") {
+            port.postMessage(response(request, true));
+            return;
+          }
+          if (request.command !== "act" || !request.action || typeof request.action.type !== "string") {
+            port.postMessage(response(request, false, { code: "invalid_request", message: "Malformed game action." }));
+            return;
+          }
+          if (request.expectedRevision !== revision) {
+            port.postMessage(response(request, false, { code: "stale_revision", message: "Read the current state before acting." }));
+            return;
+          }
+          if (request.action.type !== actions[revision]) {
+            port.postMessage(response(request, false, { code: "illegal_action", message: "That action is not legal now." }));
+            return;
+          }
+          revision += 1;
+          render(revision === actions.length ? "Route committed." : `Step ${revision} accepted.`);
+          port.postMessage(response(request, true));
+        };
+        port.start();
+        render("Connected to trusted parent.");
+        port.postMessage({
+          protocol: PROTOCOL,
+          type: "ready",
+          sessionId,
+          generation,
+          accepted: true,
+          revision,
+          state: state(),
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

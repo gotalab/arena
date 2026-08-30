@@ -1,0 +1,150 @@
+:root {
+  color-scheme: dark;
+  font-family: "Trebuchet MS", "Avenir Next", system-ui, sans-serif;
+  background: #070711;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background:
+    radial-gradient(circle at 50% 15%, #20203a 0, #0a0917 45%, #05050c 100%);
+  touch-action: none;
+  user-select: none;
+}
+
+body {
+  display: grid;
+  place-items: center;
+}
+
+#game-shell {
+  position: relative;
+  width: min(100vw, calc(100vh * .5625));
+  height: min(100vh, calc(100vw * 1.7778));
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  background: #0c0b1c;
+  box-shadow: 0 0 80px #000b;
+  isolation: isolate;
+}
+
+#game {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.ceremony {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: max(18px, 5vh) 9%;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 35%, #5c302660 0 10%, transparent 42%),
+    linear-gradient(180deg, #090919e8, #171126f5);
+  animation: arrive .7s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.ceremony[hidden] { display: none; }
+
+.rank-medallion {
+  width: min(32vw, 134px);
+  aspect-ratio: 1;
+  display: grid;
+  place-content: center;
+  border: 2px solid #ffbd62;
+  border-radius: 48% 52% 45% 55%;
+  color: #ffd58d;
+  background: radial-gradient(circle, #502719, #181020 70%);
+  box-shadow: 0 0 0 7px #ff9c3230, 0 0 36px #ff76285c;
+  transform: rotate(-3deg);
+}
+
+.rank-medallion span, .result-grid span, .eyebrow {
+  font-size: clamp(8px, 2.2vw, 12px);
+  letter-spacing: .2em;
+  color: #d4b899;
+}
+
+.rank-medallion strong {
+  margin-top: 4px;
+  font-size: clamp(16px, 5vw, 25px);
+  letter-spacing: .08em;
+}
+
+.eyebrow { margin: 4vh 0 1vh; }
+
+.ceremony h1 {
+  margin: 0;
+  color: #fff3d7;
+  font-size: clamp(28px, 9vw, 52px);
+  line-height: .88;
+  letter-spacing: -.055em;
+}
+
+.ceremony h1 i {
+  color: #ffad53;
+  font-style: normal;
+  text-shadow: 0 0 20px #ff6b35;
+}
+
+.result-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  margin: 4.5vh 0;
+  border-block: 1px solid #c9a37835;
+}
+
+.result-grid div {
+  min-width: 0;
+  padding: 2.2vh 3px;
+  border-right: 1px solid #c9a37835;
+}
+.result-grid div:last-child { border: 0; }
+
+.result-grid span {
+  display: block;
+  min-height: 2.5em;
+  font-size: clamp(7px, 1.9vw, 10px);
+}
+
+.result-grid strong {
+  display: block;
+  margin-top: 5px;
+  color: #fff2d0;
+  font-size: clamp(18px, 5vw, 28px);
+}
+
+.restart {
+  margin: 0;
+  color: #fff0ce;
+  font-size: clamp(9px, 2.7vw, 13px);
+  letter-spacing: .16em;
+  animation: breathe 1.6s ease-in-out infinite;
+}
+
+@keyframes arrive {
+  from { opacity: 0; transform: scale(1.04); }
+}
+@keyframes breathe {
+  50% { opacity: .45; transform: translateY(2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ceremony, .restart { animation: none; }
+}

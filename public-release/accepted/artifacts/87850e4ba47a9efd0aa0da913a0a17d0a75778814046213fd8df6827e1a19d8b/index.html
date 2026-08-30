@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#090b16">
+  <title>EMBER</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="shell" aria-label="EMBER, a slingshot climbing game">
+    <canvas id="game"></canvas>
+    <section id="ceremony" class="hidden" aria-live="polite">
+      <div class="end-card">
+        <div class="eyebrow">THE DAMP TOOK THE LIGHT</div>
+        <div id="rank" class="rank">C</div>
+        <div class="score-row">
+          <div><span>RUN</span><strong id="final-score">0</strong></div>
+          <div><span>SESSION BEST</span><strong id="best-score">0</strong></div>
+        </div>
+        <div class="chain-result"><span>BEST AIR CHAIN</span><strong id="best-chain">×0</strong></div>
+        <div class="tap-again">TAP ANYWHERE TO REKINDLE</div>
+      </div>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07061a">
+<meta name="description" content="STOMP — a one-screen score attack about a small machine and the one ball it keeps alive.">
+<title>STOMP</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <div id="safe-probe" aria-hidden="true"></div>
+  <canvas id="stage" aria-label="STOMP playfield"></canvas>
+
+  <div id="overlay">
+    <!-- one short line, on the idle stage only -->
+    <div id="hint"><span>MOVE OR JUMP TO BEGIN</span></div>
+
+    <div id="pad-move" class="pad" role="button" tabindex="-1" aria-label="Move">
+      <div class="pad-track"></div>
+      <div class="pad-thumb"></div>
+      <div class="pad-glyph pad-glyph-l"></div>
+      <div class="pad-glyph pad-glyph-r"></div>
+      <div class="pad-label">MOVE</div>
+    </div>
+
+    <div id="pad-jump" class="pad" role="button" tabindex="-1" aria-label="Jump">
+      <div class="jump-ring"></div>
+      <div class="jump-chevron"></div>
+      <div class="pad-label">JUMP</div>
+    </div>
+
+    <button id="mute" type="button" aria-label="Toggle sound"><span class="spk"></span></button>
+
+    <div id="endcard" aria-live="polite">
+      <div class="card">
+        <div class="card-kicker">CLOCK EMPTY</div>
+        <div class="card-rank"><span id="e-rank">SCRAP</span></div>
+        <div class="card-score"><em id="e-score">0</em><i>SCORE</i></div>
+        <div class="card-grid">
+          <div><b id="e-best">0</b><span>SESSION BEST</span></div>
+          <div><b id="e-kills">0</b><span>TARGETS DOWN</span></div>
+          <div><b id="e-chain">0</b><span>LONGEST PURSUIT</span></div>
+        </div>
+        <button id="again" type="button">GO AGAIN</button>
+        <div class="card-foot"><span id="e-seed">seed 0</span> · <button id="newseed" type="button">NEW SEED</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="audio.js"></script>
+<script src="game.js"></script>
+<script src="art.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

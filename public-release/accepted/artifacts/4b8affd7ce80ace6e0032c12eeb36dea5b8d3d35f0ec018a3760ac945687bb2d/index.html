@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#0a0810" />
+    <title>STOMP</title>
+    <link rel="stylesheet" href="game.css" />
+  </head>
+  <body>
+    <div id="wrap">
+      <div id="stage">
+        <canvas id="game"></canvas>
+        <div id="pads">
+          <div id="pad-move" class="pad" role="slider" aria-label="Move"></div>
+          <div id="pad-jump" class="pad" role="button" aria-label="Jump"></div>
+        </div>
+        <div id="end">
+          <div class="card">
+            <div class="kicker">Curtain</div>
+            <div class="rank" id="end-rank">D</div>
+            <div class="score" id="end-score">0</div>
+            <div class="stats">
+              <div><span>Session best</span><strong id="end-best">0</strong></div>
+              <div><span>Airborne down</span><strong id="end-air">0</strong></div>
+              <div><span>Longest pursuit</span><strong id="end-pursuit">0</strong></div>
+              <div><span>Clean streak</span><strong id="end-streak">0</strong></div>
+            </div>
+            <div class="again">jump or tap · again</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/sim.js"></script>
+    <script src="js/game.js"></script>
+  </body>
+</html>

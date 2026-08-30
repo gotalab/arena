@@ -1,0 +1,57 @@
+name: Verify product
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify clean Arena product
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+
+      - name: Activate pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.20.0 --activate
+          test "$(pnpm --version)" = "10.20.0"
+
+      - name: Install without lifecycle scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Verify
+        run: |
+          node --input-type=module -e "import {scanPublicTree} from './public-contract/scan-public.mjs'; await scanPublicTree('.', {includeGitBlobs:true,trustedPolicyFiles:['public-contract/scan-public.mjs','public-contract/validate-public-release.mjs','public-contract/webmcp-probe.v1.json','public-contract/arena.product-build-receipt.v2.schema.json','public-contract/validate-product-build-receipt.mjs'],allowedRuleCodesByFile:{'runtime/d1/fixture.sql':['internal_id'],'scripts/build-product-runtime.mjs':['evaluation_control'],'scripts/test-product-runtime-tamper.mjs':['evaluation_control'],'test/product-runtime-contract.test.mjs':['evaluation_control']}}); console.log('source and history scan passed')"
+          pnpm run verify:license
+          pnpm test
+          pnpm run test:runtime
+          pnpm run check:runtime-fixture
+          pnpm run check:runtime-types
+          pnpm run typecheck
+          pnpm run build
+          pnpm run build:runtime
+          pnpm run dev:runtime --smoke
+          pnpm run test:runtime-negative
+          output="$RUNNER_TEMP/product-runtime"
+          pnpm run build:product-runtime --output "$output"
+          pnpm run verify:product-runtime "$output"
+          pnpm run test:product-runtime-tamper "$output"
+          test -f "$output/worker-runtime/main-worker.js"
+          test -f "$output/worker-runtime/artifact-worker.js"
+          pnpm exec wrangler deploy "$output/worker-runtime/main-worker.js" --config runtime/wrangler.main.jsonc --no-bundle --dry-run
+          pnpm exec wrangler deploy "$output/worker-runtime/artifact-worker.js" --config runtime/wrangler.artifact.jsonc --no-bundle --dry-run
+          pnpm audit --audit-level=high

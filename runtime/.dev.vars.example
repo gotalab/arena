@@ -1,0 +1,4 @@
+# `pnpm run dev:runtime` generates fresh values in a temporary directory.
+# These names document the local bindings; do not put real values here:
+# - CSRF_SECRET
+# - ARTIFACT_TOKEN_SECRET

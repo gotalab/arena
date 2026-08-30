@@ -1,0 +1,22 @@
+:root { color-scheme: dark; font-family: ui-rounded, "Trebuchet MS", system-ui, sans-serif; }
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #050713; touch-action: none; user-select: none; }
+body { display: grid; place-items: center; }
+#shell { position: relative; width: min(100vw, calc(100vh * .5625)); height: min(100vh, calc(100vw * 1.77778)); max-width: 100%; max-height: 100%; overflow: hidden; background: #0b0d1c; box-shadow: 0 0 80px #000; touch-action: none; }
+#game { display: block; width: 100%; height: 100%; touch-action: none; }
+#ceremony { position: absolute; inset: 0; display: grid; place-items: center; padding: 8%; background: radial-gradient(circle at 50% 36%, rgba(72,49,94,.25), rgba(4,7,18,.87) 65%); animation: veil .7s ease-out both; }
+#ceremony.hidden { display: none; }
+.end-card { width: 100%; padding: 9% 8% 8%; text-align: center; border: 1px solid rgba(255,205,132,.3); border-radius: 32px 32px 52px 52px; background: linear-gradient(180deg, rgba(24,24,48,.94), rgba(8,11,28,.96)); box-shadow: inset 0 0 40px rgba(255,158,77,.05), 0 20px 70px #0009; animation: rise .65s cubic-bezier(.17,.89,.27,1.25) both; }
+.eyebrow { color: #8790ac; letter-spacing: .16em; font-size: clamp(9px, 2.5vw, 14px); font-weight: 800; }
+.rank { margin: .05em 0; color: #ffd483; font-family: Georgia, serif; font-size: clamp(80px, 28vw, 170px); line-height: .95; text-shadow: 0 0 24px #ff7a3b99, 0 0 55px #ffb55044; }
+.score-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 6% 0; }
+.score-row div, .chain-result { padding: 12px 5px; border-radius: 14px; background: #ffffff08; }
+.score-row span, .chain-result span { display: block; color: #7e87a4; font-size: clamp(8px, 2.3vw, 12px); font-weight: 800; letter-spacing: .1em; }
+.score-row strong { color: #f7ead3; font-size: clamp(20px, 6vw, 34px); }
+.chain-result { display: flex; justify-content: space-between; align-items: center; padding-inline: 18px; }
+.chain-result strong { color: #ff9d63; font-size: clamp(24px, 7vw, 40px); }
+.tap-again { margin-top: 9%; color: #ffd69c; font-size: clamp(10px, 3vw, 15px); font-weight: 900; letter-spacing: .12em; animation: pulse 1.6s ease-in-out infinite; }
+@keyframes rise { from { opacity: 0; transform: translateY(35px) scale(.96); } }
+@keyframes veil { from { opacity: 0; } }
+@keyframes pulse { 50% { opacity: .45; transform: scale(.98); } }
+@media (min-aspect-ratio: 3/4) { #shell { border-inline: 1px solid #33364e; } }

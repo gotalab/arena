@@ -1,0 +1,9 @@
+minimumReleaseAge: 1440
+# This exact type snapshot was already reviewed and locked before the policy was
+# enabled; only that version bypasses the age gate.
+minimumReleaseAgeExclude:
+  - "@cloudflare/workers-types@5.20260830.1"
+saveExact: true
+strictPeerDependencies: true
+strictStorePkgContentCheck: true
+verifyStoreIntegrity: true

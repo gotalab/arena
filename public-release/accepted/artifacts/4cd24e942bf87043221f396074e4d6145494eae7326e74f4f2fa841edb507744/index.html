@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>EMBER - The Spark Ascending</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #050508;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      touch-action: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 600px; /* Portrait containment */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #08080f;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+      overflow: hidden;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Subtle UI Layer over Canvas */
+    #ui-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+      z-index: 10;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .stat-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 200, 150, 0.6);
+      font-weight: 700;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(255, 140, 50, 0.7);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chain-badge {
+      display: none;
+      align-self: center;
+      background: linear-gradient(135deg, rgba(255, 80, 20, 0.3), rgba(255, 180, 50, 0.3));
+      border: 1px solid rgba(255, 160, 50, 0.6);
+      border-radius: 20px;
+      padding: 4px 14px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 0 15px rgba(255, 100, 20, 0.4);
+      animation: pulseGlow 1s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      from { transform: scale(1); filter: brightness(1); }
+      to { transform: scale(1.06); filter: brightness(1.3); }
+    }
+
+    .chain-badge span {
+      font-size: 14px;
+      font-weight: 900;
+      color: #ffd27d;
+      letter-spacing: 1px;
+    }
+
+    /* Sound indicator button */
+    #sound-toggle {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      pointer-events: auto;
+      background: rgba(20, 20, 30, 0.6);
+      border: 1px solid rgba(255, 180, 100, 0.3);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: #ffd27d;
+      font-size: 14px;
+      transition: all 0.2s;
+      z-index: 20;
+    }
+
+    #sound-toggle:active {
+      transform: scale(0.9);
+      background: rgba(255, 140, 50, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+    
+    <div id="ui-layer">
+      <div class="top-bar">
+        <div class="stat-group">
+          <span class="stat-label">HEIGHT</span>
+          <span class="stat-value" id="ui-height">0m</span>
+        </div>
+        
+        <div class="chain-badge" id="ui-chain-badge">
+          <span id="ui-chain-text">CHAIN x2</span>
+        </div>
+
+        <div class="stat-group" style="align-items: flex-end; margin-right: 46px;">
+          <span class="stat-label">SCORE</span>
+          <span class="stat-value" id="ui-score">0</span>
+        </div>
+      </div>
+    </div>
+
+    <button id="sound-toggle" title="音声切替" aria-label="Toggle Sound">🔊</button>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

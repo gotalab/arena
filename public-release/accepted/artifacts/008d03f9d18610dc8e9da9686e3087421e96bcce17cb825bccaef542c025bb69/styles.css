@@ -1,0 +1,55 @@
+/* STOMP - shell styling. The whole game lives inside one canvas, so the page
+ * only has to guarantee: no scrolling, no clipping, no browser gestures. */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #04030c;
+  color: #eaf6ff;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  position: fixed;
+  inset: 0;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#shell {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 50% 110%, #2a1148 0%, #0d0a24 55%, #04030c 100%);
+}
+
+#stage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: pointer;
+}
+
+/* Measured, never seen: lets JS read the bottom safe-area inset. */
+#safeprobe {
+  position: fixed;
+  left: -100px;
+  bottom: 0;
+  width: 1px;
+  height: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  pointer-events: none;
+  visibility: hidden;
+}

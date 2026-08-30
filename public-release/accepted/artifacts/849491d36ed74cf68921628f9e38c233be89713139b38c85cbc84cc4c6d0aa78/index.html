@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>STOMP - Arcade Score Attack</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #070913;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: none;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 460px;
+      max-height: 820px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 100px rgba(79, 70, 229, 0.15);
+      background: #090d1e;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    // ==========================================
+    // DETERMINISTIC PRNG (Mulberry32)
+    // ==========================================
+    class PRNG {
+      constructor(seed = 123456789) {
+        this.setSeed(seed);
+      }
+
+      setSeed(seed) {
+        if (typeof seed === 'string') {
+          let h = 2166136261 >>> 0;
+          for (let i = 0; i < seed.length; i++) {
+            h = Math.imul(h ^ seed.charCodeAt(i), 16777619);
+          }
+          this.state = h >>> 0;
+        } else {
+          this.state = (seed >>> 0) || 123456789;
+        }
+        this.initialSeed = seed;
+      }
+
+      next() {
+        let t = (this.state += 0x6D2B79F5);
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      }
+
+      range(min, max) {
+        return min + this.next() * (max - min);
+      }
+
+      rangeInt(min, max) {
+        return Math.floor(this.range(min, max + 1));
+      }
+
+      choice(arr) {
+        return arr[Math.floor(this.next() * arr.length)];
+      }
+
+      getState() {
+        return this.state;
+      }
+
+      setState(s) {
+        this.state = s >>> 0;
+      }
+    }
+
+    // ==========================================
+    // AUDIO SYNTHESIZER (Web Audio API)
+    // ==========================================
+    class SoundFX {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      play(name) {
+        if (!this.ctx || !this.enabled) return;
+        try {
+          const t = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          if (name === 'jump') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(140, t);
+            osc.frequency.exponentialRampToValueAtTime(320, t + 0.12);
+            gain.gain.setValueAtTime(0.18, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.12);
+            osc.start(t);
+            osc.stop(t + 0.12);
+          } else if (name === 'bounce_normal') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(330, t);
+            osc.frequency.exponentialRampToValueAtTime(550, t + 0.14);
+            gain.gain.setValueAtTime(0.25, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.14);
+            osc.start(t);
+            osc.stop(t + 0.14);
+          } else if (name === 'bounce_power') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(400, t);
+            osc.frequency.exponentialRampToValueAtTime(880, t + 0.22);
+            gain.gain.setValueAtTime(0.28, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.22);
+            osc.start(t);
+            osc.stop(t + 0.22);
+          } else if (name === 'bounce_weak') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(220, t);
+            osc.frequency.linearRampToValueAtTime(160, t + 0.1);
+            gain.gain.setValueAtTime(0.15, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.1);
+            osc.start(t);
+            osc.stop(t + 0.1);
+          } else if (name === 'top_hit_1') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523, t);
+            osc.frequency.setValueAtTime(659, t + 0.06);
+            gain.gain.setValueAtTime(0.3, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.16);
+            osc.start(t);
+            osc.stop(t + 0.16);
+          } else if (name === 'top_hit_2') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(659, t);
+            osc.frequency.setValueAtTime(783, t + 0.06);
+            gain.gain.setValueAtTime(0.35, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.2);
+            osc.start(t);
+            osc.stop(t + 0.2);
+          } else if (name === 'defeat') {
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(587, t);
+            osc.frequency.setValueAtTime(880, t + 0.08);
+            osc.frequency.setValueAtTime(1174, t + 0.16);
+            gain.gain.setValueAtTime(0.35, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.35);
+            osc.start(t);
+            osc.stop(t + 0.35);
+          } else if (name === 'stomp') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, t);
+            osc.frequency.exponentialRampToValueAtTime(60, t + 0.15);
+            gain.gain.setValueAtTime(0.3, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.15);
+            osc.start(t);
+            osc.stop(t + 0.15);
+          } else if (name === 'wrong_side') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(240, t);
+            osc.frequency.linearRampToValueAtTime(110, t + 0.2);
+            gain.gain.setValueAtTime(0.3, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.2);
+            osc.start(t);
+            osc.stop(t + 0.2);
+          } else if (name === 'ball_drop') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, t);
+            osc.frequency.linearRampToValueAtTime(70, t + 0.3);
+            gain.gain.setValueAtTime(0.35, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.3);
+            osc.start(t);
+            osc.stop(t + 0.3);
+          } else if (name === 'game_over') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(330, t);
+            osc.frequency.linearRampToValueAtTime(165, t + 0.6);
+            gain.gain.setValueAtTime(0.3, t);
+            gain.gain.linearRampToValueAtTime(0.01, t + 0.7);
+            osc.start(t);
+            osc.stop(t + 0.7);
+          }
+        } catch (e) {}
+      }
+    }
+
+    const sound = new SoundFX();
+
+    // ==========================================
+    // GAME ENGINE & SIMULATION CONSTANTS
+    // ==========================================
+    const STAGE_WIDTH = 400;
+    const STAGE_HEIGHT = 680;
+
+    const GROUND_Y = 560;
+    const LOW_LANE_Y = 340;
+    const HIGH_LANE_Y = 180;
+
+    const GRAVITY = 0.46;
+    const JUMP_IMPULSE = -10.4;
+    // Machine center apex: vy^2 / (2*g) = (10.4^2)/(2*0.46) = 108.16 / 0.92 = 117.56px above resting center (540 -> 422.44)
+    // Resting center Y is 540 (radius 20, groundY 560).
+    // Resting bumper top Y is 520. Machine apex bumper top is 402.44, strictly below LOW_LANE_Y (340).
+    const MACHINE_NORMAL_APEX_Y = GROUND_Y - 20 - (JUMP_IMPULSE * JUMP_IMPULSE) / (2 * GRAVITY);
+
+    const MACHINE_RADIUS = 20;
+    const MACHINE_SPEED = 5.6;
+
+    const BALL_RADIUS = 11;
+    const BALL_GRAVITY = 0.38;
+    const BOUNCE_NORMAL_VY = -13.8;
+    const BOUNCE_POWER_VY = -17.2;
+    const BOUNCE_WEAK_VY = -9.2;
+
+    const STARTING_CLOCK_MS = 65000;
+
+    // Rewards & Penalties
+    const TIME_HIT_1 = 2500;
+    const SCORE_HIT_1 = 150;
+    const TIME_HIT_2 = 4500;
+    const SCORE_HIT_2 = 350;
+    const TIME_HIT_3 = 8000;
+    const SCORE_HIT_3 = 1000;
+
+    const TIME_STOMP_WALKER = 2500;
+    const SCORE_STOMP_WALKER = 250;
+
+    const TIME_PENALTY_WRONG_SIDE = -3500;
+    const TIME_PENALTY_BALL_DROP = -6000;
+    const TIME_PENALTY_WALKER_BODY = -3000;
+
+    class GameSimulation {
+      constructor(seed = 12345) {
+        this.prng = new PRNG(seed);
+        this.initialSeed = seed;
+        this.reset(seed);
+      }
+
+      reset(seed = this.initialSeed) {
+        this.initialSeed = seed;
+        this.prng.setSeed(seed);
+
+        this.phase = "ready"; // "ready", "playing", "ended"
+        this.tick = 0;
+        this.elapsedMs = 0;
+        this.remainingMs = STARTING_CLOCK_MS;
+        this.score = 0;
+        this.difficulty = 1;
+        this.rank = "D";
+
+        this.input = { left: false, right: false, jump: false };
+        this.jumpQueued = false;
+
+        this.machine = {
+          x: STAGE_WIDTH / 2,
+          y: GROUND_Y - MACHINE_RADIUS,
+          vx: 0,
+          vy: 0,
+          radius: MACHINE_RADIUS,
+          grounded: true,
+          jumpCount: 0
+        };
+
+        this.ball = {
+          x: STAGE_WIDTH / 2,
+          y: GROUND_Y - MACHINE_RADIUS * 2 - BALL_RADIUS + 4,
+          vx: 0,
+          vy: 0,
+          radius: BALL_RADIUS,
+          active: true,
+          lastBounceKind: null
+        };
+
+        this.ballDropCooldown = 0;
+        this.nextEnemyId = 1;
+        this.enemies = [];
+
+        // Counters
+        this.topHits = 0;
+        this.airEnemiesDefeated = 0;
+        this.wrongSideHits = 0;
+        this.ballDrops = 0;
+        this.currentCleanSequence = 0;
+        this.longestCleanSequence = 0;
+
+        // Telemetry Events
+        this.eventSequence = 1;
+        this.recentEvents = [];
+        this.lastEvent = null;
+
+        // Spawning logic state
+        this.enemySpawnTimer = 30; // spawn first flyer shortly after start
+        this.walkerSpawnTimer = 180;
+
+        // Overlap debouncing for wrong-side hits: map enemyId -> boolean
+        this.currentBallOverlaps = new Set();
+        this.currentMachineOverlaps = new Set();
+
+        // Initial opening spawn: ensure low-lane slow flyer appears right away
+        this.spawnEnemy("slowFlyer", "low", -30, 1.2);
+      }
+
+      addEvent(kind, enemyId, amountMs, source, contact) {
+        const evt = {
+          sequence: this.eventSequence++,
+          kind,
+          tick: this.tick,
+          enemyId: enemyId !== undefined ? enemyId : null,
+          amountMs,
+          source,
+          contact
+        };
+        this.recentEvents.push(evt);
+        if (this.recentEvents.length > 80) {
+          this.recentEvents.shift();
+        }
+        this.lastEvent = evt;
+      }
+
+      updateRank() {
+        if (this.score >= 12000) this.rank = "S+";
+        else if (this.score >= 8000) this.rank = "S";
+        else if (this.score >= 5000) this.rank = "A";
+        else if (this.score >= 2800) this.rank = "B";
+        else if (this.score >= 1200) this.rank = "C";
+        else this.rank = "D";
+      }
+
+      spawnEnemy(type, lane, startX, speed) {
+        const id = this.nextEnemyId++;
+        let y = LOW_LANE_Y;
+        let visualRadius = 22;
+        let collisionRadius = 21;
+        let hitsRequired = 3;
+
+        if (lane === "high") {
+          y = HIGH_LANE_Y;
+        } else if (lane === "ground") {
+          y = GROUND_Y - 14;
+          visualRadius = 16;
+          collisionRadius = 15;
+          hitsRequired = 1;
+        }
+
+        const enemy = {
+          id,
+          type,
+          lane,
+          x: startX,
+          y,
+          vx: speed,
+          active: true,
+          hitsTaken: 0,
+          hitsRequired,
+          visualRadius,
+          collisionRadius,
+          deathTimer: 0
+        };
+
+        this.enemies.push(enemy);
+        this.enemies.sort((a, b) => a.id - b.id);
+        return enemy;
+      }
+
+      updateSpawns() {
+        // Count active flyers
+        const activeFlyers = this.enemies.filter(e => e.active && (e.type === "slowFlyer" || e.type === "fastFlyer"));
+
+        // Opening Promise:
+        // Until player has destroyed first airborne target, whenever current slow target leaves screen or is destroyed,
+        // another slow target follows within a couple of seconds, and no fast flyer joins.
+        if (this.airEnemiesDefeated === 0) {
+          if (activeFlyers.length === 0) {
+            this.enemySpawnTimer--;
+            if (this.enemySpawnTimer <= 0) {
+              const lane = this.prng.next() < 0.5 ? "low" : "high";
+              const fromLeft = this.prng.next() < 0.5;
+              const x = fromLeft ? -30 : STAGE_WIDTH + 30;
+              const vx = (fromLeft ? 1 : -1) * (1.1 + this.prng.next() * 0.4);
+              this.spawnEnemy("slowFlyer", lane, x, vx);
+              this.enemySpawnTimer = 90; // reset
+            }
+          }
+        } else {
+          // Post-first-defeat escalation based on difficulty / score
+          this.enemySpawnTimer--;
+          if (this.enemySpawnTimer <= 0) {
+            const maxSimultaneous = this.difficulty >= 3 ? 2 : 1;
+            if (activeFlyers.length < maxSimultaneous) {
+              const useFast = this.difficulty >= 2 && this.prng.next() < 0.45;
+              const type = useFast ? "fastFlyer" : "slowFlyer";
+              const lane = this.prng.next() < 0.55 ? "low" : "high";
+              const fromLeft = this.prng.next() < 0.5;
+              const x = fromLeft ? -30 : STAGE_WIDTH + 30;
+              const baseSpeed = useFast ? (2.2 + this.prng.next() * 0.7) : (1.2 + this.prng.next() * 0.5);
+              const vx = (fromLeft ? 1 : -1) * baseSpeed;
+              this.spawnEnemy(type, lane, x, vx);
+            }
+            this.enemySpawnTimer = Math.max(50, 110 - this.difficulty * 12);
+          }
+        }
+
+        // Ground Walker spawns (supporting distraction)
+        this.walkerSpawnTimer--;
+        if (this.walkerSpawnTimer <= 0) {
+          const activeWalkers = this.enemies.filter(e => e.active && e.type === "walker");
+          if (activeWalkers.length < (this.difficulty >= 3 ? 2 : 1)) {
+            const fromLeft = this.prng.next() < 0.5;
+            const x = fromLeft ? -20 : STAGE_WIDTH + 20;
+            const vx = (fromLeft ? 1 : -1) * (0.9 + this.prng.next() * 0.6);
+            this.spawnEnemy("walker", "ground", x, vx);
+          }
+          this.walkerSpawnTimer = Math.max(140, 260 - this.difficulty * 25);
+        }
+      }
+
+      applyInput(inputState) {
+        if (inputState.left !== undefined) this.input.left = !!inputState.left;
+        if (inputState.right !== undefined) this.input.right = !!inputState.right;
+        if (inputState.jump !== undefined) {
+          if (inputState.jump && !this.input.jump) {
+            this.jumpQueued = true;
+          }
+          this.input.jump = !!inputState.jump;
+        }
+
+        // The first movement or jump starts the clock!
+        if (this.phase === "ready") {
+          if (this.input.left || this.input.right || this.jumpQueued || this.input.jump) {
+            this.phase = "playing";
+            // Initial ball launch
+            this.ball.vy = BOUNCE_NORMAL_VY;
+            this.ball.vx = (this.prng.next() - 0.5) * 2.0;
+            this.ball.lastBounceKind = "normal";
+            this.addEvent("ball_bounce_normal", null, 0, "ball", "top");
+            sound.play("bounce_normal");
+          }
+        }
+      }
+
+      step() {
+        if (this.phase !== "playing") return;
+
+        this.tick++;
+        const dtMs = 1000 / 60;
+        this.elapsedMs += dtMs;
+        this.remainingMs -= dtMs;
+
+        if (this.remainingMs <= 0) {
+          this.remainingMs = 0;
+          this.phase = "ended";
+          this.addEvent("game_over", null, 0, "system", "non_top");
+          sound.play("game_over");
+          return;
+        }
+
+        // Progression tier calculation based on attack score
+        const newDiff = 1 + Math.floor(this.score / 2500);
+        if (newDiff > this.difficulty) {
+          this.difficulty = newDiff;
+        }
+        this.updateRank();
+
+        // ----------------- MACHINE PHYSICS -----------------
+        let targetVx = 0;
+        if (this.input.left && !this.input.right) {
+          targetVx = -MACHINE_SPEED;
+        } else if (this.input.right && !this.input.left) {
+          targetVx = MACHINE_SPEED;
+        }
+        this.machine.vx = targetVx;
+        this.machine.x += this.machine.vx;
+
+        // Stage bounds for machine
+        const minX = this.machine.radius + 6;
+        const maxX = STAGE_WIDTH - this.machine.radius - 6;
+        if (this.machine.x < minX) {
+          this.machine.x = minX;
+          this.machine.vx = 0;
+        }
+        if (this.machine.x > maxX) {
+          this.machine.x = maxX;
+          this.machine.vx = 0;
+        }
+
+        // Jump processing
+        if (this.jumpQueued && this.machine.grounded) {
+          this.machine.vy = JUMP_IMPULSE;
+          this.machine.grounded = false;
+          this.machine.jumpCount = 1;
+          this.jumpQueued = false;
+          this.addEvent("machine_jump", null, 0, "machine", "body");
+          sound.play("jump");
+        } else {
+          this.jumpQueued = false;
+        }
+
+        // Machine gravity
+        if (!this.machine.grounded) {
+          this.machine.vy += GRAVITY;
+          this.machine.y += this.machine.vy;
+
+          if (this.machine.y >= GROUND_Y - this.machine.radius) {
+            this.machine.y = GROUND_Y - this.machine.radius;
+            this.machine.vy = 0;
+            this.machine.grounded = true;
+            this.machine.jumpCount = 0;
+            this.addEvent("machine_land", null, 0, "machine", "body");
+          }
+        }
+
+        // ----------------- BALL PHYSICS -----------------
+        if (this.ballDropCooldown > 0) {
+          this.ballDropCooldown--;
+          // Recovering ball above machine
+          this.ball.x = this.machine.x;
+          this.ball.y = this.machine.y - this.machine.radius - this.ball.radius - 10;
+          this.ball.vx = 0;
+          this.ball.vy = 0;
+          if (this.ballDropCooldown === 0) {
+            this.ball.vy = BOUNCE_NORMAL_VY * 0.85;
+            this.ball.lastBounceKind = "normal";
+            this.addEvent("ball_bounce_normal", null, 0, "ball", "top");
+            sound.play("bounce_normal");
+          }
+        } else if (this.ball.active) {
+          this.ball.vy += BALL_GRAVITY;
+          this.ball.x += this.ball.vx;
+          this.ball.y += this.ball.vy;
+
+          // Wall bounces
+          const ballMinX = this.ball.radius + 6;
+          const ballMaxX = STAGE_WIDTH - this.ball.radius - 6;
+          if (this.ball.x < ballMinX) {
+            this.ball.x = ballMinX;
+            this.ball.vx = Math.abs(this.ball.vx) * 0.95;
+          } else if (this.ball.x > ballMaxX) {
+            this.ball.x = ballMaxX;
+            this.ball.vx = -Math.abs(this.ball.vx) * 0.95;
+          }
+
+          // Ceiling bounce
+          if (this.ball.y < this.ball.radius + 10) {
+            this.ball.y = this.ball.radius + 10;
+            this.ball.vy = Math.abs(this.ball.vy) * 0.8;
+          }
+
+          // ----------------- BALL <-> MACHINE CONTACT -----------------
+          // Machine top bumper position
+          const bumperY = this.machine.y - this.machine.radius;
+          const dx = this.ball.x - this.machine.x;
+          const distMachineX = Math.abs(dx);
+
+          // Check if ball hits machine top
+          if (
+            this.ball.vy > 0 &&
+            distMachineX <= this.machine.radius + this.ball.radius * 0.8 &&
+            this.ball.y + this.ball.radius >= bumperY - 4 &&
+            this.ball.y - this.ball.radius <= bumperY + 12
+          ) {
+            // Reposition on top
+            this.ball.y = bumperY - this.ball.radius;
+
+            // Determine Return Band:
+            // 1. Rising machine -> Power Return through high lane
+            // 2. Grounded machine -> Normal Return through low lane
+            // 3. Late/descending machine -> Weak Return below low lane
+            let bounceKind = "normal";
+            let bounceVy = BOUNCE_NORMAL_VY;
+
+            if (!this.machine.grounded && this.machine.vy < -1.5) {
+              bounceKind = "power";
+              bounceVy = BOUNCE_POWER_VY;
+              this.addEvent("ball_bounce_power", null, 0, "ball", "top");
+              sound.play("bounce_power");
+            } else if (!this.machine.grounded && this.machine.vy > 1.0) {
+              bounceKind = "weak";
+              bounceVy = BOUNCE_WEAK_VY;
+              this.addEvent("ball_bounce_weak", null, 0, "ball", "top");
+              sound.play("bounce_weak");
+            } else {
+              bounceKind = "normal";
+              bounceVy = BOUNCE_NORMAL_VY;
+              this.addEvent("ball_bounce_normal", null, 0, "ball", "top");
+              sound.play("bounce_normal");
+            }
+
+            this.ball.vy = bounceVy;
+            this.ball.lastBounceKind = bounceKind;
+
+            // Horizontal steering influence
+            this.ball.vx = this.machine.vx * 0.75 + (dx / this.machine.radius) * 3.0;
+            // Cap vx
+            this.ball.vx = Math.max(-6.5, Math.min(6.5, this.ball.vx));
+          }
+
+          // ----------------- BALL GROUND DROP -----------------
+          if (this.ball.y + this.ball.radius >= GROUND_Y) {
+            this.ballDrops++;
+            this.currentCleanSequence = 0;
+            this.remainingMs += TIME_PENALTY_BALL_DROP;
+            this.addEvent("ball_drop", null, TIME_PENALTY_BALL_DROP, "ball", "non_top");
+            sound.play("ball_drop");
+
+            if (this.remainingMs <= 0) {
+              this.remainingMs = 0;
+              this.phase = "ended";
+              return;
+            }
+
+            // Enter quick 45-frame recovery
+            this.ballDropCooldown = 45;
+          }
+        }
+
+        // ----------------- ENEMIES UPDATE & COLLISIONS -----------------
+        this.updateSpawns();
+
+        const newBallOverlaps = new Set();
+        const newMachineOverlaps = new Set();
+
+        for (let i = 0; i < this.enemies.length; i++) {
+          const enemy = this.enemies[i];
+
+          if (!enemy.active) {
+            enemy.deathTimer++;
+            continue;
+          }
+
+          // Move enemy
+          enemy.x += enemy.vx;
+
+          // Despawn offscreen
+          if (
+            (enemy.vx > 0 && enemy.x > STAGE_WIDTH + 60) ||
+            (enemy.vx < 0 && enemy.x < -60)
+          ) {
+            enemy.active = false;
+            continue;
+          }
+
+          // Airborne flyers
+          if (enemy.type === "slowFlyer" || enemy.type === "fastFlyer") {
+            const edx = this.ball.x - enemy.x;
+            const edy = this.ball.y - enemy.y;
+            const dist = Math.sqrt(edx * edx + edy * edy);
+            const hitDist = enemy.collisionRadius + this.ball.radius;
+
+            if (dist < hitDist) {
+              // Overlap detected!
+              newBallOverlaps.add(enemy.id);
+
+              // Check if valid top hit:
+              // 1. Ball is descending (vy > 0)
+              // 2. Ball's center is above enemy center (edy < -2)
+              // 3. Ball horizontal offset is reasonably centered on top
+              const isTopHit = this.ball.vy > 0 && edy < -2 && Math.abs(edx) < enemy.collisionRadius * 1.05;
+
+              if (isTopHit) {
+                // Check if this is a fresh contact
+                if (!this.currentBallOverlaps.has(enemy.id)) {
+                  enemy.hitsTaken++;
+                  this.topHits++;
+                  this.currentCleanSequence++;
+                  if (this.currentCleanSequence > this.longestCleanSequence) {
+                    this.longestCleanSequence = this.currentCleanSequence;
+                  }
+
+                  // Rebound ball upward
+                  this.ball.vy = -Math.abs(BOUNCE_NORMAL_VY) * 0.95;
+                  this.ball.vx += (edx / enemy.collisionRadius) * 2.0;
+
+                  if (enemy.hitsTaken >= enemy.hitsRequired) {
+                    // Enemy Burst / Defeated! (3rd hit)
+                    enemy.active = false;
+                    this.airEnemiesDefeated++;
+                    this.score += SCORE_HIT_3;
+                    this.remainingMs += TIME_HIT_3;
+                    this.addEvent("enemy_defeated", enemy.id, TIME_HIT_3, "ball", "top");
+                    sound.play("defeat");
+                  } else {
+                    // 1st or 2nd hit
+                    const timeReward = enemy.hitsTaken === 1 ? TIME_HIT_1 : TIME_HIT_2;
+                    const scoreReward = enemy.hitsTaken === 1 ? SCORE_HIT_1 : SCORE_HIT_2;
+                    this.score += scoreReward;
+                    this.remainingMs += timeReward;
+                    this.addEvent("top_hit", enemy.id, timeReward, "ball", "top");
+                    sound.play(enemy.hitsTaken === 1 ? "top_hit_1" : "top_hit_2");
+                  }
+                }
+              } else {
+                // Non-top / wrong-side collision (charge at most once per continuous overlap)
+                if (!this.currentBallOverlaps.has(enemy.id)) {
+                  this.wrongSideHits++;
+                  this.currentCleanSequence = 0;
+                  this.remainingMs += TIME_PENALTY_WRONG_SIDE;
+                  this.addEvent("wrong_side_hit", enemy.id, TIME_PENALTY_WRONG_SIDE, "ball", "non_top");
+                  sound.play("wrong_side");
+
+                  // Deflect ball slightly
+                  this.ball.vy = 4.0;
+                  this.ball.vx = (edx >= 0 ? 1 : -1) * 3.5;
+
+                  if (this.remainingMs <= 0) {
+                    this.remainingMs = 0;
+                    this.phase = "ended";
+                    return;
+                  }
+                }
+              }
+            }
+          }
+
+          // Ground Walkers
+          if (enemy.type === "walker") {
+            // Ball stomp on walker
+            const bdx = this.ball.x - enemy.x;
+            const bdy = this.ball.y - enemy.y;
+            const bdist = Math.sqrt(bdx * bdx + bdy * bdy);
+            if (bdist < enemy.collisionRadius + this.ball.radius && this.ball.vy > 0 && bdy < 0) {
+              enemy.active = false;
+              this.score += SCORE_STOMP_WALKER;
+              this.remainingMs += TIME_STOMP_WALKER;
+              this.ball.vy = -11.0;
+              this.addEvent("ground_stomp", enemy.id, TIME_STOMP_WALKER, "ball", "top");
+              sound.play("stomp");
+            }
+
+            // Machine stomp or body hit
+            const mdx = this.machine.x - enemy.x;
+            const mdy = this.machine.y - enemy.y;
+            const mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+
+            if (mdist < enemy.collisionRadius + this.machine.radius) {
+              newMachineOverlaps.add(enemy.id);
+
+              // Stomp from above while machine is falling
+              const isMachineStomp = !this.machine.grounded && this.machine.vy > 0 && mdy < -8;
+              if (isMachineStomp) {
+                if (!this.currentMachineOverlaps.has(enemy.id)) {
+                  enemy.active = false;
+                  this.score += SCORE_STOMP_WALKER;
+                  this.remainingMs += TIME_STOMP_WALKER;
+                  this.machine.vy = JUMP_IMPULSE * 0.75; // small bounce
+                  this.addEvent("ground_stomp", enemy.id, TIME_STOMP_WALKER, "machine", "top");
+                  sound.play("stomp");
+                }
+              } else {
+                // Horizontal body contact penalty
+                if (!this.currentMachineOverlaps.has(enemy.id)) {
+                  this.wrongSideHits++;
+                  this.currentCleanSequence = 0;
+                  this.remainingMs += TIME_PENALTY_WALKER_BODY;
+                  this.addEvent("wrong_side_hit", enemy.id, TIME_PENALTY_WALKER_BODY, "machine", "body");
+                  sound.play("wrong_side");
+
+                  if (this.remainingMs <= 0) {
+                    this.remainingMs = 0;
+                    this.phase = "ended";
+                    return;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        this.currentBallOverlaps = newBallOverlaps;
+        this.currentMachineOverlaps = newMachineOverlaps;
+
+        // Clean up inactive enemies after death animation (deathTimer > 40)
+        this.enemies = this.enemies.filter(e => e.active || e.deathTimer < 40);
+        this.enemies.sort((a, b) => a.id - b.id);
+      }
+
+      advance(ms) {
+        if (this.phase === "ready" || this.phase === "ended") return;
+        const tickMs = 1000 / 60;
+        let elapsed = 0;
+        while (elapsed + tickMs <= ms + 0.0001 && this.phase === "playing") {
+          this.step();
+          elapsed += tickMs;
+        }
+      }
+
+      snapshot() {
+        return {
+          phase: this.phase,
+          tick: this.tick,
+          elapsedMs: Math.round(this.elapsedMs * 100) / 100,
+          remainingMs: Math.max(0, Math.round(this.remainingMs)),
+          seed: this.initialSeed,
+          rngState: this.prng.getState(),
+          score: this.score,
+          difficulty: this.difficulty,
+          rank: this.rank,
+          input: {
+            left: this.input.left,
+            right: this.input.right,
+            jump: this.input.jump
+          },
+          groundY: GROUND_Y,
+          lowLaneY: LOW_LANE_Y,
+          highLaneY: HIGH_LANE_Y,
+          machineNormalApexY: Math.round(MACHINE_NORMAL_APEX_Y * 100) / 100,
+          machine: {
+            x: Math.round(this.machine.x * 100) / 100,
+            y: Math.round(this.machine.y * 100) / 100,
+            vx: Math.round(this.machine.vx * 100) / 100,
+            vy: Math.round(this.machine.vy * 100) / 100,
+            radius: this.machine.radius,
+            grounded: this.machine.grounded,
+            jumpCount: this.machine.jumpCount
+          },
+          ball: {
+            x: Math.round(this.ball.x * 100) / 100,
+            y: Math.round(this.ball.y * 100) / 100,
+            vx: Math.round(this.ball.vx * 100) / 100,
+            vy: Math.round(this.ball.vy * 100) / 100,
+            radius: this.ball.radius,
+            active: this.ball.active,
+            lastBounceKind: this.ball.lastBounceKind
+          },
+          topHits: this.topHits,
+          airEnemiesDefeated: this.airEnemiesDefeated,
+          wrongSideHits: this.wrongSideHits,
+          ballDrops: this.ballDrops,
+          longestCleanSequence: this.longestCleanSequence,
+          enemies: this.enemies.map(e => ({
+            id: e.id,
+            type: e.type,
+            lane: e.lane,
+            x: Math.round(e.x * 100) / 100,
+            y: Math.round(e.y * 100) / 100,
+            vx: Math.round(e.vx * 100) / 100,
+            active: e.active,
+            hitsTaken: e.hitsTaken,
+            hitsRequired: e.hitsRequired,
+            visualRadius: e.visualRadius,
+            collisionRadius: e.collisionRadius
+          })),
+          recentEvents: this.recentEvents.slice(),
+          lastEvent: this.lastEvent ? { ...this.lastEvent } : null
+        };
+      }
+    }
+
+    // ==========================================
+    // RENDERER & VISUAL PRESENTATION
+    // ==========================================
+    class GameRenderer {
+      constructor(canvas, sim) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.sim = sim;
+
+        this.particles = [];
+        this.floatingTexts = [];
+        this.screenShake = 0;
+        this.sessionBestScore = 0;
+
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+      }
+
+      resize() {
+        const dpr = window.devicePixelRatio || 1;
+        this.canvas.width = STAGE_WIDTH * dpr;
+        this.canvas.height = STAGE_HEIGHT * dpr;
+        this.ctx.resetTransform?.() || this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        this.ctx.scale(dpr, dpr);
+      }
+
+      addParticles(x, y, color, count = 8, speed = 3) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const spd = (0.5 + Math.random() * 0.8) * speed;
+          this.particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * spd,
+            vy: Math.sin(angle) * spd,
+            radius: 2 + Math.random() * 3,
+            color,
+            life: 1.0,
+            decay: 0.03 + Math.random() * 0.03
+          });
+        }
+      }
+
+      addFloatingText(x, y, text, color, fontSize = 16) {
+        this.floatingTexts.push({
+          x,
+          y,
+          text,
+          color,
+          fontSize,
+          life: 1.0,
+          vy: -1.2
+        });
+      }
+
+      updateEffects() {
+        if (this.screenShake > 0) this.screenShake *= 0.88;
+        if (this.screenShake < 0.1) this.screenShake = 0;
+
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const p = this.particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.life -= p.decay;
+          if (p.life <= 0) this.particles.splice(i, 1);
+        }
+
+        for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+          const ft = this.floatingTexts[i];
+          ft.y += ft.vy;
+          ft.life -= 0.025;
+          if (ft.life <= 0) this.floatingTexts.splice(i, 1);
+        }
+      }
+
+      draw(touchState) {
+        const ctx = this.ctx;
+        const sim = this.sim;
+
+        if (sim.score > this.sessionBestScore) {
+          this.sessionBestScore = sim.score;
+        }
+
+        this.updateEffects();
+
+        ctx.save();
+        if (this.screenShake > 0) {
+          const sx = (Math.random() - 0.5) * this.screenShake;
+          const sy = (Math.random() - 0.5) * this.screenShake;
+          ctx.translate(sx, sy);
+        }
+
+        // 1. Background Gradient
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, STAGE_HEIGHT);
+        bgGrad.addColorStop(0, '#060814');
+        bgGrad.addColorStop(0.5, '#0b1026');
+        bgGrad.addColorStop(1, '#111736');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
+
+        // Subtle background grid
+        ctx.strokeStyle = 'rgba(79, 70, 229, 0.04)';
+        ctx.lineWidth = 1;
+        for (let x = 20; x < STAGE_WIDTH; x += 40) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, STAGE_HEIGHT);
+          ctx.stroke();
+        }
+        for (let y = 20; y < STAGE_HEIGHT; y += 40) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(STAGE_WIDTH, y);
+          ctx.stroke();
+        }
+
+        // 2. Air Lanes (High & Low)
+        this.drawLane(HIGH_LANE_Y, "HIGH LANE", "#ec4899");
+        this.drawLane(LOW_LANE_Y, "LOW LANE", "#06b6d4");
+
+        // 3. Ground Arena & Grid
+        this.drawGround();
+
+        // 4. Draw Enemies
+        for (const enemy of sim.enemies) {
+          this.drawEnemy(enemy);
+        }
+
+        // 5. Draw Machine
+        this.drawMachine(sim.machine);
+
+        // 6. Draw Ball
+        this.drawBall(sim.ball);
+
+        // 7. Draw Visual Particles & Floating Text
+        this.drawParticles();
+
+        // 8. Draw HUD (Clock, Score, Combo, Rank)
+        this.drawHUD();
+
+        // 9. Draw Touch / Control Zones Guide
+        this.drawControls(touchState);
+
+        // 10. Draw Ready or End State Overlays
+        if (sim.phase === "ready") {
+          this.drawReadyOverlay();
+        } else if (sim.phase === "ended") {
+          this.drawEndOverlay();
+        }
+
+        ctx.restore();
+      }
+
+      drawLane(laneY, label, color) {
+        const ctx = this.ctx;
+        const t = performance.now() * 0.002;
+        const pulse = 0.4 + 0.2 * Math.sin(t + laneY);
+
+        ctx.save();
+        // Lane line
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = pulse;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([8, 8]);
+        ctx.beginPath();
+        ctx.moveTo(16, laneY);
+        ctx.lineTo(STAGE_WIDTH - 16, laneY);
+        ctx.stroke();
+
+        // Glowing track dots
+        ctx.setLineDash([]);
+        ctx.fillStyle = color;
+        ctx.globalAlpha = pulse * 0.7;
+        for (let x = 30; x < STAGE_WIDTH; x += 60) {
+          ctx.beginPath();
+          ctx.arc(x, laneY, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Lane label tag
+        ctx.font = '9px monospace';
+        ctx.textAlign = 'right';
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.65;
+        ctx.fillText(label, STAGE_WIDTH - 20, laneY - 6);
+        ctx.restore();
+      }
+
+      drawGround() {
+        const ctx = this.ctx;
+
+        // Ground baseline glow
+        ctx.save();
+        const grad = ctx.createLinearGradient(0, GROUND_Y, 0, STAGE_HEIGHT);
+        grad.addColorStop(0, 'rgba(59, 130, 246, 0.25)');
+        grad.addColorStop(0.1, 'rgba(17, 24, 39, 0.95)');
+        grad.addColorStop(1, '#050711');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, GROUND_Y, STAGE_WIDTH, STAGE_HEIGHT - GROUND_Y);
+
+        // Ground top edge bright line
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.moveTo(10, GROUND_Y);
+        ctx.lineTo(STAGE_WIDTH - 10, GROUND_Y);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Perspective ground floor grid
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.15)';
+        ctx.lineWidth = 1;
+        for (let x = 20; x <= STAGE_WIDTH - 20; x += 36) {
+          ctx.beginPath();
+          ctx.moveTo(x, GROUND_Y);
+          ctx.lineTo(STAGE_WIDTH / 2 + (x - STAGE_WIDTH / 2) * 1.8, STAGE_HEIGHT);
+          ctx.stroke();
+        }
+        for (let y = GROUND_Y + 15; y < STAGE_HEIGHT; y += 22) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(STAGE_WIDTH, y);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      drawMachine(m) {
+        const ctx = this.ctx;
+        ctx.save();
+        ctx.translate(m.x, m.y);
+
+        // Visual squash & stretch
+        let scaleX = 1.0;
+        let scaleY = 1.0;
+        if (!m.grounded) {
+          if (m.vy < -2) {
+            scaleX = 0.88;
+            scaleY = 1.14; // stretching upward
+          } else if (m.vy > 2) {
+            scaleX = 0.92;
+            scaleY = 1.08;
+          }
+        } else if (Math.abs(m.vx) > 0.5) {
+          // Walking wobble
+          const wobble = Math.sin(performance.now() * 0.02) * 0.05;
+          scaleX = 1.0 + wobble;
+          scaleY = 1.0 - wobble;
+        }
+
+        ctx.scale(scaleX, scaleY);
+
+        // Under-glow shadow
+        ctx.fillStyle = 'rgba(0, 240, 255, 0.2)';
+        ctx.beginPath();
+        ctx.ellipse(0, m.radius + 2, m.radius * 0.9, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 1. Rover Wheels / Treads
+        ctx.fillStyle = '#1e293b';
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(-m.radius - 2, m.radius - 10, 10, 12, 3);
+        ctx.roundRect(m.radius - 8, m.radius - 10, 10, 12, 3);
+        ctx.fill();
+        ctx.stroke();
+
+        // 2. Machine Main Chassis
+        const bodyGrad = ctx.createLinearGradient(0, -m.radius, 0, m.radius);
+        bodyGrad.addColorStop(0, '#38bdf8');
+        bodyGrad.addColorStop(0.5, '#0284c7');
+        bodyGrad.addColorStop(1, '#0369a1');
+        ctx.fillStyle = bodyGrad;
+        ctx.beginPath();
+        ctx.roundRect(-m.radius, -m.radius + 6, m.radius * 2, m.radius * 2 - 8, 8);
+        ctx.fill();
+
+        ctx.strokeStyle = '#bae6fd';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 3. Animated Eyes / Expressive Visor
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.roundRect(-12, -4, 24, 12, 4);
+        ctx.fill();
+
+        // Eye pupils
+        const eyeColor = '#38bdf8';
+        ctx.fillStyle = eyeColor;
+        ctx.shadowColor = eyeColor;
+        ctx.shadowBlur = 6;
+        const lookOffset = Math.sign(m.vx) * 2;
+
+        if (this.sim.phase === "ended") {
+          // Closed / defeated X eyes
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(-8, -2); ctx.lineTo(-4, 2);
+          ctx.moveTo(-4, -2); ctx.lineTo(-8, 2);
+          ctx.moveTo(4, -2); ctx.lineTo(8, 2);
+          ctx.moveTo(8, -2); ctx.lineTo(4, 2);
+          ctx.stroke();
+        } else {
+          ctx.beginPath();
+          ctx.arc(-6 + lookOffset, 2, 2.5, 0, Math.PI * 2);
+          ctx.arc(6 + lookOffset, 2, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.shadowBlur = 0;
+
+        // 4. Springy Top Bumper Pad (Contact Surface)
+        const bumperGrad = ctx.createLinearGradient(0, -m.radius - 2, 0, -m.radius + 6);
+        bumperGrad.addColorStop(0, '#facc15');
+        bumperGrad.addColorStop(1, '#eab308');
+        ctx.fillStyle = bumperGrad;
+        ctx.strokeStyle = '#fef08a';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(-m.radius + 2, -m.radius, (m.radius - 2) * 2, 7, 3);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      drawBall(b) {
+        if (!b.active) return;
+        const ctx = this.ctx;
+        ctx.save();
+        ctx.translate(b.x, b.y);
+
+        // Squash & stretch based on velocity
+        const speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
+        const angle = Math.atan2(b.vy, b.vx);
+        ctx.rotate(angle);
+
+        let stretch = Math.min(1.4, 1.0 + speed * 0.025);
+        let squash = 1.0 / Math.sqrt(stretch);
+        ctx.scale(stretch, squash);
+
+        // Outer Glow
+        const glowColor = b.lastBounceKind === 'power' ? '#f43f5e' : '#38bdf8';
+        ctx.shadowColor = glowColor;
+        ctx.shadowBlur = 12;
+
+        // Ball Body Gradient
+        const ballGrad = ctx.createRadialGradient(-2, -2, 1, 0, 0, b.radius);
+        ballGrad.addColorStop(0, '#ffffff');
+        ballGrad.addColorStop(0.3, glowColor);
+        ballGrad.addColorStop(1, '#1e3a8a');
+        ctx.fillStyle = ballGrad;
+        ctx.beginPath();
+        ctx.arc(0, 0, b.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Ball Cute Face
+        ctx.rotate(-angle); // un-rotate for face orientation
+        ctx.fillStyle = '#0f172a';
+        const eyeOffset = Math.sign(b.vx) * 1.5;
+        ctx.beginPath();
+        ctx.arc(-3 + eyeOffset, -1, 1.8, 0, Math.PI * 2);
+        ctx.arc(3 + eyeOffset, -1, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Cute highlight
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(-4, -4, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      drawEnemy(e) {
+        const ctx = this.ctx;
+        ctx.save();
+        ctx.translate(e.x, e.y);
+
+        if (!e.active) {
+          // Burst / Death Dissolve Animation
+          const progress = e.deathTimer / 40;
+          ctx.globalAlpha = Math.max(0, 1.0 - progress);
+          ctx.scale(1.0 + progress * 0.8, 1.0 + progress * 0.8);
+        }
+
+        if (e.type === "slowFlyer" || e.type === "fastFlyer") {
+          const isFast = e.type === "fastFlyer";
+          const baseColor = isFast ? "#f43f5e" : "#06b6d4";
+
+          // Hover wobble
+          const hoverY = Math.sin(performance.now() * 0.005 + e.id) * 2;
+          ctx.translate(0, hoverY);
+
+          // 1. Glowing Top Bumper (Target Stomp Area)
+          const topPadColor = e.hitsTaken === 2 ? '#ef4444' : (e.hitsTaken === 1 ? '#f59e0b' : '#10b981');
+          ctx.fillStyle = topPadColor;
+          ctx.shadowColor = topPadColor;
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          ctx.roundRect(-e.visualRadius * 0.85, -e.visualRadius, e.visualRadius * 1.7, 7, 3);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          // 2. Main Drone Body
+          const droneGrad = ctx.createLinearGradient(0, -e.visualRadius, 0, e.visualRadius);
+          droneGrad.addColorStop(0, '#1e293b');
+          droneGrad.addColorStop(0.6, isFast ? '#881337' : '#083344');
+          droneGrad.addColorStop(1, '#0f172a');
+          ctx.fillStyle = droneGrad;
+          ctx.beginPath();
+          ctx.arc(0, 0, e.visualRadius - 2, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.strokeStyle = baseColor;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // 3. Danger Underside Spikes
+          ctx.fillStyle = '#ef4444';
+          for (let sx = -12; sx <= 12; sx += 8) {
+            ctx.beginPath();
+            ctx.moveTo(sx - 3, e.visualRadius - 4);
+            ctx.lineTo(sx + 3, e.visualRadius - 4);
+            ctx.lineTo(sx, e.visualRadius + 3);
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          // 4. Damage Indicators (3 Dots on Body)
+          for (let h = 0; h < 3; h++) {
+            const hx = (h - 1) * 8;
+            ctx.beginPath();
+            ctx.arc(hx, 0, 3, 0, Math.PI * 2);
+            if (h < e.hitsTaken) {
+              ctx.fillStyle = '#ef4444'; // hit taken
+            } else {
+              ctx.fillStyle = '#334155'; // remaining
+            }
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+
+          // 5. Animated Wings/Propellers
+          const wingFlap = Math.sin(performance.now() * 0.03 + e.id) * 6;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(-e.visualRadius + 2, -4);
+          ctx.lineTo(-e.visualRadius - 8, -4 + wingFlap);
+          ctx.moveTo(e.visualRadius - 2, -4);
+          ctx.lineTo(e.visualRadius + 8, -4 + wingFlap);
+          ctx.stroke();
+        } else if (e.type === "walker") {
+          // Ground walker beetle
+          const legWobble = Math.sin(performance.now() * 0.02 + e.id) * 3;
+
+          // Legs
+          ctx.strokeStyle = '#e2e8f0';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(-10, 4); ctx.lineTo(-14, 12 + legWobble);
+          ctx.moveTo(0, 4);   ctx.lineTo(0, 12 - legWobble);
+          ctx.moveTo(10, 4);  ctx.lineTo(14, 12 + legWobble);
+          ctx.stroke();
+
+          // Body
+          ctx.fillStyle = '#d97706';
+          ctx.strokeStyle = '#fef3c7';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(0, 0, e.visualRadius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          // Stomp target pad on top
+          ctx.fillStyle = '#10b981';
+          ctx.beginPath();
+          ctx.roundRect(-8, -e.visualRadius - 2, 16, 5, 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+
+      drawParticles() {
+        const ctx = this.ctx;
+        ctx.save();
+        for (const p of this.particles) {
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = Math.max(0, p.life);
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        for (const ft of this.floatingTexts) {
+          ctx.fillStyle = ft.color;
+          ctx.globalAlpha = Math.max(0, ft.life);
+          ctx.font = `bold ${ft.fontSize}px -apple-system, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.shadowColor = 'rgba(0,0,0,0.8)';
+          ctx.shadowBlur = 4;
+          ctx.fillText(ft.text, ft.x, ft.y);
+        }
+        ctx.restore();
+      }
+
+      drawHUD() {
+        const ctx = this.ctx;
+        const sim = this.sim;
+        ctx.save();
+
+        // 1. Clock Display (Top Center)
+        const seconds = Math.ceil(sim.remainingMs / 1000);
+        const isLowTime = seconds <= 15 && sim.phase === "playing";
+        const clockColor = isLowTime ? (Math.floor(performance.now() / 250) % 2 === 0 ? '#ef4444' : '#ffffff') : '#38bdf8';
+
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 30px -apple-system, monospace';
+        ctx.fillStyle = clockColor;
+        ctx.shadowColor = clockColor;
+        ctx.shadowBlur = isLowTime ? 12 : 4;
+        ctx.fillText(`${seconds}s`, STAGE_WIDTH / 2, 44);
+        ctx.shadowBlur = 0;
+
+        ctx.font = '10px -apple-system, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fillText('TIME REMAINING', STAGE_WIDTH / 2, 58);
+
+        // 2. Score & Session Best (Top Left)
+        ctx.textAlign = 'left';
+        ctx.font = 'bold 18px -apple-system, monospace';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(`${sim.score}`, 20, 36);
+
+        ctx.font = '10px -apple-system, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fillText(`BEST ${this.sessionBestScore}`, 20, 50);
+
+        // 3. Rank & Tier (Top Right)
+        ctx.textAlign = 'right';
+        ctx.font = 'bold 20px -apple-system, monospace';
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillText(`RANK ${sim.rank}`, STAGE_WIDTH - 20, 36);
+
+        ctx.font = '10px -apple-system, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fillText(`TIER ${sim.difficulty}`, STAGE_WIDTH - 20, 50);
+
+        // 4. Clean Pursuit Sequence (Combo Badge)
+        if (sim.currentCleanSequence > 1) {
+          ctx.textAlign = 'center';
+          ctx.font = 'bold 14px -apple-system, sans-serif';
+          ctx.fillStyle = '#10b981';
+          ctx.shadowColor = '#10b981';
+          ctx.shadowBlur = 6;
+          ctx.fillText(`PURSUIT ×${sim.currentCleanSequence}`, STAGE_WIDTH / 2, 80);
+          ctx.shadowBlur = 0;
+        }
+
+        ctx.restore();
+      }
+
+      drawControls(touchState) {
+        const ctx = this.ctx;
+        ctx.save();
+
+        const baseY = STAGE_HEIGHT - 65;
+
+        // Left Steer Surface Guide
+        const leftZoneX = 80;
+        ctx.fillStyle = touchState.leftActive ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.05)';
+        ctx.strokeStyle = touchState.leftActive ? '#38bdf8' : 'rgba(255, 255, 255, 0.15)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(16, baseY - 35, 150, 70, 16);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = touchState.leftActive ? '#38bdf8' : 'rgba(255, 255, 255, 0.5)';
+        ctx.font = 'bold 13px -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('◄ STEER ►', 91, baseY + 4);
+
+        // Draw active drag thumb indicator
+        if (touchState.leftActive) {
+          const thumbX = Math.max(30, Math.min(152, 91 + touchState.dragDeltaX));
+          ctx.fillStyle = '#38bdf8';
+          ctx.beginPath();
+          ctx.arc(thumbX, baseY, 14, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Right Jump Surface Guide
+        const rightZoneX = STAGE_WIDTH - 91;
+        ctx.fillStyle = touchState.rightActive ? 'rgba(244, 63, 94, 0.25)' : 'rgba(255, 255, 255, 0.05)';
+        ctx.strokeStyle = touchState.rightActive ? '#f43f5e' : 'rgba(255, 255, 255, 0.15)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(STAGE_WIDTH - 166, baseY - 35, 150, 70, 16);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = touchState.rightActive ? '#f43f5e' : 'rgba(255, 255, 255, 0.5)';
+        ctx.font = 'bold 13px -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('▲ JUMP', rightZoneX, baseY + 4);
+
+        ctx.restore();
+      }
+
+      drawReadyOverlay() {
+        const ctx = this.ctx;
+        ctx.save();
+
+        const pulse = 0.6 + 0.4 * Math.sin(performance.now() * 0.005);
+        ctx.textAlign = 'center';
+
+        ctx.font = 'bold 14px -apple-system, sans-serif';
+        ctx.fillStyle = `rgba(255, 255, 255, ${pulse})`;
+        ctx.fillText('Move or Jump to Start', STAGE_WIDTH / 2, GROUND_Y - 70);
+
+        ctx.font = '11px -apple-system, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.fillText('Aim the ball onto target tops • 3 hits to defeat', STAGE_WIDTH / 2, GROUND_Y - 50);
+
+        ctx.restore();
+      }
+
+      drawEndOverlay() {
+        const ctx = this.ctx;
+        const sim = this.sim;
+        ctx.save();
+
+        // Dark dim backdrop
+        ctx.fillStyle = 'rgba(6, 8, 20, 0.85)';
+        ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
+
+        // Result Card Modal
+        const cardY = 140;
+        const cardH = 370;
+        const cardW = STAGE_WIDTH - 48;
+        const cardX = 24;
+
+        ctx.fillStyle = '#0f172a';
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = 'rgba(56, 189, 248, 0.3)';
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.roundRect(cardX, cardY, cardW, cardH, 20);
+        ctx.fill();
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.textAlign = 'center';
+
+        // Title
+        ctx.font = 'bold 26px -apple-system, sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText('RUN COMPLETE', STAGE_WIDTH / 2, cardY + 46);
+
+        // Final Score
+        ctx.font = '13px -apple-system, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.fillText('FINAL SCORE', STAGE_WIDTH / 2, cardY + 76);
+
+        ctx.font = 'bold 36px -apple-system, monospace';
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText(`${sim.score}`, STAGE_WIDTH / 2, cardY + 115);
+
+        // Rank Badge
+        ctx.font = 'bold 16px -apple-system, sans-serif';
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillText(`RANK: ${sim.rank}`, STAGE_WIDTH / 2, cardY + 145);
+
+        // Stats Table
+        const tableY = cardY + 180;
+        ctx.font = '13px -apple-system, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+
+        ctx.textAlign = 'left';
+        ctx.fillText('Session Best', cardX + 24, tableY);
+        ctx.fillText('Targets Defeated', cardX + 24, tableY + 28);
+        ctx.fillText('Clean Pursuit Record', cardX + 24, tableY + 56);
+        ctx.fillText('Clean Top Hits', cardX + 24, tableY + 84);
+
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 13px -apple-system, monospace';
+        ctx.fillText(`${this.sessionBestScore}`, cardX + cardW - 24, tableY);
+        ctx.fillText(`${sim.airEnemiesDefeated}`, cardX + cardW - 24, tableY + 28);
+        ctx.fillText(`${sim.longestCleanSequence}`, cardX + cardW - 24, tableY + 56);
+        ctx.fillText(`${sim.topHits}`, cardX + cardW - 24, tableY + 84);
+
+        // Play Again Button
+        const btnY = cardY + cardH - 56;
+        const btnH = 42;
+        const btnW = cardW - 48;
+        const btnX = cardX + 24;
+
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.roundRect(btnX, btnY, btnW, btnH, 12);
+        ctx.fill();
+
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 15px -apple-system, sans-serif';
+        ctx.fillStyle = '#0f172a';
+        ctx.fillText('PLAY AGAIN (Press R / Tap)', STAGE_WIDTH / 2, btnY + 26);
+
+        ctx.restore();
+      }
+    }
+
+    // ==========================================
+    // INPUT HANDLING & MULTI-TOUCH CONTROLLER
+    // ==========================================
+    class InputController {
+      constructor(canvas, sim, renderer) {
+        this.canvas = canvas;
+        this.sim = sim;
+        this.renderer = renderer;
+
+        this.touchState = {
+          leftActive: false,
+          dragDeltaX: 0,
+          rightActive: false
+        };
+
+        this.keysDown = new Set();
+        this.activePointers = new Map(); // pointerId -> { originX, originY, currentX, currentY, zone }
+
+        this.setupKeyboard();
+        this.setupPointers();
+      }
+
+      setupKeyboard() {
+        window.addEventListener('keydown', (e) => {
+          sound.init();
+          this.keysDown.add(e.code);
+
+          if (e.code === 'KeyR') {
+            this.sim.reset(this.sim.initialSeed);
+            return;
+          }
+
+          this.syncInputs();
+        });
+
+        window.addEventListener('keyup', (e) => {
+          this.keysDown.delete(e.code);
+          this.syncInputs();
+        });
+      }
+
+      getCanvasCoordinates(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const clientX = e.clientX;
+        const clientY = e.clientY;
+        const normX = (clientX - rect.left) / rect.width;
+        const normY = (clientY - rect.top) / rect.height;
+        return {
+          x: normX * STAGE_WIDTH,
+          y: normY * STAGE_HEIGHT
+        };
+      }
+
+      setupPointers() {
+        const onPointerDown = (e) => {
+          sound.init();
+          const { x, y } = this.getCanvasCoordinates(e);
+
+          // Check if retry button clicked in game over phase
+          if (this.sim.phase === "ended") {
+            this.sim.reset(this.sim.initialSeed);
+            return;
+          }
+
+          // Determine zone: left half = movement steer, right half = jump
+          const zone = x < STAGE_WIDTH / 2 ? 'left' : 'right';
+          this.activePointers.set(e.pointerId, {
+            originX: x,
+            originY: y,
+            currentX: x,
+            currentY: y,
+            zone
+          });
+
+          if (zone === 'right') {
+            this.sim.jumpQueued = true;
+          }
+
+          this.syncInputs();
+        };
+
+        const onPointerMove = (e) => {
+          if (!this.activePointers.has(e.pointerId)) return;
+          const { x, y } = this.getCanvasCoordinates(e);
+          const p = this.activePointers.get(e.pointerId);
+          p.currentX = x;
+          p.currentY = y;
+          this.syncInputs();
+        };
+
+        const onPointerUp = (e) => {
+          this.activePointers.delete(e.pointerId);
+          this.syncInputs();
+        };
+
+        this.canvas.addEventListener('pointerdown', onPointerDown, { passive: false });
+        window.addEventListener('pointermove', onPointerMove, { passive: false });
+        window.addEventListener('pointerup', onPointerUp, { passive: false });
+        window.addEventListener('pointercancel', onPointerUp, { passive: false });
+      }
+
+      syncInputs() {
+        let left = this.keysDown.has('ArrowLeft') || this.keysDown.has('KeyA');
+        let right = this.keysDown.has('ArrowRight') || this.keysDown.has('KeyD');
+        let jump = this.keysDown.has('Space') || this.keysDown.has('ArrowUp') || this.keysDown.has('KeyW');
+
+        let leftActive = false;
+        let rightActive = false;
+        let dragDeltaX = 0;
+
+        for (const p of this.activePointers.values()) {
+          if (p.zone === 'left') {
+            leftActive = true;
+            const deltaX = p.currentX - p.originX;
+            dragDeltaX = deltaX;
+            const deadzone = 8;
+            if (deltaX < -deadzone) {
+              left = true;
+            } else if (deltaX > deadzone) {
+              right = true;
+            }
+          } else if (p.zone === 'right') {
+            rightActive = true;
+            jump = true;
+          }
+        }
+
+        this.touchState.leftActive = leftActive;
+        this.touchState.rightActive = rightActive;
+        this.touchState.dragDeltaX = dragDeltaX;
+
+        this.sim.applyInput({ left, right, jump });
+      }
+    }
+
+    // ==========================================
+    // INITIALIZATION & MAIN RAF LOOP
+    // ==========================================
+    const canvas = document.getElementById('game-canvas');
+    const simulation = new GameSimulation(12345);
+    const renderer = new GameRenderer(canvas, simulation);
+    const input = new InputController(canvas, simulation, renderer);
+
+    // Watch telemetry events to spawn visual particles / floating text
+    let lastHandledEventSeq = 0;
+    function processVisualEvents() {
+      const events = simulation.recentEvents;
+      for (const evt of events) {
+        if (evt.sequence > lastHandledEventSeq) {
+          lastHandledEventSeq = evt.sequence;
+
+          if (evt.kind === 'top_hit') {
+            renderer.screenShake = 6;
+            renderer.addParticles(simulation.ball.x, simulation.ball.y, '#38bdf8', 12, 4);
+            renderer.addFloatingText(simulation.ball.x, simulation.ball.y - 15, `+${evt.amountMs / 1000}s`, '#38bdf8', 16);
+          } else if (evt.kind === 'enemy_defeated') {
+            renderer.screenShake = 12;
+            renderer.addParticles(simulation.ball.x, simulation.ball.y, '#f59e0b', 24, 6);
+            renderer.addFloatingText(simulation.ball.x, simulation.ball.y - 20, `BURST! +${evt.amountMs / 1000}s`, '#f59e0b', 20);
+          } else if (evt.kind === 'ground_stomp') {
+            renderer.screenShake = 8;
+            renderer.addParticles(simulation.ball.x, simulation.ball.y, '#10b981', 14, 4);
+            renderer.addFloatingText(simulation.ball.x, simulation.ball.y - 15, `STOMP! +${evt.amountMs / 1000}s`, '#10b981', 16);
+          } else if (evt.kind === 'wrong_side_hit') {
+            renderer.screenShake = 10;
+            renderer.addParticles(simulation.ball.x, simulation.ball.y, '#ef4444', 16, 5);
+            renderer.addFloatingText(simulation.ball.x, simulation.ball.y - 15, `${evt.amountMs / 1000}s`, '#ef4444', 16);
+          } else if (evt.kind === 'ball_drop') {
+            renderer.screenShake = 10;
+            renderer.addParticles(simulation.ball.x, GROUND_Y, '#ef4444', 16, 4);
+            renderer.addFloatingText(STAGE_WIDTH / 2, GROUND_Y - 30, `DROP! ${evt.amountMs / 1000}s`, '#ef4444', 18);
+          } else if (evt.kind === 'ball_bounce_power') {
+            renderer.addParticles(simulation.ball.x, simulation.ball.y, '#ec4899', 8, 3);
+          }
+        }
+      }
+    }
+
+    // 60 Hz Fixed Timestep Game Loop
+    let lastTime = performance.now();
+    let accumulator = 0;
+    const stepMs = 1000 / 60;
+
+    function mainLoop(now) {
+      const frameTime = Math.min(now - lastTime, 100);
+      lastTime = now;
+      accumulator += frameTime;
+
+      while (accumulator >= stepMs) {
+        simulation.step();
+        accumulator -= stepMs;
+      }
+
+      processVisualEvents();
+      renderer.draw(input.touchState);
+
+      requestAnimationFrame(mainLoop);
+    }
+
+    requestAnimationFrame(mainLoop);
+
+    // ==========================================
+    // PLATFORM TELEMETRY EXPORT (__ARENA_GAME__)
+    // ==========================================
+    window.__ARENA_GAME__ = {
+      reset(seed) {
+        simulation.reset(seed !== undefined ? seed : 12345);
+        lastHandledEventSeq = 0;
+      },
+      snapshot() {
+        return simulation.snapshot();
+      },
+      advance(ms) {
+        simulation.advance(ms);
+        processVisualEvents();
+      }
+    };
+
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1737 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#070b18">
+  <title>DELVE // Substrate Run</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f0f4ff;
+      --muted: #8e9bb8;
+      --deep: #070b18;
+      --panel: rgba(11, 19, 39, .83);
+      --line: rgba(157, 181, 220, .2);
+      --cyan: #62e4e0;
+      --aqua: #a2ffdc;
+      --coral: #ff7f75;
+      --amber: #ffd477;
+      --violet: #ad9aff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--deep);
+      color: var(--ink);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body { overscroll-behavior: none; }
+
+    #game {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-width: 240px;
+      min-height: 220px;
+      overflow: hidden;
+      isolation: isolate;
+      background: #070b18;
+    }
+
+    canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    .hud {
+      position: absolute;
+      z-index: 4;
+      top: max(11px, env(safe-area-inset-top));
+      left: max(12px, env(safe-area-inset-left));
+      right: max(12px, env(safe-area-inset-right));
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+      text-shadow: 0 2px 8px rgba(0,0,0,.5);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      position: relative;
+      width: 31px;
+      height: 31px;
+      flex: 0 0 auto;
+      border: 2px solid var(--cyan);
+      border-radius: 9px 9px 13px 13px;
+      box-shadow: 0 0 16px rgba(98,228,224,.25), inset 0 -6px rgba(98,228,224,.1);
+      transform: rotate(45deg);
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--coral);
+      box-shadow: 0 0 10px var(--coral);
+    }
+
+    .brand-copy { min-width: 0; }
+    .brand-title {
+      color: var(--ink);
+      font-size: clamp(15px, 2.1vw, 21px);
+      font-weight: 900;
+      letter-spacing: .2em;
+      line-height: 1;
+    }
+    .brand-sub {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: .15em;
+      white-space: nowrap;
+    }
+
+    .stat-strip {
+      display: flex;
+      align-items: stretch;
+      justify-content: flex-end;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .stat {
+      min-width: 59px;
+      padding: 7px 8px 6px;
+      border: 1px solid rgba(164,188,226,.16);
+      border-radius: 8px;
+      background: rgba(8, 15, 31, .62);
+      box-shadow: inset 0 1px rgba(255,255,255,.035);
+      backdrop-filter: blur(6px);
+    }
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: .12em;
+      line-height: 1;
+    }
+    .stat strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--ink);
+      font-size: clamp(12px, 1.8vw, 17px);
+      letter-spacing: .03em;
+      line-height: 1;
+      font-weight: 800;
+    }
+    .stat.score strong { color: var(--aqua); }
+    .stat.timer {
+      position: relative;
+      min-width: 76px;
+      overflow: hidden;
+      border-color: rgba(255,212,119,.28);
+    }
+    .timer-track {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      background: rgba(255,255,255,.07);
+    }
+    .timer-fill {
+      width: 100%;
+      height: 100%;
+      transform-origin: left center;
+      background: var(--amber);
+      box-shadow: 0 0 9px rgba(255,212,119,.7);
+      transition: transform .08s linear, background .2s ease;
+    }
+    .stat.timer.warning strong { color: var(--coral); }
+    .stat.timer.warning .timer-fill { background: var(--coral); box-shadow: 0 0 10px rgba(255,127,117,.8); }
+
+    .power-readout {
+      position: absolute;
+      z-index: 4;
+      left: max(13px, env(safe-area-inset-left));
+      bottom: max(14px, env(safe-area-inset-bottom));
+      display: none;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 10px 7px 8px;
+      border: 1px solid rgba(162,255,220,.42);
+      border-radius: 10px;
+      color: var(--aqua);
+      background: rgba(10, 36, 46, .73);
+      box-shadow: 0 0 18px rgba(98,228,224,.14), inset 0 0 14px rgba(98,228,224,.07);
+      font-size: 9px;
+      letter-spacing: .12em;
+      pointer-events: none;
+    }
+    .power-readout.visible { display: flex; }
+    .power-glyph {
+      width: 17px;
+      height: 17px;
+      border: 2px solid var(--aqua);
+      border-radius: 5px 8px 5px 8px;
+      transform: rotate(45deg);
+      box-shadow: 0 0 9px rgba(162,255,220,.65);
+    }
+    .power-copy strong { display:block; font-size: 10px; }
+    .power-copy small { display:block; margin-top: 3px; color: rgba(162,255,220,.72); font-size: 8px; }
+
+    .hint {
+      position: absolute;
+      z-index: 3;
+      left: 50%;
+      top: 48%;
+      width: min(88%, 420px);
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .hint.hidden { opacity: 0; transform: translate(-50%, -46%); }
+    .hint-kicker {
+      color: var(--cyan);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .25em;
+      text-shadow: 0 0 15px rgba(98,228,224,.55);
+    }
+    .hint-title {
+      margin-top: 10px;
+      color: var(--ink);
+      font-size: clamp(20px, 4vw, 34px);
+      font-weight: 900;
+      letter-spacing: .06em;
+      line-height: 1.06;
+    }
+    .hint-detail {
+      margin: 12px auto 0;
+      color: #acb9d4;
+      font-size: clamp(10px, 1.5vw, 12px);
+      line-height: 1.7;
+    }
+    .keycap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 21px;
+      margin: 0 2px;
+      padding: 0 6px;
+      border: 1px solid rgba(220,234,255,.28);
+      border-bottom-width: 2px;
+      border-radius: 5px;
+      color: var(--ink);
+      background: rgba(20,31,58,.7);
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .hint-foot {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 8px 13px;
+      border: 1px solid rgba(98,228,224,.3);
+      border-radius: 999px;
+      color: var(--aqua);
+      background: rgba(7,22,34,.62);
+      font-size: 9px;
+      letter-spacing: .14em;
+    }
+
+    .edge-toast {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      top: 42%;
+      transform: translate(-50%, -50%) scale(.92);
+      color: var(--amber);
+      font-size: clamp(10px, 2vw, 14px);
+      font-weight: 900;
+      letter-spacing: .25em;
+      opacity: 0;
+      text-align: center;
+      text-shadow: 0 0 14px rgba(255,212,119,.8);
+      pointer-events: none;
+      transition: opacity .15s ease, transform .15s ease;
+    }
+    .edge-toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+    .end-screen {
+      position: absolute;
+      z-index: 8;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      background: rgba(4, 7, 17, .48);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .35s ease, visibility .35s ease;
+    }
+    .end-screen.visible {
+      opacity: 1;
+      visibility: visible;
+      /* The canvas remains the single touch target so a tap restarts on mobile. */
+      pointer-events: none;
+    }
+    .end-card {
+      position: relative;
+      width: min(100%, 430px);
+      padding: clamp(20px, 5vw, 32px);
+      border: 1px solid rgba(173,154,255,.38);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(24,26,58,.92), rgba(9,18,39,.94)),
+        #0b1228;
+      box-shadow: 0 20px 70px rgba(0,0,0,.48), 0 0 45px rgba(173,154,255,.12), inset 0 1px rgba(255,255,255,.07);
+      text-align: center;
+      overflow: hidden;
+    }
+    .end-card::before, .end-card::after {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      border: 1px solid rgba(98,228,224,.18);
+      transform: rotate(45deg);
+      pointer-events: none;
+    }
+    .end-card::before { top: -77px; left: -53px; }
+    .end-card::after { right: -53px; bottom: -77px; border-color: rgba(255,127,117,.16); }
+    .end-kicker {
+      position: relative;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .27em;
+    }
+    .end-title {
+      position: relative;
+      margin-top: 8px;
+      color: var(--ink);
+      font-size: clamp(21px, 6vw, 34px);
+      font-weight: 900;
+      letter-spacing: .1em;
+    }
+    .grade {
+      position: relative;
+      margin: 13px auto 8px;
+      color: var(--amber);
+      font-size: clamp(64px, 16vw, 92px);
+      font-weight: 900;
+      line-height: .9;
+      text-shadow: 0 0 22px rgba(255,212,119,.35);
+    }
+    .end-scoreline {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 12px;
+    }
+    .end-stat span {
+      display:block;
+      color: var(--muted);
+      font-size: 8px;
+      letter-spacing: .14em;
+    }
+    .end-stat strong {
+      display:block;
+      margin-top: 5px;
+      color: var(--ink);
+      font-size: 18px;
+    }
+    .end-stat.best strong { color: var(--aqua); }
+    .signature {
+      position: relative;
+      margin: 23px 0 19px;
+      padding: 11px 14px;
+      border: 1px solid rgba(255,212,119,.2);
+      border-radius: 9px;
+      background: rgba(255,212,119,.055);
+    }
+    .signature span { display:block; color: var(--muted); font-size: 8px; letter-spacing:.2em; }
+    .signature strong { display:block; margin-top:6px; color:var(--amber); font-size:12px; letter-spacing:.08em; }
+    .restart {
+      position: relative;
+      display: inline-block;
+      padding: 10px 15px;
+      border: 1px solid rgba(98,228,224,.33);
+      border-radius: 999px;
+      color: var(--aqua);
+      background: rgba(98,228,224,.07);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .18em;
+    }
+
+    .touch-sticky {
+      position: absolute;
+      z-index: 5;
+      display: none;
+      width: 74px;
+      height: 74px;
+      margin: -37px 0 0 -37px;
+      border: 1px solid rgba(162,255,220,.35);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(162,255,220,.09), rgba(162,255,220,.025) 52%, transparent 54%);
+      box-shadow: 0 0 20px rgba(98,228,224,.16), inset 0 0 18px rgba(98,228,224,.11);
+      pointer-events: none;
+      opacity: .85;
+    }
+    .touch-sticky.active { display: block; }
+    .touch-sticky::before, .touch-sticky::after {
+      content: "";
+      position:absolute;
+      background: rgba(162,255,220,.45);
+    }
+    .touch-sticky::before { left: 50%; top: 12px; bottom:12px; width:1px; }
+    .touch-sticky::after { top:50%; left:12px; right:12px; height:1px; }
+
+    @media (max-width: 520px) {
+      .hud { gap: 7px; }
+      .brand-mark { width: 26px; height: 26px; border-radius: 8px 8px 11px 11px; }
+      .brand-mark::after { left: 6px; top: 6px; width: 7px; height:7px; }
+      .brand-sub { font-size: 7px; }
+      .stat { min-width: 49px; padding: 6px 6px 5px; }
+      .stat.timer { min-width: 64px; }
+      .stat span { font-size: 7px; }
+      .stat strong { font-size: 11px; }
+      .stat-strip { gap:4px; }
+      .hint { top: 51%; }
+      .hint-foot { margin-top: 13px; }
+    }
+    @media (max-width: 320px) {
+      .hud { left: 8px; right: 8px; gap: 4px; }
+      .brand { gap: 5px; }
+      .brand-mark { width: 22px; height: 22px; border-width: 1px; border-radius: 6px 6px 9px 9px; }
+      .brand-mark::after { left: 5px; top: 5px; width: 5px; height: 5px; }
+      .brand-title { font-size: 12px; letter-spacing: .12em; }
+      .stat:first-child { display: none; }
+      .stat { min-width: 44px; padding: 5px 5px 4px; }
+      .stat.timer { min-width: 61px; }
+      .stat span { font-size: 6px; }
+      .stat strong { margin-top: 4px; font-size: 10px; }
+      .stat-strip { gap: 3px; }
+      .hint-title { font-size: 19px; }
+      .hint-detail { font-size: 9px; }
+    }
+    @media (max-height: 430px) {
+      .brand-sub { display:none; }
+      .hint { top: 55%; }
+      .hint-detail { margin-top: 8px; line-height: 1.35; }
+      .hint-foot { margin-top: 9px; }
+      .end-card { padding: 16px 22px; }
+      .signature { margin: 14px 0 12px; }
+    }
+    @media (max-height: 320px) {
+      .end-screen { padding: 10px; }
+      .end-card { padding: 10px 14px; transform: scale(.86); }
+      .end-kicker { font-size: 7px; }
+      .end-title { margin-top: 5px; font-size: 20px; }
+      .grade { margin: 5px auto 4px; font-size: 48px; }
+      .end-scoreline { margin-top: 6px; gap: 16px; }
+      .end-stat strong { margin-top: 3px; font-size: 14px; }
+      .signature { margin: 8px 0; padding: 7px 9px; }
+      .signature strong { margin-top: 4px; font-size: 10px; }
+      .restart { padding: 7px 11px; font-size: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <main id="game" aria-label="DELVE timed digging game">
+    <canvas id="scene" aria-label="DELVE playfield"></canvas>
+
+    <div class="hud" aria-hidden="true">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <div class="brand-copy">
+          <div class="brand-title">DELVE</div>
+          <div class="brand-sub">SUBSTRATE RUN // SECTOR 07</div>
+        </div>
+      </div>
+      <div class="stat-strip">
+        <div class="stat"><span>DEPTH</span><strong id="depth-value">000</strong></div>
+        <div class="stat score"><span>SCORE</span><strong id="score-value">0000</strong></div>
+        <div class="stat timer" id="timer-stat"><span>TIME</span><strong id="timer-value">00:11.0</strong><div class="timer-track"><div class="timer-fill" id="timer-fill"></div></div></div>
+      </div>
+    </div>
+
+    <div class="power-readout" id="power-readout" aria-hidden="true">
+      <div class="power-glyph"></div>
+      <div class="power-copy"><strong>CORE CHARGED</strong><small id="power-value">00.0 SEC</small></div>
+    </div>
+
+    <div class="hint" id="ready-hint" aria-hidden="true">
+      <div class="hint-kicker">A FRESH VEIN IS WAITING</div>
+      <div class="hint-title">PUSH DOWN TO DESCEND</div>
+      <div class="hint-detail"><span class="keycap">↓</span> or <span class="keycap">SPACE</span> builds speed<br>drag down to dig · drag sideways to thread</div>
+      <div class="hint-foot">THE DEEPER LINE PAYS</div>
+    </div>
+
+    <div class="edge-toast" id="edge-toast">HAIR'S WIDTH</div>
+    <div class="touch-sticky" id="touch-sticky" aria-hidden="true"></div>
+
+    <section class="end-screen" id="end-screen" aria-live="polite">
+      <div class="end-card">
+        <div class="end-kicker">RUN ARCHIVE // SIGNAL RECOVERED</div>
+        <div class="end-title">THE VEIN GOES DARK</div>
+        <div class="grade" id="grade-value">C</div>
+        <div class="end-scoreline">
+          <div class="end-stat"><span>RUN SCORE</span><strong id="end-score">0000</strong></div>
+          <div class="end-stat best"><span>SESSION BEST</span><strong id="best-score">0000</strong></div>
+        </div>
+        <div class="signature"><span>SIGNATURE // CLOSEST SHAVE</span><strong id="signature-value">NO ROCK LEFT A MARK</strong></div>
+        <div class="restart">TAP TO RESET VEIN <span style="opacity:.55">·</span> PRESS R</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  (() => {
+    'use strict';
+
+    // Simulation contract: all rule numbers advance in 60 Hz steps. Snapshot
+    // numbers are rounded to three decimal places for stable replay telemetry.
+    const STEP_MS = 1000 / 60;
+    const PREVIEW_DISTANCE = 560;
+    const ENTITY_TRAIL = 105;
+    const PLAYER_RADIUS = 17;
+    const IDLE_SPEED = 9;
+    const MAX_SPEED = 48;
+    const START_TIME = 11000;
+    const MAX_TIME = 15000;
+    const FRAGMENT_TIME = 1350;
+    const POWER_TIME = 7600;
+    const POWER_ROCK_TIME = 1000;
+    const DEFAULT_SEED = 735291;
+    const WORLD_MIN_X = 270;
+    const WORLD_MAX_X = 730;
+    const COURSE_STEP = 220;
+    const SECTION_STEP = 300;
+
+    const canvas = document.getElementById('scene');
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const gameEl = document.getElementById('game');
+    const depthEl = document.getElementById('depth-value');
+    const scoreEl = document.getElementById('score-value');
+    const timerEl = document.getElementById('timer-value');
+    const timerStatEl = document.getElementById('timer-stat');
+    const timerFillEl = document.getElementById('timer-fill');
+    const powerEl = document.getElementById('power-readout');
+    const powerValueEl = document.getElementById('power-value');
+    const readyHintEl = document.getElementById('ready-hint');
+    const edgeToastEl = document.getElementById('edge-toast');
+    const endScreenEl = document.getElementById('end-screen');
+    const gradeEl = document.getElementById('grade-value');
+    const endScoreEl = document.getElementById('end-score');
+    const bestScoreEl = document.getElementById('best-score');
+    const signatureEl = document.getElementById('signature-value');
+    const stickyEl = document.getElementById('touch-sticky');
+
+    const view = { width: 1, height: 1, dpr: 1, playerY: 100, yScale: .5, xScale: .5, focusX: 500 };
+    const keys = { left: false, right: false, accelerate: false };
+    const pointer = { active: false, id: null, anchorX: 0, anchorY: 0, x: 0, y: 0 };
+    const fx = {
+      particles: [],
+      shake: 0,
+      flash: 0,
+      hit: 0,
+      near: 0,
+      fragment: 0,
+      power: 0,
+      end: 0,
+      edgeText: 0,
+      edgeChain: 0
+    };
+
+    let rng;
+    let state;
+    let simAccumulator = 0;
+    let lastFrame = performance.now();
+    let sessionBest = 0;
+    let audio = null;
+    let audioStarted = false;
+
+    class SeededRng {
+      constructor(seed) {
+        this.state = (seed >>> 0) || 0x9e3779b9;
+      }
+      next() {
+        let x = this.state >>> 0;
+        x ^= x << 13;
+        x ^= x >>> 17;
+        x ^= x << 5;
+        this.state = x >>> 0;
+        return (this.state >>> 0) / 4294967296;
+      }
+      range(min, max) { return min + (max - min) * this.next(); }
+      int(min, max) { return Math.floor(this.range(min, max + 1)); }
+    }
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function smooth(t) { return t * t * (3 - 2 * t); }
+    function round3(v) { return Math.round(v * 1000) / 1000; }
+    function cleanSeed(seed) {
+      const value = Number(seed);
+      if (!Number.isFinite(value)) return DEFAULT_SEED;
+      return value >>> 0;
+    }
+    function hash(n) {
+      let x = (n | 0) ^ (state ? state.seed : DEFAULT_SEED);
+      x = Math.imul(x ^ (x >>> 16), 0x45d9f3b);
+      x = Math.imul(x ^ (x >>> 16), 0x45d9f3b);
+      return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
+    }
+    function formatNumber(value, digits) {
+      return Math.max(0, Math.floor(value)).toString().padStart(digits, '0');
+    }
+    function formatTime(ms) {
+      const seconds = Math.max(0, ms) / 1000;
+      return `00:${seconds.toFixed(1).padStart(4, '0')}`;
+    }
+
+    function currentInput() {
+      let steer = 0;
+      if (keys.left) steer -= 1;
+      if (keys.right) steer += 1;
+      if (pointer.active) {
+        const horizontal = clamp((pointer.x - pointer.anchorX) / 66, -1, 1);
+        if (Math.abs(horizontal) > Math.abs(steer)) steer = horizontal;
+      }
+      return {
+        accelerate: keys.accelerate || (pointer.active && pointer.y - pointer.anchorY > 25),
+        left: keys.left,
+        right: keys.right,
+        steer: clamp(steer, -1, 1)
+      };
+    }
+
+    function applyInputState() {
+      state.input = currentInput();
+      if (state.phase === 'ready' && state.input.accelerate) {
+        state.phase = 'playing';
+        startAudio();
+        readyHintEl.classList.add('hidden');
+      }
+    }
+
+    function courseAt(depth) {
+      const nodes = state.course;
+      if (depth <= nodes[0].depth) return { center: nodes[0].center, half: nodes[0].half };
+      for (let i = 0; i < nodes.length - 1; i++) {
+        const a = nodes[i];
+        const b = nodes[i + 1];
+        if (depth <= b.depth) {
+          const t = smooth((depth - a.depth) / (b.depth - a.depth));
+          return { center: lerp(a.center, b.center, t), half: lerp(a.half, b.half, t) };
+        }
+      }
+      const a = nodes[nodes.length - 2];
+      const b = nodes[nodes.length - 1];
+      const t = (depth - b.depth) / (b.depth - a.depth);
+      return { center: b.center + (b.center - a.center) * t, half: b.half };
+    }
+
+    function ensureCourse(targetDepth) {
+      while (state.course[state.course.length - 1].depth < targetDepth) {
+        const previous = state.course[state.course.length - 1];
+        const prior = state.course[state.course.length - 2] || previous;
+        const index = state.course.length;
+        const progress = clamp(previous.depth / 5200, 0, 1);
+        let delta = rng.range(-1, 1) * (65 + progress * 65);
+        if (index < 4) delta *= .18;
+        if (previous.center < 340) delta = Math.abs(delta) * .8;
+        if (previous.center > 660) delta = -Math.abs(delta) * .8;
+        if (index % 5 === 0 && index > 4) delta *= 1.22;
+        // Keep the lateral route generous even when a generated bend is sharp.
+        const center = clamp(previous.center + delta, WORLD_MIN_X + 30, WORLD_MAX_X - 30);
+        const half = clamp(196 - progress * 41 - rng.range(0, 5), 151, 196);
+        state.course.push({ depth: previous.depth + COURSE_STEP, center, half, bend: center - previous.center, priorBend: previous.center - prior.center });
+      }
+    }
+
+    function addRock(depth, x, radius) {
+      const id = state.nextEntityId++;
+      state.rocks.push({
+        id,
+        position: { x, depth },
+        active: true,
+        visualRadius: radius,
+        collisionRadius: Math.min(radius * .82, radius - 1)
+      });
+    }
+
+    function addFragment(depth, x, formationId, formationKind, formationIndex) {
+      const id = state.nextEntityId++;
+      state.items.push({
+        id,
+        type: 'fragment',
+        position: { x, depth },
+        active: true,
+        visualRadius: 13,
+        collisionRadius: 12,
+        formationId,
+        formationKind,
+        formationIndex
+      });
+    }
+
+    function addPower(depth, x) {
+      const id = state.nextEntityId++;
+      state.items.push({
+        id,
+        type: 'power',
+        position: { x, depth },
+        active: true,
+        visualRadius: 21,
+        collisionRadius: 18
+      });
+    }
+
+    function spawnFormation(baseDepth, section) {
+      const formationId = state.nextFormationId++;
+      const kinds = ['line', 'chevron', 'arc', 'ribbon'];
+      const kind = kinds[section % kinds.length];
+      const count = kind === 'line' ? 4 : 5;
+      const c = courseAt(baseDepth);
+      const side = section % 2 === 0 ? -1 : 1;
+      const baseOffset = (section % 3 - 1) * c.half * .22;
+      for (let i = 0; i < count; i++) {
+        const depth = baseDepth + i * 30;
+        const course = courseAt(depth);
+        let offset;
+        if (kind === 'line') offset = baseOffset + side * (i - 1.5) * 7;
+        else if (kind === 'chevron') offset = side * (-.34 + i * .17) * course.half;
+        else if (kind === 'arc') offset = side * (Math.sin((i / (count - 1)) * Math.PI) * .34 - .11) * course.half;
+        else offset = side * (-.28 + Math.abs(i - 2) * .15) * course.half;
+        const x = clamp(course.center + offset, course.center - course.half + 30, course.center + course.half - 30);
+        addFragment(depth, x, formationId, kind, i);
+      }
+    }
+
+    function spawnSection(section) {
+      const base = 120 + section * SECTION_STEP;
+      ensureCourse(base + 290);
+
+      // A straight, sweepable opening teaches the line before the first bend.
+      spawnFormation(base + 34, section);
+
+      const course = courseAt(base + 188);
+      if (section === 0) {
+        addRock(base + 188, course.center + 105, 34);
+        // The first charged core is deliberately placed in the opening line,
+        // well inside the first minute even for an unsteered throttle run.
+        const powerCourse = courseAt(base + 250);
+        addPower(base + 250, powerCourse.center);
+      } else {
+        const difficulty = clamp(section / 15, 0, 1);
+        const count = section > 2 && rng.next() < (.26 + difficulty * .42) ? 2 : 1;
+        for (let i = 0; i < count; i++) {
+          const depth = base + 178 + i * 58 + rng.range(-12, 18);
+          const at = courseAt(depth);
+          let offset = rng.range(-.56, .56) * at.half;
+          if (count === 2) offset = (i === 0 ? -1 : 1) * at.half * (.5 + rng.range(0, .1));
+          const radius = 23 + rng.range(0, 16) + difficulty * 5;
+          addRock(depth, clamp(at.center + offset, at.center - at.half + radius + 12, at.center + at.half - radius - 12), radius);
+        }
+        // The second core is a late-run promise, not a repeating dispenser.
+        if (section === 7) {
+          const powerCourse = courseAt(base + 228);
+          addPower(base + 228, powerCourse.center + (section % 2 ? -22 : 22));
+        }
+      }
+      state.spawnIndex = section + 1;
+    }
+
+    function ensureWorld(targetDepth) {
+      ensureCourse(targetDepth + COURSE_STEP * 2);
+      while (state.nextSectionDepth < targetDepth) {
+        spawnSection(state.nextSection);
+        state.nextSection++;
+        state.nextSectionDepth = 120 + state.nextSection * SECTION_STEP;
+      }
+    }
+
+    function emit(kind) {
+      const event = { seq: state.nextEventSeq++, kind, tick: state.tick };
+      state.events.push(event);
+      if (state.events.length > 160) state.events.shift();
+      state.lastEvent = event;
+      triggerFx(kind);
+      playEventSound(kind);
+    }
+
+    function triggerFx(kind) {
+      if (kind === 'near_miss') {
+        fx.edgeChain = Math.min(6, fx.edgeChain + 1);
+        fx.near = Math.max(fx.near, .22 + fx.edgeChain * .08);
+        fx.shake = Math.max(fx.shake, 1.4 + fx.edgeChain * 1.2);
+        fx.edgeText = 1.0;
+        edgeToastEl.textContent = fx.edgeChain > 2 ? `EDGE DRUMROLL  ×${fx.edgeChain}` : "HAIR'S WIDTH";
+        edgeToastEl.classList.add('show');
+      } else if (kind === 'fragment') {
+        fx.fragment = 1;
+      } else if (kind === 'power') {
+        fx.power = 1;
+        fx.shake = Math.max(fx.shake, 3);
+      } else if (kind === 'wall_contact' || kind === 'rock_hit') {
+        fx.hit = 1;
+        fx.flash = Math.max(fx.flash, .42);
+        fx.shake = Math.max(fx.shake, kind === 'wall_contact' ? 10 : 13);
+      } else if (kind === 'rock_broken') {
+        fx.fragment = Math.max(fx.fragment, .55);
+      }
+    }
+
+    function addParticles(worldX, worldDepth, color, count, power, shape) {
+      const p = worldToScreen(worldX, worldDepth);
+      for (let i = 0; i < count; i++) {
+        const angle = (i / count) * Math.PI * 2 + hash(state.tick * 13 + i * 71) * .8;
+        const force = (8 + hash(state.tick * 17 + i * 31) * 27) * power;
+        fx.particles.push({
+          x: p.x, y: p.y,
+          vx: Math.cos(angle) * force,
+          vy: Math.sin(angle) * force - 10 * power,
+          life: .45 + hash(state.tick + i * 19) * .45,
+          maxLife: .75,
+          size: 2 + hash(i * 43 + state.tick) * 4,
+          color,
+          shape: shape || 'diamond'
+        });
+      }
+    }
+
+    function updateFx(realMs) {
+      const dt = Math.min(realMs, 50) / 1000;
+      fx.shake *= Math.pow(.025, dt);
+      fx.flash *= Math.pow(.015, dt);
+      fx.hit *= Math.pow(.035, dt);
+      fx.near *= Math.pow(.04, dt);
+      fx.fragment *= Math.pow(.035, dt);
+      fx.power *= Math.pow(.06, dt);
+      fx.edgeText -= dt;
+      if (fx.edgeText <= 0) edgeToastEl.classList.remove('show');
+      if (state && state.tick - state.lastNearMissTick > 100) fx.edgeChain = Math.max(0, fx.edgeChain - dt * 1.6);
+      for (let i = fx.particles.length - 1; i >= 0; i--) {
+        const p = fx.particles[i];
+        p.life -= dt;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.vy += 34 * dt;
+        if (p.life <= 0) fx.particles.splice(i, 1);
+      }
+    }
+
+    function updateAudio() {
+      if (!audio || !audioStarted) return;
+      const now = audio.ctx.currentTime;
+      const active = state.phase === 'playing';
+      const speedNorm = clamp((state.speed - IDLE_SPEED) / (MAX_SPEED - IDLE_SPEED), 0, 1);
+      const edgeNorm = clamp(speedNorm * .55 + fx.edgeChain * .08, 0, 1);
+      audio.engineGain.gain.setTargetAtTime(active ? .012 + speedNorm * .022 : 0, now, .06);
+      audio.engine.frequency.setTargetAtTime(76 + speedNorm * 64, now, .08);
+      audio.engineHarmonic.frequency.setTargetAtTime(152 + speedNorm * 128, now, .08);
+      audio.edgeGain.gain.setTargetAtTime(active ? edgeNorm * .018 : 0, now, .1);
+      audio.edge.frequency.setTargetAtTime(270 + edgeNorm * 430, now, .1);
+    }
+
+    function startAudio() {
+      if (audioStarted) {
+        if (audio && audio.ctx.state === 'suspended') audio.ctx.resume().catch(() => {});
+        return;
+      }
+      audioStarted = true;
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        const ac = new AudioContextClass();
+        const master = ac.createGain();
+        master.gain.value = .7;
+        master.connect(ac.destination);
+        const engineGain = ac.createGain();
+        const engine = ac.createOscillator();
+        const engineHarmonic = ac.createOscillator();
+        const harmonicGain = ac.createGain();
+        engine.type = 'triangle';
+        engineHarmonic.type = 'sine';
+        engineGain.gain.value = 0;
+        harmonicGain.gain.value = .28;
+        engine.connect(engineGain).connect(master);
+        engineHarmonic.connect(harmonicGain).connect(engineGain);
+        const edgeGain = ac.createGain();
+        const edge = ac.createOscillator();
+        edge.type = 'sine';
+        edgeGain.gain.value = 0;
+        edge.connect(edgeGain).connect(master);
+        engine.start();
+        engineHarmonic.start();
+        edge.start();
+        audio = { ctx: ac, master, engineGain, engine, engineHarmonic, harmonicGain, edgeGain, edge };
+        updateAudio();
+      } catch (error) {
+        audio = null;
+      }
+    }
+
+    function playTone(frequency, duration, volume, type) {
+      if (!audio) return;
+      try {
+        const now = audio.ctx.currentTime;
+        const osc = audio.ctx.createOscillator();
+        const gain = audio.ctx.createGain();
+        osc.type = type || 'sine';
+        osc.frequency.setValueAtTime(frequency, now);
+        gain.gain.setValueAtTime(volume, now);
+        gain.gain.exponentialRampToValueAtTime(.0001, now + duration);
+        osc.connect(gain).connect(audio.master);
+        osc.start(now);
+        osc.stop(now + duration + .02);
+      } catch (error) { /* audio is optional seasoning */ }
+    }
+
+    function playEventSound(kind) {
+      if (!audio) return;
+      if (kind === 'fragment') playTone(610, .11, .05, 'sine');
+      else if (kind === 'power') { playTone(330, .3, .06, 'triangle'); playTone(660, .42, .035, 'sine'); }
+      else if (kind === 'near_miss') playTone(360 + fx.edgeChain * 36, .075, .025, 'square');
+      else if (kind === 'wall_contact' || kind === 'rock_hit') playTone(92, .22, .085, 'sawtooth');
+      else if (kind === 'rock_broken') playTone(180, .12, .04, 'triangle');
+    }
+
+    function finishRun() {
+      state.remainingMs = 0;
+      state.phase = 'gameover';
+      state.rank = rankForScore(state.score);
+      sessionBest = Math.max(sessionBest, Math.floor(state.score));
+      fx.end = 1;
+      if (audio) {
+        playTone(196, .45, .06, 'triangle');
+        playTone(98, .75, .045, 'sine');
+      }
+      endScoreEl.textContent = formatNumber(state.score, 4);
+      bestScoreEl.textContent = formatNumber(sessionBest, 4);
+      gradeEl.textContent = state.rank;
+      if (Number.isFinite(state.closestShave)) {
+        signatureEl.textContent = `${state.closestShave.toFixed(2)} WIDTHS FROM STONE`;
+      } else {
+        signatureEl.textContent = 'NO ROCK LEFT A MARK';
+      }
+      endScreenEl.classList.add('visible');
+    }
+
+    function rankForScore(score) {
+      if (score >= 2700) return 'S';
+      if (score >= 1750) return 'A';
+      if (score >= 980) return 'B';
+      if (score >= 440) return 'C';
+      return 'D';
+    }
+
+    function reset(seed) {
+      const nextSeed = seed === undefined ? (state ? state.seed : DEFAULT_SEED) : cleanSeed(seed);
+      rng = new SeededRng(nextSeed);
+      state = {
+        phase: 'ready',
+        tick: 0,
+        elapsedMs: 0,
+        timeMs: 0,
+        remainingMs: START_TIME,
+        seed: nextSeed,
+        input: { accelerate: false, left: false, right: false, steer: 0 },
+        difficulty: .1,
+        score: 0,
+        depth: 0,
+        x: 500,
+        playerRadius: PLAYER_RADIUS,
+        speed: IDLE_SPEED,
+        maxSpeed: MAX_SPEED,
+        hits: 0,
+        wallContacts: 0,
+        fragmentsCollected: 0,
+        rocksBroken: 0,
+        invincibleUntilMs: 0,
+        rank: null,
+        course: [{ depth: 0, center: 500, half: 196, bend: 0, priorBend: 0 }],
+        rocks: [],
+        items: [],
+        nextEntityId: 1,
+        nextFormationId: 1,
+        nextSection: 0,
+        nextSectionDepth: 120,
+        spawnIndex: 0,
+        events: [],
+        lastEvent: null,
+        nextEventSeq: 1,
+        wallCooldown: 0,
+        lastNearMissTick: -9999,
+        nearMissChain: 0,
+        closestShave: Infinity,
+        currentThrottleMs: 0,
+        longestThrottleMs: 0,
+        hitCooldown: 0
+      };
+      simAccumulator = 0;
+      keys.left = keys.right = keys.accelerate = false;
+      pointer.active = false;
+      stickyEl.classList.remove('active');
+      fx.particles.length = 0;
+      fx.shake = fx.flash = fx.hit = fx.near = fx.fragment = fx.power = fx.end = 0;
+      fx.edgeText = 0;
+      fx.edgeChain = 0;
+      edgeToastEl.classList.remove('show');
+      readyHintEl.classList.remove('hidden');
+      endScreenEl.classList.remove('visible');
+      powerEl.classList.remove('visible');
+      ensureWorld(PREVIEW_DISTANCE + 20);
+      updateHUD();
+    }
+
+    function updateSimulation() {
+      if (state.phase !== 'playing') return;
+      const dt = STEP_MS / 1000;
+      const previousDepth = state.depth;
+      const previousX = state.x;
+      state.tick += 1;
+      state.elapsedMs = state.tick * STEP_MS;
+      state.timeMs = state.elapsedMs;
+      state.remainingMs -= STEP_MS;
+      state.wallCooldown = Math.max(0, state.wallCooldown - dt);
+      state.hitCooldown = Math.max(0, state.hitCooldown - dt);
+      if (state.tick - state.lastNearMissTick > 160) state.nearMissChain = Math.max(0, state.nearMissChain - .06);
+
+      const accelerating = state.input.accelerate;
+      if (accelerating) state.speed = Math.min(MAX_SPEED, state.speed + 43 * dt);
+      else state.speed = Math.max(IDLE_SPEED, state.speed - 20 * dt);
+
+      const speedRatio = clamp((state.speed - IDLE_SPEED) / (MAX_SPEED - IDLE_SPEED), 0, 1);
+      const authority = lerp(1, .22, smooth(speedRatio));
+      const lateralSpeed = 39 * authority;
+      state.x += state.input.steer * lateralSpeed * dt;
+      state.depth += state.speed * dt;
+      state.difficulty = clamp(.1 + state.depth / 4300, .1, 1.45);
+      if (accelerating && state.speed > MAX_SPEED * .86) {
+        state.currentThrottleMs += STEP_MS;
+        state.longestThrottleMs = Math.max(state.longestThrottleMs, state.currentThrottleMs);
+      } else state.currentThrottleMs = 0;
+
+      ensureWorld(state.depth + PREVIEW_DISTANCE);
+      resolveWalls();
+      resolveEntities(previousDepth, previousX);
+
+      state.score = state.depth * 2.05 + state.fragmentsCollected * 21 + state.rocksBroken * 33;
+      if (state.remainingMs <= 0) finishRun();
+    }
+
+    function resolveWalls() {
+      if (state.wallCooldown > 0) return;
+      const at = courseAt(state.depth);
+      const minX = at.center - at.half + PLAYER_RADIUS;
+      const maxX = at.center + at.half - PLAYER_RADIUS;
+      let contact = false;
+      if (state.x < minX) {
+        state.x = minX + 6;
+        contact = true;
+      } else if (state.x > maxX) {
+        state.x = maxX - 6;
+        contact = true;
+      }
+      if (contact) {
+        state.wallContacts += 1;
+        state.speed = IDLE_SPEED;
+        state.wallCooldown = .24;
+        emit('wall_contact');
+        addParticles(state.x, state.depth, '#ff8d78', 10, .7, 'chip');
+      }
+    }
+
+    function passedThisStep(depth, previousDepth, radius) {
+      return depth >= previousDepth - radius && depth <= state.depth + radius;
+    }
+
+    function resolveEntities(previousDepth, previousX) {
+      const travelled = Math.max(.001, state.depth - previousDepth);
+      const powered = state.timeMs < state.invincibleUntilMs;
+      for (const rock of state.rocks) {
+        if (!rock.active || !passedThisStep(rock.position.depth, previousDepth, rock.collisionRadius)) continue;
+        const t = clamp((rock.position.depth - previousDepth) / travelled, 0, 1);
+        const crossingX = lerp(previousX, state.x, t);
+        const distance = Math.abs(crossingX - rock.position.x);
+        const edgeGap = distance - (PLAYER_RADIUS + rock.collisionRadius);
+        if (edgeGap <= 0) {
+          rock.active = false;
+          emit('rock_hit');
+          if (!powered) {
+            state.hits += 1;
+            state.speed = IDLE_SPEED;
+            state.hitCooldown = .22;
+          }
+          state.rocksBroken += 1;
+          emit('rock_broken');
+          addParticles(rock.position.x, rock.position.depth, powered ? '#a2ffdc' : '#ff927d', powered ? 18 : 22, powered ? 1.1 : 1.35, 'chip');
+        } else if (edgeGap < PLAYER_RADIUS * 2) {
+          rock.active = false;
+          const shave = clamp(edgeGap / (PLAYER_RADIUS * 2), 0, 1);
+          state.closestShave = Math.min(state.closestShave, shave);
+          const previousNearMissTick = state.lastNearMissTick;
+          state.lastNearMissTick = state.tick;
+          state.nearMissChain = state.tick - previousNearMissTick < 160 ? state.nearMissChain + 1 : 1;
+          emit('near_miss');
+          addParticles(rock.position.x, rock.position.depth, '#ffd477', 5 + Math.min(7, state.nearMissChain), .35, 'spark');
+        }
+      }
+
+      for (const item of state.items) {
+        if (!item.active || !passedThisStep(item.position.depth, previousDepth, item.collisionRadius)) continue;
+        const t = clamp((item.position.depth - previousDepth) / travelled, 0, 1);
+        const crossingX = lerp(previousX, state.x, t);
+        if (Math.abs(crossingX - item.position.x) <= PLAYER_RADIUS + item.collisionRadius) {
+          item.active = false;
+          if (item.type === 'fragment') {
+            state.fragmentsCollected += 1;
+            state.remainingMs = Math.min(MAX_TIME, state.remainingMs + FRAGMENT_TIME);
+            emit('fragment');
+            addParticles(item.position.x, item.position.depth, '#62e4e0', 13, .75, 'diamond');
+          } else {
+            state.invincibleUntilMs = state.timeMs + POWER_TIME;
+            emit('power');
+            addParticles(item.position.x, item.position.depth, '#a2ffdc', 22, 1.15, 'diamond');
+          }
+        }
+      }
+    }
+
+    function advance(ms) {
+      const amount = Number(ms);
+      if (!Number.isFinite(amount) || amount <= 0 || state.phase !== 'playing') return snapshot();
+      simAccumulator += amount;
+      while (simAccumulator + 0.00001 >= STEP_MS && state.phase === 'playing') {
+        simAccumulator -= STEP_MS;
+        updateSimulation();
+      }
+      if (state.phase !== 'playing') simAccumulator = 0;
+      return snapshot();
+    }
+
+    function visibleEntity(entity) {
+      return entity.position.depth >= state.depth - ENTITY_TRAIL && entity.position.depth <= state.depth + PREVIEW_DISTANCE;
+    }
+
+    function computeSafeHalfWidth() {
+      let narrowest = Infinity;
+      const sampleStep = 18;
+      for (let d = state.depth; d <= state.depth + PREVIEW_DISTANCE; d += sampleStep) {
+        const at = courseAt(d);
+        const left = at.center - at.half;
+        const right = at.center + at.half;
+        const intervals = [];
+        for (const rock of state.rocks) {
+          if (!rock.active) continue;
+          const reach = rock.collisionRadius + 15;
+          if (Math.abs(rock.position.depth - d) < reach) {
+            intervals.push([Math.max(left, rock.position.x - rock.collisionRadius), Math.min(right, rock.position.x + rock.collisionRadius)]);
+          }
+        }
+        intervals.sort((a, b) => a[0] - b[0]);
+        let cursor = left;
+        let largest = 0;
+        for (const interval of intervals) {
+          if (interval[0] > cursor) largest = Math.max(largest, interval[0] - cursor);
+          cursor = Math.max(cursor, interval[1]);
+        }
+        largest = Math.max(largest, right - cursor);
+        narrowest = Math.min(narrowest, largest / 2);
+      }
+      return clamp(narrowest, PLAYER_RADIUS, 196);
+    }
+
+    function snapshot() {
+      const at = courseAt(state.depth);
+      const wallSamples = [];
+      for (let d = state.depth; d <= state.depth + PREVIEW_DISTANCE; d += 35) {
+        const c = courseAt(d);
+        wallSamples.push({ depth: round3(d), leftX: round3(c.center - c.half), rightX: round3(c.center + c.half) });
+      }
+      const mapRock = rock => ({ id: rock.id, position: { x: round3(rock.position.x), depth: round3(rock.position.depth) }, active: !!rock.active, visualRadius: round3(rock.visualRadius), collisionRadius: round3(rock.collisionRadius) });
+      const mapItem = item => {
+        const mapped = { id: item.id, type: item.type, position: { x: round3(item.position.x), depth: round3(item.position.depth) }, active: !!item.active, visualRadius: round3(item.visualRadius), collisionRadius: round3(item.collisionRadius) };
+        if (item.type === 'fragment') {
+          mapped.formationId = item.formationId;
+          mapped.formationKind = item.formationKind;
+          mapped.formationIndex = item.formationIndex;
+        }
+        return mapped;
+      };
+      return {
+        phase: state.phase,
+        tick: state.tick,
+        elapsedMs: round3(state.elapsedMs),
+        timeMs: round3(state.timeMs),
+        remainingMs: round3(Math.max(0, state.remainingMs)),
+        seed: state.seed,
+        rngState: rng.state >>> 0,
+        spawnIndex: state.spawnIndex,
+        input: { accelerate: !!state.input.accelerate, left: !!state.input.left, right: !!state.input.right, steer: round3(state.input.steer) },
+        difficulty: round3(state.difficulty),
+        score: round3(Math.max(0, state.score)),
+        depth: round3(state.depth),
+        x: round3(state.x),
+        playerRadius: PLAYER_RADIUS,
+        speed: round3(state.speed),
+        maxSpeed: MAX_SPEED,
+        hits: state.hits,
+        wallContacts: state.wallContacts,
+        fragmentsCollected: state.fragmentsCollected,
+        rocksBroken: state.rocksBroken,
+        invincibleUntilMs: round3(state.invincibleUntilMs),
+        rank: state.rank,
+        courseCenterX: round3(at.center),
+        corridorHalfWidth: round3(at.half),
+        walls: wallSamples,
+        safeHalfWidth: round3(computeSafeHalfWidth()),
+        previewMs: round3(PREVIEW_DISTANCE / MAX_SPEED * 1000),
+        rocks: state.rocks.filter(visibleEntity).sort((a, b) => a.id - b.id).map(mapRock),
+        items: state.items.filter(visibleEntity).sort((a, b) => a.id - b.id).map(mapItem),
+        events: state.events.map(event => ({ seq: event.seq, kind: event.kind, tick: event.tick })),
+        lastEvent: state.lastEvent ? { seq: state.lastEvent.seq, kind: state.lastEvent.kind, tick: state.lastEvent.tick } : null
+      };
+    }
+
+    function resize() {
+      const rect = gameEl.getBoundingClientRect();
+      view.width = Math.max(1, rect.width);
+      view.height = Math.max(1, rect.height);
+      view.dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = Math.floor(view.width * view.dpr);
+      canvas.height = Math.floor(view.height * view.dpr);
+      ctx.setTransform(view.dpr, 0, 0, view.dpr, 0, 0);
+      view.playerY = clamp(view.height * .27, 83, Math.max(84, view.height - 120));
+      view.yScale = Math.max(.24, (view.height - view.playerY - 24) / PREVIEW_DISTANCE);
+      view.xScale = Math.min(1.1, Math.max(.31, view.width / 760));
+    }
+
+    function worldToScreen(x, depth) {
+      const focus = courseAt(state.depth).center;
+      return { x: view.width / 2 + (x - focus) * view.xScale, y: view.playerY + (depth - state.depth) * view.yScale };
+    }
+
+    function drawBackground() {
+      const w = view.width;
+      const h = view.height;
+      const gradient = ctx.createLinearGradient(0, 0, 0, h);
+      gradient.addColorStop(0, '#0b1227');
+      gradient.addColorStop(.52, '#080f22');
+      gradient.addColorStop(1, '#030611');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, w, h);
+
+      const depthBand = Math.floor(state.depth / 52);
+      for (let i = -2; i < 36; i++) {
+        const worldDepth = depthBand * 52 + i * 52 - 180;
+        const y = view.playerY + (worldDepth - state.depth) * view.yScale;
+        if (y < -20 || y > h + 20) continue;
+        const x = hash(i * 991 + depthBand * 23) * w;
+        const length = 18 + hash(i * 317 + depthBand * 7) * 68;
+        ctx.strokeStyle = `rgba(${110 + Math.floor(hash(i * 17) * 50)}, ${132 + Math.floor(hash(i * 27) * 60)}, 182, ${.05 + hash(i * 37) * .09})`;
+        ctx.lineWidth = .7 + hash(i * 29) * 1.2;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + length, y - 2);
+        ctx.stroke();
+      }
+
+      const speedNorm = clamp((state.speed - IDLE_SPEED) / (MAX_SPEED - IDLE_SPEED), 0, 1);
+      if (speedNorm > .18) {
+        const streaks = 10 + Math.floor(speedNorm * 28);
+        for (let i = 0; i < streaks; i++) {
+          const seed = i * 97 + Math.floor(state.depth * .6);
+          const x = hash(seed) * w;
+          const y = (hash(seed + 31) * h + (state.depth * (1.2 + speedNorm * 2.8))) % (h + 80) - 40;
+          const len = 6 + speedNorm * 31 * (0.4 + hash(seed + 9));
+          ctx.strokeStyle = `rgba(121, 207, 224, ${.035 + speedNorm * .1})`;
+          ctx.lineWidth = .6 + speedNorm * .8;
+          ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - len); ctx.stroke();
+        }
+      }
+    }
+
+    function drawCorridor() {
+      const h = view.height;
+      const start = state.depth - 190;
+      const end = state.depth + PREVIEW_DISTANCE + 40;
+      const samples = [];
+      for (let d = start; d <= end; d += 14) {
+        const at = courseAt(d);
+        const left = worldToScreen(at.center - at.half, d);
+        const right = worldToScreen(at.center + at.half, d);
+        samples.push({ d, left, right, at });
+      }
+
+      const tunnel = ctx.createLinearGradient(0, view.playerY - 170, 0, h);
+      tunnel.addColorStop(0, 'rgba(13, 25, 49, .5)');
+      tunnel.addColorStop(.45, 'rgba(7, 20, 38, .86)');
+      tunnel.addColorStop(1, 'rgba(3, 10, 21, .98)');
+      ctx.beginPath();
+      samples.forEach((s, i) => i ? ctx.lineTo(s.left.x, s.left.y) : ctx.moveTo(s.left.x, s.left.y));
+      for (let i = samples.length - 1; i >= 0; i--) ctx.lineTo(samples[i].right.x, samples[i].right.y);
+      ctx.closePath();
+      ctx.fillStyle = tunnel;
+      ctx.fill();
+
+      // A dim central seam gives the corridor a readable direction without becoming a lane marker.
+      ctx.save();
+      ctx.setLineDash([2, 17]);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = `rgba(102, 188, 199, ${.07 + clamp((state.speed - IDLE_SPEED) / 80, 0, .14)})`;
+      ctx.beginPath();
+      for (let i = 0; i < samples.length; i++) {
+        const s = samples[i];
+        const p = worldToScreen(s.at.center, s.d);
+        if (i) ctx.lineTo(p.x, p.y); else ctx.moveTo(p.x, p.y);
+      }
+      ctx.stroke();
+      ctx.restore();
+
+      const leftPath = new Path2D();
+      const rightPath = new Path2D();
+      samples.forEach((s, i) => {
+        if (i === 0) { leftPath.moveTo(s.left.x, s.left.y); rightPath.moveTo(s.right.x, s.right.y); }
+        else { leftPath.lineTo(s.left.x, s.left.y); rightPath.lineTo(s.right.x, s.right.y); }
+      });
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = 'rgba(2, 5, 14, .85)';
+      ctx.lineWidth = Math.max(24, view.width * .045);
+      ctx.stroke(leftPath); ctx.stroke(rightPath);
+      ctx.strokeStyle = 'rgba(52, 76, 113, .74)';
+      ctx.lineWidth = Math.max(14, view.width * .024);
+      ctx.stroke(leftPath); ctx.stroke(rightPath);
+      ctx.strokeStyle = 'rgba(111, 137, 174, .47)';
+      ctx.lineWidth = 2.4;
+      ctx.stroke(leftPath); ctx.stroke(rightPath);
+      ctx.strokeStyle = 'rgba(98, 228, 224, .16)';
+      ctx.lineWidth = 1;
+      ctx.stroke(leftPath); ctx.stroke(rightPath);
+
+      // Mineral bands are locked to world depth, so high speed makes the authored walls stream too.
+      const firstBand = Math.floor((state.depth - 155) / 74) * 74;
+      for (let d = firstBand; d < state.depth + PREVIEW_DISTANCE + 60; d += 74) {
+        const at = courseAt(d);
+        const l = worldToScreen(at.center - at.half + 5, d);
+        const r = worldToScreen(at.center + at.half - 5, d);
+        const inset = 10 + hash(Math.floor(d) * 3) * 30;
+        ctx.strokeStyle = `rgba(151, 116, 167, ${.07 + hash(Math.floor(d) * 5) * .12})`;
+        ctx.lineWidth = 1 + hash(Math.floor(d) * 9) * 2;
+        ctx.beginPath(); ctx.moveTo(l.x + inset, l.y); ctx.lineTo(l.x + 4, l.y + 4 + hash(d) * 13); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(r.x - inset, r.y); ctx.lineTo(r.x - 4, r.y + 4 + hash(d + 4) * 13); ctx.stroke();
+      }
+
+      const bottomFade = ctx.createLinearGradient(0, h * .7, 0, h);
+      bottomFade.addColorStop(0, 'rgba(2, 6, 15, 0)');
+      bottomFade.addColorStop(1, 'rgba(2, 6, 15, .35)');
+      ctx.fillStyle = bottomFade;
+      ctx.fillRect(0, h * .65, view.width, h * .35);
+    }
+
+    function drawRock(rock) {
+      if (!rock.active && rock.position.depth < state.depth - 12) return;
+      const p = worldToScreen(rock.position.x, rock.position.depth);
+      if (p.y < -70 || p.y > view.height + 60) return;
+      const size = rock.visualRadius * view.xScale * (0.96 + clamp((rock.position.depth - state.depth) / PREVIEW_DISTANCE, 0, 1) * .12);
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      if (!rock.active) {
+        ctx.globalAlpha = .15;
+        ctx.scale(1.35, 1.35);
+      }
+      ctx.shadowColor = 'rgba(255, 127, 117, .3)';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = '#202744';
+      ctx.strokeStyle = '#71809d';
+      ctx.lineWidth = Math.max(1.3, size * .055);
+      ctx.beginPath();
+      const points = 8;
+      for (let i = 0; i < points; i++) {
+        const a = (i / points) * Math.PI * 2;
+        const r = size * (.73 + hash(rock.id * 41 + i * 7) * .27);
+        const px = Math.cos(a) * r;
+        const py = Math.sin(a) * r * .9;
+        if (!i) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = 'rgba(155, 174, 194, .19)';
+      ctx.beginPath(); ctx.moveTo(-size*.35,-size*.28); ctx.lineTo(size*.05,-size*.58); ctx.lineTo(size*.36,-size*.18); ctx.lineTo(-size*.02,-size*.07); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = 'rgba(6, 10, 23, .75)';
+      ctx.lineWidth = Math.max(1, size * .045);
+      ctx.beginPath(); ctx.moveTo(-size*.46,size*.16); ctx.lineTo(-size*.08,-size*.02); ctx.lineTo(size*.21,size*.34); ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawFormationLinks() {
+      const groups = new Map();
+      for (const item of state.items) {
+        if (item.type !== 'fragment' || !item.active || !visibleEntity(item)) continue;
+        if (!groups.has(item.formationId)) groups.set(item.formationId, []);
+        groups.get(item.formationId).push(item);
+      }
+      for (const group of groups.values()) {
+        group.sort((a, b) => a.formationIndex - b.formationIndex);
+        if (group.length < 2) continue;
+        ctx.save();
+        ctx.setLineDash([2, 8]);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(98, 228, 224, .18)';
+        ctx.beginPath();
+        group.forEach((item, i) => { const p = worldToScreen(item.position.x, item.position.depth); if (i) ctx.lineTo(p.x, p.y); else ctx.moveTo(p.x, p.y); });
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    function drawFragment(item) {
+      const p = worldToScreen(item.position.x, item.position.depth);
+      if (p.y < -50 || p.y > view.height + 50) return;
+      const s = 1 + Math.sin(state.timeMs * .006 + item.id) * .08;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(Math.PI / 4 + state.timeMs * .0008);
+      ctx.scale(s, s);
+      ctx.shadowColor = '#62e4e0';
+      ctx.shadowBlur = 13;
+      ctx.fillStyle = '#a2ffdc';
+      ctx.strokeStyle = '#62e4e0';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(0, -10); ctx.lineTo(8, 0); ctx.lineTo(0, 10); ctx.lineTo(-8, 0); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = 'rgba(255,255,255,.78)';
+      ctx.beginPath(); ctx.moveTo(-1, -6); ctx.lineTo(3, 0); ctx.lineTo(0, 2); ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+
+    function drawPower(item) {
+      const p = worldToScreen(item.position.x, item.position.depth);
+      if (p.y < -70 || p.y > view.height + 70) return;
+      const pulse = 1 + Math.sin(state.timeMs * .005 + item.id) * .1;
+      const r = 15 * pulse;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(Math.PI / 4 + state.timeMs * .00035);
+      ctx.shadowColor = '#a2ffdc'; ctx.shadowBlur = 22;
+      ctx.strokeStyle = '#a2ffdc'; ctx.lineWidth = 2;
+      ctx.fillStyle = 'rgba(58, 209, 194, .25)';
+      ctx.beginPath(); ctx.rect(-r, -r, r*2, r*2); ctx.fill(); ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#e5fff0';
+      ctx.beginPath(); ctx.moveTo(-2, -10); ctx.lineTo(5, -1); ctx.lineTo(1, -1); ctx.lineTo(4, 9); ctx.lineTo(-5, 0); ctx.lineTo(-1, 0); ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+
+    function drawEntities() {
+      drawFormationLinks();
+      const entities = [];
+      for (const rock of state.rocks) if (visibleEntity(rock)) entities.push({ depth: rock.position.depth, type: 'rock', entity: rock });
+      for (const item of state.items) if (visibleEntity(item)) entities.push({ depth: item.position.depth, type: item.type, entity: item });
+      entities.sort((a, b) => a.depth - b.depth);
+      for (const entry of entities) {
+        if (entry.type === 'rock') drawRock(entry.entity);
+        else if (entry.type === 'fragment' && entry.entity.active) drawFragment(entry.entity);
+        else if (entry.type === 'power' && entry.entity.active) drawPower(entry.entity);
+      }
+    }
+
+    function drawParticles() {
+      for (const p of fx.particles) {
+        const alpha = clamp(p.life / p.maxLife, 0, 1);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(p.x, p.y);
+        ctx.rotate((1 - alpha) * 2.5);
+        ctx.fillStyle = p.color;
+        if (p.shape === 'chip') {
+          ctx.fillRect(-p.size * .6, -p.size * .35, p.size * 1.4, p.size * .7);
+        } else if (p.shape === 'spark') {
+          ctx.fillRect(-.7, -p.size, 1.4, p.size * 2);
+        } else {
+          ctx.beginPath(); ctx.moveTo(0, -p.size); ctx.lineTo(p.size * .7, 0); ctx.lineTo(0, p.size); ctx.lineTo(-p.size * .7, 0); ctx.closePath(); ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+
+    function drawMachine() {
+      const screen = worldToScreen(state.x, state.depth);
+      const speedRatio = clamp((state.speed - IDLE_SPEED) / (MAX_SPEED - IDLE_SPEED), 0, 1);
+      const danger = speedRatio > .7;
+      const powered = state.timeMs < state.invincibleUntilMs;
+      const edgeMoment = fx.near > .05;
+      const ready = state.phase === 'ready';
+      const gameover = state.phase === 'gameover';
+      const bob = ready ? Math.sin(performance.now() * .002) * 3 : 0;
+      const squash = fx.hit > .12 ? 1 - fx.hit * .17 : 1;
+      const tilt = clamp(state.input.steer, -1, 1) * (.05 + (1 - speedRatio) * .07) + (danger ? Math.sin(state.timeMs * .035) * .018 : 0);
+      const scale = clamp(view.xScale * 1.12, .36, 1.12);
+
+      ctx.save();
+      ctx.translate(screen.x, screen.y + bob);
+      ctx.rotate(tilt);
+      ctx.scale(scale, scale * squash);
+      ctx.globalAlpha = gameover ? .52 : 1;
+
+      ctx.shadowColor = powered ? '#a2ffdc' : edgeMoment ? '#ffd477' : danger ? '#ff9e83' : '#62e4e0';
+      ctx.shadowBlur = powered ? 29 : danger ? 21 : 15;
+      ctx.fillStyle = powered ? 'rgba(162,255,220,.22)' : 'rgba(98,228,224,.15)';
+      ctx.beginPath(); ctx.ellipse(0, 7, 31, 48, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Exhaust tells speed before the player reads the meter.
+      const exhaust = 10 + speedRatio * 23;
+      ctx.fillStyle = powered ? '#a2ffdc' : danger ? '#ff8c73' : '#62e4e0';
+      ctx.globalAlpha *= .55 + speedRatio * .45;
+      ctx.beginPath(); ctx.moveTo(-12, -28); ctx.lineTo(-4, -28 - exhaust); ctx.lineTo(0, -27); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(12, -28); ctx.lineTo(4, -28 - exhaust * .9); ctx.lineTo(0, -27); ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = gameover ? .52 : 1;
+
+      // Fins and lamps give the pod a small, tactile silhouette.
+      ctx.fillStyle = '#35496e';
+      ctx.strokeStyle = '#8ba0bf';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(-17, -3); ctx.lineTo(-31, 10); ctx.lineTo(-22, 22); ctx.lineTo(-13, 17); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(17, -3); ctx.lineTo(31, 10); ctx.lineTo(22, 22); ctx.lineTo(13, 17); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = powered ? '#a2ffdc' : '#ff8d78';
+      ctx.beginPath(); ctx.arc(-25, 11, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(25, 11, 3, 0, Math.PI * 2); ctx.fill();
+
+      ctx.fillStyle = '#324467';
+      ctx.strokeStyle = '#d1e1ed';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, -32); ctx.bezierCurveTo(19, -31, 22, -12, 19, 11); ctx.bezierCurveTo(16, 32, 9, 38, 0, 42); ctx.bezierCurveTo(-9, 38, -16, 32, -19, 11); ctx.bezierCurveTo(-22, -12, -19, -31, 0, -32); ctx.closePath();
+      ctx.fill(); ctx.stroke();
+
+      // The face is the machine's mood: impatient, intent, thrilled, startled, spent.
+      ctx.fillStyle = powered ? '#0c2732' : '#101a34';
+      ctx.strokeStyle = powered ? '#a2ffdc' : '#81e6df';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.ellipse(0, -7, 14, 11, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      let eyeY = -8;
+      let eyeOpen = edgeMoment ? 5.5 : danger ? 5 : ready ? 2.6 : gameover ? 1.2 : 3.7;
+      let pupil = danger ? 3.2 : gameover ? 0 : 2.2;
+      if (fx.hit > .1) { eyeOpen = 1.3; pupil = 1; }
+      ctx.fillStyle = '#e7fff5';
+      ctx.beginPath(); ctx.ellipse(-5, eyeY, 3.1, eyeOpen, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(5, eyeY, 3.1, eyeOpen, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = powered ? '#62e4e0' : '#ff9b86';
+      ctx.beginPath(); ctx.arc(-5, eyeY + (danger ? 0 : .7), pupil, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(5, eyeY + (danger ? 0 : .7), pupil, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = edgeMoment ? '#ffd477' : danger ? '#ff9b86' : '#a1bdd4';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      if (fx.hit > .1) { ctx.moveTo(-6, 8); ctx.quadraticCurveTo(0, 4, 6, 8); }
+      else if (danger) { ctx.arc(0, 9, 4, 0, Math.PI); }
+      else if (ready) { ctx.moveTo(-5, 8); ctx.lineTo(5, 8); }
+      else { ctx.arc(0, 7, 3, 0, Math.PI); }
+      ctx.stroke();
+
+      // The drill nose pulses harder under throttle.
+      ctx.fillStyle = danger ? '#ff8d78' : powered ? '#a2ffdc' : '#62e4e0';
+      ctx.strokeStyle = '#e4f4ef';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.moveTo(0, 59); ctx.lineTo(-11, 30); ctx.lineTo(11, 30); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = 'rgba(9, 18, 39, .75)';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(-6, 39); ctx.lineTo(6, 44); ctx.moveTo(-5, 47); ctx.lineTo(5, 52); ctx.stroke();
+      ctx.restore();
+
+      if (powered) {
+        ctx.save();
+        ctx.translate(screen.x, screen.y);
+        ctx.strokeStyle = `rgba(162,255,220,${.27 + Math.sin(state.timeMs * .008) * .08})`;
+        ctx.lineWidth = 1.4;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath(); ctx.arc(0, 6, 43 + Math.sin(state.timeMs * .006) * 3, 0, Math.PI * 2); ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    function drawTouchGuide() {
+      if (!pointer.active) return;
+      const x = pointer.x;
+      const y = pointer.y;
+      const dx = pointer.x - pointer.anchorX;
+      const dy = pointer.y - pointer.anchorY;
+      ctx.save();
+      ctx.globalAlpha = .5;
+      ctx.strokeStyle = dy > 25 ? '#a2ffdc' : '#8aa0c1';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 4]);
+      ctx.beginPath(); ctx.moveTo(pointer.anchorX, pointer.anchorY); ctx.lineTo(x, y); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = dy > 25 ? 'rgba(162,255,220,.12)' : 'rgba(160,180,220,.08)';
+      ctx.beginPath(); ctx.arc(x, y, 20 + clamp(Math.abs(dy) * .08, 0, 13), 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
+
+    function render() {
+      if (!state) return;
+      ctx.setTransform(view.dpr, 0, 0, view.dpr, 0, 0);
+      drawBackground();
+      ctx.save();
+      const shakeX = fx.shake > .1 ? (hash(Math.floor(performance.now() / 21)) - .5) * fx.shake : 0;
+      const shakeY = fx.shake > .1 ? (hash(Math.floor(performance.now() / 31) + 9) - .5) * fx.shake : 0;
+      ctx.translate(shakeX, shakeY);
+      drawCorridor();
+      drawEntities();
+      drawParticles();
+      drawMachine();
+      drawTouchGuide();
+      ctx.restore();
+      if (fx.flash > .01) {
+        ctx.fillStyle = `rgba(255,107,100,${fx.flash * .16})`;
+        ctx.fillRect(0, 0, view.width, view.height);
+      }
+      if (fx.power > .01) {
+        const g = ctx.createRadialGradient(view.width / 2, view.playerY, 12, view.width / 2, view.playerY, view.width * .65);
+        g.addColorStop(0, `rgba(98,228,224,${fx.power * .1})`);
+        g.addColorStop(1, 'rgba(98,228,224,0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, view.width, view.height);
+      }
+      const vignette = ctx.createRadialGradient(view.width/2, view.height*.45, Math.min(view.width,view.height)*.18, view.width/2, view.height*.48, Math.max(view.width,view.height)*.72);
+      vignette.addColorStop(0, 'rgba(0,0,0,0)');
+      vignette.addColorStop(1, 'rgba(0,0,10,.36)');
+      ctx.fillStyle = vignette; ctx.fillRect(0,0,view.width,view.height);
+    }
+
+    function updateHUD() {
+      const remaining = Math.max(0, state.remainingMs);
+      depthEl.textContent = formatNumber(state.depth, 3);
+      scoreEl.textContent = formatNumber(state.score, 4);
+      timerEl.textContent = formatTime(remaining);
+      timerFillEl.style.transform = `scaleX(${clamp(remaining / START_TIME, 0, 1)})`;
+      timerStatEl.classList.toggle('warning', state.phase === 'playing' && remaining < 3600);
+      if (state.timeMs < state.invincibleUntilMs && state.phase === 'playing') {
+        powerEl.classList.add('visible');
+        powerValueEl.textContent = `${Math.max(0, (state.invincibleUntilMs - state.timeMs) / 1000).toFixed(1)} SEC`;
+      } else powerEl.classList.remove('visible');
+    }
+
+    function pointerPoint(event) {
+      const rect = canvas.getBoundingClientRect();
+      return { x: clamp(event.clientX - rect.left, 0, view.width), y: clamp(event.clientY - rect.top, 0, view.height) };
+    }
+
+    function handlePointerDown(event) {
+      event.preventDefault();
+      startAudio();
+      if (state.phase === 'gameover') reset(state.seed);
+      const p = pointerPoint(event);
+      pointer.active = true;
+      pointer.id = event.pointerId;
+      pointer.anchorX = pointer.x = p.x;
+      pointer.anchorY = pointer.y = p.y;
+      stickyEl.style.left = `${p.x}px`;
+      stickyEl.style.top = `${p.y}px`;
+      stickyEl.classList.add('active');
+      canvas.setPointerCapture?.(event.pointerId);
+      applyInputState();
+    }
+
+    function handlePointerMove(event) {
+      if (!pointer.active || event.pointerId !== pointer.id) return;
+      event.preventDefault();
+      const p = pointerPoint(event);
+      pointer.x = p.x; pointer.y = p.y;
+      applyInputState();
+    }
+
+    function handlePointerUp(event) {
+      if (!pointer.active || event.pointerId !== pointer.id) return;
+      event.preventDefault();
+      pointer.active = false;
+      stickyEl.classList.remove('active');
+      applyInputState();
+      try { canvas.releasePointerCapture?.(event.pointerId); } catch (error) { /* already released */ }
+    }
+
+    function handleKey(event, down) {
+      const code = event.code;
+      if (code === 'KeyR' && down) {
+        event.preventDefault();
+        startAudio();
+        reset(state.seed);
+        return;
+      }
+      if (code === 'ArrowDown' || code === 'Space' || code === 'ArrowLeft' || code === 'ArrowRight') {
+        event.preventDefault();
+        startAudio();
+        if (code === 'ArrowDown' || code === 'Space') keys.accelerate = down;
+        if (code === 'ArrowLeft') keys.left = down;
+        if (code === 'ArrowRight') keys.right = down;
+        applyInputState();
+      }
+    }
+
+    function tickFrame(now) {
+      const realMs = Math.min(100, Math.max(0, now - lastFrame));
+      lastFrame = now;
+      if (state.phase === 'playing') advance(realMs);
+      updateFx(realMs);
+      updateHUD();
+      updateAudio();
+      render();
+      requestAnimationFrame(tickFrame);
+    }
+
+    canvas.addEventListener('pointerdown', handlePointerDown, { passive: false });
+    canvas.addEventListener('pointermove', handlePointerMove, { passive: false });
+    canvas.addEventListener('pointerup', handlePointerUp, { passive: false });
+    canvas.addEventListener('pointercancel', handlePointerUp, { passive: false });
+    document.addEventListener('keydown', event => handleKey(event, true), { passive: false });
+    document.addEventListener('keyup', event => handleKey(event, false), { passive: false });
+    window.addEventListener('blur', () => {
+      keys.left = keys.right = keys.accelerate = false;
+      if (pointer.active) { pointer.active = false; stickyEl.classList.remove('active'); }
+      if (state) applyInputState();
+    });
+    window.addEventListener('resize', resize, { passive: true });
+
+    window.__ARENA_GAME__ = { reset, snapshot, advance };
+    reset(DEFAULT_SEED);
+    resize();
+    requestAnimationFrame(tickFrame);
+  })();
+  </script>
+</body>
+</html>

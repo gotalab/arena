@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#090b1b">
+  <title>STOMP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="shell" aria-label="STOMP arcade game">
+    <canvas id="game" width="390" height="700" aria-label="Game stage"></canvas>
+    <div id="touchbar" aria-label="Game controls">
+      <div id="movePad" class="pad move" role="button" aria-label="Drag to move left or right">
+        <span class="chev left">‹</span><i></i><span class="chev right">›</span>
+      </div>
+      <button id="jumpPad" class="pad jump" aria-label="Jump"><span>↑</span><small>JUMP</small></button>
+    </div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>

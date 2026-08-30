@@ -1,0 +1,18 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "arena-runtime-artifact-local",
+  "main": "src/artifact.ts",
+  "compatibility_date": "2026-08-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "PUBLIC_RELEASE": "true",
+    "MAIN_ORIGIN": "http://127.0.0.1:8787"
+  },
+  "assets": {
+    "directory": "../public-release/accepted",
+    "binding": "ASSETS",
+    "html_handling": "none",
+    "not_found_handling": "none",
+    "run_worker_first": true
+  }
+}

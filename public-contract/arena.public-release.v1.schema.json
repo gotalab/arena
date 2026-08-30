@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gotalab.dev/schemas/arena.public-release.v1.schema.json",
+  "title": "Arena public release",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "release", "blind", "catalog", "taskManifests"],
+  "properties": {
+    "schema": { "const": "arena.public-release.v1" },
+    "release": { "$ref": "#/$defs/release" },
+    "blind": { "$ref": "#/$defs/blind" },
+    "catalog": { "type": "array", "items": { "$ref": "#/$defs/catalogTask" } },
+    "taskManifests": { "type": "array", "items": { "$ref": "#/$defs/taskManifest" } }
+  },
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "publicBase"],
+      "properties": {
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "publicBase": { "type": "string", "pattern": "^/artifacts/[a-f0-9]{64}/$" },
+        "byteLength": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "version", "presentation"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "version": { "type": "string" },
+        "presentation": { "$ref": "#/$defs/presentation" }
+      }
+    },
+    "blindBuild": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "taskId", "status", "playability", "artifact"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^build_[a-f0-9]{20}$" },
+        "taskId": { "type": "string" },
+        "status": { "const": "succeeded" },
+        "playability": { "type": ["string", "null"] },
+        "artifact": { "$ref": "#/$defs/artifact" }
+      }
+    },
+    "namedBuild": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "taskId", "configurationId", "status", "playability", "artifact", "requirementSummary", "checks", "replica"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^build_[a-f0-9]{20}$" },
+        "taskId": { "type": "string" },
+        "configurationId": { "type": "string" },
+        "status": { "const": "succeeded" },
+        "playability": { "type": ["string", "null"] },
+        "artifact": { "$ref": "#/$defs/artifact" },
+        "requirementSummary": { "oneOf": [{ "$ref": "#/$defs/requirementSummary" }, { "type": "null" }] },
+        "checks": { "type": "array", "maxItems": 0 },
+        "replica": { "type": "integer", "minimum": 1 },
+        "runResult": { "type": ["string", "null"] },
+        "startedAt": { "type": ["string", "null"] },
+        "wallClockSeconds": { "type": ["number", "null"] },
+        "usage": { "oneOf": [{ "$ref": "#/$defs/usage" }, { "type": "null" }] },
+        "totalReportedTokens": { "type": ["number", "null"] },
+        "estimatedApiCost": { "oneOf": [{ "$ref": "#/$defs/cost" }, { "type": "null" }] },
+        "actualBilledCost": { "oneOf": [{ "$ref": "#/$defs/cost" }, { "type": "null" }] },
+        "meterSources": { "oneOf": [{ "$ref": "#/$defs/meterSources" }, { "type": "null" }] },
+        "agentPlayEvidence": { "$ref": "#/$defs/agentPlayEvidence" }
+      }
+    },
+    "agentPlayEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "receiptAvailable"],
+      "properties": {
+        "status": { "enum": ["not_applicable", "not_evaluated", "failed", "passed"] },
+        "receiptAvailable": { "type": "boolean" }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["releaseId", "taskCollection", "evaluationVersion", "tasks", "configurations", "cells", "builds", "attempts"],
+      "properties": {
+        "releaseId": { "type": "string" },
+        "taskCollection": { "type": ["string", "null"] },
+        "evaluationVersion": { "type": "string" },
+        "costDisclosure": { "type": "string" },
+        "tasks": { "type": "array", "items": { "$ref": "#/$defs/task" } },
+        "configurations": { "type": "array", "items": { "$ref": "#/$defs/configuration" } },
+        "cells": { "type": "array", "items": { "$ref": "#/$defs/cell" } },
+        "builds": { "type": "array", "items": { "$ref": "#/$defs/namedBuild" } },
+        "attempts": { "type": "array", "items": { "$ref": "#/$defs/attempt" } }
+      }
+    },
+    "blind": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["releaseId", "configurationCount", "tasks", "builds"],
+      "properties": {
+        "releaseId": { "type": "string" },
+        "configurationCount": { "type": "integer", "minimum": 0 },
+        "tasks": { "type": "array", "items": { "$ref": "#/$defs/task" } },
+        "builds": { "type": "array", "items": { "$ref": "#/$defs/blindBuild" } }
+      }
+    },
+    "catalogTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "slug", "name", "image", "browseRule", "rule", "tension", "inputSummary", "controls", "presentation", "publicNarrative"],
+      "properties": {
+        "id": { "type": "string" },
+        "slug": { "type": "string" },
+        "name": { "type": "string" },
+        "image": { "type": "string" },
+        "browseRule": { "type": "string" },
+        "rule": { "type": "string" },
+        "tension": { "type": "string" },
+        "inputSummary": { "type": "string" },
+        "controls": { "type": "array", "items": { "$ref": "#/$defs/control" } },
+        "presentation": { "$ref": "#/$defs/presentation" },
+        "publicNarrative": { "type": "string" }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canonicalViewport"],
+      "properties": {
+        "canonicalViewport": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height"],
+          "properties": { "width": { "type": "integer", "minimum": 1 }, "height": { "type": "integer", "minimum": 1 } }
+        }
+      }
+    },
+    "control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keys", "label"],
+      "properties": { "keys": { "type": "string" }, "label": { "type": "string" } }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string" }, "harnessId": { "type": "string" }, "harness": { "type": "string" }, "harnessVersion": { "type": "string" },
+        "model": { "type": "string" }, "effort": { "type": "string" }
+      }
+    },
+    "requirementSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "passed": { "type": ["number", "null"] }, "failed": { "type": ["number", "null"] },
+        "notEvaluated": { "type": ["number", "null"] }, "graderErrors": { "type": ["number", "null"] },
+        "evaluated": { "type": ["number", "null"] }, "applicable": { "type": ["number", "null"] },
+        "rate": { "type": ["number", "null"] }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_tokens": { "type": ["number", "null"] }, "cached_input_tokens": { "type": ["number", "null"] },
+        "cache_creation_input_tokens": { "type": ["number", "null"] }, "output_tokens": { "type": ["number", "null"] },
+        "reasoning_tokens": { "type": ["number", "null"] }
+      }
+    },
+    "cost": {
+      "type": "object", "additionalProperties": false, "required": ["amount"],
+      "properties": { "amount": { "type": "number" }, "currency": { "type": "string" } }
+    },
+    "meterSources": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "time": { "type": "string" }, "tokens": { "type": "string" }, "cost": { "type": "string" } }
+    },
+    "mean": {
+      "type": "object", "additionalProperties": false, "required": ["mean", "reported"],
+      "properties": { "mean": { "type": ["number", "null"] }, "reported": { "type": "integer", "minimum": 0 } }
+    },
+    "operational": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runs", "time", "tokens", "estimatedCost", "costAtListPrice"],
+      "properties": {
+        "runs": { "type": "integer", "minimum": 0 }, "time": { "$ref": "#/$defs/mean" },
+        "tokens": { "$ref": "#/$defs/mean" }, "estimatedCost": { "$ref": "#/$defs/mean" },
+        "costAtListPrice": { "type": "boolean" }
+      }
+    },
+    "score": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mean", "ciHalfWidth", "n", "replicasCounted", "replicasNullRate", "replicasHeldInvalid", "gatesPassed", "gateFailures", "gateUnverified"],
+      "properties": {
+        "mean": { "type": ["number", "null"] }, "ciHalfWidth": { "type": ["number", "null"] },
+        "n": { "type": "integer" }, "replicasCounted": { "type": "integer" }, "replicasNullRate": { "type": "integer" },
+        "replicasHeldInvalid": { "type": "integer" }, "gatesPassed": { "type": "boolean" },
+        "gateFailures": { "type": "array", "items": { "type": "string" } },
+        "gateUnverified": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "cellReplica": {
+      "type": "object", "additionalProperties": false,
+      "required": ["buildId", "replica", "showcase", "rate", "countedInMean", "passed", "applicable", "notEvaluated", "graderErrors", "gatesPassed", "gateFailures", "gateUnverified"],
+      "properties": {
+        "buildId": { "type": ["string", "null"] }, "replica": { "type": "integer" }, "showcase": { "type": "boolean" },
+        "rate": { "type": ["number", "null"] }, "countedInMean": { "type": "boolean" }, "passed": { "type": "integer" },
+        "applicable": { "type": "integer" }, "notEvaluated": { "type": "integer" }, "graderErrors": { "type": "integer" },
+        "gatesPassed": { "type": ["boolean", "null"] }, "gateFailures": { "type": "array", "items": { "type": "string" } },
+        "gateUnverified": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "cell": {
+      "type": "object", "additionalProperties": false,
+      "required": ["taskId", "configurationId", "showcaseBuildId", "score", "operational", "replicas"],
+      "properties": {
+        "taskId": { "type": "string" }, "configurationId": { "type": "string" }, "showcaseBuildId": { "type": "string" },
+        "score": { "$ref": "#/$defs/score" }, "operational": { "$ref": "#/$defs/operational" },
+        "replicas": { "type": "array", "items": { "$ref": "#/$defs/cellReplica" } }
+      }
+    },
+    "attempt": {
+      "type": "object", "additionalProperties": false, "required": ["taskId", "configurationId", "attempted", "succeeded"],
+      "properties": {
+        "taskId": { "type": "string" }, "configurationId": { "type": "string" },
+        "attempted": { "type": "integer" }, "succeeded": { "type": "integer" }
+      }
+    },
+    "taskManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "taskId", "tools", "actionSchema", "stateSchema", "resultSchema", "maxMessageBytes"],
+      "properties": {
+        "schema": { "const": "arena.game-manifest.v1" },
+        "taskId": { "type": "string" },
+        "tools": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["get_game_state", "take_game_action", "restart_game"] },
+          "allOf": [
+            { "contains": { "const": "get_game_state" } },
+            { "contains": { "const": "take_game_action" } }
+          ]
+        },
+        "actionSchema": { "type": "object" },
+        "stateSchema": { "$ref": "#/$defs/closedGameObjectSchema" },
+        "resultSchema": { "$ref": "#/$defs/closedGameObjectSchema" },
+        "maxMessageBytes": { "type": "integer", "minimum": 1024, "maximum": 65536 }
+      }
+    },
+    "closedGameObjectSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["properties", "additionalProperties"],
+      "properties": {
+        "properties": { "type": "object" },
+        "additionalProperties": { "const": false }
+      }
+    }
+  }
+}

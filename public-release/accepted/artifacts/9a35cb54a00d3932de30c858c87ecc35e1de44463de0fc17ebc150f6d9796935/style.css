@@ -1,0 +1,36 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0710;
+  overscroll-behavior: none;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+* { box-sizing: border-box; }
+
+#stage-outer {
+  position: fixed;
+  inset: 0;
+  display: block;
+  background: radial-gradient(ellipse at 50% 20%, #221a33 0%, #0a0710 70%);
+}
+
+#stage-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+#stage {
+  display: block;
+  background: #0a0710;
+  touch-action: none;
+}

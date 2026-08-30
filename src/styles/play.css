@@ -1,0 +1,931 @@
+/* =====================================================================
+   Play route — on the list the games are the protagonist; on a slug
+   the selected match owns the stage
+   ===================================================================== */
+
+.home {
+  display: grid;
+  /* The entrance is type on the left and honest space on the right — no
+     hero object marries one task or one medium. The proportions are tuned
+     so the jacket shelf enters the first viewport on a desktop display:
+     the shelf, not a picture, is what agents shipped. */
+  gap: clamp(28px, 4.5vw, 52px);
+  padding: clamp(40px, 5.5vw, 76px) 0 clamp(56px, 8vw, 104px);
+}
+.home__intro { max-width: 760px; }
+/* Hero: type left, the how-it-works diagram right. The figure appears only
+   where the void it replaces exists; phones keep the pure type hero. */
+.home__hero { display: grid; grid-template-columns: minmax(0, 1fr); }
+.home__how { display: none; margin: 0; }
+@media (min-width: 961px) {
+  .home__hero {
+    grid-template-columns: minmax(0, 720px) minmax(260px, 340px);
+    justify-content: space-between;
+    align-items: center;
+    gap: clamp(32px, 5vw, 88px);
+  }
+  .home__how { display: block; }
+}
+.home__how svg { display: block; width: 100%; height: auto; overflow: visible; }
+.home-how__box { fill: var(--panel); stroke: var(--line-2); stroke-width: 1.5; }
+.home-how__box--picked { stroke: var(--accent); stroke-width: 2; }
+.home-how__glyph,
+.home-how__wire { stroke: var(--line-2); stroke-width: 1.5; stroke-linecap: round; }
+.home-how__letter {
+  fill: var(--ink);
+  font: 800 28px/1 var(--sans);
+  letter-spacing: -0.02em;
+}
+.home-how__pick { fill: var(--accent); }
+.home-how__tick {
+  stroke: var(--on-accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.home-how__bars rect { fill: var(--line-2); }
+.home-how__bars rect:first-child { fill: var(--ink-2); }
+.home-how__label {
+  fill: var(--ink-2);
+  font: 600 var(--t-xs) / 1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.home__eyebrow,
+.home__release {
+  margin: 0;
+  color: var(--ink-2);
+  font: 600 var(--t-sm) / 1.4 var(--mono);
+  letter-spacing: 0.04em;
+}
+.home__intro h1 {
+  max-width: 12ch;
+  margin: 12px 0 18px;
+  font-size: clamp(42px, 6.8vw, 80px);
+  line-height: 0.96;
+  letter-spacing: -0.065em;
+}
+.home__intro > p:not(.home__eyebrow) {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--t-xl);
+  line-height: 1.45;
+}
+.home__actions,
+.task-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+.home__tasks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 22px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.home__tasks a { display: grid; gap: 10px; color: inherit; text-decoration: none; }
+.home__tasks img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--r-md);
+  box-shadow: 0 4px 0 var(--line-2);
+  transition: transform 100ms ease, box-shadow 100ms ease;
+}
+.home__tasks a:hover img,
+.home__tasks a:focus-visible img { transform: translateY(-3px); }
+.home__tasks a:active img { transform: translateY(3px); box-shadow: none; }
+.home__tasks span { display: grid; gap: 3px; }
+.home__tasks strong { font-size: var(--t-lg); }
+.home__tasks small { color: var(--ink-2); font-size: var(--t-sm); line-height: 1.35; }
+
+@media (max-width: 720px) {
+  .home { padding-top: 38px; gap: 38px; }
+  .home__intro h1 { font-size: clamp(32px, 9.5vw, 44px); }
+  .home__intro > p:not(.home__eyebrow) { font-size: var(--t-lg); }
+  .home__actions > * { flex: 1 1 100%; justify-content: center; }
+  .home__tasks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.play { padding: clamp(32px, 5vw, 72px) 0 clamp(48px, 7vw, 96px); }
+
+.play__title {
+  margin: 0 0 clamp(20px, 3vw, 32px);
+  font-size: var(--t-2xl);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+/* Jacket-forward grid: you see the games, then tap one. Not a ledger.
+   Desktop is four equal columns; the same cards wrap onto later rows
+   when more than four games ship. Phone is two columns. */
+.play-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2.4vw, 24px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (max-width: 720px) {
+  .play-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.play-card {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.play-card__still {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--r-md);
+  background: var(--panel);
+  box-shadow: 0 4px 0 var(--line-2);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.play-card__art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 160ms ease;
+}
+
+.play-card:focus-visible .play-card__art { transform: scale(1.04); }
+@media (hover: hover) and (pointer: fine) {
+  .play-card:hover .play-card__art { transform: scale(1.04); }
+}
+.play-card:active .play-card__still {
+  transform: translateY(4px) scale(0.97);
+  box-shadow: 0 0 0 var(--line-2);
+}
+.play-card:active .play-card__art { transform: none; }
+
+.play-card__copy { display: grid; gap: 8px; min-width: 0; }
+
+.play-card__name {
+  font-size: var(--t-xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.play-card__rule {
+  color: var(--ink);
+  font-size: var(--t-md);
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.play-card:hover .play-card__name,
+.play-card:focus-visible .play-card__name { color: var(--accent-ink); }
+
+.ledger {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  min-height: 44px;
+  padding: 16px 4px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: none;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 100ms ease;
+}
+.ledger:active { transform: scale(0.99); }
+.ledger strong { font-size: var(--t-lg); font-weight: 700; }
+.ledger__go { color: var(--accent-ink); font-size: var(--t-lg); transition: transform 120ms ease; }
+/* The whole band answers hover, so the row reads as one control, not a
+   heading that happens to sit near an arrow. */
+.ledger:hover { background: color-mix(in srgb, var(--ink) 3%, transparent); }
+.ledger:hover strong { color: var(--accent-ink); }
+.ledger:hover .ledger__go { transform: translateX(4px); }
+/* A row that carries its answers: the game, your own status under it, and
+   who currently leads on the right. */
+.ledger__name { display: grid; gap: 2px; min-width: 0; }
+.ledger__name small { color: var(--ink-2); font-size: var(--t-xs); }
+.ledger__lead {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35em;
+  margin-left: auto;
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+@media (max-width: 720px) {
+  .ledger { flex-wrap: wrap; }
+  .ledger__lead { margin-left: 0; flex: 1 1 100%; order: 3; text-align: left; }
+}
+
+/* =====================================================================
+   Blind comparison — two builds on one dark stage
+   ===================================================================== */
+
+.arena { padding: clamp(16px, 2.4vw, 28px) 0 clamp(48px, 7vw, 96px); }
+
+/* One compact row: back, name, keys. The stage owns the viewport. */
+.arena__bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: clamp(18px, 3vw, 40px);
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.arena__title { display: grid; gap: 4px; min-width: 0; }
+.arena__title h1 {
+  margin: 0;
+  font-size: var(--t-xl);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.keys { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: flex-end; }
+.key { display: grid; gap: 5px; justify-items: center; color: var(--ink-2); font-size: var(--t-md); }
+kbd {
+  min-width: 40px;
+  padding: 7px 8px;
+  text-align: center;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  border-bottom-width: 3px;
+  border-radius: var(--r-sm);
+  font: 700 var(--t-md) / 1 var(--mono);
+}
+
+.arena__floor {
+  margin-top: 18px;
+  padding: clamp(14px, 1.8vw, 22px);
+  background: var(--floor);
+  border: 1px solid var(--floor-line);
+  border-radius: var(--r-md);
+}
+
+/* Both panes stay mounted: switching sides must never reload a sandboxed build
+   and throw away the reader's run. */
+.deck { display: grid; gap: 10px; }
+
+.deck__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 0 2px;
+  border-bottom: 1px solid var(--floor-line);
+}
+.deck__bar .deck__label { flex: 1 1 160px; }
+.deck__bar .deck__tools { margin-left: auto; }
+
+/* The .tabs primitive recolored for the dark floor; the deck's own bar
+   already draws the hairline, so the primitive's is dropped. */
+.deck__switch {
+  --tab-ink: var(--on-floor-2);
+  --tab-ink-active: var(--on-floor);
+  --tab-accent: var(--accent-on-floor);
+  gap: 8px;
+  border-bottom: 0;
+}
+.deck__switch button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  min-height: 48px;
+  padding: 8px 16px;
+  font-size: var(--t-xl);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.deck__switch button:active { transform: translateY(2px); }
+
+/* The bar's right half: extra controls a surface adds (compare picker,
+   previous/next, close) plus the fullscreen button, one aligned row. */
+.deck__tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; margin-bottom: 8px; min-width: 0; }
+.deck__tools .btn-icon {
+  width: 44px;
+  height: 44px;
+  border-color: var(--floor-line);
+  color: var(--on-floor-2);
+}
+.deck__tools .btn-icon:hover { color: var(--on-floor); border-color: var(--accent-on-floor); }
+.deck__tools .btn-icon:disabled:hover { color: var(--on-floor-2); border-color: var(--floor-line); }
+.deck__tools .btn-primary {
+  min-height: 44px;
+  padding: 6px 14px;
+  font-size: var(--t-md);
+}
+.deck__count {
+  padding-inline: 2px;
+  color: var(--on-floor-2);
+  font: 600 var(--t-xs) / 1 var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.deck__compare {
+  min-height: 44px;
+  max-width: 180px;
+  padding: 4px 8px;
+  border: 1px solid var(--floor-line);
+  border-radius: var(--r-pill);
+  background: var(--floor-2);
+  color: var(--on-floor-2);
+  font: 600 var(--t-md) / 1.2 var(--sans);
+  transition: transform 100ms ease, color 120ms ease, border-color 120ms ease;
+}
+.deck__compare:hover { color: var(--on-floor); border-color: var(--accent-on-floor); }
+.deck__compare:active { transform: scale(0.97); }
+
+/* A single named build needs a name, not a tab. */
+.deck__label { display: flex; align-items: center; min-width: 0; padding: 8px 2px 10px; }
+.deck__name {
+  min-width: 0;
+  white-space: normal;
+  color: var(--on-floor);
+  font-size: var(--t-md);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.deck__fs {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--floor-line);
+  border-radius: var(--r-pill);
+  background: var(--floor-2);
+  color: var(--on-floor-2);
+  cursor: pointer;
+  transition: color 120ms ease, border-color 120ms ease, transform 80ms ease;
+}
+.deck__fs svg { width: 16px; height: 16px; }
+.deck__fs:hover { color: var(--on-floor); border-color: var(--accent-on-floor); }
+.deck__fs:active { transform: translateY(2px); }
+
+/* The slot is the available cabinet; the frame is the phone-shaped game
+   (390×780, the verifier viewport). A wide slab around a portrait canvas
+   is dead gutter, not a stage. Native size is 390px wide; the live match
+   fills remaining viewport instead of a short-viewport postage stamp. */
+.deck__slot {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-width: 0;
+}
+.deck__frame {
+  display: grid;
+  position: relative;
+  width: min(100%, calc(var(--stage-w) * 1px));
+  aspect-ratio: var(--stage-w) / var(--stage-h);
+  height: auto;
+  max-height: calc(var(--stage-h) * 1px);
+  border: 1px solid var(--floor-line);
+  border-radius: var(--r-sm);
+  background: var(--floor-2);
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+/* Panes stack in one grid cell: the inactive one keeps running, hidden. */
+.deck__pane { grid-area: 1 / 1; position: relative; width: 100%; height: 100%; min-width: 0; min-height: 0; }
+.deck__pane[data-inactive] { visibility: hidden; pointer-events: none; }
+.deck__pane iframe { display: block; width: 100%; height: 100%; border: 0; background: var(--floor-2); touch-action: none; }
+
+.deck__status {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  padding: 24px;
+  background: var(--floor-2);
+  color: var(--on-floor);
+  text-align: center;
+}
+.deck__status p { margin: 0; max-width: 28ch; font-size: var(--t-md); }
+.deck__status[data-state="loading"]::before {
+  content: "";
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--floor-line);
+  border-top-color: var(--accent-on-floor);
+  border-radius: 50%;
+  animation: deck-spin 0.8s linear infinite;
+}
+@keyframes deck-spin { to { transform: rotate(360deg); } }
+.deck__retry {
+  min-height: 44px;
+  border-color: var(--floor-line);
+  color: var(--on-floor);
+}
+.deck__retry:hover { color: var(--on-floor); border-color: var(--accent-on-floor); }
+
+.deck:fullscreen,
+.deck:-webkit-full-screen,
+.deck.is-fullscreen {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  background: var(--floor);
+}
+.deck.is-viewport-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  width: 100vw;
+  height: 100dvh;
+}
+.deck:fullscreen .deck__bar,
+.deck:-webkit-full-screen .deck__bar,
+.deck.is-fullscreen .deck__bar {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  padding: max(2px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 2px max(8px, env(safe-area-inset-left));
+  background: var(--floor);
+}
+.deck:fullscreen .deck__switch button,
+.deck:-webkit-full-screen .deck__switch button,
+.deck.is-fullscreen .deck__switch button {
+  min-width: 48px;
+  min-height: 44px;
+  padding: 4px 14px;
+  font-size: var(--t-lg);
+}
+.deck:fullscreen .deck__tools,
+.deck:-webkit-full-screen .deck__tools,
+.deck.is-fullscreen .deck__tools { margin-bottom: 0; }
+.deck:fullscreen .deck__slot,
+.deck:-webkit-full-screen .deck__slot,
+.deck.is-fullscreen .deck__slot {
+  flex: 1 1 0;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  container-type: size;
+}
+.deck:fullscreen .deck__frame,
+.deck:-webkit-full-screen .deck__frame,
+.deck.is-fullscreen .deck__frame {
+  flex: none;
+  width: min(100cqw, calc(100cqh * var(--stage-w) / var(--stage-h)));
+  height: min(100cqh, calc(100cqw * var(--stage-h) / var(--stage-w)));
+  max-height: none;
+  margin-inline: 0;
+  border: 0;
+  border-radius: 0;
+}
+.deck:fullscreen .deck__pane,
+.deck:fullscreen .deck__pane iframe,
+.deck:-webkit-full-screen .deck__pane,
+.deck:-webkit-full-screen .deck__pane iframe,
+.deck.is-fullscreen .deck__pane,
+.deck.is-fullscreen .deck__pane iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+/* A matching phone orientation gives the task the entire play region below
+   Arena's controls. A mismatched orientation keeps the canonical aspect and
+   naturally leaves room for the task's rotate affordance instead of crushing
+   the stage. */
+@media (orientation: portrait) {
+  .deck.is-fullscreen[data-stage-orientation="portrait"] .deck__frame {
+    width: 100cqw;
+    height: 100cqh;
+    aspect-ratio: auto;
+  }
+}
+@media (orientation: landscape) {
+  .deck.is-fullscreen[data-stage-orientation="landscape"] .deck__frame {
+    width: 100cqw;
+    height: 100cqh;
+    aspect-ratio: auto;
+  }
+}
+
+/* The question lives on the same stage as the builds. */
+.verdict { padding: clamp(24px, 3vw, 32px) 8px 8px; }
+.verdict h2 {
+  margin: 0;
+  max-width: 22ch;
+  color: var(--on-floor);
+  font-size: var(--t-2xl);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.verdict__options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+.verdict__options button {
+  min-height: 56px;
+  padding: 8px;
+  border: 1px solid var(--floor-line);
+  border-bottom-width: 4px;
+  border-radius: var(--r-md);
+  background: var(--floor-2);
+  color: var(--on-floor);
+  font-size: var(--t-lg);
+  font-weight: 800;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color 80ms ease, background 80ms ease, transform 80ms ease, border-bottom-width 80ms ease;
+}
+.verdict__beat { font-size: var(--t-xl); }
+.verdict__side {
+  font-size: var(--t-md);
+  font-weight: 700;
+}
+.verdict__options button:hover {
+  border-color: var(--accent-on-floor);
+  background: color-mix(in srgb, var(--accent-on-floor) 14%, var(--floor-2));
+}
+.verdict__options button:active {
+  transform: translateY(4px);
+  border-bottom-width: 0;
+}
+.verdict__options button:disabled { cursor: wait; opacity: 0.5; }
+.verdict__error { margin: 16px 0 0; color: var(--danger-on-floor); font-weight: 700; }
+.verdict__note { margin: 16px 0 0; color: var(--on-floor); font-size: var(--t-md); }
+.verdict__locked { margin: 16px 0 0; color: var(--on-floor); font-size: var(--t-md); }
+.verdict .btn-primary { margin-top: 16px; }
+
+/* The reveal: the emotional peak, paced like a results screen.
+   The kicker lands first ("You picked A. It was made by"), then a
+   real beat of silence before the name drops. Cards follow one at a time;
+   actions arrive last, when the reader is done feeling it. All delays
+   collapse under prefers-reduced-motion (base.css). */
+.reveal {
+  margin-top: clamp(28px, 4vw, 48px);
+  padding-top: clamp(20px, 3vw, 30px);
+  min-width: 0;
+  overflow: visible;
+  border-top: 2px solid var(--ink);
+  animation: reveal-in 260ms cubic-bezier(0.22, 0.7, 0.3, 1) both;
+}
+
+@keyframes reveal-in { from { opacity: 0; transform: translateY(16px); } }
+
+.reveal__kicker {
+  margin: 0;
+  color: var(--ink);
+  font: 700 var(--t-md) / 1.4 var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  animation: reveal-in 280ms 120ms cubic-bezier(0.22, 0.7, 0.3, 1) both;
+}
+.reveal__headline {
+  margin: 8px 0 0;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--t-4xl);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  text-wrap: wrap;
+  animation: reveal-in 420ms 820ms cubic-bezier(0.16, 0.8, 0.24, 1) both;
+}
+.reveal__headline--sentence { max-width: 24ch; font-size: var(--t-3xl); line-height: 1.02; }
+.reveal__subject {
+  margin: 10px 0 0;
+  color: var(--ink);
+  font-size: var(--t-xl);
+  letter-spacing: -0.02em;
+  animation: reveal-in 320ms 1020ms cubic-bezier(0.22, 0.7, 0.3, 1) both;
+}
+.reveal .pair { margin-top: clamp(24px, 3vw, 36px); }
+.reveal .pair > * { animation: reveal-in 340ms cubic-bezier(0.22, 0.7, 0.3, 1) both; }
+.reveal .pair > *:nth-child(1) { animation-delay: 1240ms; }
+.reveal .pair > *:nth-child(2) { animation-delay: 1400ms; }
+.reveal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: clamp(16px, 2.6vw, 32px);
+  animation: reveal-in 300ms 1660ms cubic-bezier(0.22, 0.7, 0.3, 1) both;
+}
+
+/* Share is SNS: the X intent is the same tap size as Next; copy-link
+   stays the quiet second control. Never a brand-button row. */
+.share { display: inline-flex; align-items: center; gap: 8px; }
+.share .btn-quiet__icon { width: 18px; height: 18px; }
+.share .link-quiet { display: inline-flex; align-items: center; gap: 6px; }
+.reveal__actions .share .btn-quiet {
+  min-height: 44px;
+  padding: 8px 18px;
+  font-size: var(--t-md);
+  text-decoration: none;
+}
+.reveal__actions .btn-primary:active { transform: translateY(2px); }
+.reveal__actions .btn-quiet:active { transform: translateY(2px); }
+@media (min-width: 961px) {
+  .arena { padding-top: clamp(24px, 3vw, 40px); }
+  .reveal__headline { letter-spacing: -0.04em; }
+  .verdict { padding: clamp(28px, 3.4vw, 40px) 8px 12px; }
+}
+
+/* Live match: the game is the stage. Lock the room to the visible
+   viewport so the vote stays on the first screen. Compact the chrome
+   that used to push a 390×780 portrait below an 800px fold. */
+.arena--live {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - (var(--gutter) * 2));
+  max-width: none;
+  height: calc(100dvh - var(--header));
+  min-height: 0;
+  padding-top: 8px;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+.arena--live .arena__bar {
+  flex: 0 0 auto;
+  padding-bottom: 8px;
+}
+.arena--live .arena__floor {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.arena--live .arena__title h1 { font-size: var(--t-lg); }
+.arena--live .keys { display: flex; flex-wrap: wrap; gap: 6px 10px; }
+.arena--live .key {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--t-md);
+}
+.arena--live kbd {
+  min-width: 0;
+  padding: 4px 6px;
+  font-size: var(--t-md);
+  border-bottom-width: 2px;
+}
+
+/* Desktop live: the floor is the theater and it fills the leftover
+   width. The portrait frame (390:780) sits in that floor at the
+   largest size remaining height allows. Vote is a compact card on
+   the same floor, on the first fold. Do not center a max-content
+   cluster in page-bg, and do not cap the frame at 390px if height
+   would allow it wider. */
+@media (min-width: 721px) {
+  .arena--live .arena__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+  }
+  .arena--live .arena__floor {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(13rem, 16rem);
+    column-gap: 16px;
+    align-items: stretch;
+    width: auto;
+    max-width: none;
+    height: auto;
+    margin-top: 4px;
+    padding: 8px;
+  }
+  .arena--live .deck {
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .arena--live .deck__bar {
+    padding: 0;
+    gap: 8px;
+  }
+  .arena--live .deck__slot {
+    flex: 1 1 auto;
+    min-height: 0;
+    width: auto;
+    container-type: size;
+    display: grid;
+    place-items: center;
+  }
+  .arena--live .deck__frame {
+    width: min(100cqw, calc(100cqh * var(--stage-w) / var(--stage-h)));
+    height: min(100cqh, calc(100cqw * var(--stage-h) / var(--stage-w)));
+    max-width: none;
+    max-height: none;
+  }
+  .arena--live .verdict {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    min-width: 0;
+    margin-top: 0;
+    padding: 16px;
+    background: var(--floor-2);
+    border: 1px solid var(--floor-line);
+    border-radius: var(--r-md);
+  }
+  .arena--live .verdict h2 { font-size: var(--t-xl); max-width: 12ch; }
+  .arena--live .verdict__options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* --- Responsive ------------------------------------------------------ */
+
+@media (max-width: 960px) {
+  .arena__bar { grid-template-columns: auto minmax(0, 1fr); row-gap: 12px; align-items: center; }
+  .keys { grid-column: 1 / -1; justify-content: flex-start; }
+}
+
+@media (max-width: 720px) {
+  .arena {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100dvh - var(--header));
+    padding-bottom: 24px;
+  }
+  /* Live match: tabs + frame + vote fill the visible stage. The page does
+     not scroll mid-play; drag inside the game stays inside the frame.
+     Compact ~8px of chrome so #choice-heading clears an 800px fold. */
+  .arena--live {
+    height: calc(100dvh - var(--header));
+    min-height: 0;
+    padding-top: 4px;
+    padding-bottom: 0;
+    overflow: hidden;
+  }
+  .arena--live .arena__bar {
+    flex: 0 0 auto;
+    padding-bottom: 4px;
+    row-gap: 4px;
+  }
+  .arena--live .arena__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 12px;
+  }
+  .arena--live .arena__title .link-quiet {
+    min-height: 0;
+    padding: 0;
+  }
+  .arena--live .arena__title h1 { font-size: var(--t-lg); }
+  .arena--live .keys { display: flex; flex-wrap: wrap; gap: 6px 10px; }
+  .arena--live .key {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--t-md);
+  }
+  .arena--live kbd {
+    min-width: 0;
+    padding: 4px 6px;
+    font-size: var(--t-md);
+    border-bottom-width: 2px;
+  }
+  .arena__floor {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    margin-inline: calc(var(--gutter) * -1);
+    border-radius: 0;
+    padding: 12px var(--gutter) 8px;
+    overflow-x: clip;
+  }
+  .arena--live .arena__floor {
+    display: flex;
+    flex-direction: column;
+    padding-top: 4px;
+    padding-bottom: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  .arena__floor .deck {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    width: 100%;
+  }
+  .arena--live .deck__slot {
+    flex: 1 1 auto;
+    min-height: 0;
+    container-type: size;
+  }
+  .arena--live .deck__frame {
+    width: min(100cqw, calc(100cqh * var(--stage-w) / var(--stage-h)));
+    height: min(100cqh, calc(100cqw * var(--stage-h) / var(--stage-w)));
+    max-height: none;
+  }
+  .arena--live .verdict {
+    flex: 0 0 auto;
+    margin-inline: calc(var(--gutter) * -1);
+    /* Bottom padding, not top: a bottom-docked heading only moves up
+       when the block below the fold gets taller. 16px raises a locked
+       #choice-heading above an 800px fold on a 844px phone. */
+    padding: 4px var(--gutter) 16px;
+    background: var(--floor);
+  }
+  .deck__bar { gap: 8px 10px; }
+  .deck__switch { gap: 8px; }
+  .deck__switch button {
+    min-width: 52px;
+    min-height: 48px;
+    font-size: var(--t-xl);
+  }
+  .deck__fs { width: 44px; height: 44px; }
+  /* When the tools carry more than the fullscreen button (the benchmark
+     stage's compare picker and walk controls), they become their own
+     full-width row under the build name, so they never push the stage wider
+     than the phone. The blind stage's lone fullscreen button stays inline. */
+  .deck__bar .deck__tools:has(.deck__compare) { flex: 1 1 100%; margin-left: 0; justify-content: space-between; }
+  .deck__compare { flex: 1 1 0; max-width: none; min-width: 0; min-height: 44px; }
+  .deck__tools .btn-icon { width: 44px; height: 44px; flex: 0 0 auto; }
+  .verdict { flex: 0 0 auto; padding: 12px 4px 4px; }
+  .verdict__options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .verdict__options button { min-height: 48px; }
+  .verdict h2 { font-size: var(--t-xl); max-width: none; }
+  .verdict__note, .verdict__locked { margin-top: 10px; }
+  .keys { gap: 8px 14px; }
+  .reveal__headline {
+    font-size: clamp(36px, 11vw, 56px);
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+  }
+  .reveal__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .reveal__actions .btn-primary,
+  .reveal__actions .btn-quiet {
+    width: 100%;
+    justify-content: center;
+  }
+  .share {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+  .share .btn-quiet {
+    width: 100%;
+    justify-content: center;
+  }
+  .share .link-quiet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+  }
+}

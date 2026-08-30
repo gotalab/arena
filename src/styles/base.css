@@ -1,0 +1,532 @@
+/* =====================================================================
+   Playable Arena — visual system v0.4
+   Personality comes from the key art and the type, not from chrome.
+   Tokens: palette, type scale, spacing, radius. Nothing decorative.
+   ===================================================================== */
+
+:root {
+  /* Both themes are declared once per token with `light-dark()`, so a token
+     cannot be added without a dark value. The default is pinned to light, not
+     to the OS; declaring it here rather than in JS makes the first paint
+     already correct, with no dark flash and no blocking inline script. */
+  color-scheme: light;
+
+  /* Surfaces and ink -------------------------------------------------- */
+  --paper: light-dark(#fbfaf8, #0b0c0e);
+  --paper-2: light-dark(#ffffff, #121317);
+  --panel: light-dark(#f2f0ec, #16181c);
+  --ink: light-dark(#12110f, #f6f4ef);
+  --ink-2: light-dark(#5d5a54, #a5a29b);
+  --line: light-dark(#e2dfd8, #2a2d32);
+  --line-2: light-dark(#c5c1b8, #494d54);
+
+  /* Accent: taken from the key art, not from a template ---------------- */
+  /* 5.27:1 with --on-accent in light (6.03:1 dark): AA for normal-size
+     labels, so buttons scale like product controls, not hero banners. */
+  --accent: light-dark(#cc2f12, #ff5a36);        /* fills */
+  --accent-ink: light-dark(#b62f14, #ff8465);    /* accent as text on paper (AA) */
+  --on-accent: light-dark(#ffffff, #14120f);
+  /* Locked Playable mark (board + one hand). Not the old site accent. */
+  --mark: light-dark(#e64c30, #ff6f4f);
+
+  /* The arena floor: the blind stage is always dark in both themes ----- */
+  --floor: light-dark(#0c0d0f, #000000);
+  --floor-2: light-dark(#16181c, #0f1113);
+  --floor-line: light-dark(#2b2e33, #24262a);
+  /* On-floor tokens have no light/dark split *because the floor never
+     changes*. Anything painted on the floor needs its own token here — a
+     paper-relative one is wrong on a permanently dark slab. */
+  --on-floor: #f4f2ee;
+  --on-floor-2: #a3a09a;
+  --focus-on-floor: #7fb2ff;
+  --accent-on-floor: #ff5a36;
+  --danger-on-floor: #ff8465;
+
+  --focus: light-dark(#0b5cf0, #7fb2ff);
+  --ok: light-dark(#12784a, #4fc98a);
+  /* Failure on paper. Deliberately a colder red than the orange accent, so a
+     failed gate cannot be mistaken for an accent fill; `--danger-on-floor` is
+     its counterpart on the permanently dark stage. */
+  --bad: light-dark(#a3231b, #ff8f80);
+  /* Categorical series colors, one per model vendor, fixed order, never
+     cycled. Hue follows the vendor; within a vendor the stronger tier is
+     darker on paper and brighter on the dark surface, so the ramp reads as
+     strength in both modes. Both modes validated with the dataviz palette
+     checks (adjacent-pair CVD separation, normal-vision floor, contrast)
+     against their panel surfaces on 2026-08-10, in this declared order —
+     the near-black xai step must stay next to deepseek, not next to the
+     dark ends of the ramps. Chart identity is the official harness chip;
+     color is a quiet vendor grouping tint, not the name of the point.
+     Each `-num` pair is the number ink that passes on that fill per mode. */
+  --series-anthropic-1: light-dark(#d97e52, #855043);
+  --series-anthropic-1-num: light-dark(#201409, #fff);
+  --series-anthropic-2: light-dark(#a63e14, #d96536);
+  --series-anthropic-2-num: light-dark(#fff, #16181c);
+  --series-anthropic-3: light-dark(#63200a, #ffab84);
+  --series-anthropic-3-num: light-dark(#fff, #16181c);
+  --series-openai-1: light-dark(#3ebba3, #3f7a68);
+  --series-openai-1-num: light-dark(#0b2620, #fff);
+  --series-openai-2: light-dark(#0e7d6c, #22b096);
+  --series-openai-2-num: light-dark(#fff, #16181c);
+  --series-openai-3: light-dark(#063b33, #7bf2d8);
+  --series-openai-3-num: light-dark(#fff, #16181c);
+  --series-deepseek: light-dark(#3e5bc6, #7c95ff);
+  --series-deepseek-num: light-dark(#fff, #16181c);
+  --series-xai: light-dark(#24292f, #e8eaed);
+  --series-xai-num: light-dark(#fff, #16181c);
+  --series-neutral: light-dark(#8a8578, #8f8a7c);
+  --series-neutral-num: light-dark(#1d1a15, #16181c);
+
+  /* Type -------------------------------------------------------------- */
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  /* Data floor is 13px; 11px is never product voice. Body is --t-md. */
+  --t-xs: 13px;
+  --t-sm: 13px;
+  --t-md: 15px;
+  --t-lg: clamp(16px, 1.2vw, 18px);
+  --t-xl: clamp(19px, 1.7vw, 24px);
+  --t-2xl: clamp(24px, 2.6vw, 32px);
+  --t-3xl: clamp(30px, 4vw, 46px);
+  --t-4xl: clamp(44px, 6.4vw, 84px);
+
+  /* Space and shape --------------------------------------------------- */
+  --gutter: clamp(16px, 3.4vw, 44px);
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-pill: 999px;
+  --header: 64px;
+
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+/* A stored preference pins the scheme; without one the light default above
+   stands. This is the only place either theme is selected. */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* Base ---------------------------------------------------------------- */
+
+* { box-sizing: border-box; }
+
+html { min-width: 320px; min-height: 100%; background: var(--paper); }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--t-md);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+}
+
+h1, h2, h3, h4 { line-height: 1.12; text-wrap: balance; }
+p { text-wrap: pretty; }
+img { max-width: 100%; }
+button, a { font: inherit; -webkit-tap-highlight-color: transparent; }
+button { color: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* The stage is dark in both themes, so the ring there is the floor's own
+   focus token rather than the paper-relative one. */
+.arena__floor :focus-visible { outline-color: var(--focus-on-floor); }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.app-shell { min-height: 100vh; display: flex; flex-direction: column; min-width: 0; }
+.app-shell > main { flex: 1 0 auto; min-width: 0; max-width: 100%; }
+/* About and Method are short documents: do not stretch main into a dead hole. */
+.app-shell:has(.doc) > main { flex: 0 0 auto; }
+
+/* Live match (/task/:slug/compare before a pick): the room is the viewport.
+   The site footer is ~100px and is what pushed 1280×800 to scrollHeight 900.
+   Hide it on this route only, never site-wide. */
+.app-shell[data-match] {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+.app-shell[data-match] > main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.app-shell[data-match] .colophon { display: none; }
+html:has(.app-shell[data-match]),
+html:has(.app-shell[data-match]) body {
+  height: 100%;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+.colophon {
+  padding: 28px var(--gutter) 32px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-2);
+  font-size: var(--t-md);
+  text-align: center;
+}
+/* The colophon is the one quiet door to /about and /method: same voice as
+   the line it sits in, underline as the only affordance. */
+.colophon a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.colophon a:hover { color: var(--ink); }
+
+.home,
+.play,
+.doc,
+.arena {
+  width: min(1280px, 100% - (var(--gutter) * 2));
+  max-width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+/* Masthead ------------------------------------------------------------ */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 3vw, 44px);
+  height: var(--header);
+  padding-inline: var(--gutter);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+  color: var(--ink);
+  font-size: clamp(16px, 1.5vw, 20px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  transition: transform 100ms ease;
+}
+.brand:active { transform: scale(0.97); }
+.brand__mark {
+  display: block;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  color: var(--mark);
+}
+
+.nav { display: flex; align-items: center; gap: clamp(14px, 2vw, 30px); }
+
+.masthead__end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.nav-menu { display: none; position: relative; }
+.nav-menu__list {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  right: 0;
+  display: grid;
+  width: min(320px, calc(100vw - 28px));
+  max-height: min(360px, calc(100dvh - var(--header) - 16px));
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+  overscroll-behavior: contain;
+}
+.nav-menu__list nav { display: grid; }
+.nav-menu__list a,
+.nav-menu__theme {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink);
+  font: 650 var(--t-md) / 1.2 var(--sans);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 100ms ease, background-color 120ms ease, color 120ms ease;
+}
+.nav-menu__list a:hover,
+.nav-menu__list a.is-active,
+.nav-menu__theme:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+.nav-menu__list a.is-active { color: var(--accent-ink); }
+.nav-menu__list a:active,
+.nav-menu__theme:active { transform: scale(0.97); }
+.nav-menu__theme {
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 6px 6px;
+  font-weight: 650;
+}
+.nav-menu__state {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+:root[data-nav-open],
+:root[data-nav-open] body { overflow: hidden; }
+
+/* Fullscreen of the stage must not leave the sticky masthead compositing
+   on top of the canvas (backdrop-filter is a known offender). */
+:root[data-stage-fullscreen] .masthead,
+:root:has(:fullscreen) .masthead,
+:root:has(:-webkit-full-screen) .masthead { display: none; }
+:root[data-stage-fullscreen],
+:root[data-stage-fullscreen] body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 4px 0;
+  color: var(--ink-2);
+  font-size: var(--t-md);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: transform 100ms ease, color 120ms ease;
+}
+.nav__link:hover { color: var(--ink); }
+.nav__link:active { transform: scale(0.97); }
+.nav__link.is-active { color: var(--ink); }
+.nav__link.is-active::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -3px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.theme-text {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 2px;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font-size: var(--t-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 100ms ease, color 120ms ease;
+}
+.theme-text:hover { color: var(--ink); }
+.theme-text:active { transform: scale(0.97); }
+
+/* Shared primitives --------------------------------------------------- */
+
+.btn-primary {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  /* Product-control scale (Stripe/Linear register): 48px full-width,
+     44px inline. --accent clears AA at normal label sizes (base tokens). */
+  min-height: 48px;
+  padding: 10px 22px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 100ms ease, filter 120ms ease;
+}
+.btn-primary:hover { filter: brightness(0.93); }
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary:disabled { cursor: not-allowed; filter: grayscale(0.3); opacity: 0.55; }
+.btn-primary:disabled:active { transform: none; }
+.btn-primary--inline { width: auto; min-height: 44px; padding: 8px 18px; font-size: var(--t-md); }
+
+.btn-quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-2);
+  font-size: var(--t-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 100ms ease, color 120ms ease, border-color 120ms ease;
+}
+.btn-quiet:hover { color: var(--ink); border-color: var(--line-2); }
+/* Quiet button on the permanently dark floor (task hero, stage chrome).
+   It sits over artwork, so it carries its own translucent fill and a bright
+   label — its legibility must never depend on how dark the art behind it is. */
+.btn-quiet--floor {
+  border-color: var(--floor-line);
+  background: rgb(10 10 12 / 0.45);
+  color: var(--on-floor);
+}
+.btn-quiet--floor:hover { color: var(--on-floor); border-color: var(--on-floor-2); }
+.btn-quiet:active { transform: scale(0.97); }
+.btn-quiet__icon { width: 14px; height: 14px; flex: 0 0 auto; }
+
+/* Icon-only variant of the quiet button. Always carries an aria-label. */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: transform 100ms ease, color 120ms ease, border-color 120ms ease;
+}
+.btn-icon:hover { color: var(--ink); border-color: var(--line-2); }
+.btn-icon:active { transform: scale(0.97); }
+.btn-icon:disabled { opacity: 0.35; cursor: default; }
+.btn-icon:disabled:hover,
+.btn-icon:disabled:active { color: var(--ink-2); border-color: var(--line); transform: none; }
+.btn-icon svg { width: 18px; height: 18px; }
+
+.link-quiet {
+  justify-self: start;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font-size: var(--t-md);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 100ms ease, color 120ms ease;
+}
+.link-quiet:active { transform: scale(0.97); }
+.link-quiet span,
+.link-plain {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.link-plain {
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  font-size: var(--t-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 100ms ease, color 120ms ease;
+}
+.link-plain:active { transform: scale(0.97); }
+
+.pill {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 9px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* --- Responsive ------------------------------------------------------ */
+
+@media (max-width: 720px) {
+  :root { --header: 56px; }
+
+  .masthead { gap: 12px; padding-inline: 14px; }
+  .brand {
+    min-height: 44px;
+    min-width: 44px;
+    padding-inline: 4px;
+    margin-inline-start: -4px;
+    font-size: 15px;
+  }
+  .nav { display: none; }
+  .nav-menu { display: block; }
+  .theme-text { display: none; }
+  .nav-menu .btn-icon,
+  .btn-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .btn-quiet { min-height: 44px; }
+  .link-quiet {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+@media (min-width: 961px) {
+  .colophon { padding: 36px var(--gutter) 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  :active {
+    transform: none !important;
+  }
+  .play-card:active .play-card__still,
+  .play-card:active .play-card__art {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,143 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  touch-action: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0812;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+#stage-wrap {
+  position: relative;
+  height: 100%;
+  max-height: 100%;
+  aspect-ratio: 9 / 16;
+  max-width: 100%;
+  box-shadow: 0 0 60px rgba(120, 80, 255, 0.15);
+}
+
+#game-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+#controls {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.control-pad {
+  position: absolute;
+  bottom: 0;
+  height: 28%;
+  min-height: 72px;
+  max-height: 140px;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#move-pad {
+  left: 0;
+  width: 55%;
+  background: linear-gradient(180deg, transparent 0%, rgba(40, 30, 70, 0.35) 100%);
+  border-top-right-radius: 40% 30%;
+}
+
+#jump-pad {
+  right: 0;
+  width: 45%;
+  background: linear-gradient(180deg, transparent 0%, rgba(70, 40, 90, 0.35) 100%);
+  border-top-left-radius: 40% 30%;
+}
+
+.control-hint {
+  opacity: 0.35;
+  font-size: clamp(10px, 2.5vw, 13px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c8b8ff;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.control-hint.hidden {
+  opacity: 0;
+}
+
+#move-hint {
+  transform: translateX(-8%);
+}
+
+#jump-hint {
+  transform: translateX(8%);
+}
+
+.move-indicator {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(180, 150, 255, 0.5);
+  background: rgba(100, 70, 180, 0.25);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.move-indicator.visible {
+  opacity: 1;
+}
+
+@media (min-aspect-ratio: 9/16) {
+  #stage-wrap {
+    height: 100%;
+    width: auto;
+  }
+}
+
+@media (max-aspect-ratio: 9/16) {
+  #stage-wrap {
+    width: 100%;
+    height: auto;
+  }
+}
+
+#jump-pad::after {
+  content: '▲';
+  font-size: clamp(18px, 5vw, 28px);
+  color: rgba(200, 184, 255, 0.35);
+  pointer-events: none;
+}
+
+#move-pad::after {
+  content: '◀ ▶';
+  font-size: clamp(14px, 4vw, 22px);
+  color: rgba(200, 184, 255, 0.28);
+  letter-spacing: 0.2em;
+  pointer-events: none;
+}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#090916">
+  <title>EMBER</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main id="game-shell" aria-label="EMBER climbing game">
+    <canvas id="game" aria-label="Pull away and release to launch the spark"></canvas>
+    <section id="game-over" class="ceremony" hidden>
+      <div class="rank-medallion"><span>RANK</span><strong id="final-rank">CINDER</strong></div>
+      <p class="eyebrow">THE FLUE REMEMBERS</p>
+      <h1>YOUR LIGHT<br>WENT <i>HIGH</i></h1>
+      <div class="result-grid">
+        <div><span>SCORE</span><strong id="final-score">0</strong></div>
+        <div><span>SESSION BEST</span><strong id="final-best">0</strong></div>
+        <div><span>BEST CHAIN</span><strong id="final-chain">0</strong></div>
+      </div>
+      <p class="restart">TAP ANYWHERE TO BURN AGAIN</p>
+    </section>
+  </main>
+  <script src="./game.js"></script>
+</body>
+</html>

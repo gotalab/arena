@@ -1,0 +1,5694 @@
+{
+  "schema": "arena.public-release.v1",
+  "release": {
+    "releaseId": "round-v6",
+    "taskCollection": null,
+    "evaluationVersion": "0.1.1+8217913c0eb1.rtf6658267ee5a",
+    "tasks": [
+      {
+        "id": "ember@1.3.0",
+        "title": "EMBER",
+        "version": "1.3.0",
+        "presentation": {
+          "canonicalViewport": {
+            "width": 390,
+            "height": 780
+          }
+        }
+      },
+      {
+        "id": "delve@0.6.0",
+        "title": "DELVE",
+        "version": "0.6.0",
+        "presentation": {
+          "canonicalViewport": {
+            "width": 390,
+            "height": 780
+          }
+        }
+      },
+      {
+        "id": "stomp@0.7.0",
+        "title": "STOMP",
+        "version": "0.7.0",
+        "presentation": {
+          "canonicalViewport": {
+            "width": 390,
+            "height": 780
+          }
+        }
+      }
+    ],
+    "configurations": [
+      {
+        "id": "antigravity-gemini-3.7-flash-medium",
+        "harnessId": "antigravity",
+        "harness": "antigravity",
+        "harnessVersion": "1.1.20",
+        "model": "Gemini 3.7 Flash",
+        "effort": "Medium"
+      },
+      {
+        "id": "claude-code-claude-opus-5-high",
+        "harnessId": "claude-code",
+        "harness": "Claude Code",
+        "harnessVersion": "2.1.245 (Claude Code)",
+        "model": "Claude Opus 5",
+        "effort": "High"
+      },
+      {
+        "id": "claude-code-claude-sonnet-5-high",
+        "harnessId": "claude-code",
+        "harness": "Claude Code",
+        "harnessVersion": "2.1.245 (Claude Code)",
+        "model": "Claude Sonnet 5",
+        "effort": "High"
+      },
+      {
+        "id": "codex-cli-gpt-5.6-luna-max",
+        "harnessId": "codex-cli",
+        "harness": "Codex",
+        "harnessVersion": "codex-cli 0.149.1",
+        "model": "GPT-5.6 Luna",
+        "effort": "Max"
+      },
+      {
+        "id": "codex-cli-gpt-5.6-sol-medium",
+        "harnessId": "codex-cli",
+        "harness": "Codex",
+        "harnessVersion": "codex-cli 0.149.1",
+        "model": "GPT-5.6 Sol",
+        "effort": "Medium"
+      },
+      {
+        "id": "cursor-agent-auto-default",
+        "harnessId": "cursor-agent",
+        "harness": "Cursor",
+        "harnessVersion": "2026.08.11-e8db854",
+        "model": "Auto (router)",
+        "effort": ""
+      },
+      {
+        "id": "cursor-agent-gemini-3.7-flash-medium",
+        "harnessId": "cursor-agent",
+        "harness": "Cursor",
+        "harnessVersion": "2026.08.11-e8db854",
+        "model": "Gemini 3.7 Flash",
+        "effort": "Medium"
+      },
+      {
+        "id": "cursor-agent-gpt-5.6-sol-medium",
+        "harnessId": "cursor-agent",
+        "harness": "Cursor",
+        "harnessVersion": "2026.08.11-e8db854",
+        "model": "GPT-5.6 Sol",
+        "effort": "Medium"
+      },
+      {
+        "id": "cursor-agent-cursor-grok-4.6-high",
+        "harnessId": "cursor-agent",
+        "harness": "Cursor",
+        "harnessVersion": "2026.08.11-e8db854",
+        "model": "Grok 4.6",
+        "effort": "High"
+      },
+      {
+        "id": "cursor-agent-claude-opus-5-thinking-high",
+        "harnessId": "cursor-agent",
+        "harness": "Cursor",
+        "harnessVersion": "2026.08.11-e8db854",
+        "model": "Claude Opus 5",
+        "effort": "High"
+      },
+      {
+        "id": "opencode-deepseek-v4-flash-high",
+        "harnessId": "opencode",
+        "harness": "OpenCode",
+        "harnessVersion": "1.18.23",
+        "model": "DeepSeek V4 Flash",
+        "effort": "High"
+      },
+      {
+        "id": "opencode-glm-5.3-flash-high",
+        "harnessId": "opencode",
+        "harness": "OpenCode",
+        "harnessVersion": "1.18.23",
+        "model": "GLM-5.3-Flash",
+        "effort": "High"
+      },
+      {
+        "id": "pi-gpt-5.6-sol-medium",
+        "harnessId": "pi",
+        "harness": "pi",
+        "harnessVersion": "0.84.3",
+        "model": "GPT-5.6 Sol",
+        "effort": "Medium"
+      }
+    ],
+    "cells": [
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "showcaseBuildId": "build_170ade79eaba2284cf2e",
+        "score": {
+          "mean": 0.821429,
+          "ciHalfWidth": 0.469496,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 165.995534,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 1020483,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.438982,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_170ade79eaba2284cf2e",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.964286,
+            "countedInMean": true,
+            "passed": 27,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.892857,
+            "countedInMean": true,
+            "passed": 25,
+            "applicable": 28,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.607143,
+            "countedInMean": true,
+            "passed": 17,
+            "applicable": 28,
+            "notEvaluated": 6,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "claude-code-claude-opus-5-high",
+        "showcaseBuildId": "build_ceb65c23b6015f066457",
+        "score": {
+          "mean": 0.880952,
+          "ciHalfWidth": 0.369397,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 2290.089182,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 15161104,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 14.306594,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_ceb65c23b6015f066457",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.928571,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.714286,
+            "countedInMean": true,
+            "passed": 20,
+            "applicable": 28,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 1,
+            "countedInMean": true,
+            "passed": 28,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "claude-code-claude-sonnet-5-high",
+        "showcaseBuildId": "build_e60decb056754c51fc01",
+        "score": {
+          "mean": 0.666667,
+          "ciHalfWidth": 0.717166,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 1665.311216,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 6720201,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 3.550771,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_e60decb056754c51fc01",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.357143,
+            "countedInMean": true,
+            "passed": 10,
+            "applicable": 28,
+            "notEvaluated": 7,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.928571,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.714286,
+            "countedInMean": true,
+            "passed": 20,
+            "applicable": 28,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "codex-cli-gpt-5.6-luna-max",
+        "showcaseBuildId": "build_b903b0652d3150a85ce3",
+        "score": {
+          "mean": 0.785714,
+          "ciHalfWidth": 0.153679,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 494.736593,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 1797612,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.12186,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_b903b0652d3150a85ce3",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.75,
+            "countedInMean": true,
+            "passed": 21,
+            "applicable": 28,
+            "notEvaluated": 3,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.857143,
+            "countedInMean": true,
+            "passed": 24,
+            "applicable": 28,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.75,
+            "countedInMean": true,
+            "passed": 21,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "codex-cli-gpt-5.6-sol-medium",
+        "showcaseBuildId": "build_87850e4ba47a9efd0aa0",
+        "score": {
+          "mean": 0.904762,
+          "ciHalfWidth": 0.051226,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 216.500179,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 319277,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.617564,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_87850e4ba47a9efd0aa0",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.892857,
+            "countedInMean": true,
+            "passed": 25,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.928571,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.892857,
+            "countedInMean": true,
+            "passed": 25,
+            "applicable": 28,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "cursor-agent-auto-default",
+        "showcaseBuildId": "build_4d2d87b8d0db776a4c4c",
+        "score": {
+          "mean": 0.267857,
+          "ciHalfWidth": 3.403391,
+          "n": 2,
+          "replicasCounted": 2,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 1,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.no_blocking_uncaught_error",
+            "gate.input_liveness"
+          ],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 2,
+          "time": {
+            "mean": 591.383505,
+            "reported": 2
+          },
+          "tokens": {
+            "mean": 1438139,
+            "reported": 2
+          },
+          "estimatedCost": {
+            "mean": null,
+            "reported": 0
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_4d2d87b8d0db776a4c4c",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.535714,
+            "countedInMean": true,
+            "passed": 15,
+            "applicable": 28,
+            "notEvaluated": 11,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 4,
+            "applicable": 28,
+            "notEvaluated": 15,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.no_blocking_uncaught_error",
+              "gate.input_liveness"
+            ],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+        "showcaseBuildId": "build_4cd24e942bf87043221f",
+        "score": {
+          "mean": 0.547619,
+          "ciHalfWidth": 0.223289,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 286.206564,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 1068824,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.298371,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_4cd24e942bf87043221f",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.464286,
+            "countedInMean": true,
+            "passed": 13,
+            "applicable": 28,
+            "notEvaluated": 10,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.535714,
+            "countedInMean": true,
+            "passed": 15,
+            "applicable": 28,
+            "notEvaluated": 7,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.642857,
+            "countedInMean": true,
+            "passed": 18,
+            "applicable": 28,
+            "notEvaluated": 6,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+        "showcaseBuildId": "build_c9bc86515d256036bdf7",
+        "score": {
+          "mean": 0.940476,
+          "ciHalfWidth": 0.051227,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 406.452487,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 1383102,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 1.231625,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_c9bc86515d256036bdf7",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.928571,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.928571,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.964286,
+            "countedInMean": true,
+            "passed": 27,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "cursor-agent-cursor-grok-4.6-high",
+        "showcaseBuildId": "build_f57078acad34e5285b8a",
+        "score": {
+          "mean": 0.869047,
+          "ciHalfWidth": 0.184699,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 1525.783717,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 3536410,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 2.525438,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_f57078acad34e5285b8a",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.785714,
+            "countedInMean": true,
+            "passed": 22,
+            "applicable": 28,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.928571,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.892857,
+            "countedInMean": true,
+            "passed": 25,
+            "applicable": 28,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+        "showcaseBuildId": "build_dc660935e16ebcc1776f",
+        "score": {
+          "mean": 0.797619,
+          "ciHalfWidth": 0.102453,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 5262.584873,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 22564291,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 13.88778,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_dc660935e16ebcc1776f",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.75,
+            "countedInMean": true,
+            "passed": 21,
+            "applicable": 28,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.821429,
+            "countedInMean": true,
+            "passed": 23,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.821429,
+            "countedInMean": true,
+            "passed": 23,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "opencode-deepseek-v4-flash-high",
+        "showcaseBuildId": "build_9ba366975958695a1f5d",
+        "score": {
+          "mean": 0.803572,
+          "ciHalfWidth": 0.226897,
+          "n": 2,
+          "replicasCounted": 2,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 1,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 2,
+          "time": {
+            "mean": 2158.316183,
+            "reported": 2
+          },
+          "tokens": {
+            "mean": 23322642,
+            "reported": 2
+          },
+          "estimatedCost": {
+            "mean": 0.394467,
+            "reported": 2
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_9ba366975958695a1f5d",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.821429,
+            "countedInMean": true,
+            "passed": 23,
+            "applicable": 28,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.785714,
+            "countedInMean": true,
+            "passed": 22,
+            "applicable": 28,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "opencode-glm-5.3-flash-high",
+        "showcaseBuildId": "build_346993e3908a4cc377bd",
+        "score": {
+          "mean": 0.559524,
+          "ciHalfWidth": 1.22408,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.artifact_valid",
+            "gate.loads"
+          ],
+          "gateUnverified": [
+            "gate.no_blocking_uncaught_error",
+            "gate.input_liveness"
+          ]
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 3134.96086,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 12260067,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.227314,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": null,
+            "replica": 1,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 0,
+            "applicable": 28,
+            "notEvaluated": 28,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.artifact_valid",
+              "gate.loads"
+            ],
+            "gateUnverified": [
+              "gate.no_blocking_uncaught_error",
+              "gate.input_liveness"
+            ]
+          },
+          {
+            "buildId": "build_346993e3908a4cc377bd",
+            "replica": 2,
+            "showcase": true,
+            "rate": 0.75,
+            "countedInMean": true,
+            "passed": 21,
+            "applicable": 28,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.928571,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 28,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "pi-gpt-5.6-sol-medium",
+        "showcaseBuildId": "build_f76117d3456668dfdcb4",
+        "score": {
+          "mean": 0.809524,
+          "ciHalfWidth": 0.512261,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 250.868953,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 146893,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.533052,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_f76117d3456668dfdcb4",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.928571,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.571429,
+            "countedInMean": true,
+            "passed": 16,
+            "applicable": 28,
+            "notEvaluated": 7,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.928571,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "showcaseBuildId": "build_fc1500f2ca978af31e33",
+        "score": {
+          "mean": 0.541667,
+          "ciHalfWidth": 1.165396,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.no_blocking_uncaught_error",
+            "gate.input_liveness"
+          ],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 174.491995,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 1496246,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.503193,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_fc1500f2ca978af31e33",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.8125,
+            "countedInMean": true,
+            "passed": 39,
+            "applicable": 48,
+            "notEvaluated": 7,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.8125,
+            "countedInMean": true,
+            "passed": 39,
+            "applicable": 48,
+            "notEvaluated": 3,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 6,
+            "applicable": 48,
+            "notEvaluated": 27,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.no_blocking_uncaught_error",
+              "gate.input_liveness"
+            ],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "claude-code-claude-opus-5-high",
+        "showcaseBuildId": "build_50c65501b4f7a9722e23",
+        "score": {
+          "mean": 0.888889,
+          "ciHalfWidth": 0.059764,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 2317.197416,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 12006844,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 12.716567,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_50c65501b4f7a9722e23",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.916667,
+            "countedInMean": true,
+            "passed": 44,
+            "applicable": 48,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.875,
+            "countedInMean": true,
+            "passed": 42,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.875,
+            "countedInMean": true,
+            "passed": 42,
+            "applicable": 48,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "claude-code-claude-sonnet-5-high",
+        "showcaseBuildId": "build_1a778474d00b68aca665",
+        "score": {
+          "mean": 0.777778,
+          "ciHalfWidth": 0.181766,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 1474.898116,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 9597427,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 3.931565,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_1a778474d00b68aca665",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.770833,
+            "countedInMean": true,
+            "passed": 37,
+            "applicable": 48,
+            "notEvaluated": 6,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.708333,
+            "countedInMean": true,
+            "passed": 34,
+            "applicable": 48,
+            "notEvaluated": 7,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.854167,
+            "countedInMean": true,
+            "passed": 41,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "codex-cli-gpt-5.6-luna-max",
+        "showcaseBuildId": "build_dc73aa2c34db7fc2f30a",
+        "score": {
+          "mean": 0.875,
+          "ciHalfWidth": 0.225604,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 642.175722,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 2767380,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.159407,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_dc73aa2c34db7fc2f30a",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.770833,
+            "countedInMean": true,
+            "passed": 37,
+            "applicable": 48,
+            "notEvaluated": 8,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.916667,
+            "countedInMean": true,
+            "passed": 44,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.9375,
+            "countedInMean": true,
+            "passed": 45,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "codex-cli-gpt-5.6-sol-medium",
+        "showcaseBuildId": "build_585d00c6b718a36324e3",
+        "score": {
+          "mean": 0.618055,
+          "ciHalfWidth": 1.33201,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.input_liveness"
+          ],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 235.814052,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 511058,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.699871,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_585d00c6b718a36324e3",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.895833,
+            "countedInMean": true,
+            "passed": 43,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.958333,
+            "countedInMean": true,
+            "passed": 46,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 17,
+            "applicable": 48,
+            "notEvaluated": 22,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.input_liveness"
+            ],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "cursor-agent-auto-default",
+        "showcaseBuildId": "build_b028a5ceeb435adba1b0",
+        "score": {
+          "mean": 0.364584,
+          "ciHalfWidth": 4.632398,
+          "n": 2,
+          "replicasCounted": 2,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 1,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.loads",
+            "gate.no_blocking_uncaught_error"
+          ],
+          "gateUnverified": [
+            "gate.input_liveness"
+          ]
+        },
+        "operational": {
+          "runs": 2,
+          "time": {
+            "mean": 525.885494,
+            "reported": 2
+          },
+          "tokens": {
+            "mean": 1156782,
+            "reported": 2
+          },
+          "estimatedCost": {
+            "mean": null,
+            "reported": 0
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_b028a5ceeb435adba1b0",
+            "replica": 2,
+            "showcase": true,
+            "rate": 0.729167,
+            "countedInMean": true,
+            "passed": 35,
+            "applicable": 48,
+            "notEvaluated": 7,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 0,
+            "applicable": 48,
+            "notEvaluated": 48,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.loads",
+              "gate.no_blocking_uncaught_error"
+            ],
+            "gateUnverified": [
+              "gate.input_liveness"
+            ]
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+        "showcaseBuildId": "build_64c0a4c7089b083851ba",
+        "score": {
+          "mean": 0.506944,
+          "ciHalfWidth": 1.105632,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.input_liveness"
+          ],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 312.981469,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 983956,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.301614,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_64c0a4c7089b083851ba",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.6875,
+            "countedInMean": true,
+            "passed": 33,
+            "applicable": 48,
+            "notEvaluated": 7,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 13,
+            "applicable": 48,
+            "notEvaluated": 22,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.input_liveness"
+            ],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.833333,
+            "countedInMean": true,
+            "passed": 40,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+        "showcaseBuildId": "build_5a900753377b793ea760",
+        "score": {
+          "mean": 0.881944,
+          "ciHalfWidth": 0.107742,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 429.232606,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 1458472,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 1.269577,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_5a900753377b793ea760",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.895833,
+            "countedInMean": true,
+            "passed": 43,
+            "applicable": 48,
+            "notEvaluated": 3,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.833333,
+            "countedInMean": true,
+            "passed": 40,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.916667,
+            "countedInMean": true,
+            "passed": 44,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "cursor-agent-cursor-grok-4.6-high",
+        "showcaseBuildId": "build_3345396e6ba1209b0f12",
+        "score": {
+          "mean": 0.78125,
+          "ciHalfWidth": 0.397063,
+          "n": 2,
+          "replicasCounted": 2,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 1,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 2,
+          "time": {
+            "mean": 1425.353725,
+            "reported": 2
+          },
+          "tokens": {
+            "mean": 3253976,
+            "reported": 2
+          },
+          "estimatedCost": {
+            "mean": 2.319228,
+            "reported": 2
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_3345396e6ba1209b0f12",
+            "replica": 2,
+            "showcase": true,
+            "rate": 0.75,
+            "countedInMean": true,
+            "passed": 36,
+            "applicable": 48,
+            "notEvaluated": 6,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.8125,
+            "countedInMean": true,
+            "passed": 39,
+            "applicable": 48,
+            "notEvaluated": 6,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+        "showcaseBuildId": "build_9729d2983b39d88d8a93",
+        "score": {
+          "mean": 0.875,
+          "ciHalfWidth": 0.264704,
+          "n": 2,
+          "replicasCounted": 2,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 1,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 2,
+          "time": {
+            "mean": 4787.784041,
+            "reported": 2
+          },
+          "tokens": {
+            "mean": 21698417,
+            "reported": 2
+          },
+          "estimatedCost": {
+            "mean": 17.450188,
+            "reported": 2
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_9729d2983b39d88d8a93",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.895833,
+            "countedInMean": true,
+            "passed": 43,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.854167,
+            "countedInMean": true,
+            "passed": 41,
+            "applicable": 48,
+            "notEvaluated": 3,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "opencode-deepseek-v4-flash-high",
+        "showcaseBuildId": "build_9a2bdabab8a72a074771",
+        "score": {
+          "mean": 0.263889,
+          "ciHalfWidth": 1.135514,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.input_liveness"
+          ],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 2315.430242,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 24487245,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.344912,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_9a2bdabab8a72a074771",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.791667,
+            "countedInMean": true,
+            "passed": 38,
+            "applicable": 48,
+            "notEvaluated": 7,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 3,
+            "applicable": 48,
+            "notEvaluated": 32,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.input_liveness"
+            ],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 24,
+            "applicable": 48,
+            "notEvaluated": 15,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.input_liveness"
+            ],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "opencode-glm-5.3-flash-high",
+        "showcaseBuildId": "build_47604726e9ed4fb935f2",
+        "score": {
+          "mean": 0.826389,
+          "ciHalfWidth": 0.07906,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 2585.690655,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 7087640,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.140022,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_47604726e9ed4fb935f2",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.791667,
+            "countedInMean": true,
+            "passed": 38,
+            "applicable": 48,
+            "notEvaluated": 2,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.833333,
+            "countedInMean": true,
+            "passed": 40,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.854167,
+            "countedInMean": true,
+            "passed": 41,
+            "applicable": 48,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "pi-gpt-5.6-sol-medium",
+        "showcaseBuildId": "build_127f1a2b32b9f740ed46",
+        "score": {
+          "mean": 0.854167,
+          "ciHalfWidth": 0.136935,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 319.25329,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 179850,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.637166,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_127f1a2b32b9f740ed46",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.895833,
+            "countedInMean": true,
+            "passed": 43,
+            "applicable": 48,
+            "notEvaluated": 2,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.875,
+            "countedInMean": true,
+            "passed": 42,
+            "applicable": 48,
+            "notEvaluated": 5,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.791667,
+            "countedInMean": true,
+            "passed": 38,
+            "applicable": 48,
+            "notEvaluated": 5,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "showcaseBuildId": "build_849491d36ed74cf68921",
+        "score": {
+          "mean": 0.481482,
+          "ciHalfWidth": 1.061141,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.input_liveness"
+          ],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 145.848978,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 793390,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.389066,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_849491d36ed74cf68921",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.814815,
+            "countedInMean": true,
+            "passed": 22,
+            "applicable": 27,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.62963,
+            "countedInMean": true,
+            "passed": 17,
+            "applicable": 27,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 9,
+            "applicable": 27,
+            "notEvaluated": 9,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.input_liveness"
+            ],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "claude-code-claude-opus-5-high",
+        "showcaseBuildId": "build_9e6c1551397990117ebb",
+        "score": {
+          "mean": 0.864198,
+          "ciHalfWidth": 0.265617,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 2426.113049,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 18049744,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 16.204977,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_9e6c1551397990117ebb",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.925926,
+            "countedInMean": true,
+            "passed": 25,
+            "applicable": 27,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.740741,
+            "countedInMean": true,
+            "passed": 20,
+            "applicable": 27,
+            "notEvaluated": 5,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.925926,
+            "countedInMean": true,
+            "passed": 25,
+            "applicable": 27,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "claude-code-claude-sonnet-5-high",
+        "showcaseBuildId": "build_9a35cb54a00d3932de30",
+        "score": {
+          "mean": 0.765432,
+          "ciHalfWidth": 0.23156,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 1238.92469,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 6291333,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 3.012804,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_9a35cb54a00d3932de30",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.777778,
+            "countedInMean": true,
+            "passed": 21,
+            "applicable": 27,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.851852,
+            "countedInMean": true,
+            "passed": 23,
+            "applicable": 27,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.666667,
+            "countedInMean": true,
+            "passed": 18,
+            "applicable": 27,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "codex-cli-gpt-5.6-luna-max",
+        "showcaseBuildId": "build_894be9bc9725356cc4f1",
+        "score": {
+          "mean": 0.802469,
+          "ciHalfWidth": 0.191539,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 667.810578,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 2793643,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.164117,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_894be9bc9725356cc4f1",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.888889,
+            "countedInMean": true,
+            "passed": 24,
+            "applicable": 27,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.777778,
+            "countedInMean": true,
+            "passed": 21,
+            "applicable": 27,
+            "notEvaluated": 2,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.740741,
+            "countedInMean": true,
+            "passed": 20,
+            "applicable": 27,
+            "notEvaluated": 5,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "codex-cli-gpt-5.6-sol-medium",
+        "showcaseBuildId": "build_970328c67136ee8b7549",
+        "score": {
+          "mean": 0.802469,
+          "ciHalfWidth": 0.383078,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 183.249732,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 291721,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.529543,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_970328c67136ee8b7549",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.62963,
+            "countedInMean": true,
+            "passed": 17,
+            "applicable": 27,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.925926,
+            "countedInMean": true,
+            "passed": 25,
+            "applicable": 27,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.851852,
+            "countedInMean": true,
+            "passed": 23,
+            "applicable": 27,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "cursor-agent-auto-default",
+        "showcaseBuildId": "build_310c33af7f2e7cc88cb7",
+        "score": {
+          "mean": 0,
+          "ciHalfWidth": 0,
+          "n": 2,
+          "replicasCounted": 2,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 1,
+          "gatesPassed": false,
+          "gateFailures": [],
+          "gateUnverified": [
+            "gate.input_liveness"
+          ]
+        },
+        "operational": {
+          "runs": 2,
+          "time": {
+            "mean": 324.443622,
+            "reported": 2
+          },
+          "tokens": {
+            "mean": 934211,
+            "reported": 2
+          },
+          "estimatedCost": {
+            "mean": null,
+            "reported": 0
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_310c33af7f2e7cc88cb7",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 0,
+            "applicable": 27,
+            "notEvaluated": 27,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [],
+            "gateUnverified": [
+              "gate.input_liveness"
+            ]
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 0,
+            "applicable": 27,
+            "notEvaluated": 27,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [],
+            "gateUnverified": [
+              "gate.input_liveness"
+            ]
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+        "showcaseBuildId": "build_719fd9a34c7ed5069bdd",
+        "score": {
+          "mean": 0.592593,
+          "ciHalfWidth": 0.243442,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 370.40366,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 1211307,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.340719,
+            "reported": 3
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_719fd9a34c7ed5069bdd",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.518519,
+            "countedInMean": true,
+            "passed": 14,
+            "applicable": 27,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.555556,
+            "countedInMean": true,
+            "passed": 15,
+            "applicable": 27,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.703704,
+            "countedInMean": true,
+            "passed": 19,
+            "applicable": 27,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+        "showcaseBuildId": "build_f7760f27007969e43af1",
+        "score": {
+          "mean": 0.851852,
+          "ciHalfWidth": 0.941184,
+          "n": 2,
+          "replicasCounted": 2,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 1,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 2,
+          "time": {
+            "mean": 458.280649,
+            "reported": 2
+          },
+          "tokens": {
+            "mean": 1403306,
+            "reported": 2
+          },
+          "estimatedCost": {
+            "mean": 1.189884,
+            "reported": 2
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_f7760f27007969e43af1",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.777778,
+            "countedInMean": true,
+            "passed": 21,
+            "applicable": 27,
+            "notEvaluated": 6,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.925926,
+            "countedInMean": true,
+            "passed": 25,
+            "applicable": 27,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "cursor-agent-cursor-grok-4.6-high",
+        "showcaseBuildId": "build_4b8affd7ce80ace6e003",
+        "score": {
+          "mean": 0.444445,
+          "ciHalfWidth": 5.647112,
+          "n": 2,
+          "replicasCounted": 2,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 1,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.no_blocking_uncaught_error",
+            "gate.input_liveness"
+          ],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 2,
+          "time": {
+            "mean": 1570.567142,
+            "reported": 2
+          },
+          "tokens": {
+            "mean": 4174138,
+            "reported": 2
+          },
+          "estimatedCost": {
+            "mean": 3.569458,
+            "reported": 2
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": null,
+            "replica": 1,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 10,
+            "applicable": 27,
+            "notEvaluated": 6,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.no_blocking_uncaught_error",
+              "gate.input_liveness"
+            ],
+            "gateUnverified": []
+          },
+          {
+            "buildId": "build_4b8affd7ce80ace6e003",
+            "replica": 2,
+            "showcase": true,
+            "rate": 0.888889,
+            "countedInMean": true,
+            "passed": 24,
+            "applicable": 27,
+            "notEvaluated": 2,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+        "showcaseBuildId": "build_008d03f9d18610dc8e9d",
+        "score": {
+          "mean": 0.907408,
+          "ciHalfWidth": 0.235296,
+          "n": 2,
+          "replicasCounted": 2,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 1,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 2,
+          "time": {
+            "mean": 4488.940568,
+            "reported": 2
+          },
+          "tokens": {
+            "mean": 23895180,
+            "reported": 2
+          },
+          "estimatedCost": {
+            "mean": 18.060211,
+            "reported": 2
+          },
+          "costAtListPrice": true
+        },
+        "replicas": [
+          {
+            "buildId": "build_008d03f9d18610dc8e9d",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.888889,
+            "countedInMean": true,
+            "passed": 24,
+            "applicable": 27,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.925926,
+            "countedInMean": true,
+            "passed": 25,
+            "applicable": 27,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "opencode-deepseek-v4-flash-high",
+        "showcaseBuildId": "build_aa6bb8d7352b5756558b",
+        "score": {
+          "mean": 0.234568,
+          "ciHalfWidth": 1.009346,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.no_blocking_uncaught_error"
+          ],
+          "gateUnverified": [
+            "gate.input_liveness"
+          ]
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 2024.513808,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 14304339,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.256412,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": null,
+            "replica": 1,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 0,
+            "applicable": 27,
+            "notEvaluated": 27,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [],
+            "gateUnverified": [
+              "gate.input_liveness"
+            ]
+          },
+          {
+            "buildId": "build_aa6bb8d7352b5756558b",
+            "replica": 2,
+            "showcase": true,
+            "rate": 0.703704,
+            "countedInMean": true,
+            "passed": 19,
+            "applicable": 27,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 21,
+            "applicable": 27,
+            "notEvaluated": 2,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.no_blocking_uncaught_error"
+            ],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "opencode-glm-5.3-flash-high",
+        "showcaseBuildId": "build_121be8b911cda81cd3b1",
+        "score": {
+          "mean": 0.395062,
+          "ciHalfWidth": 0.854942,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.no_blocking_uncaught_error",
+            "gate.input_liveness"
+          ],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 2389.175051,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 7817380,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.148947,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": null,
+            "replica": 1,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 6,
+            "applicable": 27,
+            "notEvaluated": 9,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.no_blocking_uncaught_error",
+              "gate.input_liveness"
+            ],
+            "gateUnverified": []
+          },
+          {
+            "buildId": "build_121be8b911cda81cd3b1",
+            "replica": 2,
+            "showcase": true,
+            "rate": 0.555556,
+            "countedInMean": true,
+            "passed": 15,
+            "applicable": 27,
+            "notEvaluated": 5,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.62963,
+            "countedInMean": true,
+            "passed": 17,
+            "applicable": 27,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "pi-gpt-5.6-sol-medium",
+        "showcaseBuildId": "build_7a370af3978b9e77a183",
+        "score": {
+          "mean": 0.604938,
+          "ciHalfWidth": 1.302338,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.artifact_valid",
+            "gate.no_blocking_uncaught_error"
+          ],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 239.989265,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 122731,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": 0.523853,
+            "reported": 3
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": null,
+            "replica": 1,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 17,
+            "applicable": 27,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.artifact_valid",
+              "gate.no_blocking_uncaught_error"
+            ],
+            "gateUnverified": []
+          },
+          {
+            "buildId": "build_7a370af3978b9e77a183",
+            "replica": 2,
+            "showcase": true,
+            "rate": 0.888889,
+            "countedInMean": true,
+            "passed": 24,
+            "applicable": 27,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.925926,
+            "countedInMean": true,
+            "passed": 25,
+            "applicable": 27,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      }
+    ],
+    "builds": [
+      {
+        "id": "build_170ade79eaba2284cf2e",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "170ade79eaba2284cf2e26c347512188d14b4d9874299bd2a6587ab1dc929865",
+          "publicBase": "/artifacts/170ade79eaba2284cf2e26c347512188d14b4d9874299bd2a6587ab1dc929865/",
+          "byteLength": 384
+        },
+        "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "requirementSummary": {
+          "passed": 27,
+          "failed": 1,
+          "notEvaluated": 0,
+          "graderErrors": 0,
+          "evaluated": 28,
+          "applicable": 28,
+          "rate": 0.9642857142857143
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T21:22:46.340096Z",
+        "wallClockSeconds": 214.999178,
+        "usage": {
+          "input_tokens": 154796,
+          "cached_input_tokens": 1122687,
+          "cache_creation_input_tokens": null,
+          "output_tokens": 82403,
+          "reasoning_tokens": 19203
+        },
+        "totalReportedTokens": 1379089,
+        "estimatedApiCost": {
+          "amount": 0.581321025,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_ceb65c23b6015f066457",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "ceb65c23b6015f06645780b317cfa9d1154835de9d6eb2760ad669531bb3fa25",
+          "publicBase": "/artifacts/ceb65c23b6015f06645780b317cfa9d1154835de9d6eb2760ad669531bb3fa25/",
+          "byteLength": 784
+        },
+        "configurationId": "claude-code-claude-opus-5-high",
+        "requirementSummary": {
+          "passed": 26,
+          "failed": 2,
+          "notEvaluated": 0,
+          "graderErrors": 0,
+          "evaluated": 28,
+          "applicable": 28,
+          "rate": 0.9285714285714286
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T21:06:12.288692Z",
+        "wallClockSeconds": 2139.741073,
+        "usage": {
+          "input_tokens": 128,
+          "cached_input_tokens": 10549447,
+          "cache_creation_input_tokens": 238708,
+          "output_tokens": 171684,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 10959967,
+        "estimatedApiCost": {
+          "amount": 11.954543500000002,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "provider_cli_total_cost_usd_estimate"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_e60decb056754c51fc01",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "e60decb056754c51fc01559c4d028b1fd30fee0f392c634fe4f31dbc8cc8973d",
+          "publicBase": "/artifacts/e60decb056754c51fc01559c4d028b1fd30fee0f392c634fe4f31dbc8cc8973d/",
+          "byteLength": 521
+        },
+        "configurationId": "claude-code-claude-sonnet-5-high",
+        "requirementSummary": {
+          "passed": 10,
+          "failed": 11,
+          "notEvaluated": 7,
+          "graderErrors": 0,
+          "evaluated": 21,
+          "applicable": 28,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T21:06:22.540893Z",
+        "wallClockSeconds": 1414.24882,
+        "usage": {
+          "input_tokens": 102,
+          "cached_input_tokens": 7138903,
+          "cache_creation_input_tokens": 184341,
+          "output_tokens": 131872,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 7455218,
+        "estimatedApiCost": {
+          "amount": 3.484068600000001,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "provider_cli_total_cost_usd_estimate"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_b903b0652d3150a85ce3",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "b903b0652d3150a85ce326f115e230f8d78b5e5e3ded3766683d6c5edd5329db",
+          "publicBase": "/artifacts/b903b0652d3150a85ce326f115e230f8d78b5e5e3ded3766683d6c5edd5329db/",
+          "byteLength": 64388
+        },
+        "configurationId": "codex-cli-gpt-5.6-luna-max",
+        "requirementSummary": {
+          "passed": 21,
+          "failed": 4,
+          "notEvaluated": 3,
+          "graderErrors": 0,
+          "evaluated": 25,
+          "applicable": 28,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T20:53:23.639536Z",
+        "wallClockSeconds": 508.984613,
+        "usage": {
+          "input_tokens": 1875200,
+          "cached_input_tokens": 1788291,
+          "cache_creation_input_tokens": 86825,
+          "output_tokens": 58246,
+          "reasoning_tokens": 22421
+        },
+        "totalReportedTokens": 1933446,
+        "estimatedApiCost": {
+          "amount": 0.12304282,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_87850e4ba47a9efd0aa0",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "87850e4ba47a9efd0aa0da913a0a17d0a75778814046213fd8df6827e1a19d8b",
+          "publicBase": "/artifacts/87850e4ba47a9efd0aa0da913a0a17d0a75778814046213fd8df6827e1a19d8b/",
+          "byteLength": 1061
+        },
+        "configurationId": "codex-cli-gpt-5.6-sol-medium",
+        "requirementSummary": {
+          "passed": 25,
+          "failed": 3,
+          "notEvaluated": 0,
+          "graderErrors": 0,
+          "evaluated": 28,
+          "applicable": 28,
+          "rate": 0.8928571428571429
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T21:21:49.113171Z",
+        "wallClockSeconds": 231.795573,
+        "usage": {
+          "input_tokens": 330300,
+          "cached_input_tokens": 296288,
+          "cache_creation_input_tokens": 33976,
+          "output_tokens": 16254,
+          "reasoning_tokens": 3102
+        },
+        "totalReportedTokens": 346554,
+        "estimatedApiCost": {
+          "amount": 0.5796431999999999,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_4d2d87b8d0db776a4c4c",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "4d2d87b8d0db776a4c4c2df4a13b38cfe9bfdcf0a86dda20e49ef71c3a502a35",
+          "publicBase": "/artifacts/4d2d87b8d0db776a4c4c2df4a13b38cfe9bfdcf0a86dda20e49ef71c3a502a35/",
+          "byteLength": 637
+        },
+        "configurationId": "cursor-agent-auto-default",
+        "requirementSummary": {
+          "passed": 15,
+          "failed": 2,
+          "notEvaluated": 11,
+          "graderErrors": 0,
+          "evaluated": 17,
+          "applicable": 28,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T20:45:57.962668Z",
+        "wallClockSeconds": 423.559419,
+        "usage": {
+          "input_tokens": 53216,
+          "cached_input_tokens": 780041,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 29342,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 862599,
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "not reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_4cd24e942bf87043221f",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "4cd24e942bf87043221f396074e4d6145494eae7326e74f4f2fa841edb507744",
+          "publicBase": "/artifacts/4cd24e942bf87043221f396074e4d6145494eae7326e74f4f2fa841edb507744/",
+          "byteLength": 4251
+        },
+        "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+        "requirementSummary": {
+          "passed": 13,
+          "failed": 5,
+          "notEvaluated": 10,
+          "graderErrors": 0,
+          "evaluated": 18,
+          "applicable": 28,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T21:04:54.839527Z",
+        "wallClockSeconds": 257.901056,
+        "usage": {
+          "input_tokens": 96068,
+          "cached_input_tokens": 596079,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 36010,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 728157,
+        "estimatedApiCost": {
+          "amount": 0.251794425,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_c9bc86515d256036bdf7",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "c9bc86515d256036bdf7debbcfe02dbf08890b9e647dbbb558350bdd43bb8a47",
+          "publicBase": "/artifacts/c9bc86515d256036bdf7debbcfe02dbf08890b9e647dbbb558350bdd43bb8a47/",
+          "byteLength": 1114
+        },
+        "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+        "requirementSummary": {
+          "passed": 26,
+          "failed": 2,
+          "notEvaluated": 0,
+          "graderErrors": 0,
+          "evaluated": 28,
+          "applicable": 28,
+          "rate": 0.9285714285714286
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T21:13:17.003537Z",
+        "wallClockSeconds": 315.01795,
+        "usage": {
+          "input_tokens": 45,
+          "cached_input_tokens": 661698,
+          "cache_creation_input_tokens": 60505,
+          "output_tokens": 19971,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 742219,
+        "estimatedApiCost": {
+          "amount": 0.9668042,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_f57078acad34e5285b8a",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "f57078acad34e5285b8a3278668f4c493945f841ab4ab9135685b6dd530ef334",
+          "publicBase": "/artifacts/f57078acad34e5285b8a3278668f4c493945f841ab4ab9135685b6dd530ef334/",
+          "byteLength": 716
+        },
+        "configurationId": "cursor-agent-cursor-grok-4.6-high",
+        "requirementSummary": {
+          "passed": 22,
+          "failed": 5,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 27,
+          "applicable": 28,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T20:45:51.881397Z",
+        "wallClockSeconds": 1588.101986,
+        "usage": {
+          "input_tokens": 521067,
+          "cached_input_tokens": 1351040,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 16458,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 1888565,
+        "estimatedApiCost": {
+          "amount": 1.816402,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_dc660935e16ebcc1776f",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "dc660935e16ebcc1776f9cbb19822c8a759815458d0ae702008da18dbc9a7dc9",
+          "publicBase": "/artifacts/dc660935e16ebcc1776f9cbb19822c8a759815458d0ae702008da18dbc9a7dc9/",
+          "byteLength": 749
+        },
+        "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+        "requirementSummary": {
+          "passed": 21,
+          "failed": 6,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 27,
+          "applicable": 28,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T20:45:37.968579Z",
+        "wallClockSeconds": 5668.867078,
+        "usage": {
+          "input_tokens": 10,
+          "cached_input_tokens": 1060728,
+          "cache_creation_input_tokens": 4254,
+          "output_tokens": 2603,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 1067595,
+        "estimatedApiCost": {
+          "amount": 0.6220765,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_9ba366975958695a1f5d",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "9ba366975958695a1f5d2a22cef65d3e4a2de684834036f44cbb6cf68a4300fd",
+          "publicBase": "/artifacts/9ba366975958695a1f5d2a22cef65d3e4a2de684834036f44cbb6cf68a4300fd/",
+          "byteLength": 532
+        },
+        "configurationId": "opencode-deepseek-v4-flash-high",
+        "requirementSummary": {
+          "passed": 23,
+          "failed": 4,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 27,
+          "applicable": 28,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T09:12:33.831097Z",
+        "wallClockSeconds": 2945.013031,
+        "usage": {
+          "input_tokens": 399764,
+          "cached_input_tokens": 25198080,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 123234,
+          "reasoning_tokens": 83649
+        },
+        "totalReportedTokens": 25721078,
+        "estimatedApiCost": {
+          "amount": 0.40087742,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "cli_reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_346993e3908a4cc377bd",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "346993e3908a4cc377bd0278034e03b10454a197d38f4fdbdc7b26548bb42a5e",
+          "publicBase": "/artifacts/346993e3908a4cc377bd0278034e03b10454a197d38f4fdbdc7b26548bb42a5e/",
+          "byteLength": 63301
+        },
+        "configurationId": "opencode-glm-5.3-flash-high",
+        "requirementSummary": {
+          "passed": 21,
+          "failed": 3,
+          "notEvaluated": 4,
+          "graderErrors": 0,
+          "evaluated": 24,
+          "applicable": 28,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T22:39:43.173542Z",
+        "wallClockSeconds": 4540.729361,
+        "usage": {
+          "input_tokens": 337867,
+          "cached_input_tokens": 17661632,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 66044,
+          "reasoning_tokens": 84429
+        },
+        "totalReportedTokens": 18065543,
+        "estimatedApiCost": {
+          "amount": 0.3278827549999998,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "cli_reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_f76117d3456668dfdcb4",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "f76117d3456668dfdcb4f99b4ea659bda389cdc4e9049ce2ab9042b818c6be6a",
+          "publicBase": "/artifacts/f76117d3456668dfdcb4f99b4ea659bda389cdc4e9049ce2ab9042b818c6be6a/",
+          "byteLength": 1173
+        },
+        "configurationId": "pi-gpt-5.6-sol-medium",
+        "requirementSummary": {
+          "passed": 26,
+          "failed": 2,
+          "notEvaluated": 0,
+          "graderErrors": 0,
+          "evaluated": 28,
+          "applicable": 28,
+          "rate": 0.9285714285714286
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T21:15:17.209385Z",
+        "wallClockSeconds": 252.029549,
+        "usage": {
+          "input_tokens": 24709,
+          "cached_input_tokens": 129024,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 11317,
+          "reasoning_tokens": 2452
+        },
+        "totalReportedTokens": 165050,
+        "estimatedApiCost": {
+          "amount": 0.5275669999999999,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "cli_reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_fc1500f2ca978af31e33",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "fc1500f2ca978af31e3322348e82bbaac9d659b43ba2b3631c920024107dde74",
+          "publicBase": "/artifacts/fc1500f2ca978af31e3322348e82bbaac9d659b43ba2b3631c920024107dde74/",
+          "byteLength": 418
+        },
+        "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "requirementSummary": {
+          "passed": 39,
+          "failed": 2,
+          "notEvaluated": 7,
+          "graderErrors": 0,
+          "evaluated": 41,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T19:03:58.378660Z",
+        "wallClockSeconds": 173.817792,
+        "usage": {
+          "input_tokens": 165874,
+          "cached_input_tokens": 1044638,
+          "cache_creation_input_tokens": null,
+          "output_tokens": 56047,
+          "reasoning_tokens": 13714
+        },
+        "totalReportedTokens": 1280273,
+        "estimatedApiCost": {
+          "amount": 0.46435709999999997,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_50c65501b4f7a9722e23",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "50c65501b4f7a9722e23d6719c050a79b5f506c1a8608b7feac8119d0e48a8fb",
+          "publicBase": "/artifacts/50c65501b4f7a9722e23d6719c050a79b5f506c1a8608b7feac8119d0e48a8fb/",
+          "byteLength": 701
+        },
+        "configurationId": "claude-code-claude-opus-5-high",
+        "requirementSummary": {
+          "passed": 44,
+          "failed": 4,
+          "notEvaluated": 0,
+          "graderErrors": 0,
+          "evaluated": 48,
+          "applicable": 48,
+          "rate": 0.9166666666666666
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T19:13:39.783861Z",
+        "wallClockSeconds": 2068.277405,
+        "usage": {
+          "input_tokens": 118,
+          "cached_input_tokens": 10005697,
+          "cache_creation_input_tokens": 204817,
+          "output_tokens": 170134,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 10380766,
+        "estimatedApiCost": {
+          "amount": 11.3049585,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "provider_cli_total_cost_usd_estimate"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_1a778474d00b68aca665",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "1a778474d00b68aca665af87139c2b7425a9df08ef60bc46ab83140d64315edc",
+          "publicBase": "/artifacts/1a778474d00b68aca665af87139c2b7425a9df08ef60bc46ab83140d64315edc/",
+          "byteLength": 554
+        },
+        "configurationId": "claude-code-claude-sonnet-5-high",
+        "requirementSummary": {
+          "passed": 37,
+          "failed": 5,
+          "notEvaluated": 6,
+          "graderErrors": 0,
+          "evaluated": 42,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T20:06:53.868895Z",
+        "wallClockSeconds": 1579.975794,
+        "usage": {
+          "input_tokens": 152,
+          "cached_input_tokens": 11148591,
+          "cache_creation_input_tokens": 200838,
+          "output_tokens": 137691,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 11487272,
+        "estimatedApiCost": {
+          "amount": 4.410284200000002,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "provider_cli_total_cost_usd_estimate"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_dc73aa2c34db7fc2f30a",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "dc73aa2c34db7fc2f30aaaef18eec885c171c5623260245ab1c827ecbc14a961",
+          "publicBase": "/artifacts/dc73aa2c34db7fc2f30aaaef18eec885c171c5623260245ab1c827ecbc14a961/",
+          "byteLength": 67270
+        },
+        "configurationId": "codex-cli-gpt-5.6-luna-max",
+        "requirementSummary": {
+          "passed": 37,
+          "failed": 3,
+          "notEvaluated": 8,
+          "graderErrors": 0,
+          "evaluated": 40,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T18:23:37.679942Z",
+        "wallClockSeconds": 600.818751,
+        "usage": {
+          "input_tokens": 1509545,
+          "cached_input_tokens": 1427789,
+          "cache_creation_input_tokens": 81684,
+          "output_tokens": 60687,
+          "reasoning_tokens": 27627
+        },
+        "totalReportedTokens": 1570232,
+        "estimatedApiCost": {
+          "amount": 0.11773138,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_585d00c6b718a36324e3",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "585d00c6b718a36324e32b1db774c4fcea98180cd5ecde8473b8243ffa86763c",
+          "publicBase": "/artifacts/585d00c6b718a36324e32b1db774c4fcea98180cd5ecde8473b8243ffa86763c/",
+          "byteLength": 26143
+        },
+        "configurationId": "codex-cli-gpt-5.6-sol-medium",
+        "requirementSummary": {
+          "passed": 43,
+          "failed": 4,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 47,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T18:55:45.399997Z",
+        "wallClockSeconds": 261.75124,
+        "usage": {
+          "input_tokens": 395058,
+          "cached_input_tokens": 357520,
+          "cache_creation_input_tokens": 37499,
+          "output_tokens": 17718,
+          "reasoning_tokens": 3601
+        },
+        "totalReportedTokens": 412776,
+        "estimatedApiCost": {
+          "amount": 0.64752,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_b028a5ceeb435adba1b0",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "b028a5ceeb435adba1b05d046eff0f8a1847797d3f8345d70137940ff303492d",
+          "publicBase": "/artifacts/b028a5ceeb435adba1b05d046eff0f8a1847797d3f8345d70137940ff303492d/",
+          "byteLength": 471
+        },
+        "configurationId": "cursor-agent-auto-default",
+        "requirementSummary": {
+          "passed": 35,
+          "failed": 6,
+          "notEvaluated": 7,
+          "graderErrors": 0,
+          "evaluated": 41,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-27T03:30:08.699772Z",
+        "wallClockSeconds": 550.190957,
+        "usage": {
+          "input_tokens": 58770,
+          "cached_input_tokens": 1121806,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 32057,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 1212633,
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "not reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_64c0a4c7089b083851ba",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "64c0a4c7089b083851bac959016a11f1dbd4e9ab4fddee63a060359b838819eb",
+          "publicBase": "/artifacts/64c0a4c7089b083851bac959016a11f1dbd4e9ab4fddee63a060359b838819eb/",
+          "byteLength": 1528
+        },
+        "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+        "requirementSummary": {
+          "passed": 33,
+          "failed": 8,
+          "notEvaluated": 7,
+          "graderErrors": 0,
+          "evaluated": 41,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T19:10:26.928098Z",
+        "wallClockSeconds": 345.654533,
+        "usage": {
+          "input_tokens": 106861,
+          "cached_input_tokens": 735809,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 38955,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 881625,
+        "estimatedApiCost": {
+          "amount": 0.281412675,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_5a900753377b793ea760",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "5a900753377b793ea7608a1262f3fcaab65d858fced9ff6d5119695c4941ef8c",
+          "publicBase": "/artifacts/5a900753377b793ea7608a1262f3fcaab65d858fced9ff6d5119695c4941ef8c/",
+          "byteLength": 1910
+        },
+        "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+        "requirementSummary": {
+          "passed": 43,
+          "failed": 2,
+          "notEvaluated": 3,
+          "graderErrors": 0,
+          "evaluated": 45,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T19:21:29.696259Z",
+        "wallClockSeconds": 562.596352,
+        "usage": {
+          "input_tokens": 102,
+          "cached_input_tokens": 1662446,
+          "cache_creation_input_tokens": 60731,
+          "output_tokens": 22155,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 1745434,
+        "estimatedApiCost": {
+          "amount": 1.4121413999999999,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_3345396e6ba1209b0f12",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "3345396e6ba1209b0f129d08cd3bbc9c0a81ad316d57b301aef053e13c269ebb",
+          "publicBase": "/artifacts/3345396e6ba1209b0f129d08cd3bbc9c0a81ad316d57b301aef053e13c269ebb/",
+          "byteLength": 741
+        },
+        "configurationId": "cursor-agent-cursor-grok-4.6-high",
+        "requirementSummary": {
+          "passed": 36,
+          "failed": 6,
+          "notEvaluated": 6,
+          "graderErrors": 0,
+          "evaluated": 42,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-27T02:28:01.479731Z",
+        "wallClockSeconds": 1394.892344,
+        "usage": {
+          "input_tokens": 575333,
+          "cached_input_tokens": 4905984,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 87502,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 5568819,
+        "estimatedApiCost": {
+          "amount": 4.12867,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_9729d2983b39d88d8a93",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "9729d2983b39d88d8a93b39a95e26870b2934afe36735e5cce6fb80be3439a91",
+          "publicBase": "/artifacts/9729d2983b39d88d8a93b39a95e26870b2934afe36735e5cce6fb80be3439a91/",
+          "byteLength": 867
+        },
+        "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+        "requirementSummary": {
+          "passed": 43,
+          "failed": 4,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 47,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T17:16:54.311191Z",
+        "wallClockSeconds": 5402.318649,
+        "usage": {
+          "input_tokens": 338,
+          "cached_input_tokens": 25952729,
+          "cache_creation_input_tokens": 829016,
+          "output_tokens": 235051,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 27017134,
+        "estimatedApiCost": {
+          "amount": 24.0356795,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_9a2bdabab8a72a074771",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "9a2bdabab8a72a07477120be883d98ee1c6fd6fc41afea10434bcce547979807",
+          "publicBase": "/artifacts/9a2bdabab8a72a07477120be883d98ee1c6fd6fc41afea10434bcce547979807/",
+          "byteLength": 654
+        },
+        "configurationId": "opencode-deepseek-v4-flash-high",
+        "requirementSummary": {
+          "passed": 38,
+          "failed": 3,
+          "notEvaluated": 7,
+          "graderErrors": 0,
+          "evaluated": 41,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T17:36:35.649211Z",
+        "wallClockSeconds": 2757.198395,
+        "usage": {
+          "input_tokens": 83488,
+          "cached_input_tokens": 16204544,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 221161,
+          "reasoning_tokens": 0
+        },
+        "totalReportedTokens": 16509193,
+        "estimatedApiCost": {
+          "amount": 0.2777654279999999,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "cli_reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_47604726e9ed4fb935f2",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "47604726e9ed4fb935f2618ef310f2ee4d08ac317292110f30b51865dc1eceb4",
+          "publicBase": "/artifacts/47604726e9ed4fb935f2618ef310f2ee4d08ac317292110f30b51865dc1eceb4/",
+          "byteLength": 968
+        },
+        "configurationId": "opencode-glm-5.3-flash-high",
+        "requirementSummary": {
+          "passed": 38,
+          "failed": 8,
+          "notEvaluated": 2,
+          "graderErrors": 0,
+          "evaluated": 46,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T17:16:23.532235Z",
+        "wallClockSeconds": 2269.133182,
+        "usage": {
+          "input_tokens": 141172,
+          "cached_input_tokens": 7116864,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 67658,
+          "reasoning_tokens": 42734
+        },
+        "totalReportedTokens": 7325694,
+        "estimatedApiCost": {
+          "amount": 0.14493886,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "cli_reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_127f1a2b32b9f740ed46",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "127f1a2b32b9f740ed46245d3cb32ea5a0ef5e2686388f9042e990c50cfd17c5",
+          "publicBase": "/artifacts/127f1a2b32b9f740ed46245d3cb32ea5a0ef5e2686388f9042e990c50cfd17c5/",
+          "byteLength": 24607
+        },
+        "configurationId": "pi-gpt-5.6-sol-medium",
+        "requirementSummary": {
+          "passed": 43,
+          "failed": 3,
+          "notEvaluated": 2,
+          "graderErrors": 0,
+          "evaluated": 46,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T18:50:35.998102Z",
+        "wallClockSeconds": 249.279952,
+        "usage": {
+          "input_tokens": 45355,
+          "cached_input_tokens": 115712,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 12310,
+          "reasoning_tokens": 1802
+        },
+        "totalReportedTokens": 173377,
+        "estimatedApiCost": {
+          "amount": 0.6539309999999999,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "cli_reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_849491d36ed74cf68921",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "849491d36ed74cf68921628f9e38c233be89713139b38c85cbc84cc4c6d0aa78",
+          "publicBase": "/artifacts/849491d36ed74cf68921628f9e38c233be89713139b38c85cbc84cc4c6d0aa78/",
+          "byteLength": 62891
+        },
+        "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "requirementSummary": {
+          "passed": 22,
+          "failed": 4,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 26,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T19:01:16.514825Z",
+        "wallClockSeconds": 140.811001,
+        "usage": {
+          "input_tokens": 117763,
+          "cached_input_tokens": 518918,
+          "cache_creation_input_tokens": null,
+          "output_tokens": 55498,
+          "reasoning_tokens": 8239
+        },
+        "totalReportedTokens": 700418,
+        "estimatedApiCost": {
+          "amount": 0.36625484999999997,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_9e6c1551397990117ebb",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "9e6c1551397990117ebb2586649f0e46606b202db9c5704a694c719408f6d72f",
+          "publicBase": "/artifacts/9e6c1551397990117ebb2586649f0e46606b202db9c5704a694c719408f6d72f/",
+          "byteLength": 2228
+        },
+        "configurationId": "claude-code-claude-opus-5-high",
+        "requirementSummary": {
+          "passed": 25,
+          "failed": 2,
+          "notEvaluated": 0,
+          "graderErrors": 0,
+          "evaluated": 27,
+          "applicable": 27,
+          "rate": 0.9259259259259259
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T20:15:41.820892Z",
+        "wallClockSeconds": 2028.81777,
+        "usage": {
+          "input_tokens": 112,
+          "cached_input_tokens": 7611290,
+          "cache_creation_input_tokens": 195876,
+          "output_tokens": 168965,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 7976243,
+        "estimatedApiCost": {
+          "amount": 9.989089999999996,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "provider_cli_total_cost_usd_estimate"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_9a35cb54a00d3932de30",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "9a35cb54a00d3932de30c858c87ecc35e1de44463de0fc17ebc150f6d9796935",
+          "publicBase": "/artifacts/9a35cb54a00d3932de30c858c87ecc35e1de44463de0fc17ebc150f6d9796935/",
+          "byteLength": 503
+        },
+        "configurationId": "claude-code-claude-sonnet-5-high",
+        "requirementSummary": {
+          "passed": 21,
+          "failed": 5,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 26,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T20:34:37.076226Z",
+        "wallClockSeconds": 1447.917107,
+        "usage": {
+          "input_tokens": 132,
+          "cached_input_tokens": 9496021,
+          "cache_creation_input_tokens": 195926,
+          "output_tokens": 133024,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 9825103,
+        "estimatedApiCost": {
+          "amount": 4.0134122,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "provider_cli_total_cost_usd_estimate"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_894be9bc9725356cc4f1",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "894be9bc9725356cc4f152da0e3cf8e12ec6a632cf57f506e92c551f1e309d56",
+          "publicBase": "/artifacts/894be9bc9725356cc4f152da0e3cf8e12ec6a632cf57f506e92c551f1e309d56/",
+          "byteLength": 79886
+        },
+        "configurationId": "codex-cli-gpt-5.6-luna-max",
+        "requirementSummary": {
+          "passed": 24,
+          "failed": 2,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 26,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T18:34:58.085311Z",
+        "wallClockSeconds": 891.176772,
+        "usage": {
+          "input_tokens": 3777410,
+          "cached_input_tokens": 3659412,
+          "cache_creation_input_tokens": 117866,
+          "output_tokens": 94362,
+          "reasoning_tokens": 45858
+        },
+        "totalReportedTokens": 3871772,
+        "estimatedApiCost": {
+          "amount": 0.21002224,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_970328c67136ee8b7549",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "970328c67136ee8b754991ec2d140ee26569ae65d7e9abc9cc488b9180bca838",
+          "publicBase": "/artifacts/970328c67136ee8b754991ec2d140ee26569ae65d7e9abc9cc488b9180bca838/",
+          "byteLength": 23198
+        },
+        "configurationId": "codex-cli-gpt-5.6-sol-medium",
+        "requirementSummary": {
+          "passed": 17,
+          "failed": 6,
+          "notEvaluated": 4,
+          "graderErrors": 0,
+          "evaluated": 23,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T18:59:08.101677Z",
+        "wallClockSeconds": 197.914018,
+        "usage": {
+          "input_tokens": 258593,
+          "cached_input_tokens": 229448,
+          "cache_creation_input_tokens": 29112,
+          "output_tokens": 14040,
+          "reasoning_tokens": 2512
+        },
+        "totalReportedTokens": 272633,
+        "estimatedApiCost": {
+          "amount": 0.4891592,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_310c33af7f2e7cc88cb7",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "not_evaluated",
+        "artifact": {
+          "sha256": "310c33af7f2e7cc88cb71e9221cb00a53524b1b3f70232d1df81042eda865d8a",
+          "publicBase": "/artifacts/310c33af7f2e7cc88cb71e9221cb00a53524b1b3f70232d1df81042eda865d8a/",
+          "byteLength": 981
+        },
+        "configurationId": "cursor-agent-auto-default",
+        "requirementSummary": {
+          "passed": 0,
+          "failed": 0,
+          "notEvaluated": 27,
+          "graderErrors": 0,
+          "evaluated": 0,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T19:01:01.447930Z",
+        "wallClockSeconds": 401.235588,
+        "usage": {
+          "input_tokens": 94753,
+          "cached_input_tokens": 885792,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 26851,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 1007396,
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "not reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_719fd9a34c7ed5069bdd",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "719fd9a34c7ed5069bdd6f3c02c7386886e9418d77cf4a6760c7c0930f4f6beb",
+          "publicBase": "/artifacts/719fd9a34c7ed5069bdd6f3c02c7386886e9418d77cf4a6760c7c0930f4f6beb/",
+          "byteLength": 2124
+        },
+        "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+        "requirementSummary": {
+          "passed": 14,
+          "failed": 9,
+          "notEvaluated": 4,
+          "graderErrors": 0,
+          "evaluated": 23,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T19:15:36.006884Z",
+        "wallClockSeconds": 512.886576,
+        "usage": {
+          "input_tokens": 146710,
+          "cached_input_tokens": 1439681,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 61990,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 1648381,
+        "estimatedApiCost": {
+          "amount": 0.450471075,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_f7760f27007969e43af1",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "f7760f27007969e43af16c390eca864eb8afc86a8bba6462366b189d3c6a5ca2",
+          "publicBase": "/artifacts/f7760f27007969e43af16c390eca864eb8afc86a8bba6462366b189d3c6a5ca2/",
+          "byteLength": 36572
+        },
+        "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+        "requirementSummary": {
+          "passed": 21,
+          "failed": 0,
+          "notEvaluated": 6,
+          "graderErrors": 0,
+          "evaluated": 21,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T19:16:20.021654Z",
+        "wallClockSeconds": 502.313869,
+        "usage": {
+          "input_tokens": 84,
+          "cached_input_tokens": 1444094,
+          "cache_creation_input_tokens": 67704,
+          "output_tokens": 21035,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 1532917,
+        "estimatedApiCost": {
+          "amount": 1.3371936,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_4b8affd7ce80ace6e003",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "4b8affd7ce80ace6e0032c12eeb36dea5b8d3d35f0ec018a3760ac945687bb2d",
+          "publicBase": "/artifacts/4b8affd7ce80ace6e0032c12eeb36dea5b8d3d35f0ec018a3760ac945687bb2d/",
+          "byteLength": 1559
+        },
+        "configurationId": "cursor-agent-cursor-grok-4.6-high",
+        "requirementSummary": {
+          "passed": 24,
+          "failed": 1,
+          "notEvaluated": 2,
+          "graderErrors": 0,
+          "evaluated": 25,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-27T03:01:38.272587Z",
+        "wallClockSeconds": 1658.137683,
+        "usage": {
+          "input_tokens": 428746,
+          "cached_input_tokens": 3931008,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 89467,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 4449221,
+        "estimatedApiCost": {
+          "amount": 3.359798,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_008d03f9d18610dc8e9d",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "008d03f9d18610dc8e9da9686e3087421e96bcce17cb825bccaef542c025bb69",
+          "publicBase": "/artifacts/008d03f9d18610dc8e9da9686e3087421e96bcce17cb825bccaef542c025bb69/",
+          "byteLength": 797
+        },
+        "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+        "requirementSummary": {
+          "passed": 24,
+          "failed": 2,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 26,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-26T17:17:01.660258Z",
+        "wallClockSeconds": 4375.834684,
+        "usage": {
+          "input_tokens": 228,
+          "cached_input_tokens": 17504935,
+          "cache_creation_input_tokens": 185588,
+          "output_tokens": 105047,
+          "reasoning_tokens": null
+        },
+        "totalReportedTokens": 17795798,
+        "estimatedApiCost": {
+          "amount": 12.5397075,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_aa6bb8d7352b5756558b",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "aa6bb8d7352b5756558b85922a15474ceb5a87216c248adeffc670d76ebacd67",
+          "publicBase": "/artifacts/aa6bb8d7352b5756558b85922a15474ceb5a87216c248adeffc670d76ebacd67/",
+          "byteLength": 53945
+        },
+        "configurationId": "opencode-deepseek-v4-flash-high",
+        "requirementSummary": {
+          "passed": 19,
+          "failed": 7,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 26,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-27T01:13:48.230936Z",
+        "wallClockSeconds": 1968.064561,
+        "usage": {
+          "input_tokens": 70289,
+          "cached_input_tokens": 12770304,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 199757,
+          "reasoning_tokens": 0
+        },
+        "totalReportedTokens": 13040350,
+        "estimatedApiCost": {
+          "amount": 0.23669532799999995,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "cli_reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_121be8b911cda81cd3b1",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "121be8b911cda81cd3b1f461b69e82af8b9d4bce2e571db6b7ae06d0c5ef9623",
+          "publicBase": "/artifacts/121be8b911cda81cd3b1f461b69e82af8b9d4bce2e571db6b7ae06d0c5ef9623/",
+          "byteLength": 49458
+        },
+        "configurationId": "opencode-glm-5.3-flash-high",
+        "requirementSummary": {
+          "passed": 15,
+          "failed": 7,
+          "notEvaluated": 5,
+          "graderErrors": 0,
+          "evaluated": 22,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-27T01:47:22.453690Z",
+        "wallClockSeconds": 3162.113768,
+        "usage": {
+          "input_tokens": 156274,
+          "cached_input_tokens": 13327872,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 62873,
+          "reasoning_tokens": 53446
+        },
+        "totalReportedTokens": 13547019,
+        "estimatedApiCost": {
+          "amount": 0.24071838000000007,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "cli_reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_7a370af3978b9e77a183",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "7a370af3978b9e77a18357cc41aadba5ebad9a1a33fc47bc2f9c7587aee81f32",
+          "publicBase": "/artifacts/7a370af3978b9e77a18357cc41aadba5ebad9a1a33fc47bc2f9c7587aee81f32/",
+          "byteLength": 869
+        },
+        "configurationId": "pi-gpt-5.6-sol-medium",
+        "requirementSummary": {
+          "passed": 24,
+          "failed": 3,
+          "notEvaluated": 0,
+          "graderErrors": 0,
+          "evaluated": 27,
+          "applicable": 27,
+          "rate": 0.8888888888888888
+        },
+        "checks": [],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-08-27T03:05:07.884507Z",
+        "wallClockSeconds": 253.107439,
+        "usage": {
+          "input_tokens": 25282,
+          "cached_input_tokens": 88576,
+          "cache_creation_input_tokens": 0,
+          "output_tokens": 11226,
+          "reasoning_tokens": 2286
+        },
+        "totalReportedTokens": 125084,
+        "estimatedApiCost": {
+          "amount": 0.5074779999999999,
+          "currency": "USD"
+        },
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "cli_reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      }
+    ],
+    "attempts": [
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "claude-code-claude-opus-5-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "claude-code-claude-sonnet-5-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "codex-cli-gpt-5.6-luna-max",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "codex-cli-gpt-5.6-sol-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "cursor-agent-auto-default",
+        "attempted": 3,
+        "succeeded": 2
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "cursor-agent-cursor-grok-4.6-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "opencode-deepseek-v4-flash-high",
+        "attempted": 3,
+        "succeeded": 2
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "opencode-glm-5.3-flash-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "pi-gpt-5.6-sol-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "claude-code-claude-opus-5-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "claude-code-claude-sonnet-5-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "codex-cli-gpt-5.6-luna-max",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "codex-cli-gpt-5.6-sol-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "cursor-agent-auto-default",
+        "attempted": 3,
+        "succeeded": 2
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "cursor-agent-cursor-grok-4.6-high",
+        "attempted": 3,
+        "succeeded": 2
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+        "attempted": 3,
+        "succeeded": 2
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "opencode-deepseek-v4-flash-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "opencode-glm-5.3-flash-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "pi-gpt-5.6-sol-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "claude-code-claude-opus-5-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "claude-code-claude-sonnet-5-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "codex-cli-gpt-5.6-luna-max",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "codex-cli-gpt-5.6-sol-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "cursor-agent-auto-default",
+        "attempted": 3,
+        "succeeded": 2
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+        "attempted": 3,
+        "succeeded": 2
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "cursor-agent-cursor-grok-4.6-high",
+        "attempted": 3,
+        "succeeded": 2
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+        "attempted": 3,
+        "succeeded": 2
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "opencode-deepseek-v4-flash-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "opencode-glm-5.3-flash-high",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "pi-gpt-5.6-sol-medium",
+        "attempted": 3,
+        "succeeded": 3
+      }
+    ]
+  },
+  "blind": {
+    "releaseId": "round-v6",
+    "configurationCount": 13,
+    "tasks": [
+      {
+        "id": "ember@1.3.0",
+        "title": "EMBER",
+        "version": "1.3.0",
+        "presentation": {
+          "canonicalViewport": {
+            "width": 390,
+            "height": 780
+          }
+        }
+      },
+      {
+        "id": "delve@0.6.0",
+        "title": "DELVE",
+        "version": "0.6.0",
+        "presentation": {
+          "canonicalViewport": {
+            "width": 390,
+            "height": 780
+          }
+        }
+      },
+      {
+        "id": "stomp@0.7.0",
+        "title": "STOMP",
+        "version": "0.7.0",
+        "presentation": {
+          "canonicalViewport": {
+            "width": 390,
+            "height": 780
+          }
+        }
+      }
+    ],
+    "builds": [
+      {
+        "id": "build_170ade79eaba2284cf2e",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "170ade79eaba2284cf2e26c347512188d14b4d9874299bd2a6587ab1dc929865",
+          "publicBase": "/artifacts/170ade79eaba2284cf2e26c347512188d14b4d9874299bd2a6587ab1dc929865/",
+          "byteLength": 384
+        }
+      },
+      {
+        "id": "build_ceb65c23b6015f066457",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "ceb65c23b6015f06645780b317cfa9d1154835de9d6eb2760ad669531bb3fa25",
+          "publicBase": "/artifacts/ceb65c23b6015f06645780b317cfa9d1154835de9d6eb2760ad669531bb3fa25/",
+          "byteLength": 784
+        }
+      },
+      {
+        "id": "build_e60decb056754c51fc01",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "e60decb056754c51fc01559c4d028b1fd30fee0f392c634fe4f31dbc8cc8973d",
+          "publicBase": "/artifacts/e60decb056754c51fc01559c4d028b1fd30fee0f392c634fe4f31dbc8cc8973d/",
+          "byteLength": 521
+        }
+      },
+      {
+        "id": "build_b903b0652d3150a85ce3",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "b903b0652d3150a85ce326f115e230f8d78b5e5e3ded3766683d6c5edd5329db",
+          "publicBase": "/artifacts/b903b0652d3150a85ce326f115e230f8d78b5e5e3ded3766683d6c5edd5329db/",
+          "byteLength": 64388
+        }
+      },
+      {
+        "id": "build_87850e4ba47a9efd0aa0",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "87850e4ba47a9efd0aa0da913a0a17d0a75778814046213fd8df6827e1a19d8b",
+          "publicBase": "/artifacts/87850e4ba47a9efd0aa0da913a0a17d0a75778814046213fd8df6827e1a19d8b/",
+          "byteLength": 1061
+        }
+      },
+      {
+        "id": "build_4d2d87b8d0db776a4c4c",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "4d2d87b8d0db776a4c4c2df4a13b38cfe9bfdcf0a86dda20e49ef71c3a502a35",
+          "publicBase": "/artifacts/4d2d87b8d0db776a4c4c2df4a13b38cfe9bfdcf0a86dda20e49ef71c3a502a35/",
+          "byteLength": 637
+        }
+      },
+      {
+        "id": "build_4cd24e942bf87043221f",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "4cd24e942bf87043221f396074e4d6145494eae7326e74f4f2fa841edb507744",
+          "publicBase": "/artifacts/4cd24e942bf87043221f396074e4d6145494eae7326e74f4f2fa841edb507744/",
+          "byteLength": 4251
+        }
+      },
+      {
+        "id": "build_c9bc86515d256036bdf7",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "c9bc86515d256036bdf7debbcfe02dbf08890b9e647dbbb558350bdd43bb8a47",
+          "publicBase": "/artifacts/c9bc86515d256036bdf7debbcfe02dbf08890b9e647dbbb558350bdd43bb8a47/",
+          "byteLength": 1114
+        }
+      },
+      {
+        "id": "build_f57078acad34e5285b8a",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "f57078acad34e5285b8a3278668f4c493945f841ab4ab9135685b6dd530ef334",
+          "publicBase": "/artifacts/f57078acad34e5285b8a3278668f4c493945f841ab4ab9135685b6dd530ef334/",
+          "byteLength": 716
+        }
+      },
+      {
+        "id": "build_dc660935e16ebcc1776f",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "dc660935e16ebcc1776f9cbb19822c8a759815458d0ae702008da18dbc9a7dc9",
+          "publicBase": "/artifacts/dc660935e16ebcc1776f9cbb19822c8a759815458d0ae702008da18dbc9a7dc9/",
+          "byteLength": 749
+        }
+      },
+      {
+        "id": "build_9ba366975958695a1f5d",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "9ba366975958695a1f5d2a22cef65d3e4a2de684834036f44cbb6cf68a4300fd",
+          "publicBase": "/artifacts/9ba366975958695a1f5d2a22cef65d3e4a2de684834036f44cbb6cf68a4300fd/",
+          "byteLength": 532
+        }
+      },
+      {
+        "id": "build_346993e3908a4cc377bd",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "346993e3908a4cc377bd0278034e03b10454a197d38f4fdbdc7b26548bb42a5e",
+          "publicBase": "/artifacts/346993e3908a4cc377bd0278034e03b10454a197d38f4fdbdc7b26548bb42a5e/",
+          "byteLength": 63301
+        }
+      },
+      {
+        "id": "build_f76117d3456668dfdcb4",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "f76117d3456668dfdcb4f99b4ea659bda389cdc4e9049ce2ab9042b818c6be6a",
+          "publicBase": "/artifacts/f76117d3456668dfdcb4f99b4ea659bda389cdc4e9049ce2ab9042b818c6be6a/",
+          "byteLength": 1173
+        }
+      },
+      {
+        "id": "build_fc1500f2ca978af31e33",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "fc1500f2ca978af31e3322348e82bbaac9d659b43ba2b3631c920024107dde74",
+          "publicBase": "/artifacts/fc1500f2ca978af31e3322348e82bbaac9d659b43ba2b3631c920024107dde74/",
+          "byteLength": 418
+        }
+      },
+      {
+        "id": "build_50c65501b4f7a9722e23",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "50c65501b4f7a9722e23d6719c050a79b5f506c1a8608b7feac8119d0e48a8fb",
+          "publicBase": "/artifacts/50c65501b4f7a9722e23d6719c050a79b5f506c1a8608b7feac8119d0e48a8fb/",
+          "byteLength": 701
+        }
+      },
+      {
+        "id": "build_1a778474d00b68aca665",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "1a778474d00b68aca665af87139c2b7425a9df08ef60bc46ab83140d64315edc",
+          "publicBase": "/artifacts/1a778474d00b68aca665af87139c2b7425a9df08ef60bc46ab83140d64315edc/",
+          "byteLength": 554
+        }
+      },
+      {
+        "id": "build_dc73aa2c34db7fc2f30a",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "dc73aa2c34db7fc2f30aaaef18eec885c171c5623260245ab1c827ecbc14a961",
+          "publicBase": "/artifacts/dc73aa2c34db7fc2f30aaaef18eec885c171c5623260245ab1c827ecbc14a961/",
+          "byteLength": 67270
+        }
+      },
+      {
+        "id": "build_585d00c6b718a36324e3",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "585d00c6b718a36324e32b1db774c4fcea98180cd5ecde8473b8243ffa86763c",
+          "publicBase": "/artifacts/585d00c6b718a36324e32b1db774c4fcea98180cd5ecde8473b8243ffa86763c/",
+          "byteLength": 26143
+        }
+      },
+      {
+        "id": "build_b028a5ceeb435adba1b0",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "b028a5ceeb435adba1b05d046eff0f8a1847797d3f8345d70137940ff303492d",
+          "publicBase": "/artifacts/b028a5ceeb435adba1b05d046eff0f8a1847797d3f8345d70137940ff303492d/",
+          "byteLength": 471
+        }
+      },
+      {
+        "id": "build_64c0a4c7089b083851ba",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "64c0a4c7089b083851bac959016a11f1dbd4e9ab4fddee63a060359b838819eb",
+          "publicBase": "/artifacts/64c0a4c7089b083851bac959016a11f1dbd4e9ab4fddee63a060359b838819eb/",
+          "byteLength": 1528
+        }
+      },
+      {
+        "id": "build_5a900753377b793ea760",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "5a900753377b793ea7608a1262f3fcaab65d858fced9ff6d5119695c4941ef8c",
+          "publicBase": "/artifacts/5a900753377b793ea7608a1262f3fcaab65d858fced9ff6d5119695c4941ef8c/",
+          "byteLength": 1910
+        }
+      },
+      {
+        "id": "build_3345396e6ba1209b0f12",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "3345396e6ba1209b0f129d08cd3bbc9c0a81ad316d57b301aef053e13c269ebb",
+          "publicBase": "/artifacts/3345396e6ba1209b0f129d08cd3bbc9c0a81ad316d57b301aef053e13c269ebb/",
+          "byteLength": 741
+        }
+      },
+      {
+        "id": "build_9729d2983b39d88d8a93",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "9729d2983b39d88d8a93b39a95e26870b2934afe36735e5cce6fb80be3439a91",
+          "publicBase": "/artifacts/9729d2983b39d88d8a93b39a95e26870b2934afe36735e5cce6fb80be3439a91/",
+          "byteLength": 867
+        }
+      },
+      {
+        "id": "build_9a2bdabab8a72a074771",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "9a2bdabab8a72a07477120be883d98ee1c6fd6fc41afea10434bcce547979807",
+          "publicBase": "/artifacts/9a2bdabab8a72a07477120be883d98ee1c6fd6fc41afea10434bcce547979807/",
+          "byteLength": 654
+        }
+      },
+      {
+        "id": "build_47604726e9ed4fb935f2",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "47604726e9ed4fb935f2618ef310f2ee4d08ac317292110f30b51865dc1eceb4",
+          "publicBase": "/artifacts/47604726e9ed4fb935f2618ef310f2ee4d08ac317292110f30b51865dc1eceb4/",
+          "byteLength": 968
+        }
+      },
+      {
+        "id": "build_127f1a2b32b9f740ed46",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "127f1a2b32b9f740ed46245d3cb32ea5a0ef5e2686388f9042e990c50cfd17c5",
+          "publicBase": "/artifacts/127f1a2b32b9f740ed46245d3cb32ea5a0ef5e2686388f9042e990c50cfd17c5/",
+          "byteLength": 24607
+        }
+      },
+      {
+        "id": "build_849491d36ed74cf68921",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "849491d36ed74cf68921628f9e38c233be89713139b38c85cbc84cc4c6d0aa78",
+          "publicBase": "/artifacts/849491d36ed74cf68921628f9e38c233be89713139b38c85cbc84cc4c6d0aa78/",
+          "byteLength": 62891
+        }
+      },
+      {
+        "id": "build_9e6c1551397990117ebb",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "9e6c1551397990117ebb2586649f0e46606b202db9c5704a694c719408f6d72f",
+          "publicBase": "/artifacts/9e6c1551397990117ebb2586649f0e46606b202db9c5704a694c719408f6d72f/",
+          "byteLength": 2228
+        }
+      },
+      {
+        "id": "build_9a35cb54a00d3932de30",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "9a35cb54a00d3932de30c858c87ecc35e1de44463de0fc17ebc150f6d9796935",
+          "publicBase": "/artifacts/9a35cb54a00d3932de30c858c87ecc35e1de44463de0fc17ebc150f6d9796935/",
+          "byteLength": 503
+        }
+      },
+      {
+        "id": "build_894be9bc9725356cc4f1",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "894be9bc9725356cc4f152da0e3cf8e12ec6a632cf57f506e92c551f1e309d56",
+          "publicBase": "/artifacts/894be9bc9725356cc4f152da0e3cf8e12ec6a632cf57f506e92c551f1e309d56/",
+          "byteLength": 79886
+        }
+      },
+      {
+        "id": "build_970328c67136ee8b7549",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "970328c67136ee8b754991ec2d140ee26569ae65d7e9abc9cc488b9180bca838",
+          "publicBase": "/artifacts/970328c67136ee8b754991ec2d140ee26569ae65d7e9abc9cc488b9180bca838/",
+          "byteLength": 23198
+        }
+      },
+      {
+        "id": "build_310c33af7f2e7cc88cb7",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "not_evaluated",
+        "artifact": {
+          "sha256": "310c33af7f2e7cc88cb71e9221cb00a53524b1b3f70232d1df81042eda865d8a",
+          "publicBase": "/artifacts/310c33af7f2e7cc88cb71e9221cb00a53524b1b3f70232d1df81042eda865d8a/",
+          "byteLength": 981
+        }
+      },
+      {
+        "id": "build_719fd9a34c7ed5069bdd",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "719fd9a34c7ed5069bdd6f3c02c7386886e9418d77cf4a6760c7c0930f4f6beb",
+          "publicBase": "/artifacts/719fd9a34c7ed5069bdd6f3c02c7386886e9418d77cf4a6760c7c0930f4f6beb/",
+          "byteLength": 2124
+        }
+      },
+      {
+        "id": "build_f7760f27007969e43af1",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "f7760f27007969e43af16c390eca864eb8afc86a8bba6462366b189d3c6a5ca2",
+          "publicBase": "/artifacts/f7760f27007969e43af16c390eca864eb8afc86a8bba6462366b189d3c6a5ca2/",
+          "byteLength": 36572
+        }
+      },
+      {
+        "id": "build_4b8affd7ce80ace6e003",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "4b8affd7ce80ace6e0032c12eeb36dea5b8d3d35f0ec018a3760ac945687bb2d",
+          "publicBase": "/artifacts/4b8affd7ce80ace6e0032c12eeb36dea5b8d3d35f0ec018a3760ac945687bb2d/",
+          "byteLength": 1559
+        }
+      },
+      {
+        "id": "build_008d03f9d18610dc8e9d",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "008d03f9d18610dc8e9da9686e3087421e96bcce17cb825bccaef542c025bb69",
+          "publicBase": "/artifacts/008d03f9d18610dc8e9da9686e3087421e96bcce17cb825bccaef542c025bb69/",
+          "byteLength": 797
+        }
+      },
+      {
+        "id": "build_aa6bb8d7352b5756558b",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "aa6bb8d7352b5756558b85922a15474ceb5a87216c248adeffc670d76ebacd67",
+          "publicBase": "/artifacts/aa6bb8d7352b5756558b85922a15474ceb5a87216c248adeffc670d76ebacd67/",
+          "byteLength": 53945
+        }
+      },
+      {
+        "id": "build_121be8b911cda81cd3b1",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "121be8b911cda81cd3b1f461b69e82af8b9d4bce2e571db6b7ae06d0c5ef9623",
+          "publicBase": "/artifacts/121be8b911cda81cd3b1f461b69e82af8b9d4bce2e571db6b7ae06d0c5ef9623/",
+          "byteLength": 49458
+        }
+      },
+      {
+        "id": "build_7a370af3978b9e77a183",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "7a370af3978b9e77a18357cc41aadba5ebad9a1a33fc47bc2f9c7587aee81f32",
+          "publicBase": "/artifacts/7a370af3978b9e77a18357cc41aadba5ebad9a1a33fc47bc2f9c7587aee81f32/",
+          "byteLength": 869
+        }
+      }
+    ]
+  },
+  "catalog": [
+    {
+      "id": "ember@1.3.0",
+      "slug": "ember",
+      "name": "EMBER",
+      "image": "/assets/games/ember-jacket.webp",
+      "browseRule": "Sling a spark up a dark flue. Every launch spends a glow; the damp below never stops.",
+      "rule": "Drag back and release to sling a living spark up the flue. Ledges refill your launches, soot-moths refund one mid-air, and stringing launches through open air builds a chain that pays when you land.",
+      "tension": "Glow is currency. The safe ledges pay it back; the treasure and the chains live where they can't.",
+      "inputSummary": "One finger or mouse button",
+      "controls": [
+        {
+          "keys": "Drag + release",
+          "label": "Aim and launch"
+        },
+        {
+          "keys": "Tap / click",
+          "label": "Next run"
+        }
+      ],
+      "presentation": {
+        "canonicalViewport": {
+          "width": 390,
+          "height": 780
+        }
+      },
+      "publicNarrative": "Drag back and release to sling a living spark up the flue. Ledges refill your launches, soot-moths refund one mid-air, and stringing launches through open air builds a chain that pays when you land.\n\nGlow is currency. The safe ledges pay it back; the treasure and the chains live where they can't.\n\nOne finger or mouse button"
+    },
+    {
+      "id": "delve@0.6.0",
+      "slug": "delve",
+      "name": "DELVE",
+      "image": "/assets/games/delve-jacket.webp",
+      "browseRule": "Dig deep against the clock. Momentum is a promise you can't take back.",
+      "rule": "Drive a digging machine down a winding corridor, sweep time fragments to keep the run alive, and dodge the rocks. Speed builds depth but carries momentum: the machine turns wide and stops slow, and a rare power item turns a hopeless field around.",
+      "tension": "The defining moment is full throttle into a gap you're no longer sure you can make. Ease off at the right instant and the tight line pays; hold it a beat too long and the corridor collects.",
+      "inputSummary": "One thumb, a mouse, or two keys",
+      "controls": [
+        {
+          "keys": "← →",
+          "label": "Steer"
+        },
+        {
+          "keys": "Hold / drag",
+          "label": "Accelerate"
+        },
+        {
+          "keys": "R",
+          "label": "Restart"
+        }
+      ],
+      "presentation": {
+        "canonicalViewport": {
+          "width": 390,
+          "height": 780
+        }
+      },
+      "publicNarrative": "Drive a digging machine down a winding corridor, sweep time fragments to keep the run alive, and dodge the rocks. Speed builds depth but carries momentum: the machine turns wide and stops slow, and a rare power item turns a hopeless field around.\n\nThe defining moment is full throttle into a gap you're no longer sure you can make. Ease off at the right instant and the tight line pays; hold it a beat too long and the corridor collects.\n\nOne thumb, a mouse, or two keys"
+    },
+    {
+      "id": "stomp@0.7.0",
+      "slug": "stomp",
+      "name": "STOMP",
+      "image": "/assets/games/stomp-jacket.webp",
+      "browseRule": "Keep one ball in play against a draining clock. Stomp walkers, strike flyers from above.",
+      "rule": "Slide the machine under the returning ball and jump: a grounded catch bounces it steady, a rising catch launches it high enough to strike the flyers above. Three clean top hits burst an enemy into time, and a slow first target always drifts in low to get you started.",
+      "tension": "The high launch reaches the richest targets, but a higher ball stays away longer and its underside contact bites. Safe returns alone lose to the clock.",
+      "inputSummary": "Two thumbs, a mouse, or three keys",
+      "controls": [
+        {
+          "keys": "← →",
+          "label": "Move"
+        },
+        {
+          "keys": "Jump",
+          "label": "Launch"
+        },
+        {
+          "keys": "R",
+          "label": "Restart"
+        }
+      ],
+      "presentation": {
+        "canonicalViewport": {
+          "width": 390,
+          "height": 780
+        }
+      },
+      "publicNarrative": "Slide the machine under the returning ball and jump: a grounded catch bounces it steady, a rising catch launches it high enough to strike the flyers above. Three clean top hits burst an enemy into time, and a slow first target always drifts in low to get you started.\n\nThe high launch reaches the richest targets, but a higher ball stays away longer and its underside contact bites. Safe returns alone lose to the clock.\n\nTwo thumbs, a mouse, or three keys"
+    }
+  ],
+  "taskManifests": []
+}

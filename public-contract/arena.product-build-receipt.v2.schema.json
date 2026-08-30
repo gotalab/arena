@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gotalab.dev/schemas/arena.product-build-receipt.v2.schema.json",
+  "title": "Arena product build receipt v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "product", "publicRelease", "webDistSha256", "runtime", "webMcpProbe", "licenseManifestSha256", "status"],
+  "properties": {
+    "schema": { "const": "arena.product-build-receipt.v2" },
+    "product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "gitTree"],
+      "properties": {
+        "repository": { "const": "gotalab/arena" },
+        "commit": { "$ref": "#/$defs/gitObject" },
+        "gitTree": { "$ref": "#/$defs/gitObject" }
+      }
+    },
+    "publicRelease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "bundleSha256", "artifactTreeSha256"],
+      "properties": {
+        "schema": { "const": "arena.public-release.v1" },
+        "bundleSha256": { "$ref": "#/$defs/sha256" },
+        "artifactTreeSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "webDistSha256": { "$ref": "#/$defs/sha256" },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["routeContractSha256", "mainWorkerSha256", "artifactWorkerSha256", "sourceTreeSha256", "inputManifestSha256"],
+      "properties": {
+        "routeContractSha256": { "$ref": "#/$defs/sha256" },
+        "mainWorkerSha256": { "$ref": "#/$defs/sha256" },
+        "artifactWorkerSha256": { "$ref": "#/$defs/sha256" },
+        "sourceTreeSha256": { "$ref": "#/$defs/sha256" },
+        "inputManifestSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "webMcpProbe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "artifactSha256"],
+      "properties": {
+        "enabled": { "const": true },
+        "artifactSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "licenseManifestSha256": { "$ref": "#/$defs/sha256" },
+    "status": { "const": "built" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "gitObject": { "type": "string", "pattern": "^[a-f0-9]{40}$" }
+  }
+}

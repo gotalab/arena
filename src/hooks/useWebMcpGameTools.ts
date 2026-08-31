@@ -32,7 +32,7 @@ export function useWebMcpGameTools({ frame, generation, manifest }: UseWebMcpGam
 
     let disposed = false;
     const registration = new AbortController();
-    const channel = new FrameGameChannel(frameWindow, generation, undefined, Object.keys(manifest.stateSchema.properties));
+    const channel = new FrameGameChannel(frameWindow, generation, undefined, manifest.stateSchema);
     setStatus("connecting");
     void (async () => {
       try {

@@ -1,3 +1,5 @@
+import { matchesClosedJsonSchema } from "./closed-json-schema";
+
 export const GAME_PROTOCOL = "arena.game.v1" as const;
 
 const DEFAULT_TIMEOUT_MS = 2_000;
@@ -45,9 +47,21 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function parseState(value: unknown, allowedKeys: ReadonlySet<string>): GameChannelState | null {
+const DEFAULT_STATE_SCHEMA = {
+  type: "object",
+  properties: {
+    revision: { type: "integer", minimum: 0 },
+    phase: { type: "string" },
+    outcome: { type: ["string", "null"] },
+    legalActions: { type: "array" },
+  },
+  required: ["revision", "phase", "outcome", "legalActions"],
+  additionalProperties: false,
+} as const;
+
+function parseState(value: unknown, stateSchema: Record<string, unknown>): GameChannelState | null {
   if (!isObject(value)) return null;
-  if (Object.keys(value).some((key) => !allowedKeys.has(key))) return null;
+  if (!matchesClosedJsonSchema(value, stateSchema)) return null;
   if (!Number.isSafeInteger(value.revision) || (value.revision as number) < 0) return null;
   if (typeof value.phase !== "string") return null;
   if (value.outcome !== null && typeof value.outcome !== "string") return null;
@@ -71,17 +85,17 @@ export class FrameGameChannel {
   private readyTimer: ReturnType<typeof setTimeout>;
   private closed = false;
   private readonly timeoutMs: number;
-  private readonly allowedStateKeys: ReadonlySet<string>;
+  private readonly stateSchema: Record<string, unknown>;
 
   constructor(
     frameWindow: FrameWindow,
     generation: number,
     timeoutMs = DEFAULT_TIMEOUT_MS,
-    allowedStateKeys: readonly string[] = ["revision", "phase", "outcome", "legalActions"],
+    stateSchema: Record<string, unknown> = DEFAULT_STATE_SCHEMA,
   ) {
     this.generation = generation;
     this.timeoutMs = timeoutMs;
-    this.allowedStateKeys = new Set(allowedStateKeys);
+    this.stateSchema = stateSchema;
     this.readyPromise = new Promise((resolve, reject) => {
       this.readyResolve = resolve;
       this.readyReject = reject;
@@ -102,7 +116,7 @@ export class FrameGameChannel {
     return this.readyPromise;
   }
 
-  async request(command: "observe" | "act", payload: Record<string, unknown> = {}): Promise<GameChannelResult> {
+  async request(command: "observe" | "act" | "restart", payload: Record<string, unknown> = {}): Promise<GameChannelResult> {
     if (this.closed) throw new Error("game frame channel is closed");
     await this.readyPromise;
     const requestId = randomId();
@@ -148,7 +162,7 @@ export class FrameGameChannel {
     if (this.closed || encodedSize(value) > MAX_MESSAGE_BYTES || !isObject(value)) return;
     if (value.protocol !== GAME_PROTOCOL) return;
     if (value.sessionId !== this.sessionId || value.generation !== this.generation) return;
-    const state = parseState(value.state, this.allowedStateKeys);
+    const state = parseState(value.state, this.stateSchema);
     if (!state || typeof value.accepted !== "boolean" || value.revision !== state.revision) return;
     const result: GameChannelResult = {
       accepted: value.accepted,

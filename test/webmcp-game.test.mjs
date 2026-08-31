@@ -1,6 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parseProbeAction, parseTakeActionInput, PROBE_ACTIONS } from "../src/lib/game-tools.ts";
+import {
+  gameToolDefinitions,
+  parseRestartInput,
+  parseTakeActionInput,
+  PROBE_ACTIONS,
+  WEBMCP_PROBE_MANIFEST,
+} from "../src/lib/game-tools.ts";
 import { FrameGameChannel, GAME_PROTOCOL } from "../src/platform/frame-game-channel.ts";
 
 function fixtureFrame({ forgedFirst = false, malformed = false, secretState = false, silent = false } = {}) {
@@ -34,7 +40,7 @@ function fixtureFrame({ forgedFirst = false, malformed = false, secretState = fa
         if (forgedFirst) {
           port.postMessage({ ...envelope("response", { requestId: request.requestId }), sessionId: "foreign" });
         }
-        if (request.command === "act") {
+        if (request.command === "act" || request.command === "restart") {
           if (request.expectedRevision !== revision) {
             port.postMessage(envelope("response", {
               accepted: false,
@@ -43,7 +49,7 @@ function fixtureFrame({ forgedFirst = false, malformed = false, secretState = fa
             }));
             return;
           }
-          revision += 1;
+          revision = request.command === "restart" ? 0 : revision + 1;
         }
         port.postMessage(envelope("response", { requestId: request.requestId }));
       };
@@ -54,19 +60,74 @@ function fixtureFrame({ forgedFirst = false, malformed = false, secretState = fa
 }
 
 test("probe action input is closed and purpose-typed", () => {
-  assert.deepEqual(parseProbeAction({ type: "scan_sector" }), { type: "scan_sector" });
-  assert.equal(parseProbeAction({ type: "scan_sector", secret: true }), null);
-  assert.equal(parseProbeAction({ type: "unknown" }), null);
   assert.deepEqual(parseTakeActionInput({
     sessionId: "s1",
     expectedRevision: 0,
     action: { type: "scan_sector" },
-  }), {
+  }, WEBMCP_PROBE_MANIFEST.actionSchema), {
     sessionId: "s1",
     expectedRevision: 0,
     action: { type: "scan_sector" },
   });
-  assert.equal(parseTakeActionInput({ sessionId: "s1", expectedRevision: 0, action: { type: "scan_sector" }, extra: true }), null);
+  assert.equal(parseTakeActionInput({
+    sessionId: "s1",
+    expectedRevision: 0,
+    action: { type: "scan_sector", secret: true },
+  }, WEBMCP_PROBE_MANIFEST.actionSchema), null);
+  assert.equal(parseTakeActionInput({
+    sessionId: "s1",
+    expectedRevision: 0,
+    action: { type: "unknown" },
+  }, WEBMCP_PROBE_MANIFEST.actionSchema), null);
+  assert.equal(parseTakeActionInput({
+    sessionId: "s1",
+    expectedRevision: 0,
+    action: { type: "scan_sector" },
+    extra: true,
+  }, WEBMCP_PROBE_MANIFEST.actionSchema), null);
+});
+
+test("task-specific move and undo actions validate from the trusted manifest", () => {
+  const actionSchema = {
+    oneOf: [
+      {
+        type: "object",
+        properties: { type: { const: "move" }, direction: { enum: ["up", "down", "left", "right"] } },
+        required: ["type", "direction"],
+        additionalProperties: false,
+      },
+      {
+        type: "object",
+        properties: { type: { const: "undo" } },
+        required: ["type"],
+        additionalProperties: false,
+      },
+    ],
+  };
+  assert.deepEqual(parseTakeActionInput({
+    sessionId: "s1", expectedRevision: 3, action: { type: "move", direction: "left" },
+  }, actionSchema)?.action, { type: "move", direction: "left" });
+  assert.deepEqual(parseTakeActionInput({
+    sessionId: "s1", expectedRevision: 3, action: { type: "undo" },
+  }, actionSchema)?.action, { type: "undo" });
+  assert.equal(parseTakeActionInput({
+    sessionId: "s1", expectedRevision: 3, action: { type: "move", direction: "diagonal" },
+  }, actionSchema), null);
+});
+
+test("restart is a separate tool only when the manifest offers it", async () => {
+  const channel = new FrameGameChannel(fixtureFrame(), 9, 100);
+  await channel.ready();
+  const manifest = { ...WEBMCP_PROBE_MANIFEST, tools: [...WEBMCP_PROBE_MANIFEST.tools, "restart_game"] };
+  const tools = gameToolDefinitions(channel, manifest);
+  assert.deepEqual(tools.map((tool) => tool.name), ["get_game_state", "take_game_action", "restart_game"]);
+  assert.deepEqual(parseRestartInput({ sessionId: channel.sessionId, expectedRevision: 0 }), {
+    sessionId: channel.sessionId,
+    expectedRevision: 0,
+  });
+  const restarted = await tools[2].execute({ sessionId: channel.sessionId, expectedRevision: 0 });
+  assert.equal(restarted.structuredContent.revision, 0);
+  channel.close();
 });
 
 test("one pinned game channel completes three state-dependent actions", async () => {

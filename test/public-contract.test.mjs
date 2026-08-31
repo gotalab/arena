@@ -11,7 +11,14 @@ function manifest(taskId) {
     schema: "arena.game-manifest.v1",
     taskId,
     tools: ["get_game_state", "take_game_action"],
-    actionSchema: { type: "object" },
+    actionSchema: {
+      oneOf: [{
+        type: "object",
+        properties: { type: { const: "scan" } },
+        required: ["type"],
+        additionalProperties: false,
+      }],
+    },
     stateSchema: { properties: {}, additionalProperties: false },
     resultSchema: { properties: {}, additionalProperties: false },
     maxMessageBytes: 32768,
@@ -43,6 +50,10 @@ test("invalid manifests and false evidence fail closed", () => {
   const openState = structuredClone(accepted);
   openState.taskManifests = [{ ...manifest(taskId), stateSchema: { properties: {}, additionalProperties: true } }];
   assert.throws(() => validatePublicBundle(openState), /must_be_false/);
+
+  const openAction = structuredClone(accepted);
+  openAction.taskManifests = [{ ...manifest(taskId), actionSchema: { type: "object" } }];
+  assert.throws(() => validatePublicBundle(openAction), /forbidden_field|oneOf/);
 
   const unknownTask = structuredClone(accepted);
   unknownTask.taskManifests = [manifest("private-task@1")];

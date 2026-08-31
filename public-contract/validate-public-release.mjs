@@ -74,10 +74,68 @@ function assertObject(record, at) {
   if (!record || typeof record !== "object" || Array.isArray(record)) throw new Error(`public_schema:${at}:object_required`);
 }
 
+const GAME_SCHEMA_KEYS = new Set([
+  "type", "const", "enum", "oneOf", "properties", "required", "additionalProperties",
+  "items", "minItems", "maxItems", "uniqueItems", "minimum", "maximum",
+  "minLength", "maxLength", "pattern",
+]);
+
+function validateGameValueSchema(record, at, depth = 0) {
+  if (depth > 8) throw new Error(`public_schema:${at}:too_deep`);
+  assertClosed(record, GAME_SCHEMA_KEYS, at);
+  if (record.type !== undefined) {
+    const types = Array.isArray(record.type) ? record.type : [record.type];
+    if (!types.length || types.some((type) => !["null", "boolean", "integer", "number", "string", "array", "object"].includes(type))) {
+      throw new Error(`public_schema:${at}.type:invalid`);
+    }
+  }
+  if (record.enum !== undefined && (!Array.isArray(record.enum) || !record.enum.length)) throw new Error(`public_schema:${at}.enum:nonempty_array_required`);
+  if (record.oneOf !== undefined) {
+    if (!Array.isArray(record.oneOf) || !record.oneOf.length) throw new Error(`public_schema:${at}.oneOf:nonempty_array_required`);
+    record.oneOf.forEach((branch, index) => validateGameValueSchema(branch, `${at}.oneOf[${index}]`, depth + 1));
+  }
+  if (record.properties !== undefined) {
+    assertObject(record.properties, `${at}.properties`);
+    for (const [key, field] of Object.entries(record.properties)) validateGameValueSchema(field, `${at}.properties.${key}`, depth + 1);
+  }
+  if (record.required !== undefined) {
+    if (!Array.isArray(record.required) || new Set(record.required).size !== record.required.length || record.required.some((key) => typeof key !== "string")) {
+      throw new Error(`public_schema:${at}.required:unique_string_array_required`);
+    }
+    if (record.properties && record.required.some((key) => !Object.hasOwn(record.properties, key))) throw new Error(`public_schema:${at}.required:unknown_property`);
+  }
+  if (record.items !== undefined) validateGameValueSchema(record.items, `${at}.items`, depth + 1);
+  if (record.additionalProperties !== undefined && record.additionalProperties !== false) throw new Error(`public_schema:${at}.additionalProperties:must_be_false`);
+}
+
+function validateActionSchema(record, at) {
+  assertClosed(record, new Set(["oneOf"]), at);
+  if (!Array.isArray(record.oneOf) || !record.oneOf.length) throw new Error(`public_schema:${at}.oneOf:nonempty_array_required`);
+  const actionTypes = new Set();
+  record.oneOf.forEach((branch, index) => {
+    const branchAt = `${at}.oneOf[${index}]`;
+    validateGameValueSchema(branch, branchAt);
+    if (branch.type !== "object" || branch.additionalProperties !== false || !branch.properties || !Array.isArray(branch.required)) {
+      throw new Error(`public_schema:${branchAt}:closed_object_required`);
+    }
+    const actionType = branch.properties.type?.const;
+    if (typeof actionType !== "string" || !branch.required.includes("type")) throw new Error(`public_schema:${branchAt}.properties.type:required_const`);
+    if (actionTypes.has(actionType)) throw new Error(`public_schema:${at}:duplicate_action_type`);
+    actionTypes.add(actionType);
+  });
+}
+
 function validateClosedGameObjectSchema(record, at) {
-  assertClosed(record, new Set(["properties", "additionalProperties"]), at);
+  assertClosed(record, new Set(["type", "properties", "required", "additionalProperties"]), at);
+  if (record.type !== undefined && record.type !== "object") throw new Error(`public_schema:${at}.type:must_be_object`);
   assertObject(record.properties, `${at}.properties`);
   if (record.additionalProperties !== false) throw new Error(`public_schema:${at}.additionalProperties:must_be_false`);
+  if (record.required !== undefined) {
+    if (!Array.isArray(record.required) || new Set(record.required).size !== record.required.length || record.required.some((key) => typeof key !== "string" || !Object.hasOwn(record.properties, key))) {
+      throw new Error(`public_schema:${at}.required:known_unique_string_array_required`);
+    }
+  }
+  for (const [key, field] of Object.entries(record.properties)) validateGameValueSchema(field, `${at}.properties.${key}`, 1);
 }
 
 function assertString(value, at) {
@@ -215,7 +273,7 @@ export function validatePublicBundle(bundle) {
     if (!Array.isArray(manifest.tools) || new Set(manifest.tools).size !== manifest.tools.length) throw new Error(`public_schema:taskManifests[${index}].tools:unique_array_required`);
     if (!manifest.tools.includes("get_game_state") || !manifest.tools.includes("take_game_action")) throw new Error(`public_schema:taskManifests[${index}].tools:core_tools_required`);
     if (manifest.tools.some((tool) => !["get_game_state", "take_game_action", "restart_game"].includes(tool))) throw new Error(`public_schema:taskManifests[${index}].tools:invalid`);
-    assertObject(manifest.actionSchema, `taskManifests[${index}].actionSchema`);
+    validateActionSchema(manifest.actionSchema, `taskManifests[${index}].actionSchema`);
     validateClosedGameObjectSchema(manifest.stateSchema, `taskManifests[${index}].stateSchema`);
     validateClosedGameObjectSchema(manifest.resultSchema, `taskManifests[${index}].resultSchema`);
     if (!Number.isSafeInteger(manifest.maxMessageBytes) || manifest.maxMessageBytes < 1024 || manifest.maxMessageBytes > 65536) throw new Error(`public_schema:taskManifests[${index}].maxMessageBytes:invalid`);

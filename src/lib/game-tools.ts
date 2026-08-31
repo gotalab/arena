@@ -1,4 +1,5 @@
 import type { FrameGameChannel, GameChannelResult } from "../platform/frame-game-channel";
+import { matchesClosedJsonSchema } from "../platform/closed-json-schema";
 
 export const PROBE_ACTIONS = ["scan_sector", "mark_route", "commit_route"] as const;
 export type ProbeActionType = (typeof PROBE_ACTIONS)[number];
@@ -10,7 +11,7 @@ export interface ProbeAction {
 export interface PublicGameTaskManifest {
   schema: "arena.game-manifest.v1";
   taskId: string;
-  tools: readonly ["get_game_state", "take_game_action"];
+  tools: readonly ("get_game_state" | "take_game_action" | "restart_game")[];
   actionSchema: Record<string, unknown>;
   stateSchema: { properties: Record<string, unknown>; additionalProperties: false };
   resultSchema: { properties: Record<string, unknown>; additionalProperties: false };
@@ -53,22 +54,21 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-export function parseProbeAction(value: unknown): ProbeAction | null {
-  if (!isObject(value) || Object.keys(value).length !== 1) return null;
-  return typeof value.type === "string" && PROBE_ACTIONS.includes(value.type as ProbeActionType)
-    ? { type: value.type as ProbeActionType }
-    : null;
-}
-
-export function parseTakeActionInput(value: unknown): {
+export function parseTakeActionInput(value: unknown, actionSchema: Record<string, unknown>): {
   sessionId: string;
   expectedRevision: number;
-  action: ProbeAction;
+  action: Record<string, unknown>;
 } | null {
   if (!isObject(value) || Object.keys(value).some((key) => !["sessionId", "expectedRevision", "action"].includes(key))) return null;
-  const action = parseProbeAction(value.action);
-  if (typeof value.sessionId !== "string" || !value.sessionId || !Number.isSafeInteger(value.expectedRevision) || !action) return null;
-  return { sessionId: value.sessionId, expectedRevision: value.expectedRevision as number, action };
+  if (typeof value.sessionId !== "string" || !value.sessionId || !Number.isSafeInteger(value.expectedRevision)) return null;
+  if (!isObject(value.action) || !matchesClosedJsonSchema(value.action, actionSchema)) return null;
+  return { sessionId: value.sessionId, expectedRevision: value.expectedRevision as number, action: value.action };
+}
+
+export function parseRestartInput(value: unknown): { sessionId: string; expectedRevision: number } | null {
+  if (!isObject(value) || Object.keys(value).some((key) => !["sessionId", "expectedRevision"].includes(key))) return null;
+  if (typeof value.sessionId !== "string" || !value.sessionId || !Number.isSafeInteger(value.expectedRevision)) return null;
+  return { sessionId: value.sessionId, expectedRevision: value.expectedRevision as number };
 }
 
 function toolResult(result: GameChannelResult) {
@@ -77,7 +77,7 @@ function toolResult(result: GameChannelResult) {
 }
 
 export function gameToolDefinitions(channel: FrameGameChannel, manifest: PublicGameTaskManifest) {
-  return [
+  const tools: WebMcpTool[] = [
     {
       name: "get_game_state",
       description: "Read the visible state, revision, and legal actions of the active Arena game.",
@@ -102,7 +102,7 @@ export function gameToolDefinitions(channel: FrameGameChannel, manifest: PublicG
       },
       annotations: { readOnlyHint: false, untrustedContentHint: true },
       async execute(input: unknown) {
-        const parsed = parseTakeActionInput(input);
+        const parsed = parseTakeActionInput(input, manifest.actionSchema);
         if (!parsed) throw new TypeError("invalid take_game_action input");
         if (parsed.sessionId !== channel.sessionId) throw new Error("stale or foreign game session");
         return toolResult(await channel.request("act", {
@@ -111,5 +111,28 @@ export function gameToolDefinitions(channel: FrameGameChannel, manifest: PublicG
         }));
       },
     },
-  ] as const;
+  ];
+  if (manifest.tools.includes("restart_game")) {
+    tools.push({
+      name: "restart_game",
+      description: "Start a new attempt of the active Arena game from its declared initial state.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          sessionId: { type: "string", description: "Session returned by get_game_state." },
+          expectedRevision: { type: "integer", minimum: 0 },
+        },
+        required: ["sessionId", "expectedRevision"],
+        additionalProperties: false,
+      },
+      annotations: { readOnlyHint: false, untrustedContentHint: true },
+      async execute(input: unknown) {
+        const parsed = parseRestartInput(input);
+        if (!parsed) throw new TypeError("invalid restart_game input");
+        if (parsed.sessionId !== channel.sessionId) throw new Error("stale or foreign game session");
+        return toolResult(await channel.request("restart", { expectedRevision: parsed.expectedRevision }));
+      },
+    });
+  }
+  return tools;
 }

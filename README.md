@@ -10,6 +10,20 @@ build exposes a trusted Agent Play contract.
 
 **[Open Playable Arena](https://arena.gotalab.dev)**
 
+## Why a playable benchmark
+
+A published benchmark answers one fixed question under one set of tasks,
+checks, and execution conditions. A real decision may depend on a different
+workflow, failure mode, audience, or quality requirement.
+
+Arena keeps the published result intact and makes its evidence and actual
+builds available for further inspection. People can play the outputs, and an
+Agent can inspect the same public evidence through WebMCP. Any later
+use-case-specific evaluation remains separate from the published score.
+
+Games make this gap visible: passing checks does not by itself establish that
+an interface is understandable, satisfying, or right for a particular use.
+
 ## What you can do
 
 - **Explore** — see the games, builds, scores, checks, and run evidence in the
@@ -25,14 +39,15 @@ build exposes a trusted Agent Play contract.
 Open the live app in ChatGPT's in-app browser. You can ask things like:
 
 - “What tasks are available, and which ones offer Agent Play?”
-- “Show me the builds for EMBER.”
-- “Compare these two builds and open the stronger evidence.”
-- “Open an anonymous comparison for me to play.”
+- “Filter the Benchmark to GPT-5.6 Sol.”
+- “Open EMBER and compare these Builds.”
+- “Show only the failed checks and explain the published evidence.”
 
 The tools follow the page you are on:
 
-- Home and Play expose task discovery.
-- Benchmark and named task pages expose build search, opening, and comparison.
+- Home and Play expose `search_tasks` and `open_task`.
+- Benchmark adds `filter_benchmark_results` and `open_build`.
+- A named task adds `compare_task_builds` and `open_build`.
 - Blind comparison hides builder identity until reveal.
 - Game controls appear only after the active frame completes the trusted
   `arena.game.v1` handshake.

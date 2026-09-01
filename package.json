@@ -4,6 +4,11 @@
   "private": true,
   "license": "MIT",
   "packageManager": "pnpm@10.20.0",
+  "pnpm": {
+    "overrides": {
+      "browserslist": "4.28.7"
+    }
+  },
   "type": "module",
   "scripts": {
     "dev": "node scripts/verify-public-release.mjs && vite",

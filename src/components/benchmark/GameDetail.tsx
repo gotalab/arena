@@ -223,7 +223,10 @@ export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, 
     }
     const previous = previousCriterionKey.current;
     previousCriterionKey.current = criterionKey;
-    if (previous && previous !== criterionKey && criterionKey) {
+    // The first WebMCP selection starts from an empty key. It must focus the
+    // evaluator matrix too; otherwise the filters change below the fold while
+    // the viewport appears stuck at the task intro.
+    if (previous !== criterionKey && criterionKey) {
       evidenceRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [criterionKey]);

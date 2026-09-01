@@ -14,7 +14,7 @@ test("product receipt v2 is closed and rejects v1 or tamper", () => {
 });
 
 test("runtime input manifest fixes toolchain and entry names", () => {
-  const manifest={schema:"arena.runtime-input-manifest.v1",esbuild:{package:"esbuild",version:"0.28.1",bundle:true,format:"esm",platform:"browser",target:"es2022",sourcemap:false,legalComments:"none",charset:"ascii"},contracts:{route:"src/lib/match-path.ts",routeSha256:hash,gameProtocol:"arena.game.v1",gameManifest:"arena.game-manifest.v1",tools:["get_game_state","take_game_action"]},inputs:[{kind:"route",path:"src/lib/match-path.ts",sha256:hash}],entryOutputPairs:[{entry:"runtime/src/artifact.ts",output:"worker-runtime/artifact-worker.js"},{entry:"runtime/src/main.ts",output:"worker-runtime/main-worker.js"}]};
+  const manifest={schema:"arena.runtime-input-manifest.v1",esbuild:{package:"esbuild",version:"0.28.1",bundle:true,format:"esm",platform:"browser",target:"es2022",sourcemap:false,legalComments:"none",charset:"ascii"},contracts:{route:"src/lib/match-path.ts",routeSha256:hash,gameProtocol:"arena.game.v1",gameManifest:"arena.game-manifest.v1",tools:["get_game_state","take_game_action","restart_game"]},inputs:[{kind:"route",path:"src/lib/match-path.ts",sha256:hash}],entryOutputPairs:[{entry:"runtime/src/artifact.ts",output:"worker-runtime/artifact-worker.js"},{entry:"runtime/src/main.ts",output:"worker-runtime/main-worker.js"}]};
   assert.equal(validateRuntimeInputManifest(manifest).schema,"arena.runtime-input-manifest.v1");
   assert.throws(()=>validateRuntimeInputManifest({...manifest,esbuild:{...manifest.esbuild,sourcemap:true}}),/unsupported_configuration/);
 });

@@ -47,7 +47,7 @@ function inputManifest() {
   return validateRuntimeInputManifest({
     schema: "arena.runtime-input-manifest.v1",
     esbuild: { package: "esbuild", version: "0.28.1", bundle: true, format: "esm", platform: "browser", target: "es2022", sourcemap: false, legalComments: "none", charset: "ascii" },
-    contracts: { route: "src/lib/match-path.ts", routeSha256: fileSha(join(root, "src/lib/match-path.ts")), gameProtocol: "arena.game.v1", gameManifest: "arena.game-manifest.v1", tools: ["get_game_state", "take_game_action"] },
+    contracts: { route: "src/lib/match-path.ts", routeSha256: fileSha(join(root, "src/lib/match-path.ts")), gameProtocol: "arena.game.v1", gameManifest: "arena.game-manifest.v1", tools: ["get_game_state", "take_game_action", "restart_game"] },
     inputs,
     entryOutputPairs: [
       { entry: "runtime/src/artifact.ts", output: "worker-runtime/artifact-worker.js" },

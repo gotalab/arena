@@ -78,7 +78,7 @@ export function validateRuntimeInputManifest(value) {
   if (value.contracts.route !== "src/lib/match-path.ts") fail("inputManifest.contracts.route", "unsupported");
   digest(value.contracts.routeSha256, "inputManifest.contracts.routeSha256");
   if (value.contracts.gameProtocol !== "arena.game.v1" || value.contracts.gameManifest !== "arena.game-manifest.v1") fail("inputManifest.contracts", "unsupported_version");
-  if (JSON.stringify(value.contracts.tools) !== JSON.stringify(["get_game_state", "take_game_action"])) fail("inputManifest.contracts.tools", "unsupported");
+  if (JSON.stringify(value.contracts.tools) !== JSON.stringify(["get_game_state", "take_game_action", "restart_game"])) fail("inputManifest.contracts.tools", "unsupported");
   if (!Array.isArray(value.inputs) || value.inputs.length === 0) fail("inputManifest.inputs", "nonempty_array_required");
   let previous = "";
   for (const [index, input] of value.inputs.entries()) {

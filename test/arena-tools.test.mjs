@@ -64,10 +64,11 @@ test("task search is identity-free, bounded and closed to extra input", async ()
   const [search] = arenaToolDefinitions(context());
   const output = await search.execute({ query: "survival", limit: 1 });
   assert.ok(Array.isArray(output.structuredContent.tasks));
-  assert.ok(output.structuredContent.tasks.every((task) => task.agentPlay.mode === "not_offered"));
+  assert.ok(output.structuredContent.tasks.every((task) => task.agentPlay.status === "human_only"));
   assert.equal(JSON.stringify(output).includes("configuration"), false);
   assert.throws(() => search.execute({ query: "", provider: "hidden" }), /invalid task search input/);
-  assert.deepEqual((await search.execute({ agentPlay: "required" })).structuredContent.tasks, []);
+  assert.throws(() => search.execute({ agentPlay: "any" }), /invalid Agent Play filter/);
+  assert.deepEqual((await search.execute({ agentPlay: "supported" })).structuredContent.tasks, []);
 });
 
 test("task search reports Agent Play policy and open_task changes the visible route", async () => {
@@ -84,10 +85,10 @@ test("task search reports Agent Play policy and open_task changes the visible ro
   const opened = [];
   const tools = arenaToolDefinitions(context({ taskManifests: [manifest], openTask: (id) => opened.push(id) }));
   const byName = new Map(tools.map((tool) => [tool.name, tool]));
-  const tasks = (await byName.get("search_tasks").execute({ agentPlay: "required" })).structuredContent.tasks;
+  const tasks = (await byName.get("search_tasks").execute({ agentPlay: "supported" })).structuredContent.tasks;
   assert.equal(tasks.length, 1);
   assert.deepEqual(tasks[0].agentPlay, {
-    mode: "required",
+    status: "supported",
     protocol: "arena.game.v1",
     tools: ["get_game_state", "take_game_action"],
   });

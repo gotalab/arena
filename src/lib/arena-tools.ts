@@ -83,8 +83,8 @@ function assertActiveTask(context: ArenaToolContext, taskId: string): void {
 function taskAgentPlay(context: ArenaToolContext, taskId: string) {
   const manifest = context.taskManifests.find((candidate) => candidate.taskId === taskId);
   return manifest
-    ? { mode: "required" as const, protocol: "arena.game.v1" as const, tools: [...manifest.tools] }
-    : { mode: "not_offered" as const, protocol: null, tools: [] };
+    ? { status: "supported" as const, protocol: "arena.game.v1" as const, tools: [...manifest.tools] }
+    : { status: "human_only" as const, protocol: null, tools: [] };
 }
 
 function buildAgentPlayEvidence(context: ArenaToolContext, build: PublicBuild) {
@@ -118,7 +118,7 @@ function searchTasksTool(context: ArenaToolContext): WebMcpTool {
       type: "object",
       properties: {
         query: { type: "string", description: "Optional words to match." },
-        agentPlay: { enum: ["any", "required", "not_offered"], description: "Optional Agent Play policy filter." },
+        agentPlay: { enum: ["supported", "human_only"], description: "Filter by whether the task can be played by an agent. Omit to include all tasks." },
         limit: { type: "integer", minimum: 1, maximum: 50 },
         cursor: { type: "string", pattern: "^[0-9]+$" },
       },
@@ -129,15 +129,15 @@ function searchTasksTool(context: ArenaToolContext): WebMcpTool {
       assertCurrent(context);
       const value = inputObject(input, ["query", "agentPlay", "limit", "cursor"], "task search");
       const query = (stringValue(value.query, "query") ?? "").trim().toLowerCase();
-      const agentPlay = stringValue(value.agentPlay, "agentPlay") ?? "any";
-      if (!["any", "required", "not_offered"].includes(agentPlay)) throw new TypeError("invalid Agent Play filter");
+      const agentPlayFilter = stringValue(value.agentPlay, "agentPlay");
+      if (agentPlayFilter != null && !["supported", "human_only"].includes(agentPlayFilter)) throw new TypeError("invalid Agent Play filter");
       const limit = Math.min(numberValue(value.limit, "limit") ?? TASK_SEARCH_PAGE_SIZE, 50);
       const cursor = cursorValue(value.cursor);
       const offset = cursor == null ? 0 : Number(cursor);
       if (!Number.isInteger(offset) || offset < 0) throw new TypeError("cursor must be a non-negative integer string");
       const matches = context.games
         .map((game) => ({ game, agentPlay: taskAgentPlay(context, game.id) }))
-        .filter((entry) => agentPlay === "any" || entry.agentPlay.mode === agentPlay)
+        .filter((entry) => agentPlayFilter == null || entry.agentPlay.status === agentPlayFilter)
         .filter(({ game }) => !query || [game.name, game.rule, game.tension, game.inputSummary].join(" ").toLowerCase().includes(query));
       const page = matches.slice(offset, offset + limit);
       const nextOffset = offset + page.length < matches.length ? offset + page.length : null;

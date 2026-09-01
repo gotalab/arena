@@ -52,9 +52,9 @@ The tools follow the page you are on:
 - Game controls appear only after the active frame completes the trusted
   `arena.game.v1` handshake.
 
-Agent Play support is reported honestly at two levels. A task says whether it
-requires an Agent Play contract; each build separately reports whether that
-contract passed, failed, was not evaluated, or did not apply.
+Agent Play support is reported honestly at two levels. A task is either
+`supported` or `human_only`; each build separately reports whether its Agent
+Play contract passed, failed, was not evaluated, or did not apply.
 
 ## How Arena works
 

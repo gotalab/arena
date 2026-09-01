@@ -84,10 +84,12 @@
 .select__count {
   min-width: 18px;
   padding: 1px 5px;
+  border: 1px solid var(--line);
   border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  color: var(--ink-2);
   font-size: var(--t-xs);
+  font-weight: 700;
   text-align: center;
 }
 .select__menu {

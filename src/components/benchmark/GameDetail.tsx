@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { hasBlindVerdict, isTaskOpen, preferredTrialId } from "../../lib/blind";
 import { configurationParts, configurationsById, operationalForCell, seriesOf } from "../../lib/configurations";
-import { formatCost, formatRunDate, formatSeconds, formatTokens } from "../../lib/format";
+import type { ConfigurationParts } from "../../lib/configurations";
+import { formatCompactTokens, formatCost, formatRunDate, formatSeconds, formatTokens } from "../../lib/format";
 import { cellScoreForTrial, compareByScore, scoreEvidence, scoreValue } from "../../lib/score";
 import { artifactSrc, buildsForTask, trialSummary } from "../../lib/trials";
 import type { ComparisonState } from "../../client-types";
@@ -39,6 +40,25 @@ interface GameDetailProps {
 
 const metricCoverage = (reported: number, runs: number) =>
   reported === runs ? null : `${reported} / ${runs} runs reported`;
+
+interface BuildResultRow {
+  compactTokens: string;
+  cost: string;
+  costAtListPrice: boolean;
+  costCoverage: string | null;
+  evidence: string | null;
+  parts: ConfigurationParts;
+  playing: boolean;
+  preferred: boolean;
+  runDate: string;
+  runTimestamp: string | null;
+  score: string;
+  time: string;
+  timeCoverage: string | null;
+  tokenCoverage: string | null;
+  tokens: string;
+  trial: Trial;
+}
 
 /**
  * One Task page at /task/:slug, built for comparison: every build in
@@ -119,6 +139,29 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
   const runCounts = new Set(rowScores.map((score) => score.n));
   const anyInterval = rowScores.some((score) => scoreEvidence(score, "runs").includes("±"));
   const uniformRuns = !anyInterval && runCounts.size === 1 ? [...runCounts][0] : null;
+  const resultRows: BuildResultRow[] = rows.map((trial) => {
+    const summary = trialSummary(trial);
+    const score = cellScoreForTrial(release, trial);
+    const operational = operationalForCell(release, trial.taskId, trial.configurationId);
+    return {
+      compactTokens: formatCompactTokens(operational.tokens.mean),
+      cost: `${operational.costAtListPrice ? "~" : ""}${formatCost(operational.estimatedCost.mean)}`,
+      costAtListPrice: operational.costAtListPrice,
+      costCoverage: metricCoverage(operational.estimatedCost.reported, operational.runs),
+      evidence: score && uniformRuns == null ? scoreEvidence(score, "runs") : null,
+      parts: seriesOf(release, trial.configurationId).parts,
+      playing: trial.id === activeTrialId,
+      preferred: trial.artifact.sha256 === preferredArtifact,
+      runDate: formatRunDate(trial.startedAt),
+      runTimestamp: trial.startedAt ?? null,
+      score: score ? scoreValue(score) : summary.requirements.rateLabel,
+      time: formatSeconds(operational.time.mean),
+      timeCoverage: metricCoverage(operational.time.reported, operational.runs),
+      tokenCoverage: metricCoverage(operational.tokens.reported, operational.runs),
+      tokens: formatTokens(operational.tokens.mean),
+      trial,
+    };
+  });
   // A lane with a published build elsewhere in the round but none for THIS
   // game gets its absence explained under the table. A lane with no published
   // build anywhere is not part of the round's story yet and is not named.
@@ -241,7 +284,7 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
             </div>
             <div aria-label="Filters" className="filter-row" role="group">
               <FilterSelect
-                label="Build"
+                label="Builds"
                 onToggle={toggleBuild}
                 options={ranked.map((trial) => ({ value: trial.id, label: nameOf(trial) }))}
                 selected={new Set(explicitOrAllBuildIds)}
@@ -274,87 +317,8 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
                 </button>
               ) : null}
             </div>
-            <div className="buildtable__scroll">
-              <table className="buildtable">
-                <thead>
-                  <tr>
-                    <th scope="col">Agent</th>
-                    <th className="buildtable__num" scope="col">Score</th>
-                    <th className="buildtable__num" scope="col">Time avg/run</th>
-                    <th className="buildtable__num" scope="col">Tokens avg/run</th>
-                    <th className="buildtable__num" scope="col">Cost avg/run</th>
-                    <th className="buildtable__num" scope="col">Run</th>
-                    <th scope="col"><span className="visually-hidden">Play</span></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((trial) => {
-                    const summary = trialSummary(trial);
-                    const score = cellScoreForTrial(release, trial);
-                    const operational = operationalForCell(release, trial.taskId, trial.configurationId);
-                    const parts = seriesOf(release, trial.configurationId).parts;
-                    const playing = trial.id === activeTrialId;
-                    return (
-                      <tr className={playing ? "is-playing" : undefined} key={trial.id}>
-                        <th scope="row">
-                          <b><ConfigurationName parts={parts} /></b>
-                          {trial.artifact.sha256 === preferredArtifact ? (
-                            <span className="buildtable__tags">
-                              <span className="pill">Your pick</span>
-                            </span>
-                          ) : null}
-                        </th>
-                        <td className="buildtable__num" data-label="Score">
-                          <b>{score ? scoreValue(score) : summary.requirements.rateLabel}</b>
-                          {score && uniformRuns == null ? <small>{scoreEvidence(score, "runs")}</small> : null}
-                        </td>
-                        <td className="buildtable__num" data-label="Time avg/run">
-                          {formatSeconds(operational.time.mean)}
-                          {metricCoverage(operational.time.reported, operational.runs) ? (
-                            <small>{metricCoverage(operational.time.reported, operational.runs)}</small>
-                          ) : null}
-                        </td>
-                        <td className="buildtable__num" data-label="Tokens avg/run">
-                          {formatTokens(operational.tokens.mean)}
-                          {metricCoverage(operational.tokens.reported, operational.runs) ? (
-                            <small>{metricCoverage(operational.tokens.reported, operational.runs)}</small>
-                          ) : null}
-                        </td>
-                        <td
-                          className="buildtable__num"
-                          data-label="Cost avg/run"
-                          title={operational.costAtListPrice
-                            ? "Computed from sealed token counts at the model's public API list price"
-                            : undefined}
-                        >
-                          {operational.costAtListPrice ? "~" : ""}{formatCost(operational.estimatedCost.mean)}
-                          {metricCoverage(operational.estimatedCost.reported, operational.runs) ? (
-                            <small>{metricCoverage(operational.estimatedCost.reported, operational.runs)}</small>
-                          ) : null}
-                        </td>
-                        <td className="buildtable__num" data-label="Run" title={trial.startedAt ?? undefined}>
-                          {formatRunDate(trial.startedAt)}
-                        </td>
-                        <td data-label="Play">
-                          <button
-                            className="btn-quiet"
-                            onClick={() => openBuild(playing ? null : trial.id)}
-                            type="button"
-                          >
-                            {playing ? (
-                              <ArenaIcon className="btn-quiet__icon" name="close" />
-                            ) : (
-                              <ArenaIcon className="btn-quiet__icon" name="play" />
-                            )}
-                            {playing ? "Close" : "Play"}
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <p className="buildresults__metric-note">Time, tokens, and cost are averages per run.</p>
+            <BuildResults rows={resultRows} onToggle={openBuild} />
             </div>
             {!played ? (
               <p className="detail__note">You revealed these results without voting, so comparisons stay playable but no longer count as blind picks.</p>
@@ -475,5 +439,113 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
         )}
       </div>
     </section>
+  );
+}
+
+function BuildResults({ rows, onToggle }: { rows: BuildResultRow[]; onToggle: (trialId: string | null) => void }) {
+  return (
+    <>
+      <div className="buildtable__scroll">
+        <table className="buildtable">
+          <thead>
+            <tr>
+              <th scope="col">Agent</th>
+              <th className="buildtable__num" scope="col">Score</th>
+              <th className="buildtable__num" scope="col" title="Average time per run">Time</th>
+              <th className="buildtable__num" scope="col" title="Average tokens per run">Tokens</th>
+              <th className="buildtable__num" scope="col" title="Average cost per run">Cost</th>
+              <th className="buildtable__num" scope="col">Run</th>
+              <th scope="col"><span className="visually-hidden">Play</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr className={row.playing ? "is-playing" : undefined} key={row.trial.id}>
+                <th scope="row">
+                  <b><ConfigurationName parts={row.parts} /></b>
+                  {row.preferred ? (
+                    <span className="buildtable__tags"><span className="pill">Your pick</span></span>
+                  ) : null}
+                </th>
+                <td className="buildtable__num">
+                  <b>{row.score}</b>
+                  {row.evidence ? <small>{row.evidence}</small> : null}
+                </td>
+                <td className="buildtable__num">
+                  {row.time}
+                  {row.timeCoverage ? <small>{row.timeCoverage}</small> : null}
+                </td>
+                <td className="buildtable__num">
+                  {row.tokens}
+                  {row.tokenCoverage ? <small>{row.tokenCoverage}</small> : null}
+                </td>
+                <td
+                  className="buildtable__num"
+                  title={row.costAtListPrice
+                    ? "Computed from sealed token counts at the model's public API list price"
+                    : undefined}
+                >
+                  {row.cost}
+                  {row.costCoverage ? <small>{row.costCoverage}</small> : null}
+                </td>
+                <td className="buildtable__num" title={row.runTimestamp ?? undefined}>{row.runDate}</td>
+                <td><BuildPlayButton onClick={() => onToggle(row.playing ? null : row.trial.id)} playing={row.playing} /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <ol className="buildresults-mobile" aria-label="Agent results">
+        {rows.map((row, index) => {
+          const coverage = [row.timeCoverage, row.tokenCoverage, row.costCoverage]
+            .filter((value): value is string => value != null);
+          return (
+            <li className={row.playing ? "buildresult-mobile is-playing" : "buildresult-mobile"} key={row.trial.id}>
+              <span className="buildresult-mobile__rank" aria-label={`Rank ${index + 1}`}>{index + 1}</span>
+              <span className="buildresult-mobile__name">
+                <b><ConfigurationName parts={row.parts} /></b>
+                {row.preferred ? <small>Your pick</small> : null}
+              </span>
+              <span className="buildresult-mobile__score">
+                <b>{row.score}</b>
+                {row.evidence ? <small>{row.evidence}</small> : null}
+              </span>
+              <span
+                className="buildresult-mobile__metrics"
+                aria-label={`Average per run: ${row.time}, ${row.tokens}, ${row.cost}. Run ${row.runDate}.`}
+              >
+                <span>{row.time}</span>
+                <span>{row.compactTokens}</span>
+                <span>{row.cost}</span>
+                <span>{row.runDate}</span>
+              </span>
+              <BuildPlayButton
+                className="buildresult-mobile__play"
+                onClick={() => onToggle(row.playing ? null : row.trial.id)}
+                playing={row.playing}
+              />
+              {coverage.length > 0 ? (
+                <small className="buildresult-mobile__coverage">{coverage.join("; ")}</small>
+              ) : null}
+            </li>
+          );
+        })}
+      </ol>
+    </>
+  );
+}
+
+function BuildPlayButton({ className, onClick, playing }: { className?: string; onClick: () => void; playing: boolean }) {
+  return (
+    <button
+      aria-pressed={playing}
+      className={["btn-quiet", className].filter(Boolean).join(" ")}
+      onClick={onClick}
+      type="button"
+    >
+      <ArenaIcon className="btn-quiet__icon" name={playing ? "close" : "play"} />
+      {playing ? "Close" : "Play"}
+    </button>
   );
 }

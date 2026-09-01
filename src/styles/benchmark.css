@@ -971,56 +971,58 @@ th.board__rank { width: 34px; }
 .buildtable__num small { display: block; color: var(--ink-2); font-size: var(--t-xs); }
 .buildtable tr.is-playing td,
 .buildtable tr.is-playing th { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+.buildresults__metric-note,
+.buildresults-mobile { display: none; }
 
 @media (max-width: 720px) {
-  /* Same move the leaderboard already makes: rows become cards so Play is
-     on-screen at rest and the page never grows sideways. */
-  .buildtable__scroll { overflow: visible; }
-  .buildtable thead { display: none; }
-  .buildtable, .buildtable tbody { display: block; }
-  .buildtable tbody { display: grid; gap: 10px; }
-  .buildtable tbody tr {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 4px 12px;
-    padding: 14px;
-    border: 1px solid var(--line);
-    border-radius: var(--r-md);
-    transition: transform 100ms ease;
-  }
-  .buildtable tbody tr:active { transform: scale(0.99); }
-  .buildtable tbody th,
-  .buildtable tbody td {
-    padding: 0;
-    border-bottom: 0;
-    white-space: normal;
-  }
-  .buildtable tbody th { grid-column: 1 / -1; }
-  .buildtable tbody td.buildtable__num {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 6px;
-    text-align: left;
-    font-size: var(--t-sm);
-  }
-  .buildtable tbody td.buildtable__num::before {
-    content: attr(data-label);
+  .buildtable__scroll { display: none; }
+  .buildresults__metric-note {
+    display: block;
+    margin: 2px 0 8px;
     color: var(--ink-2);
-    font: 600 var(--t-xs) / 1.2 var(--mono);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    font-size: var(--t-xs);
   }
-  .buildtable tbody td:last-child {
-    grid-column: 1 / -1;
-    padding-top: 8px;
-    text-align: left;
+  .buildresults-mobile {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border-top: 2px solid var(--ink);
+    list-style: none;
   }
-  .buildtable tbody td:last-child .btn-quiet {
-    width: 100%;
-    justify-content: center;
-    margin-left: 0;
+  .buildresult-mobile {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) auto;
+    gap: 5px 10px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
   }
+  .buildresult-mobile.is-playing { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+  .buildresult-mobile__rank {
+    grid-row: 1 / span 2;
+    color: var(--ink-2);
+    font: 700 var(--t-sm) / 1 var(--mono);
+  }
+  .buildresult-mobile__name { min-width: 0; }
+  .buildresult-mobile__name b { display: block; font-size: var(--t-sm); font-weight: 750; }
+  .buildresult-mobile__name .cfg-name { flex-wrap: wrap; white-space: normal; }
+  .buildresult-mobile__name small,
+  .buildresult-mobile__score small,
+  .buildresult-mobile__coverage { display: block; color: var(--ink-2); font-size: var(--t-xs); }
+  .buildresult-mobile__score { text-align: right; }
+  .buildresult-mobile__score b { font-size: var(--t-lg); letter-spacing: -0.02em; }
+  .buildresult-mobile__metrics {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 12px;
+    color: var(--ink-2);
+    font: 500 var(--t-xs) / 1.4 var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .buildresult-mobile__metrics span { white-space: nowrap; }
+  .buildresult-mobile__play { grid-column: 3; padding-inline: 10px; }
+  .buildresult-mobile__coverage { grid-column: 2 / -1; }
   .detail__stage .deck__compare { display: none; }
 }
 .pill--quiet {

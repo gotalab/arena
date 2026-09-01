@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { Dispatch, KeyboardEvent, PointerEvent, RefObject, SetStateAction } from "react";
 import {
-  CHART_CHIP,
   CHART_CHIP_R,
   CHART_COMBINED,
   chartShareModel,
@@ -16,12 +15,10 @@ import {
   configurationsById,
   seriesTokenOf,
   type ConfigurationParts,
-  type OfficialMark,
 } from "../../lib/configurations";
 import { formatCost } from "../../lib/format";
 import { formatScore, gateBadge, speakScore, type ScoreEvidenceUnit } from "../../lib/score";
 import type { PublicGame as Game, PublicRelease as Release } from "../../public-types";
-import { MarkChip } from "../ConfigurationName";
 
 type ScoredPoint = ChartPoint & { rate: number };
 
@@ -54,15 +51,12 @@ interface ComplianceChartProps {
  * view share the square: the combined totals (one mark per configuration, the
  * default) and a single game's runs.
  *
- * Identity is the official harness chip, the same 24×24 optical mark as
- * ConfigurationName. On-plot text is the model, then effort if it still fits;
- * the harness word does not sit next to its own icon. When labels would
- * collide, or two same-icon marks would be nameless, the compact number + key
- * path resolves them. A quiet series tint may remain; color is not the name
- * of the point. A mark encodes identity and position (ADR 0015): a blocked
- * build's penalty already sits in its y value, and the reason lives in the
- * hover receipt, the data table and the evidence page. Pointer or keyboard
- * focus on a mark opens that receipt; never a native SVG title, never a click.
+ * Identity is accurate text plus an Arena-owned series dot. On-plot text is
+ * the model, then effort if it still fits. When labels collide, the compact
+ * number and key path resolves them. Color supports identity but is never the
+ * only name of a point. A blocked build's penalty already sits in its y value,
+ * and the reason lives in the hover receipt, data table, and evidence page.
+ * Pointer or keyboard focus on a mark opens that receipt.
  *
  * The y value is the cell's score — the mean over its replicas — so a mark is
  * not one run's luck. A cell with no scorable replica has no honest y position
@@ -81,8 +75,7 @@ export function ComplianceChart({ tasks, release, configurationIds, view, onView
 
   const byId = configurationsById(release);
   const partsOf = (point: ChartPoint) => configurationParts(byId.get(point.configurationId));
-  // Quiet series tint follows the model vendor (hue = vendor, step = tier).
-  // Identity is the chip, not this fill.
+  // Quiet series color follows the model family. Text still names each point.
   const tokenOf = (point: ChartPoint) => seriesTokenOf(byId.get(point.configurationId));
   const allowedConfigurations = new Set(configurationIds);
   const visible = (point: ChartPoint) => allowedConfigurations.has(point.configurationId);
@@ -93,7 +86,7 @@ export function ComplianceChart({ tasks, release, configurationIds, view, onView
 
   // A labelled slot after the last cost tick holds scored marks whose cost
   // was not reported: their y is real, their x honestly does not exist. The
-  // slot is one 24px chip wide, not a grey slab, and it sits past the costed
+  // slot is one 24px mark wide, not a grey slab, and it sits past the costed
   // fan so "$70" and "cost n/a" never share pixels. Geometry is shared with
   // the OG still so a share image cannot invent a second Combined layout.
   const share = chartShareModel({
@@ -152,8 +145,8 @@ export function ComplianceChart({ tasks, release, configurationIds, view, onView
   const description = [...scoreOrdered, ...unplotted].map(describe).join("; ");
   // `activeTask` is non-null exactly when the view is not the combined totals.
   const chartLabel = combined
-    ? `Scatter chart of total requirements met against task-balanced average cost per task on a logarithmic cost axis, one mark per agent across all ${tasks.length} tasks, each mark the official harness chip, named by model or numbered in the key.`
-    : `Scatter chart of requirements met against average cost per run on a logarithmic cost axis, showing the ${activeTask!.name} cells, each mark the official harness chip, named by model or numbered in the key.`;
+    ? `Scatter chart of total requirements met against task-balanced average cost per task on a logarithmic cost axis, one series dot per agent across all ${tasks.length} tasks, named by model or numbered in the key.`
+    : `Scatter chart of requirements met against average cost per run on a logarithmic cost axis, showing the ${activeTask!.name} cells, each series dot named by model or numbered in the key.`;
   // Compact keeps the enumeration on the image. Hoverable marks speak for
   // themselves, so the group name stays the chart, not every receipt twice.
   const ariaLabel = hoverable ? chartLabel : `${chartLabel} ${description}.`;
@@ -237,7 +230,7 @@ export function ComplianceChart({ tasks, release, configurationIds, view, onView
         {naLabel != null ? (
           <g>
             {/* A thin rail, not a grey slab: one labelled slot for a real
-                score that has no x. The chip sits on the rail; the label
+                score that has no x. The mark sits on the rail; the label
                 names why it is off the cost axis. The slot is past the last
                 cost tick, so the label does not sit on "$70". */}
             <line
@@ -298,17 +291,22 @@ export function ComplianceChart({ tasks, release, configurationIds, view, onView
               role={hoverable ? "img" : undefined}
               {...markHoverHandlers(point.trialId, hoverable, setHoveredId, setFocusedId)}
             >
-              {/* Quiet vendor tint behind the official chip. Identity is the
-                  chip, not this fill. A blocked build's penalty is already in
-                  its y position; the receipt and the evidence page say why. */}
+              {/* The halo preserves the generous hit area while the solid dot
+                  matches the text-first benchmark language. */}
               <circle
-                className="chart-point__tint"
+                className="chart-point__halo"
                 cx={px}
                 cy={py}
                 r={CHART_CHIP_R + 2}
                 style={{ fill: `var(--series-${tokenOf(point)}, var(--ink))` }}
               />
-              <ChartPointChip mark={partsOf(point).harnessMark} px={px} py={py} />
+              <circle
+                className="chart-point__mark"
+                cx={px}
+                cy={py}
+                r={6}
+                style={{ fill: `var(--series-${tokenOf(point)}, var(--ink))` }}
+              />
               {/* Invisible hit target so hover and focus still find the point. */}
               <circle className="chart-point__hit" cx={px} cy={py} r={CHART_CHIP_R + 2} />
               {n != null ? (
@@ -370,7 +368,6 @@ export function ComplianceChart({ tasks, release, configurationIds, view, onView
           {numbered.map((point) => (
             <li key={point.trialId}>
               <b>{numberOf.get(point.trialId)}</b>
-              <MarkChip mark={partsOf(point).harnessMark} />
               <span>
                 {point.label}
                 {point.labelSuffix ? <small> {point.labelSuffix}</small> : null}
@@ -497,8 +494,8 @@ function ChartReceipt({
         transform: `translate(${flipX ? "-10px" : "10px"}, ${flipY ? "10px" : "calc(-100% - 10px)"})`,
       }}
     >
-      {parts.harnessMark ? <MarkChip mark={parts.harnessMark} /> : <span className="chart-point__empty" />}
       <div className="chart-receipt__copy">
+        <p className="chart-receipt__harness">{parts.harness}</p>
         <p className="chart-receipt__model">{parts.model}</p>
         {parts.effort ? <p className="chart-receipt__effort">{parts.effort}</p> : null}
         <p className="chart-receipt__score">{formatScore(point.score, scoreUnit)}</p>
@@ -506,15 +503,5 @@ function ChartReceipt({
         {badge ? <p className="chart-receipt__gate">blocked · {badge.label}</p> : null}
       </div>
     </div>
-  );
-}
-
-function ChartPointChip({ mark, px, py }: { mark: OfficialMark | null; px: number; py: number }) {
-  return (
-    <foreignObject height={CHART_CHIP} width={CHART_CHIP} x={px - CHART_CHIP_R} y={py - CHART_CHIP_R}>
-      <div className="chart-point__chip">
-        {mark ? <MarkChip mark={mark} /> : <span className="chart-point__empty" />}
-      </div>
-    </foreignObject>
   );
 }

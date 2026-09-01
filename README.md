@@ -26,12 +26,12 @@ an interface is understandable, satisfying, or right for a particular use.
 
 ## What you can do
 
-- **Explore** — see the games, builds, scores, checks, and run evidence in the
+- **Explore:** see the games, builds, scores, checks, and run evidence in the
   published benchmark.
-- **Compare** — open an anonymous pair made from the same brief, try both, then
+- **Compare:** open an anonymous pair made from the same brief, try both, then
   reveal who made them.
-- **Play** — interact with the real generated games in isolated frames.
-- **Use an agent** — let an agent search Arena through WebMCP instead of
+- **Play:** interact with the real generated games in isolated frames.
+- **Use an agent:** let an agent search Arena through WebMCP instead of
   guessing its way through the visual interface.
 
 ## Try it with WebMCP
@@ -125,11 +125,11 @@ produces the runtime.
 
 ## What's in this repository
 
-- `src/` — the Arena interface and route-scoped WebMCP tools
-- `runtime/` — Main and Artifact Workers plus the minimal runtime D1 schema
-- `public-release/accepted/` — the sanitized, content-addressed public release
-- `public-contract/` — the public bundle, Agent Play, and build receipt contracts
-- `test/` — product, runtime, WebMCP, privacy, and release-boundary tests
+- `src/`: the Arena interface and route-scoped WebMCP tools
+- `runtime/`: Main and Artifact Workers plus the minimal runtime D1 schema
+- `public-release/accepted/`: the sanitized, content-addressed public release
+- `public-contract/`: the public bundle, Agent Play, and build receipt contracts
+- `test/`: product, runtime, WebMCP, privacy, and release-boundary tests
 
 This repository contains everything needed to run the published Arena
 experience. Task authoring, private rubrics, raw evaluation runs, credentials,

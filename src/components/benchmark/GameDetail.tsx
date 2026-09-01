@@ -219,7 +219,7 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
         ) : !open ? (
           <div className="mask">
             <h3>You have not played {task.name} yet.</h3>
-            <p>Scores name who made each game — seeing them first would sway your vote.</p>
+            <p>Scores name who made each game. Seeing them first would sway your vote.</p>
             <div className="mask__actions">
               <button className="link-plain" onClick={() => reveal(task.id)} type="button">
                 Reveal results without playing

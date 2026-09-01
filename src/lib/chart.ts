@@ -23,7 +23,7 @@ export interface ChartPoint {
   trialId: string;
   taskId: string | null;
   name: string;
-  /** On-plot text: the model. The harness lives in the official mark. */
+  /** On-plot text: harness and model. */
   label: string;
   /** Effort, shown beside the model when it still fits. */
   labelSuffix: string;
@@ -76,7 +76,7 @@ export interface ChartViewModel {
  *
  * Inside one game every mark shares the game, so the game name would label all
  * of them identically. What separates two marks here is the configuration: the
- * official harness chip is the point, and the on-plot word is the model, with
+ * Arena's series dot is the point, and the on-plot text names harness and model, with
  * effort as an optional suffix. `name` stays the game, because the receipt,
  * the unplotted note and the spoken description still need to say which game.
  */
@@ -93,7 +93,7 @@ function trialPoints(release: Release, task: { id: string; name: string }): Char
         trialId: trial.id,
         taskId: trial.taskId,
         name: task.name,
-        label: parts.model,
+        label: parts.lead,
         labelSuffix: parts.effort,
         configurationName: parts.name,
         configurationId: trial.configurationId,
@@ -138,8 +138,8 @@ function combinedPoints(release: Release, tasks: Array<{ id: string }>): {
     taskId: null,
     // A total belongs to no single game; the view it comes from names it.
     name: "Combined",
-    // On-plot identity is the official harness chip; this is the model word.
-    label: configurationParts(summary.configuration).model,
+    // On-plot identity uses the series dot plus harness and model text.
+    label: configurationParts(summary.configuration).lead,
     labelSuffix: configurationParts(summary.configuration).effort,
     configurationName: configurationParts(summary.configuration).name,
     configurationId: summary.configuration.id,
@@ -209,7 +209,7 @@ export function chartView(release: Release, tasks: Game[], view: string): ChartV
   };
 }
 
-/** Official harness chip: same 24×24 optical box as ConfigurationName. */
+/** Arena-owned chart mark box. */
 export const CHART_CHIP = 24;
 export const CHART_CHIP_R = CHART_CHIP / 2;
 /** Centre gap between the last cost mark and the missing-cost rail. */
@@ -272,7 +272,7 @@ export function chipBox(px: number, py: number): ChartBox {
   };
 }
 
-/** Number drawn under a numbered chip. */
+/** Number drawn under a numbered mark. */
 export function chipNumberBox(px: number, py: number): ChartBox {
   return { x0: px - 7, x1: px + 7, y0: py + CHART_CHIP_R + 4, y1: py + CHART_CHIP_R + 13 };
 }
@@ -317,7 +317,7 @@ export function chartPlotLayout(
   const pad = {
     top: compact ? 34 : 28,
     right: compact ? 10 : 36,
-    // A mark on the score floor writes its number immediately below the chip.
+    // A mark on the score floor writes its number immediately below the dot.
     // Keep the cost-n/a tick below that number instead of sharing its pixels.
     bottom: hasCostless ? 74 : 58,
     left: compact ? 36 : 62,
@@ -328,7 +328,7 @@ export function chartPlotLayout(
   const naLabel = hasCostless ? (compact ? "no $" : "cost not reported") : null;
   const bandWidth = hasCostless ? CHART_CHIP + 4 : 0;
   // Last cost tick is on the plot's right edge. The n/a column starts after
-  // that edge by enough that the tick text, a 24px chip on the edge, and
+  // that edge by enough that the tick text, a 24px mark on the edge, and
   // "cost n/a" do not share pixels.
   const labelClearance = naLabel == null
     ? 0
@@ -477,7 +477,7 @@ function boxHitsChip(box: LabelBox, px: number, py: number): boolean {
 }
 
 /**
- * Plot geometry, chip positions, numbers, and on-plot words for one scatter
+ * Plot geometry, mark positions, numbers, and on-plot words for one scatter
  * view. The live chart and the OG still share this so a share image cannot
  * invent a second Combined layout.
  */
@@ -512,17 +512,7 @@ export function chartShareModel(input: {
 
   const scoredMarks: ScoredChartPoint[] = [...points, ...costless];
   const scoreOrdered = [...scoredMarks].sort(compareByScore);
-  const harnessKeyOf = (point: ChartPoint) => {
-    const parts = partsOf(point);
-    return parts.harnessMark?.id ?? parts.harness;
-  };
-  const harnessCounts = new Map<string, number>();
-  for (const point of scoredMarks) {
-    const key = harnessKeyOf(point);
-    harnessCounts.set(key, (harnessCounts.get(key) ?? 0) + 1);
-  }
-  const needsWord = (point: ChartPoint) =>
-    (harnessCounts.get(harnessKeyOf(point)) ?? 0) > 1 || partsOf(point).harnessMark == null;
+  const harnessKeyOf = (point: ChartPoint) => partsOf(point).harness;
 
   // A scatter mark is data, not decoration: never move it to make labels fit.
   // Close marks are resolved by numbering, the exact-value list and filters.
@@ -566,7 +556,7 @@ export function chartShareModel(input: {
   // back to a number resolved in the key. Compact plots stay fully
   // numbered — phone width has no room for on-plot words.
   // Effort is part of the word only when it separates two marks that would
-  // otherwise read identically (same chip, same model). Everywhere else the
+  // otherwise read identically (same harness and model). Everywhere else the
   // word is the model alone — a suffix that appears only where it happens
   // to fit reads as an inconsistency, not as information.
   const wordKeyOf = (point: ScoredChartPoint) => `${harnessKeyOf(point)}|${point.label}`;
@@ -586,12 +576,7 @@ export function chartShareModel(input: {
       if (hitsExisting(candidate, point.trialId, named)) return;
       named.push({ point, px, py, showEffort, ...candidate });
     };
-    for (const item of [...drawnMarks].sort((a, b) => a.py - b.py)) {
-      if (needsWord(item.point)) tryPlace(item.point, item.px, item.py);
-    }
-    for (const item of [...drawnMarks].sort((a, b) => a.py - b.py)) {
-      if (!needsWord(item.point)) tryPlace(item.point, item.px, item.py);
-    }
+    for (const item of [...drawnMarks].sort((a, b) => a.py - b.py)) tryPlace(item.point, item.px, item.py);
   }
   const namedIds = new Set(named.map((label) => label.point.trialId));
   // Numbers walk the same score order the leaderboard ranks in, skipping the

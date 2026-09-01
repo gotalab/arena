@@ -4,39 +4,37 @@ The repository source and Arena-owned assets are licensed under MIT. The followi
 
 ## Brand assets and trademarks
 
-- `public/assets/marks/antigravity-on-dark.png` — Antigravity white icon; owner: Google; source: https://antigravity.google/press.
+- `public/assets/marks/antigravity-on-dark.png`: Antigravity white icon; owner: Google; source: https://antigravity.google/press.
 
-- `public/assets/marks/antigravity.png` — Antigravity one-color icon; owner: Google; source: https://antigravity.google/press.
+- `public/assets/marks/antigravity.png`: Antigravity one-color icon; owner: Google; source: https://antigravity.google/press.
 
-- `public/assets/marks/claude.svg` — Claude Spark Clay; owner: Anthropic; source: https://www.anthropic.com/news/media-assets.
+- `public/assets/marks/claude.svg`: Claude Spark Clay; owner: Anthropic; source: https://www.anthropic.com/news/media-assets.
 
-- `public/assets/marks/cursor-on-dark.svg` — Cursor 2D Cube dark; owner: Cursor; source: https://cursor.com/brand.
+- `public/assets/marks/cursor-on-dark.svg`: Cursor 2D Cube dark; owner: Cursor; source: https://cursor.com/brand.
 
-- `public/assets/marks/cursor.svg` — Cursor 2D Cube light; owner: Cursor; source: https://cursor.com/brand.
+- `public/assets/marks/cursor.svg`: Cursor 2D Cube light; owner: Cursor; source: https://cursor.com/brand.
 
-- `public/assets/marks/openai-on-dark.svg` — OpenAI Blossom white; owner: OpenAI; source: https://openai.com/brand/.
+- `public/assets/marks/openai-on-dark.svg`: OpenAI Blossom white; owner: OpenAI; source: https://openai.com/brand/.
 
-- `public/assets/marks/openai.svg` — OpenAI Blossom black; owner: OpenAI; source: https://openai.com/brand/.
+- `public/assets/marks/openai.svg`: OpenAI Blossom black; owner: OpenAI; source: https://openai.com/brand/.
 
-- `public/assets/marks/opencode-on-dark.svg` — OpenCode dark-surface mark; owner: OpenCode; source: https://opencode.ai/brand.
+- `public/assets/marks/opencode-on-dark.svg`: OpenCode dark-surface mark; owner: OpenCode; source: https://opencode.ai/brand.
 
-- `public/assets/marks/opencode.svg` — OpenCode light-surface mark; owner: OpenCode; source: https://opencode.ai/brand.
+- `public/assets/marks/opencode.svg`: OpenCode light-surface mark; owner: OpenCode; source: https://opencode.ai/brand.
 
-- `public/assets/marks/pi.svg` — pi.dev favicon; owner: pi.dev; source: https://pi.dev/favicon.svg.
-
-- `public/assets/og/default.png` — Arena-generated social preview containing separately noticed vendor marks.
+- `public/assets/marks/pi.svg`: pi.dev favicon; owner: pi.dev; source: https://pi.dev/favicon.svg.
 
 Product and company names are used only to identify the evaluated agent configuration. No endorsement or transfer of trademark rights is claimed.
 
 ## Embedded and referenced sources
 
-- @gotalab/runes subset in `src/lib/runes.ts` — MIT; source commit `35e39b6084df60181133c40a04f2da4bc6c16014`; subset SHA-256 `2e77a1c83a0742885aedeb85affeca855bd89a286ba541385558afd545c50bf4`.
+- @gotalab/runes subset in `src/lib/runes.ts`: MIT; source commit `35e39b6084df60181133c40a04f2da4bc6c16014`; subset SHA-256 `2e77a1c83a0742885aedeb85affeca855bd89a286ba541385558afd545c50bf4`.
 
-- playwright — Apache-2.0; distributed author test source; not installed or required at runtime; source: https://registry.npmjs.org/playwright.
+- playwright: Apache-2.0; distributed author test source; not installed or required at runtime; source: https://registry.npmjs.org/playwright.
 
-- @napi-rs/canvas — MIT; distributed author screenshot helper source; not installed or required at runtime; source: https://registry.npmjs.org/@napi-rs/canvas.
+- @napi-rs/canvas: MIT; distributed author screenshot helper source; not installed or required at runtime; source: https://registry.npmjs.org/@napi-rs/canvas.
 
-- dejavu-fonts-ttf — Bitstream Vera / Arev font terms; path reference in distributed author screenshot helper; font bytes are not distributed or required at runtime; source: https://github.com/senotrusov/dejavu-fonts-ttf.
+- dejavu-fonts-ttf: Bitstream Vera / Arev font terms; path reference in distributed author screenshot helper; font bytes are not distributed or required at runtime; source: https://github.com/senotrusov/dejavu-fonts-ttf.
 
 
 ## Package licenses

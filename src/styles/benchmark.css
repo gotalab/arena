@@ -116,8 +116,7 @@
   font-weight: 750;
 }
 .chart__key small { color: var(--ink-2); font-size: inherit; }
-/* Number beside the official chip. Ink, not a fill-contrast pair: the chip
-   is the mark, and the number is a name, not a stamp on a colored disc. */
+/* The number names a point whose text did not fit on the plot. */
 .chart-point__num {
   fill: var(--ink);
   font: 750 var(--t-xs) / 1 var(--sans);
@@ -127,25 +126,12 @@
   stroke-width: 3px;
   stroke-linejoin: round;
 }
-.chart-point__tint {
-  fill-opacity: 0.2;
+.chart-point__halo {
+  fill-opacity: 0.14;
+}
+.chart-point__mark {
   stroke: var(--panel);
   stroke-width: 2;
-}
-.chart-point__chip {
-  width: 24px;
-  height: 24px;
-  overflow: hidden;
-  pointer-events: none;
-}
-.chart-point__empty {
-  display: block;
-  width: 24px;
-  height: 24px;
-  box-sizing: border-box;
-  border: 1px solid var(--line-2);
-  border-radius: 5px;
-  background: var(--panel);
 }
 .chart-point {
   outline: none;
@@ -165,8 +151,8 @@
   position: absolute;
   z-index: 4;
   display: none;
-  grid-template-columns: 24px minmax(0, auto);
-  gap: 8px 10px;
+  grid-template-columns: minmax(0, auto);
+  gap: 8px;
   align-items: start;
   padding: 10px 12px;
   background: var(--panel);
@@ -180,6 +166,12 @@
   .chart-receipt { display: grid; }
 }
 .chart-receipt__copy { display: grid; gap: 2px; min-width: 0; }
+.chart-receipt__harness {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: var(--t-xs);
+  font-weight: 650;
+}
 .chart-receipt__model {
   margin: 0;
   font-size: var(--t-md);
@@ -730,7 +722,7 @@ th.board__rank { width: 34px; }
 .checks__evidence code { font: 500 var(--t-xs) / 1.6 var(--mono); }
 .checks__evidenceMeta dd { color: var(--ink-2); }
 /* Glyph cells stay compact. The header owns the column width: 8.5rem holds
-   the 24px chip plus a model word so wrap happens at mark · model · effort,
+   the harness plus a model word so wrap happens at harness · model · effort,
    never mid-word in a 51px stamp. */
 .checks__table thead th.checks__outcomeHead,
 .checks__table tbody td.checks__cell {
@@ -741,9 +733,9 @@ th.board__rank { width: 34px; }
   min-width: 8.5rem;
   white-space: normal;
   overflow-wrap: break-word;
-  /* Stacked heads read from the chip down. Top-aligned, the chip row and
+  /* Stacked heads read from the harness down. Top-aligned, the harness row and
      the model row line up across every column; an agent with no effort
-     (Auto) just ends a line early instead of dragging its chip below its
+     (Auto) just ends a line early instead of dragging its name below its
      neighbours' the way bottom alignment did. */
   vertical-align: top;
 }

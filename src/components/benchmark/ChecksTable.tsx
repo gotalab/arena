@@ -7,6 +7,8 @@ import { ConfigurationName } from "../ConfigurationName";
 const GLYPHS: Record<string, string> = {
   pass: "✓",
   fail: "✕",
+  not_evaluated: "?",
+  grader_error: "?",
 };
 
 interface ChecksTableProps {
@@ -44,7 +46,7 @@ export function ChecksTable({ model, taskName }: ChecksTableProps) {
       <p className="checks__legend" aria-hidden="true">
         <span className="checks__cell--pass">✓ pass</span>
         <span className="checks__cell--fail">✕ fail</span>
-        <span className="checks__cell--unknown">— not observed</span>
+        <span className="checks__cell--unknown">? not observed</span>
         <span>Select a check to read the published result note.</span>
       </p>
       {model.total === 0 ? (
@@ -63,7 +65,7 @@ export function ChecksTable({ model, taskName }: ChecksTableProps) {
                       const view = checkOutcome(cell.outcome);
                       return (
                       <span className={`checks__cell--${view.tone}`} key={model.builds[index].id}>
-                        {GLYPHS[cell.outcome] ?? "—"}
+                        {GLYPHS[cell.outcome] ?? "?"}
                       </span>
                       );
                     })}
@@ -150,7 +152,7 @@ export function ChecksTable({ model, taskName }: ChecksTableProps) {
                             key={model.builds[index].id}
                             title={cell.explanation ? `${view.label}: ${cell.explanation}` : view.label}
                           >
-                            <span aria-hidden="true">{GLYPHS[cell.outcome] ?? "—"}</span>
+                            <span aria-hidden="true">{GLYPHS[cell.outcome] ?? "?"}</span>
                             <span className="visually-hidden">{view.label}</span>
                           </td>
                           );

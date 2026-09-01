@@ -53,10 +53,10 @@
      darker on paper and brighter on the dark surface, so the ramp reads as
      strength in both modes. Both modes validated with the dataviz palette
      checks (adjacent-pair CVD separation, normal-vision floor, contrast)
-     against their panel surfaces on 2026-08-10, in this declared order —
-     the near-black xai step must stay next to deepseek, not next to the
-     dark ends of the ramps. Chart identity is the official harness chip;
-     color is a quiet vendor grouping tint, not the name of the point.
+     against their panel surfaces on 2026-08-10, in this declared order.
+     The near-black xai step must stay next to deepseek, not next to the
+     dark ends of the ramps. Chart identity is the series dot plus its direct
+     text label; color supports grouping but is never the name of the point.
      Each `-num` pair is the number ink that passes on that fill per mode. */
   --series-anthropic-1: light-dark(#d97e52, #855043);
   --series-anthropic-1-num: light-dark(#201409, #fff);

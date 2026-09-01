@@ -44,23 +44,6 @@ export interface ConfigurationSummary {
   runsSucceeded: number;
 }
 
-/** Official mark shipped under `web/public/assets/marks/`. */
-export type OfficialMarkId = "cursor" | "claude" | "openai" | "antigravity" | "opencode" | "pi";
-
-export interface OfficialMark {
-  id: OfficialMarkId;
-  /** Official file for paper: one-color / black / slate, or Claude Spark Clay. */
-  src: string;
-  /** Official white / ivory / dark-surface file. Same path when the kit ships one file. */
-  srcOnDark: string;
-  /**
-   * Size of the official artwork relative to the 24px chip. ViewBoxes carry
-   * different padding, so a shared inset makes the set read as different
-   * sizes; this scale equalizes optical weight without restroking paths.
-   */
-  opticalScale: number;
-}
-
 export interface ConfigurationParts {
   /** Display name of the harness: "Codex", "Cursor", "Claude Code". */
   harness: string;
@@ -71,8 +54,6 @@ export interface ConfigurationParts {
   lead: string;
   /** The one display name: "Codex · GPT-5.6 Sol (high)". */
   name: string;
-  /** Official harness chip. Null when we have no official mark. */
-  harnessMark: OfficialMark | null;
 }
 
 export interface Series {
@@ -212,77 +193,9 @@ const HARNESS_NAMES: Record<string, string> = {
   pi: "pi",
 };
 
-const MARKS: Record<OfficialMarkId, OfficialMark> = {
-  cursor: {
-    id: "cursor",
-    src: "/assets/marks/cursor.svg",
-    srcOnDark: "/assets/marks/cursor-on-dark.svg",
-    // Cube fills its viewBox; 22px in the 24 chip, matching Spark.
-    opticalScale: 0.92,
-  },
-  claude: {
-    id: "claude",
-    src: "/assets/marks/claude.svg",
-    srcOnDark: "/assets/marks/claude.svg",
-    // Official Clay Spark. The kit has no Slate/Ivory/one-color Spark;
-    // Clay is the one official exception to one-color-only. Do not recolor.
-    // Rays reach the viewBox edge. Same 22px box as the cube; the
-    // starburst is optically lighter than a filled solid.
-    opticalScale: 0.92,
-  },
-  openai: {
-    id: "openai",
-    src: "/assets/marks/openai.svg",
-    srcOnDark: "/assets/marks/openai-on-dark.svg",
-    // Blossom ink is ~51% of the 716 box and the flower is hollow, so
-    // 1.55 reads light against the cube / Spark / pi plate. 1.9 fills
-    // the clipped 24 chip to the same optical weight (~23px of ink).
-    opticalScale: 1.9,
-  },
-  antigravity: {
-    id: "antigravity",
-    src: "/assets/marks/antigravity.png",
-    srcOnDark: "/assets/marks/antigravity-on-dark.png",
-    // Official PNG content is ~75% of the 540 frame.
-    opticalScale: 1.1,
-  },
-  opencode: {
-    id: "opencode",
-    src: "/assets/marks/opencode.svg",
-    srcOnDark: "/assets/marks/opencode-on-dark.svg",
-    // Official wordless 240×300 logo fills its viewBox. Keep its native
-    // proportions inside the 24px chip rather than restroking or squaring it.
-    opticalScale: 1,
-  },
-  pi: {
-    id: "pi",
-    src: "/assets/marks/pi.svg",
-    srcOnDark: "/assets/marks/pi.svg",
-    // Official pi.dev/favicon.svg: the square plate is the chip.
-    opticalScale: 1,
-  },
-};
-
 /**
- * Harness kind → official mark. Codex has no dedicated product mark, so it
- * takes the OpenAI Blossom. Claude Code takes Claude Spark Clay, not the
- * Anthropic symbol and not a Claude Code wordmark. OpenCode takes the official
- * wordless light/dark logo, not its wordmark. An unlisted kind gets none.
- * Never a letter badge, Gemini G, or xAI mark.
- */
-const HARNESS_MARKS: Record<string, OfficialMarkId | null> = {
-  "claude-code": "claude",
-  "codex-cli": "openai",
-  "cursor-agent": "cursor",
-  antigravity: "antigravity",
-  opencode: "opencode",
-  opencode2: "opencode",
-  pi: "pi",
-};
-
-/**
- * The one display name of a configuration: **harness first, then model, effort
- * as a qualifier** — "Codex · GPT-5.6 Sol (high)".
+ * The one display name of a configuration: harness first, then model, with
+ * effort as a qualifier: "Codex · GPT-5.6 Sol (high)".
  *
  * The model alone is ambiguous: Cursor and Codex can both run GPT-5.6 Sol, and
  * this benchmark's subject is the harness × model pair, not the model. So the
@@ -296,11 +209,11 @@ export function configurationName(configuration: Configuration | undefined): str
 }
 
 /**
- * The same identity in its pieces. Named rows paint `name` on one line.
- * The chart plot takes `harnessMark` as the point and `model` as the short
- * label, with `effort` as an optional suffix. Missing pieces are named here
- * once instead of in every component; a configuration with no sealed effort
- * simply carries no qualifier.
+ * The same identity in its pieces. Named rows paint `name` on one line. The
+ * chart uses an Arena-owned series dot and `model` as the short label, with
+ * `effort` as an optional suffix. Missing pieces are named here once instead
+ * of in every component; a configuration with no sealed effort simply carries
+ * no qualifier.
  */
 export function configurationParts(configuration: Configuration | undefined): ConfigurationParts {
   const kind = configuration?.harnessId ?? "";
@@ -308,15 +221,12 @@ export function configurationParts(configuration: Configuration | undefined): Co
   const model = configuration?.model ?? "Unknown model";
   const effort = (configuration?.effort ?? "").toLowerCase();
   const lead = `${harness} · ${model}`;
-  const harnessMarkId = HARNESS_MARKS[kind] ?? null;
-  const harnessMark = harnessMarkId ? MARKS[harnessMarkId] : null;
   return {
     harness,
     model,
     effort,
     lead,
     name: effort ? `${lead} (${effort})` : lead,
-    harnessMark,
   };
 }
 
@@ -351,14 +261,13 @@ export function configurationsById(release: Release): Map<string, Configuration>
 }
 
 /**
- * The one configuration→series identity: index, configuration, and names, in
- * release order. Everything that draws or names a configuration — chart marks,
- * the aggregate table, trial cards — reads it from here, so a third
+ * The one configuration-to-series identity: index, configuration, and names,
+ * in release order. Everything that draws or names a configuration, including
+ * chart marks, aggregate tables, and trial cards, reads it from here, so a third
  * configuration is a data change and not a code change.
  *
- * It deliberately carries **no hue**. Named rows keep identity in the
- * assembled name plus the official chip; the chart plot uses that same chip
- * as the mark (see web/AGENTS.md).
+ * It deliberately carries no hue. Named rows keep identity in the assembled
+ * name; the chart applies its series color at render time.
  */
 export function seriesFor(release: Release): Series[] {
   return release.configurations.map((configuration, index) => ({

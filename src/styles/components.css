@@ -12,7 +12,7 @@
                 the trigger. Behavior (outside click and Escape close it)
                 lives with the owning component.
    - .filter-row  the row of filter controls for a chart or table.
-   - .cfg-name    official chip (or harness word) · model (effort). */
+   - .cfg-name    harness · model (effort). */
 
 .filter-row {
   display: flex;
@@ -130,14 +130,8 @@
   height: 15px;
 }
 
-/* Configuration identity: one official chip in place of the harness
-   word when we have one. The 24px box is the chip. Optical scale sizes
-   the artwork *inside* that box (background-size on a padded inner
-   wrapper) so viewBox padding does not change apparent weight. Never a
-   transform on the img: scaled replaced paint escapes overflow:hidden.
-   Never restroked onto a 24 grid, never a taller replaced box. Type is
-   inherited, so a table cell and a run-card headline keep their own
-   size. Wrap only at the flex units (mark · model · effort). */
+/* Configuration identity stays accurate text. Type is inherited, so table
+   cells and run-card headlines keep their own hierarchy. */
 .cfg-name {
   display: inline-flex;
   flex-wrap: nowrap;
@@ -157,8 +151,8 @@
   flex: none;
   font-weight: 500;
 }
-/* Column-head variant: chip, model and effort each on their own centred
-   line, so a narrow head never runs "chip · model (effort)" into a cramped
+/* Column-head variant: harness, model and effort each on their own centered
+   line, so a narrow head never runs "harness · model (effort)" into a cramped
    single string. */
 .cfg-name--stacked {
   display: inline-grid;
@@ -173,56 +167,6 @@
   font-size: var(--t-xs);
   font-weight: 500;
 }
-.cfg-mark {
-  --cfg-mark-scale: 1;
-  --cfg-mark-src: none;
-  --cfg-mark-src-dark: none;
-  position: relative;
-  display: block;
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
-  overflow: hidden;
-  clip-path: inset(0);
-  contain: paint;
-  isolation: isolate;
-  /* Flex min-size is the content size. Inner art must not stretch the row. */
-  min-width: 24px;
-  min-height: 24px;
-  max-width: 24px;
-  max-height: 24px;
-}
-.cfg-mark__art {
-  /* 24 box. Optical scale is background-size: < 1 pads, > 1 zooms inside
-     the padding box (background paint cannot escape). A larger img plus
-     overflow:hidden still painted past the chip in Chrome. */
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  clip-path: inset(0);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: calc(24px * var(--cfg-mark-scale));
-}
-.cfg-mark__light { background-image: var(--cfg-mark-src); }
-.cfg-mark__dark { background-image: var(--cfg-mark-src-dark); }
-.cfg-mark img {
-  /* Official file stays an <img> in a 24 layout box. Src pixels would
-     ignore opticalScale; the wrapper background is the artwork.
-     `img { max-width: 100% }` is beaten so the box cannot become
-     24×(24×scale). */
-  display: block;
-  width: 24px;
-  height: 24px;
-  max-width: none;
-  max-height: none;
-  object-fit: contain;
-  visibility: hidden;
-}
-.cfg-mark__dark { display: none; }
-:root[data-theme="dark"] .cfg-mark__light { display: none; }
-:root[data-theme="dark"] .cfg-mark__dark { display: block; }
-
 @media (max-width: 720px) {
   .select__trigger { min-height: 44px; }
   .select__option,

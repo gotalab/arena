@@ -12,6 +12,8 @@
     "typecheck": "tsc --noEmit && tsc --project runtime/tsconfig.json",
     "build": "node scripts/verify-public-release.mjs && tsc --noEmit && vite build && node scripts/verify-public-build.mjs",
     "verify:license": "node scripts/verify-public-license.mjs && node scripts/verify-hackathon.mjs",
+    "generate:og": "node scripts/generate-og.mjs",
+    "check:og": "node scripts/generate-og.mjs --check",
     "generate:runtime-fixture": "node scripts/generate-runtime-fixture.mjs",
     "check:runtime-fixture": "node scripts/generate-runtime-fixture.mjs --check",
     "generate:runtime-types": "wrangler types runtime/main-bindings.generated.d.ts --config runtime/wrangler.main.jsonc --env-interface RuntimeMainBindings --include-runtime=false && wrangler types runtime/artifact-bindings.generated.d.ts --config runtime/wrangler.artifact.jsonc --env-interface RuntimeArtifactBindings --include-runtime=false",

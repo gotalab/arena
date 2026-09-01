@@ -502,23 +502,23 @@ function BuildResults({ rows, onToggle }: { rows: BuildResultRow[]; onToggle: (t
         </table>
       </div>
 
-      <ol className="buildresults-mobile" aria-label="Agent results">
+      <ol className="buildresults__compact" aria-label="Agent results">
         {rows.map((row, index) => {
           const coverage = [row.timeCoverage, row.tokenCoverage, row.costCoverage]
             .filter((value): value is string => value != null);
           return (
-            <li className={row.playing ? "buildresult-mobile is-playing" : "buildresult-mobile"} key={row.trial.id}>
-              <span className="buildresult-mobile__rank" aria-label={`Rank ${index + 1}`}>{index + 1}</span>
-              <span className="buildresult-mobile__name">
+            <li className={row.playing ? "buildresult is-playing" : "buildresult"} key={row.trial.id}>
+              <span className="buildresult__rank" aria-label={`Rank ${index + 1}`}>{index + 1}</span>
+              <span className="buildresult__name">
                 <b><ConfigurationName parts={row.parts} /></b>
                 {row.preferred ? <small>Your pick</small> : null}
               </span>
-              <span className="buildresult-mobile__score">
+              <span className="buildresult__score">
                 <b>{row.score}</b>
                 {row.evidence ? <small>{row.evidence}</small> : null}
               </span>
               <span
-                className="buildresult-mobile__metrics"
+                className="buildresult__metrics"
                 aria-label={`Average per run: ${row.time}, ${row.tokens}, ${row.cost}. Run ${row.runDate}.`}
               >
                 <span>{row.time}</span>
@@ -527,12 +527,12 @@ function BuildResults({ rows, onToggle }: { rows: BuildResultRow[]; onToggle: (t
                 <span>{row.runDate}</span>
               </span>
               <BuildPlayButton
-                className="buildresult-mobile__play"
+                className="buildresult__play"
                 onClick={() => onToggle(row.playing ? null : row.trial.id)}
                 playing={row.playing}
               />
               {coverage.length > 0 ? (
-                <small className="buildresult-mobile__coverage">{coverage.join("; ")}</small>
+                <small className="buildresult__coverage">{coverage.join("; ")}</small>
               ) : null}
             </li>
           );
@@ -546,7 +546,7 @@ function BuildPlayButton({ className, onClick, playing }: { className?: string; 
   return (
     <button
       aria-pressed={playing}
-      className={["btn-quiet", className].filter(Boolean).join(" ")}
+      className={["btn-quiet", "buildplay", className].filter(Boolean).join(" ")}
       onClick={onClick}
       type="button"
     >

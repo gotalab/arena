@@ -30,6 +30,8 @@ Product and company names are used only to identify the evaluated agent configur
 
 - @gotalab/runes subset in `src/lib/runes.ts`: MIT; source commit `35e39b6084df60181133c40a04f2da4bc6c16014`; subset SHA-256 `2e77a1c83a0742885aedeb85affeca855bd89a286ba541385558afd545c50bf4`.
 
+- GitHub mark from Primer Octicons in `src/components/GitHubMark.tsx`: GitHub logo / trademark; source commit `0e21a4c2d8449102f10e533d241f04797af0914c`; subset SHA-256 `bce494189797623c34e39a41c2c38a132bdca23ce4e6ac06b70116ed7e91ce26`.
+
 - playwright: Apache-2.0; distributed author test source; not installed or required at runtime; source: https://registry.npmjs.org/playwright.
 
 - @napi-rs/canvas: MIT; distributed author screenshot helper source; not installed or required at runtime; source: https://registry.npmjs.org/@napi-rs/canvas.

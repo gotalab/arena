@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArenaIcon } from "./components/ArenaIcon";
 import { GameBrowser } from "./components/GameBrowser";
+import { GitHubMark } from "./components/GitHubMark";
 import { HomeView } from "./components/HomeView";
 import { MethodView } from "./components/MethodView";
 import { PlayList } from "./components/PlayList";
@@ -299,6 +300,16 @@ export function App() {
           ))}
         </nav>
         <div className="masthead__end">
+          <a
+            aria-label="Arena on GitHub"
+            className="btn-icon"
+            href="https://github.com/gotalab/arena"
+            rel="noreferrer"
+            target="_blank"
+            title="Arena on GitHub"
+          >
+            <GitHubMark />
+          </a>
           <NavMenu
             onNavigate={navigate}
             route={route}

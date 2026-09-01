@@ -33,3 +33,13 @@ test("third-party marks stay available but are not product UI dependencies", () 
     assert.equal(existsSync(join(root, "public", "assets", "marks", name)), true, name);
   }
 });
+
+test("the product header links to the canonical Arena repository", () => {
+  const app = readFileSync(join(root, "src", "App.tsx"), "utf8");
+  const mark = readFileSync(join(root, "src", "components", "GitHubMark.tsx"), "utf8");
+
+  assert.match(app, /href="https:\/\/github\.com\/gotalab\/arena"/);
+  assert.match(app, /aria-label="Arena on GitHub"/);
+  assert.match(mark, /Primer Octicons `mark-github-24`/);
+  assert.match(mark, /viewBox="0 0 24 24"/);
+});

@@ -102,6 +102,7 @@ const artifactExternalTools = [
 
 const embeddedSources = [
   { name: "@gotalab/runes subset", sourceCommit: "35e39b6084df60181133c40a04f2da4bc6c16014", subsetSha256: "2e77a1c83a0742885aedeb85affeca855bd89a286ba541385558afd545c50bf4", license: "MIT", path: "src/lib/runes.ts" },
+  { name: "GitHub mark from Primer Octicons", sourceCommit: "0e21a4c2d8449102f10e533d241f04797af0914c", subsetSha256: "bce494189797623c34e39a41c2c38a132bdca23ce4e6ac06b70116ed7e91ce26", license: "GitHub logo / trademark", path: "src/components/GitHubMark.tsx" },
 ];
 
 function sha256(bytes) {

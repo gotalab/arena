@@ -56,7 +56,7 @@
 .answer__head h2 {
   margin: 0;
   font-size: var(--t-xl);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 
@@ -111,14 +111,14 @@
   min-width: 20px;
   text-align: right;
   font-variant-numeric: tabular-nums;
-  font-weight: 750;
+  font-weight: 700;
 }
 .chart__key small { color: var(--ink-2); font-size: inherit; }
 .chart__mobile-note { display: none; }
 /* The number names a point whose text did not fit on the plot. */
 .chart-point__num {
   fill: var(--ink);
-  font: 750 var(--t-xs) / 1 var(--sans);
+  font: 700 var(--t-xs) / 1 var(--sans);
   pointer-events: none;
   paint-order: stroke fill;
   stroke: var(--panel);
@@ -169,12 +169,12 @@
   margin: 0;
   color: var(--ink-2);
   font-size: var(--t-xs);
-  font-weight: 650;
+  font-weight: 600;
 }
 .chart-receipt__model {
   margin: 0;
   font-size: var(--t-md);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.01em;
 }
 .chart-receipt__effort {
@@ -185,7 +185,7 @@
 .chart-receipt__score {
   margin: 6px 0 0;
   font-size: var(--t-md);
-  font-weight: 750;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 .chart-receipt__cost {
@@ -243,7 +243,7 @@
 .chart-point__label {
   fill: var(--ink);
   font-size: var(--t-sm);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.01em;
 }
 .chart-point__effort {
@@ -275,7 +275,7 @@
 .board h2 {
   margin: 0 0 16px;
   font-size: var(--t-xl);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 /* The scroll region owns the frame: when the table outgrows it, the header
@@ -331,7 +331,7 @@ th.board__rank { width: 34px; }
    table's column layout — so the name stacks its lines as blocks and the
    score cell puts its grid on an inner wrapper. WHO is one step above the
    13px body, never the same voice as SCORE. Effort stays on this line. */
-.board__name b { display: block; color: var(--ink); font-size: var(--t-md); font-weight: 750; letter-spacing: -0.015em; }
+.board__name b { display: block; color: var(--ink); font-size: var(--t-md); font-weight: 700; letter-spacing: -0.015em; }
 .board__name .cfg-name { flex-wrap: nowrap; white-space: nowrap; }
 .board__name small { display: block; margin-top: 3px; color: var(--ink-2); font-size: var(--t-sm); }
 .board__num small { display: block; color: var(--ink-2); font-size: var(--t-xs); font-weight: 500; }
@@ -341,7 +341,7 @@ th.board__rank { width: 34px; }
 .board__pct {
   display: inline-block;
   font-size: var(--t-xl);
-  font-weight: 780;
+  font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
 }
@@ -396,7 +396,7 @@ th.board__rank { width: 34px; }
 .detail > h2 {
   margin: 0 0 16px;
   font-size: var(--t-xl);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 
@@ -482,7 +482,7 @@ th.board__rank { width: 34px; }
   background: var(--panel);
   border-radius: var(--r-md);
 }
-.mask h2, .mask h4 { margin: 0; font-size: var(--t-xl); font-weight: 750; letter-spacing: -0.025em; }
+.mask h2, .mask h4 { margin: 0; font-size: var(--t-xl); font-weight: 700; letter-spacing: -0.025em; }
 .mask p { margin: 0; max-width: 58ch; color: var(--ink-2); font-size: var(--t-md); }
 .mask__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 8px; }
 .detail__note { margin: 0 0 18px; color: var(--ink-2); font-size: var(--t-md); }
@@ -518,7 +518,7 @@ th.board__rank { width: 34px; }
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.run__id h3 { margin: 0; font-size: var(--t-2xl); font-weight: 780; letter-spacing: -0.035em; }
+.run__id h3 { margin: 0; font-size: var(--t-2xl); font-weight: 800; letter-spacing: -0.035em; }
 /* The picked build prints no eyebrow — the reveal header above already names
    it — so reserve that line: the two verdict rows still have to start on the
    same line to be comparable across the hairline. */
@@ -539,7 +539,7 @@ th.board__rank { width: 34px; }
   margin-left: 8px;
   color: var(--ink-2);
   font-size: var(--t-md);
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: 0;
   white-space: nowrap;
 }
@@ -586,7 +586,7 @@ th.board__rank { width: 34px; }
 .checks > summary:active,
 .prompt > summary:active { transform: scale(0.99); }
 .checks__title,
-.prompt__title { font-size: var(--t-md); font-weight: 750; }
+.prompt__title { font-size: var(--t-md); font-weight: 700; }
 .checks__hint { color: var(--ink-2); font-size: var(--t-sm); }
 .checks > summary:hover .checks__title,
 .prompt > summary:hover .prompt__title { color: var(--accent-ink); }
@@ -629,7 +629,7 @@ th.board__rank { width: 34px; }
   border-bottom: 0;
   box-shadow: inset 0 -2px 0 var(--ink);
   background: var(--paper);
-  font-weight: 750;
+  font-weight: 700;
   vertical-align: bottom;
   white-space: normal;
 }
@@ -655,7 +655,7 @@ th.board__rank { width: 34px; }
 .checks__categoryLabel {
   display: block;
   color: var(--ink);
-  font: 650 var(--t-sm) / 1.3 var(--sans);
+  font: 600 var(--t-sm) / 1.3 var(--sans);
   letter-spacing: -0.005em;
 }
 .checks__table tbody th,
@@ -683,9 +683,9 @@ th.board__rank { width: 34px; }
   font-size: var(--t-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-muted);
-  border: 1px solid var(--rule);
-  border-radius: 3px;
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
   padding: 0 4px;
 }
 
@@ -707,7 +707,14 @@ th.board__rank { width: 34px; }
 }
 .checks__expand:active { transform: scale(0.99); }
 .checks__expand:hover .checks__label { color: var(--accent-ink); }
-.checks__chevron { flex: none; color: var(--ink-2); font-size: var(--t-xs); }
+.checks__chevron {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--ink-2);
+  transform: rotate(0deg);
+}
+.checks__chevron.is-open { transform: rotate(90deg); }
 
 .checks__legend {
   display: flex;
@@ -765,7 +772,7 @@ th.board__rank { width: 34px; }
 .checks__stackGroup h3 {
   margin: 0 0 8px;
   font-size: var(--t-md);
-  font-weight: 750;
+  font-weight: 700;
 }
 .checks__stackItem {
   border-bottom: 1px solid var(--line);
@@ -783,7 +790,7 @@ th.board__rank { width: 34px; }
 }
 .checks__stackItem > summary:active { transform: scale(0.99); }
 .checks__stackItem > summary::-webkit-details-marker { display: none; }
-.checks__stackName { font-weight: 650; }
+.checks__stackName { font-weight: 600; }
 .checks__stackMarks {
   display: flex;
   flex-wrap: wrap;
@@ -814,7 +821,7 @@ th.board__rank { width: 34px; }
 }
 .checks__stackEvidence dt {
   color: var(--ink);
-  font: 650 var(--t-md) / 1.3 var(--sans);
+  font: 600 var(--t-md) / 1.3 var(--sans);
 }
 .checks__stackEvidence dd { margin: 0; font-size: var(--t-sm); line-height: 1.45; overflow-wrap: anywhere; }
 
@@ -874,7 +881,7 @@ th.board__rank { width: 34px; }
     font: 700 var(--t-md) / 1 var(--mono);
   }
   .board-mobile-row__name { min-width: 0; }
-  .board-mobile-row__name b { display: block; font-size: var(--t-sm); font-weight: 750; }
+  .board-mobile-row__name b { display: block; font-size: var(--t-sm); font-weight: 700; }
   .board-mobile-row__name .cfg-name { flex-wrap: wrap; white-space: normal; }
   .board-mobile-row__name small,
   .board-mobile-row__coverage { display: block; color: var(--ink-2); font-size: var(--t-xs); }
@@ -952,7 +959,7 @@ th.board__rank { width: 34px; }
   color: var(--ink-2);
 }
 .buildtable tbody th { font-weight: 400; white-space: normal; min-width: 0; overflow-wrap: break-word; }
-.buildtable tbody th b { font-weight: 650; }
+.buildtable tbody th b { font-weight: 600; }
 .buildtable tbody th .cfg-name {
   flex-wrap: wrap;
   white-space: normal;
@@ -1019,7 +1026,7 @@ th.board__rank { width: 34px; }
     font: 700 var(--t-sm) / 1 var(--mono);
   }
   .buildresult__name { min-width: 0; }
-  .buildresult__name b { display: block; font-size: var(--t-sm); font-weight: 750; }
+  .buildresult__name b { display: block; font-size: var(--t-sm); font-weight: 700; }
   .buildresult__name .cfg-name { flex-wrap: wrap; white-space: normal; }
   .buildresult__name small,
   .buildresult__score small,

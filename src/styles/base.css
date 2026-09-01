@@ -253,10 +253,6 @@ html:has(.app-shell[data-match]) body {
   margin-left: auto;
 }
 
-/* Header utilities share one compact rounded-rectangle language. Their
-   44px targets stay generous without reading as detached circular badges. */
-.masthead__end .btn-icon { border-radius: var(--r-md); }
-
 .nav-menu { display: none; position: relative; }
 .nav-menu__list {
   position: absolute;
@@ -269,7 +265,7 @@ html:has(.app-shell[data-match]) body {
   overflow: auto;
   padding: 8px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--r-md);
   background: var(--panel);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
   overscroll-behavior: contain;
@@ -283,10 +279,10 @@ html:has(.app-shell[data-match]) body {
   width: 100%;
   padding: 10px 14px;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--r-md);
   background: transparent;
   color: var(--ink);
-  font: 650 var(--t-md) / 1.2 var(--sans);
+  font: 600 var(--t-md) / 1.2 var(--sans);
   text-align: left;
   text-decoration: none;
   cursor: pointer;
@@ -303,8 +299,8 @@ html:has(.app-shell[data-match]) body {
   gap: 12px;
   margin-top: 4px;
   border-top: 1px solid var(--line);
-  border-radius: 0 0 6px 6px;
-  font-weight: 650;
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  font-weight: 600;
 }
 .nav-menu__state {
   color: var(--ink-2);
@@ -399,7 +395,7 @@ html:has(.app-shell[data-match]) body {
   min-height: 44px;
   padding: 0 14px;
   border: 1px solid var(--line);
-  border-radius: var(--r-pill);
+  border-radius: var(--r-md);
   background: transparent;
   color: var(--ink-2);
   font-size: var(--t-md);
@@ -429,7 +425,7 @@ html:has(.app-shell[data-match]) body {
   height: 44px;
   padding: 0;
   border: 1px solid var(--line);
-  border-radius: var(--r-pill);
+  border-radius: var(--r-md);
   background: transparent;
   color: var(--ink-2);
   cursor: pointer;

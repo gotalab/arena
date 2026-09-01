@@ -62,6 +62,7 @@
   max-width: 12ch;
   margin: 12px 0 18px;
   font-size: clamp(42px, 6.8vw, 80px);
+  font-weight: 700;
   line-height: 0.96;
   letter-spacing: -0.065em;
 }
@@ -354,7 +355,7 @@ kbd {
   max-width: 180px;
   padding: 4px 8px;
   border: 1px solid var(--floor-line);
-  border-radius: var(--r-pill);
+  border-radius: var(--r-md);
   background: var(--floor-2);
   color: var(--on-floor-2);
   font: 600 var(--t-md) / 1.2 var(--sans);
@@ -382,7 +383,7 @@ kbd {
   height: 44px;
   padding: 0;
   border: 1px solid var(--floor-line);
-  border-radius: var(--r-pill);
+  border-radius: var(--r-md);
   background: var(--floor-2);
   color: var(--on-floor-2);
   cursor: pointer;
@@ -926,6 +927,6 @@ kbd {
     min-height: 44px;
     padding: 10px 14px;
     border: 1px solid var(--line);
-    border-radius: var(--r-pill);
+    border-radius: var(--r-md);
   }
 }

@@ -161,7 +161,7 @@ export function ChecksTable({ model, taskName }: ChecksTableProps) {
                             title={row.id}
                             type="button"
                           >
-                            <span aria-hidden="true" className="checks__chevron">{open ? "▾" : "▸"}</span>
+                            <ArenaIcon className={open ? "checks__chevron is-open" : "checks__chevron"} name="next" />
                             <span className="checks__label">{row.label}</span>
                             {row.lane === "judged" ? <span className="checks__lane">judged</span> : null}
                           </button>

@@ -60,13 +60,11 @@
   letter-spacing: -0.03em;
 }
 
-/* One column: game tabs, the scatter, then the numbered key. Filters walk
-   the record under that share face. No legend, so there is no second track
-   to fill — the square just centres. */
+/* One column: game tabs, the scatter, then the numbered key. */
 .chart {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "views" "plot" "key" "filters" "list" "note";
+  grid-template-areas: "views" "plot" "key" "filters" "note";
   margin: 0;
   min-width: 0;
 }
@@ -116,6 +114,7 @@
   font-weight: 750;
 }
 .chart__key small { color: var(--ink-2); font-size: inherit; }
+.chart__mobile-note { display: none; }
 /* The number names a point whose text did not fit on the plot. */
 .chart-point__num {
   fill: var(--ink);
@@ -200,10 +199,18 @@
   color: var(--bad);
   font-size: var(--t-sm);
 }
-/* On a phone the plot escapes the panel's side padding: with the names in
-   the key, width is spent on the plot alone. */
+/* On a phone the plot escapes the panel's side padding. Point numbers map
+   directly to the ranking below, so a duplicate key is unnecessary. */
 @media (max-width: 520px) {
   .chart__plot { margin-inline: -20px; }
+  .chart__key { display: none; }
+  .chart__mobile-note {
+    display: block;
+    grid-area: key;
+    margin: 10px 0 0;
+    color: var(--ink-2);
+    font-size: var(--t-xs);
+  }
 }
 /* The plotting region is square; the svg carries its own max-width so it
    scales down uniformly instead of stretching on a wide panel. */
@@ -804,34 +811,6 @@ th.board__rank { width: 34px; }
 }
 .checks__stackEvidence dd { margin: 0; font-size: var(--t-sm); line-height: 1.45; overflow-wrap: anywhere; }
 
-.chart__list {
-  display: none;
-  grid-area: list;
-  gap: 0;
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--line);
-}
-.chart__list li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  gap: 8px 14px;
-  align-items: baseline;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--line);
-  font-size: var(--t-md);
-}
-.chart__list--numbered li { grid-template-columns: 1.5rem minmax(0, 1fr) auto auto; }
-.chart__list-n {
-  font-variant-numeric: tabular-nums;
-  font-weight: 750;
-  text-align: right;
-}
-.chart__list b { font-weight: 750; overflow-wrap: anywhere; }
-.chart__list span { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.chart__list small { display: block; color: var(--ink-2); font-weight: 500; }
-
 .prompt__note { margin: 0 0 12px; max-width: 66ch; color: var(--ink-2); font-size: var(--t-md); }
 .prompt__text {
   /* The prompt is preformatted text: hold it near its own line length so the
@@ -915,10 +894,8 @@ th.board__rank { width: 34px; }
 
   .run__ops { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .run__ops dt { font-size: var(--t-sm); }
-  /* The plot stays the share object on a phone. The numbered key resolves
-     compact marks; the list under it is the same numbers, not a replacement. */
+  /* The plot stays the share object on a phone. */
   .answer { min-width: 0; overflow-x: clip; }
-  .chart__list { display: grid; }
   .prompt__text { padding: 12px; }}
 
 /* Free-play builds on the evidence page ------------------------------- */

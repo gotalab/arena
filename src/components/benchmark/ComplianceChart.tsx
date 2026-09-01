@@ -377,20 +377,9 @@ export function ComplianceChart({ tasks, release, configurationIds, view, onView
         </ol>
       ) : null}
 
-      <ol className={`chart__list${numbered.length > 0 ? " chart__list--numbered" : ""}`} aria-label="Score against cost">
-        {scoreOrdered.map((point) => (
-          <li key={point.trialId}>
-            {numbered.length > 0 ? <b className="chart__list-n">{numberOf.get(point.trialId) ?? ""}</b> : null}
-            <b>{point.configurationName}</b>
-            <span>{formatScore(point.score, scoreUnit)}</span>
-            <span>
-              {point.cost == null
-                ? "cost not reported"
-                : `${point.costBasis === "list-price" ? "~" : ""}${formatCost(point.cost)}`}
-            </span>
-          </li>
-        ))}
-      </ol>
+      {compact && numbered.length > 0 ? (
+        <p className="chart__mobile-note">Point numbers match the Leaderboard ranks below.</p>
+      ) : null}
 
       {notes ? <figcaption className="chart__unplotted">{notes}</figcaption> : null}
 

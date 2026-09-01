@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { gameToolDefinitions, type PublicGameTaskManifest } from "../lib/game-tools";
 import { FrameGameChannel } from "../platform/frame-game-channel";
+import { resolveModelContext } from "../platform/model-context";
 
 export type WebMcpGameToolStatus = "waiting" | "unsupported" | "connecting" | "ready" | "error";
 
@@ -19,7 +20,7 @@ export function useWebMcpGameTools({ frame, generation, manifest }: UseWebMcpGam
       setStatus("waiting");
       return undefined;
     }
-    const modelContext = document.modelContext;
+    const modelContext = resolveModelContext();
     if (!modelContext) {
       setStatus("unsupported");
       return undefined;

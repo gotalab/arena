@@ -14,3 +14,7 @@ interface WebModelContext {
 interface Document {
   readonly modelContext?: WebModelContext;
 }
+
+interface Navigator {
+  readonly modelContext?: WebModelContext;
+}

@@ -77,10 +77,16 @@ function toolResult(result: GameChannelResult) {
 }
 
 export function gameToolDefinitions(channel: FrameGameChannel, manifest: PublicGameTaskManifest) {
+  // Promise only what this game's state actually carries: some games list
+  // their legal actions, others make legality deducible from the visible
+  // board, which is part of the game.
+  const statesLegalActions = "legalActions" in manifest.stateSchema.properties;
   const tools: WebMcpTool[] = [
     {
       name: "get_game_state",
-      description: "Read the visible state, revision, and legal actions of the active Arena game.",
+      description: statesLegalActions
+        ? "Read the visible state of the active Arena game, including its currently legal actions. Returns the sessionId and revision the other game tools require."
+        : "Read the visible state of the active Arena game. Returns the sessionId and revision the other game tools require; legality follows from the visible state.",
       inputSchema: { type: "object", properties: {}, additionalProperties: false },
       annotations: { readOnlyHint: true, untrustedContentHint: true },
       async execute() {
@@ -89,7 +95,7 @@ export function gameToolDefinitions(channel: FrameGameChannel, manifest: PublicG
     },
     {
       name: "take_game_action",
-      description: "Apply one legal action to the active Arena game using its current session and revision.",
+      description: "Apply one legal action to the active Arena game using the sessionId and revision from get_game_state. A rejection with error code stale_revision means the board moved on: read the state again and retry with the fresh revision.",
       inputSchema: {
         type: "object",
         properties: {
@@ -115,7 +121,7 @@ export function gameToolDefinitions(channel: FrameGameChannel, manifest: PublicG
   if (manifest.tools.includes("restart_game")) {
     tools.push({
       name: "restart_game",
-      description: "Start a new attempt of the active Arena game from its declared initial state.",
+      description: "Start a new attempt of the active Arena game from its declared initial state. Requires the sessionId and current revision from get_game_state; a stale revision is rejected without restarting.",
       inputSchema: {
         type: "object",
         properties: {

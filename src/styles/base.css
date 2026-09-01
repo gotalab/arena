@@ -253,6 +253,10 @@ html:has(.app-shell[data-match]) body {
   margin-left: auto;
 }
 
+/* Header utilities share one compact rounded-rectangle language. Their
+   44px targets stay generous without reading as detached circular badges. */
+.masthead__end .btn-icon { border-radius: var(--r-md); }
+
 .nav-menu { display: none; position: relative; }
 .nav-menu__list {
   position: absolute;
@@ -348,16 +352,17 @@ html:has(.app-shell[data-match]) body {
 .theme-text {
   flex: 0 0 auto;
   min-height: 44px;
-  padding: 0 2px;
-  border: 0;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
   background: none;
   color: var(--ink-2);
   font-size: var(--t-md);
   font-weight: 600;
   cursor: pointer;
-  transition: transform 100ms ease, color 120ms ease;
+  transition: transform 100ms ease, color 120ms ease, border-color 120ms ease;
 }
-.theme-text:hover { color: var(--ink); }
+.theme-text:hover { color: var(--ink); border-color: var(--line-2); }
 .theme-text:active { transform: scale(0.97); }
 
 /* Shared primitives --------------------------------------------------- */

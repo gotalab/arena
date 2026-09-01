@@ -202,7 +202,7 @@
 /* On a phone the plot escapes the panel's side padding. Point numbers map
    directly to the ranking below, so a duplicate key is unnecessary. */
 @media (max-width: 520px) {
-  .chart__plot { margin-inline: -20px; }
+  .chart__plot { margin-inline: -12px; }
   .chart__key { display: none; }
   .chart__mobile-note {
     display: block;

@@ -771,10 +771,9 @@ th.board__rank { width: 34px; }
   border-bottom: 1px solid var(--line);
 }
 .checks__stackItem > summary {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 20px;
   align-items: baseline;
-  justify-content: space-between;
   gap: 8px 12px;
   padding: 12px 2px;
   cursor: pointer;
@@ -788,10 +787,18 @@ th.board__rank { width: 34px; }
 .checks__stackMarks {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  justify-content: flex-end;
+  gap: 6px 10px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
+.checks__stackChevron {
+  width: 18px;
+  height: 18px;
+  color: var(--ink-2);
+  transition: transform 120ms ease;
+}
+.checks__stackItem[open] .checks__stackChevron { transform: rotate(90deg); }
 .checks__stackEvidence {
   display: grid;
   gap: 10px;
@@ -997,7 +1004,10 @@ th.board__rank { width: 34px; }
     padding: 12px 0;
     border-bottom: 1px solid var(--line);
   }
-  .buildresult-mobile.is-playing { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+  .buildresult-mobile.is-playing {
+    background: color-mix(in srgb, var(--ink) 4%, transparent);
+    box-shadow: inset 3px 0 var(--accent);
+  }
   .buildresult-mobile__rank {
     grid-row: 1 / span 2;
     color: var(--ink-2);
@@ -1021,9 +1031,14 @@ th.board__rank { width: 34px; }
     font-variant-numeric: tabular-nums;
   }
   .buildresult-mobile__metrics span { white-space: nowrap; }
-  .buildresult-mobile__play { grid-column: 3; padding-inline: 10px; }
+  .buildresult-mobile__play {
+    grid-column: 3;
+    padding-inline: 10px;
+    border-color: var(--line-2);
+    color: var(--ink);
+  }
+  .buildresult-mobile__play .btn-quiet__icon { color: var(--accent-ink); }
   .buildresult-mobile__coverage { grid-column: 2 / -1; }
-  .detail__stage .deck__compare { display: none; }
 }
 .pill--quiet {
   background: transparent;

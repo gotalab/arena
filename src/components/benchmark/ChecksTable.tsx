@@ -1,6 +1,7 @@
 import { Fragment, useState } from "react";
 import { checkOutcome } from "../../lib/checks";
 import type { TaskCheckComparison } from "../../lib/task-comparison";
+import { ArenaIcon } from "../ArenaIcon";
 import { ConfigurationName } from "../ConfigurationName";
 
 /** One glyph per outcome. The word stays for screen readers and tooltips. */
@@ -14,6 +15,15 @@ const GLYPHS: Record<string, string> = {
 interface ChecksTableProps {
   model: TaskCheckComparison;
   taskName: string;
+}
+
+function outcomeCounts(cells: readonly { outcome: string }[]) {
+  return cells.reduce((counts, cell) => {
+    if (cell.outcome === "pass") counts.pass += 1;
+    else if (cell.outcome === "fail") counts.fail += 1;
+    else counts.unknown += 1;
+    return counts;
+  }, { pass: 0, fail: 0, unknown: 0 });
 }
 
 /**
@@ -36,12 +46,19 @@ export function ChecksTable({ model, taskName }: ChecksTableProps) {
   };
 
   const columns = 2 + model.builds.length;
+  const differenceCount = model.groups.reduce(
+    (total, group) => total + group.rows.filter((row) => row.differences).length,
+    0,
+  );
 
   return (
     <details className="checks">
       <summary>
         <span className="checks__title">Evaluator checks, side by side</span>
-        <span className="checks__hint">{model.total} of {model.totalBeforeFilters} checks</span>
+        <span className="checks__hint">
+          {model.total} of {model.totalBeforeFilters} checks
+          {differenceCount > 0 ? ` · ${differenceCount} differ` : ""}
+        </span>
       </summary>
       <p className="checks__legend" aria-hidden="true">
         <span className="checks__cell--pass">✓ pass</span>
@@ -56,43 +73,48 @@ export function ChecksTable({ model, taskName }: ChecksTableProps) {
         {model.groups.map((group) => (
           <section className="checks__stackGroup" key={group.key}>
             <h3>{group.label}</h3>
-            {group.rows.map((row) => (
-              <details className="checks__stackItem" key={row.id}>
-                <summary>
-                  <span className="checks__stackName">{row.label}</span>
-                  <span className="checks__stackMarks" aria-hidden="true">
+            {group.rows.map((row) => {
+              const counts = outcomeCounts(row.cells);
+              return (
+                <details className="checks__stackItem" key={row.id}>
+                  <summary>
+                    <span className="checks__stackName">{row.label}</span>
+                    <span className="checks__stackMarks">
+                      {counts.pass > 0 ? (
+                        <span aria-label={`${counts.pass} pass`} className="checks__cell--pass">✓ {counts.pass}</span>
+                      ) : null}
+                      {counts.fail > 0 ? (
+                        <span aria-label={`${counts.fail} fail`} className="checks__cell--fail">✕ {counts.fail}</span>
+                      ) : null}
+                      {counts.unknown > 0 ? (
+                        <span aria-label={`${counts.unknown} not observed`} className="checks__cell--unknown">? {counts.unknown}</span>
+                      ) : null}
+                    </span>
+                    <ArenaIcon className="checks__stackChevron" name="next" />
+                  </summary>
+                  <dl className="checks__stackEvidence">
+                    <div>
+                      <dt>Check</dt>
+                      <dd><code>{row.id}</code></dd>
+                    </div>
                     {row.cells.map((cell, index) => {
                       const view = checkOutcome(cell.outcome);
                       return (
-                      <span className={`checks__cell--${view.tone}`} key={model.builds[index].id}>
-                        {GLYPHS[cell.outcome] ?? "?"}
-                      </span>
+                        <div key={model.builds[index].id}>
+                          <dt>
+                            <ConfigurationName parts={model.builds[index].parts} />
+                          </dt>
+                          <dd>
+                            <span className={`checks__cell--${view.tone}`}>{view.label}</span>
+                            {cell.explanation ? `: ${cell.explanation}` : ": no public explanation recorded"}
+                          </dd>
+                        </div>
                       );
                     })}
-                  </span>
-                </summary>
-                <dl className="checks__stackEvidence">
-                  <div>
-                    <dt>Check</dt>
-                    <dd><code>{row.id}</code></dd>
-                  </div>
-                  {row.cells.map((cell, index) => {
-                    const view = checkOutcome(cell.outcome);
-                    return (
-                    <div key={model.builds[index].id}>
-                      <dt>
-                        <ConfigurationName parts={model.builds[index].parts} />
-                      </dt>
-                      <dd>
-                        <span className={`checks__cell--${view.tone}`}>{view.label}</span>
-                        {cell.explanation ? `: ${cell.explanation}` : ": no public explanation recorded"}
-                      </dd>
-                    </div>
-                    );
-                  })}
-                </dl>
-              </details>
-            ))}
+                  </dl>
+                </details>
+              );
+            })}
           </section>
         ))}
       </div>

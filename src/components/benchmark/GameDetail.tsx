@@ -129,7 +129,7 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
   const hiddenCount = ranked.length - rows.length;
   const open = isTaskOpen(comparison, task.id);
   const played = Boolean(comparison.choices?.[task.id]) || hasBlindVerdict(comparison, task.id);
-  const preferredArtifact = preferredTrialId(comparison, task.id);
+  const preferredTrialIdValue = preferredTrialId(comparison, task.id);
   const activeIndex = rows.findIndex((trial) => trial.id === activeTrialId);
   const active = activeIndex >= 0 ? rows[activeIndex] : null;
   // Per-row evidence collapses to one line when it repeats: while every score
@@ -151,7 +151,7 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
       evidence: score && uniformRuns == null ? scoreEvidence(score, "runs") : null,
       parts: seriesOf(release, trial.configurationId).parts,
       playing: trial.id === activeTrialId,
-      preferred: trial.artifact.sha256 === preferredArtifact,
+      preferred: trial.id === preferredTrialIdValue,
       runDate: formatRunDate(trial.startedAt),
       runTimestamp: trial.startedAt ?? null,
       score: score ? scoreValue(score) : summary.requirements.rateLabel,
@@ -219,6 +219,10 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
   };
 
   const nameOf = (trial: Trial) => configurationParts(configurations.get(trial.configurationId)).name;
+  const comparisonCandidates = active ? [
+    ...rows.filter((trial) => trial.id === preferredTrialIdValue && trial.id !== active.id),
+    ...rows.filter((trial) => trial.id !== preferredTrialIdValue && trial.id !== active.id),
+  ] : [];
 
   const reveal = (taskId: string) => {
     justRevealed.current = true;
@@ -360,8 +364,10 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
                         value={compareTrialId ?? ""}
                       >
                         <option value="">Compare with…</option>
-                        {rows.filter((trial) => trial.id !== active.id).map((trial) => (
-                          <option key={trial.id} value={trial.id}>{nameOf(trial)}</option>
+                        {comparisonCandidates.map((trial) => (
+                          <option key={trial.id} value={trial.id}>
+                            {trial.id === preferredTrialIdValue ? `Your pick · ${nameOf(trial)}` : nameOf(trial)}
+                          </option>
                         ))}
                       </select>
                       {compareTrialId == null ? (

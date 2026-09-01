@@ -260,8 +260,8 @@
 
 /* Leaderboard ---------------------------------------------------------- */
 
-/* One vertical rhythm for the record's sections: header → leaderboard →
-   chart → task-by-task all breathe by the same clamp, so the page reads as
+/* One vertical rhythm for the record's sections: header, chart, leaderboard,
+   task-by-task all breathe by the same clamp, so the page reads as
    one column, not stacked one-offs. */
 .bench { --sect-gap: clamp(40px, 5vw, 64px); }
 .board { margin-top: var(--sect-gap); }
@@ -276,7 +276,7 @@
    view. The top rule lives here, not on a row, so it never scrolls away. */
 .board__scroll {
   max-height: min(560px, 70vh);
-  overflow-y: auto;
+  overflow: auto;
   border-top: 2px solid var(--ink);
 }
 /* A real <table>: the browser owns column alignment, so a markup change can
@@ -290,7 +290,7 @@
 .board__table th,
 .board__table td {
   min-width: 0;
-  padding: 18px 14px 18px 0;
+  padding: 12px 12px 12px 0;
   border-bottom: 1px solid var(--line);
   font-size: var(--t-sm);
   font-variant-numeric: tabular-nums;
@@ -315,7 +315,7 @@ th.board__rank { width: 34px; }
 /* A value and its unit never break: "24m 03s" is one number, not two lines.
    The name column is the only one allowed to wrap. The last column keeps a
    right inset so an overlay scrollbar never sits on the cost figures. */
-.board__table .board__num { padding-right: 0; padding-left: 32px; text-align: right; white-space: nowrap; }
+.board__table .board__num { padding-right: 0; padding-left: 18px; text-align: right; white-space: nowrap; }
 .board__table th:last-child,
 .board__table td:last-child { padding-right: 16px; }
 .board__rank { color: var(--ink-2); font: 700 var(--t-md) / 1 var(--mono); }
@@ -381,6 +381,7 @@ th.board__rank { width: 34px; }
    its symbol. */
 .board__legend li { display: grid; grid-template-columns: minmax(1.5em, max-content) minmax(0, 1fr); column-gap: 6px; }
 .board__legend b { color: var(--ink); }
+.board__mobile { display: none; }
 
 /* Game by game -------------------------------------------------------- */
 
@@ -856,63 +857,54 @@ th.board__rank { width: 34px; }
 @media (max-width: 960px) {
   .taskhero { min-height: 340px; }
   .pair { grid-template-columns: 1fr; }
-  /* Phone: the table becomes a stack of cards — tr/td display overrides
-     only, the markup stays the one semantic <table>. Each card: rank in a
-     fixed left gutter, name and score, then one quiet labelled meta line
-     ("TIME 98m 28s  TOKENS 13,686,972  COST ~$8.18") that wraps on narrow
-     phones but never stacks into blocks. */
-  .board__scroll { max-height: none; overflow: visible; border-top: 0; }
-  .board__table thead { display: none; }
-  .board__table, .board__table tbody { display: block; }
-  .board__table tbody { display: grid; gap: 10px; }
-  /* Card grammar: the name and its score share the top line (score on the
-     right, where a table would put it), one hairline under them, then the
-     meter line. */
-  .board__table tr.board__row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    row-gap: 12px;
-    column-gap: 16px;
-    position: relative;
-    padding: 16px 16px 16px 48px;
-    border: 1px solid var(--line);
-    border-radius: var(--r-md);
-    transition: transform 100ms ease;
-  }
-  .board__table tr.board__row:active { transform: scale(0.99); }
-  .board__table .board__row td { display: block; padding: 0; border-bottom: 0; }
-  .board__table .board__row td.board__rank { position: absolute; top: 17px; left: 14px; }
-  .board__name { order: 0; flex: 1 1 auto; min-width: 0; }
-  .board__table .board__row td.board__score { order: 1; margin-left: auto; }
-  .board__table tr.board__row::after {
-    content: "";
-    order: 2;
-    flex-basis: 100%;
-    height: 1px;
-    background: var(--line);
-  }
-  .board__table .board__row td.board__num {
-    order: 3;
-    display: inline-flex;
-    align-items: baseline;
-    gap: 6px;
-    text-align: left;
-    color: var(--ink);
-    font-size: var(--t-sm);
-  }
-  .board__table .board__row td.board__num::before {
-    content: attr(data-label);
-    color: var(--ink-2);
-    font: 600 var(--t-xs) / 1.2 var(--mono);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-  .board__rank { font-size: var(--t-lg); }
-  .board__name small { font-size: var(--t-sm); }
-  .board__ci { font-size: var(--t-sm); }
+  .board__scroll { max-height: none; }
+  .board__table th,
+  .board__table td { padding-block: 10px; }
+  .board__name .cfg-name { flex-wrap: wrap; white-space: normal; }
   .checks__matrix { display: none; }
   .checks__stack { display: block; }
+}
+
+@media (max-width: 599px) {
+  .board__scroll { display: none; }
+  .board__mobile {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border-top: 2px solid var(--ink);
+    list-style: none;
+  }
+  .board-mobile-row {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    gap: 5px 10px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .board-mobile-row__rank {
+    grid-row: 1 / span 2;
+    color: var(--ink-2);
+    font: 700 var(--t-md) / 1 var(--mono);
+  }
+  .board-mobile-row__name { min-width: 0; }
+  .board-mobile-row__name b { display: block; font-size: var(--t-sm); font-weight: 750; }
+  .board-mobile-row__name .cfg-name { flex-wrap: wrap; white-space: normal; }
+  .board-mobile-row__name small,
+  .board-mobile-row__coverage { display: block; color: var(--ink-2); font-size: var(--t-xs); }
+  .board-mobile-row__score { text-align: right; }
+  .board-mobile-row__score .board__pct { font-size: var(--t-lg); }
+  .board-mobile-row__metrics {
+    grid-column: 2 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    color: var(--ink-2);
+    font: 500 var(--t-xs) / 1.4 var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .board-mobile-row__metrics span { white-space: nowrap; }
+  .board-mobile-row__coverage { grid-column: 2 / -1; }
 }
 
 @media (max-width: 720px) {

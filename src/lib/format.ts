@@ -28,6 +28,18 @@ export function formatTokens(value: number | null | undefined): string {
   return value == null ? NOT_REPORTED : Math.round(value).toLocaleString("en-US");
 }
 
+/** Compact token count for dense summaries where the unit must stay visible. */
+export function formatCompactTokens(value: number | null | undefined): string {
+  if (value == null) return NOT_REPORTED;
+  const rounded = Math.round(value);
+  if (rounded < 1_000) return `${rounded.toLocaleString("en-US")} tok`;
+  const divisor = rounded >= 1_000_000 ? 1_000_000 : 1_000;
+  const unit = rounded >= 1_000_000 ? "M" : "K";
+  const scaled = rounded / divisor;
+  const digits = scaled < 10 ? 2 : scaled < 100 ? 1 : 0;
+  return `${scaled.toFixed(digits).replace(/\.0+$|(?<=\.[0-9])0$/, "")}${unit} tok`;
+}
+
 /** `value` is USD. */
 export function formatCost(value: number | null | undefined): string {
   return value == null ? NOT_REPORTED : `$${value.toFixed(2)}`;

@@ -1,7 +1,7 @@
 import { configurationParts, configurationSummaries } from "../../lib/configurations";
 import { selectRankableTasks } from "../../lib/benchmark-view";
 import type { ConfigurationSummary } from "../../lib/configurations";
-import { formatCost, formatSeconds, formatTokens } from "../../lib/format";
+import { formatCompactTokens, formatCost, formatSeconds, formatTokens } from "../../lib/format";
 import { compareByScore, scoreEvidence, scoreValue, speakScore } from "../../lib/score";
 import type { PublicGame as Game, PublicRelease as Release } from "../../public-types";
 import { ConfigurationName } from "../ConfigurationName";
@@ -59,6 +59,10 @@ export function Leaderboard({ tasks, release, configurationIds }: { tasks: Game[
   // interval needs disclosing, one legend line replaces the same words on
   // every row; the spoken score still carries the full claim per row.
   const rowEvidence = shown.some((summary) => scoreEvidence(summary.score, "tasks").includes("±"));
+  const entries = [
+    ...summaries.map((summary, index) => ({ summary, rank: index + 1, coverage: undefined })),
+    ...partial.map((summary) => ({ summary, rank: null, coverage: `${summary.tasksCovered} / ${ranked.length} tasks` })),
+  ];
 
   return (
     <section className="board" aria-labelledby="leaderboard-heading">
@@ -75,20 +79,17 @@ export function Leaderboard({ tasks, release, configurationIds }: { tasks: Game[
               <th scope="col" className="board__rank">#</th>
               <th scope="col" className="board__lead">Agent</th>
               <th scope="col" className="board__score">Score</th>
-              <th scope="col" className="board__num">Avg time / task</th>
-              <th scope="col" className="board__num">Avg tokens / task</th>
-              <th scope="col" className="board__num">Avg cost / task</th>
+              <th scope="col" className="board__num" title="Average time per task">Time</th>
+              <th scope="col" className="board__num" title="Average tokens per task">Tokens</th>
+              <th scope="col" className="board__num" title="Average cost per task">Cost</th>
             </tr>
           </thead>
           <tbody>
-            {summaries.map((summary, index) => (
-              <BoardRow key={summary.configuration.id} rank={index + 1} showEvidence={rowEvidence} summary={summary} />
-            ))}
-            {partial.map((summary) => (
+            {entries.map(({ coverage, rank, summary }) => (
               <BoardRow
-                coverage={`${summary.tasksCovered} / ${ranked.length} tasks`}
+                coverage={coverage}
                 key={summary.configuration.id}
-                rank={null}
+                rank={rank}
                 showEvidence={rowEvidence}
                 summary={summary}
               />
@@ -96,6 +97,17 @@ export function Leaderboard({ tasks, release, configurationIds }: { tasks: Game[
           </tbody>
         </table>
       </div>
+      <ol className="board__mobile" aria-label="Agents ranked by requirements met">
+        {entries.map(({ coverage, rank, summary }) => (
+          <MobileBoardRow
+            coverage={coverage}
+            key={summary.configuration.id}
+            rank={rank}
+            showEvidence={rowEvidence}
+            summary={summary}
+          />
+        ))}
+      </ol>
       <ul className="board__legend" aria-label="Table legend">
         {!rowEvidence ? (
           <li><b>Score</b> mean over {ranked.length} tasks, every run counted</li>
@@ -125,9 +137,7 @@ function BoardRow({
 }) {
   const parts = configurationParts(summary.configuration);
   const rate = summary.score.mean;
-  const metricCoverage = (reported: number) => reported === summary.metricRunCount
-    ? null
-    : `${reported} / ${summary.metricRunCount} runs reported`;
+  const metricCoverage = metricCoverageFor(summary);
 
   return (
     <tr className="board__row">
@@ -150,22 +160,72 @@ function BoardRow({
           {showEvidence ? <span className="board__ci">{scoreEvidence(summary.score, "tasks")}</span> : null}
         </span>
       </td>
-      {/* Desktop: three table columns. Phone: the cells collapse to one quiet
-          labelled meta line under the score, because a ranking must stay
-          scannable — three stacked labelled blocks per row turn a table into
-          cards (see the responsive block in benchmark.css). */}
-      <td className="board__num" data-label="Avg time / task">
+      <td className="board__num">
         {formatSeconds(summary.time)}
         {metricCoverage(summary.timeCoverage) ? <small>{metricCoverage(summary.timeCoverage)}</small> : null}
       </td>
-      <td className="board__num" data-label="Avg tokens / task">
+      <td className="board__num">
         {formatTokens(summary.tokens)}
         {metricCoverage(summary.tokenCoverage) ? <small>{metricCoverage(summary.tokenCoverage)}</small> : null}
       </td>
-      <td className="board__num" data-label="Avg cost / task">
+      <td className="board__num">
         {summary.costAtListPrice ? "~" : ""}{formatCost(summary.estimatedCost)}
         {metricCoverage(summary.costCoverage) ? <small>{metricCoverage(summary.costCoverage)}</small> : null}
       </td>
     </tr>
   );
+}
+
+function MobileBoardRow({
+  coverage,
+  rank,
+  showEvidence,
+  summary,
+}: {
+  coverage?: string;
+  rank: number | null;
+  showEvidence: boolean;
+  summary: ConfigurationSummary;
+}) {
+  const parts = configurationParts(summary.configuration);
+  const rate = summary.score.mean;
+  const metricCoverage = metricCoverageFor(summary);
+  const coverageNotes = [
+    metricCoverage(summary.timeCoverage),
+    metricCoverage(summary.tokenCoverage),
+    metricCoverage(summary.costCoverage),
+  ].filter((value): value is string => value != null);
+
+  return (
+    <li className="board-mobile-row">
+      <span className="board-mobile-row__rank" aria-label={rank == null ? "Unranked" : `Rank ${String(rank)}`}>
+        {rank == null ? "–" : rank}
+      </span>
+      <span className="board-mobile-row__name">
+        <b><ConfigurationName parts={parts} /></b>
+        {coverage ? <small>{coverage}</small> : null}
+      </span>
+      <span className="board-mobile-row__score">
+        <span className="visually-hidden">{speakScore(summary.score, "tasks")}</span>
+        <span aria-hidden="true" className={rate == null ? "board__pct board__pct--empty" : "board__pct"}>
+          {scoreValue(summary.score)}
+          {showEvidence ? <span className="board__ci">{scoreEvidence(summary.score, "tasks")}</span> : null}
+        </span>
+      </span>
+      <span className="board-mobile-row__metrics" aria-label="Average time, tokens, and cost per task">
+        <span>{formatSeconds(summary.time)}</span>
+        <span>{formatCompactTokens(summary.tokens)}</span>
+        <span>{summary.costAtListPrice ? "~" : ""}{formatCost(summary.estimatedCost)}</span>
+      </span>
+      {coverageNotes.length > 0 ? (
+        <small className="board-mobile-row__coverage">{coverageNotes.join("; ")}</small>
+      ) : null}
+    </li>
+  );
+}
+
+function metricCoverageFor(summary: ConfigurationSummary) {
+  return (reported: number) => reported === summary.metricRunCount
+    ? null
+    : `${reported} / ${summary.metricRunCount} runs reported`;
 }

@@ -112,9 +112,6 @@ export function ResultsView({ tasks, onOpenGame, release, state, onStateChange }
 
       {ready ? (
         <>
-          {/* The ranking is the page's answer and reads first; the scatter
-              is the analysis under it. */}
-          <Leaderboard configurationIds={configurationIds} release={release} tasks={visibleTasks} />
           <section className="answer" aria-labelledby="chart-heading">
             <div className="answer__head">
               <h2 id="chart-heading">Score against cost</h2>
@@ -127,6 +124,7 @@ export function ResultsView({ tasks, onOpenGame, release, state, onStateChange }
               view={normalized.chartTaskId}
             />
           </section>
+          <Leaderboard configurationIds={configurationIds} release={release} tasks={visibleTasks} />
         </>
       ) : (
         <div className="mask">

@@ -95,7 +95,7 @@ export function gameToolDefinitions(channel: FrameGameChannel, manifest: PublicG
     },
     {
       name: "take_game_action",
-      description: "Apply one legal action to the active Arena game using the sessionId and revision from get_game_state. A rejection with error code stale_revision means the board moved on: read the state again and retry with the fresh revision.",
+      description: "Apply one legal action to the active Arena game using the sessionId and revision from get_game_state. If the game rejects a stale revision, read the state again and retry with the fresh revision.",
       inputSchema: {
         type: "object",
         properties: {

@@ -8,8 +8,8 @@ const MAX_MESSAGE_BYTES = 32_768;
 export interface GameChannelState {
   revision: number;
   phase: string;
-  outcome: string | null;
-  legalActions: unknown[];
+  outcome?: string | null;
+  legalActions?: unknown[];
   [key: string]: unknown;
 }
 
@@ -64,8 +64,6 @@ function parseState(value: unknown, stateSchema: Record<string, unknown>): GameC
   if (!matchesClosedJsonSchema(value, stateSchema)) return null;
   if (!Number.isSafeInteger(value.revision) || (value.revision as number) < 0) return null;
   if (typeof value.phase !== "string") return null;
-  if (value.outcome !== null && typeof value.outcome !== "string") return null;
-  if (!Array.isArray(value.legalActions)) return null;
   return value as GameChannelState;
 }
 

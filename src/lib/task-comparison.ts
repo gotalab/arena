@@ -24,6 +24,7 @@ export const TASK_CHECK_OUTCOMES: readonly TaskCheckOutcome[] = [
 ];
 
 export interface TaskCheckFilterState {
+  readonly ids: readonly string[];
   readonly categories: readonly string[];
   readonly groups: readonly string[];
   readonly outcomes: readonly TaskCheckOutcome[];
@@ -45,6 +46,7 @@ export interface TaskComparisonStateInput {
   readonly models?: unknown;
   readonly efforts?: unknown;
   readonly check?: {
+    readonly ids?: unknown;
     readonly categories?: unknown;
     readonly groups?: unknown;
     readonly outcomes?: unknown;
@@ -58,6 +60,7 @@ export const TASK_COMPARISON_QUERY_KEYS = {
   harnesses: "harness",
   models: "model",
   efforts: "effort",
+  ids: "criterion",
   categories: "category",
   groups: "group",
   outcomes: "outcome",
@@ -119,9 +122,17 @@ export interface TaskComparisonEvidence {
   readonly explanation: string | null;
 }
 
+export interface TaskCriterion {
+  readonly checkId: string;
+  readonly label: string;
+  readonly category: string;
+  readonly group: string | null;
+  readonly lane: string | null;
+}
+
 export interface TaskComparisonPageRequest {
-  /** `summary` returns metadata only; `rows` is the default matrix stage. */
-  readonly stage?: "summary" | "rows" | "evidence";
+  /** `summary` returns metadata only; criteria, rows and evidence disclose progressively. */
+  readonly stage?: "summary" | "criteria" | "rows" | "evidence";
   readonly limit?: number;
   readonly offset?: number;
   readonly cursor?: string | null;
@@ -149,6 +160,7 @@ export interface TaskComparisonResult {
   /** Selected Build columns are all included; there is no 4/6 Build cap. */
   readonly builds: readonly TaskComparisonBuild[];
   readonly summary: TaskComparisonSummary;
+  readonly criteria: readonly TaskCriterion[];
   readonly rows: readonly TaskCheckRow[];
   readonly evidence: readonly TaskComparisonEvidence[];
   readonly total: number;
@@ -330,12 +342,14 @@ export function normalizeTaskComparisonState(
   const options = buildFilterOptions(release, allBuilds);
   const checkState = state.check ?? {};
   const checkValueOptions = checkOptions(allBuilds);
+  const knownCheckIds = new Set(definitionsFor(allBuilds).map((definition) => definition.id));
   return {
     buildIds,
     harnesses: canonicalSelection(state.harnesses, options.harnesses),
     models: canonicalSelection(state.models, options.models),
     efforts: canonicalSelection(state.efforts, options.efforts, { allowEmpty: true }),
     check: {
+      ids: sortedUnique(stringValues(checkState.ids).filter((id) => knownCheckIds.has(id))),
       categories: canonicalSelection(checkState.categories, checkValueOptions.categories),
       groups: canonicalSelection(checkState.groups, checkValueOptions.groups),
       outcomes: normalizedOutcomes(checkState.outcomes),
@@ -367,6 +381,7 @@ export function parseTaskComparisonSearchParams(
     models: params.getAll(keys.models),
     efforts: params.getAll(keys.efforts),
     check: {
+      ids: params.getAll(keys.ids),
       categories: params.getAll(keys.categories),
       groups: params.getAll(keys.groups),
       outcomes: params.getAll(keys.outcomes),
@@ -391,6 +406,7 @@ export function serializeTaskComparisonSearchParams(
   for (const value of sortedUnique(state.efforts).sort((a, b) => compareStrings(a || "none", b || "none"))) {
     params.append(keys.efforts, value || "none");
   }
+  for (const value of sortedUnique(state.check.ids)) params.append(keys.ids, value);
   for (const value of sortedUnique(state.check.categories)) params.append(keys.categories, value);
   for (const value of sortedUnique(state.check.groups)) params.append(keys.groups, value);
   for (const value of sortedUnique(state.check.outcomes)) params.append(keys.outcomes, value);
@@ -477,6 +493,7 @@ function filteredRows(
   filter: TaskCheckFilterState,
 ): TaskCheckRow[] {
   return rows.filter((row) => {
+    if (filter.ids.length > 0 && !filter.ids.includes(row.id)) return false;
     if (filter.blockingOnly && row.category !== "gate") return false;
     if (filter.categories.length > 0 && !filter.categories.includes(row.category)) return false;
     if (filter.groups.length > 0 && (row.group == null || !filter.groups.includes(row.group))) return false;
@@ -635,9 +652,18 @@ export function createTaskComparisonResult(
   const buildNextCursor = buildNextOffset == null ? null : String(buildNextOffset);
   const stage = request?.stage ?? "rows";
   const limit = pageLimit(request);
+  const criteria = comparison.rows.map((row): TaskCriterion => ({
+    checkId: row.id,
+    label: row.label,
+    category: row.category,
+    group: row.group,
+    lane: row.lane,
+  }));
   const source = stage === "evidence"
     ? selectTaskComparisonEvidence(release, taskId, activeState, request?.checkIds ?? [], request?.evidenceBuildIds)
-    : rowsForBuildPage;
+    : stage === "criteria"
+      ? criteria
+      : rowsForBuildPage;
   const total = source.length;
   const offset = stage === "summary" ? 0 : pageOffset(request, total);
   const page = stage === "summary" ? [] : source.slice(offset, offset + limit);
@@ -647,6 +673,7 @@ export function createTaskComparisonResult(
     taskId,
     builds,
     summary,
+    criteria: stage === "criteria" ? page as TaskCriterion[] : [],
     rows: stage === "rows" ? page as TaskCheckRow[] : [],
     evidence: stage === "evidence" ? page as TaskComparisonEvidence[] : [],
     total: stage === "summary" ? 0 : total,

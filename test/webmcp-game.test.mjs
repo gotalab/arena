@@ -9,17 +9,19 @@ import {
 } from "../src/lib/game-tools.ts";
 import { FrameGameChannel, GAME_PROTOCOL } from "../src/platform/frame-game-channel.ts";
 
-function fixtureFrame({ forgedFirst = false, malformed = false, secretState = false, silent = false } = {}) {
+function fixtureFrame({ forgedFirst = false, malformed = false, secretState = false, silent = false, stateShape = "probe" } = {}) {
   let revision = 0;
   let sessionId;
   let generation;
-  const state = () => ({
-    revision,
-    phase: revision === PROBE_ACTIONS.length ? "complete" : "playing",
-    outcome: revision === PROBE_ACTIONS.length ? "route_committed" : null,
-    legalActions: revision === PROBE_ACTIONS.length ? [] : [{ type: PROBE_ACTIONS[revision] }],
-    ...(secretState ? { secret: "must not cross the parent boundary" } : {}),
-  });
+  const state = () => stateShape === "task-owned"
+    ? { revision, phase: "playing", pool: 1, rows: ["##", "##"] }
+    : {
+        revision,
+        phase: revision === PROBE_ACTIONS.length ? "complete" : "playing",
+        outcome: revision === PROBE_ACTIONS.length ? "route_committed" : null,
+        legalActions: revision === PROBE_ACTIONS.length ? [] : [{ type: PROBE_ACTIONS[revision] }],
+        ...(secretState ? { secret: "must not cross the parent boundary" } : {}),
+      };
   const envelope = (type, extra = {}) => ({
     protocol: GAME_PROTOCOL,
     type,
@@ -145,6 +147,24 @@ test("one pinned game channel completes three state-dependent actions", async ()
   }
   const final = await channel.request("observe");
   assert.equal(final.state.outcome, "route_committed");
+  channel.close();
+});
+
+test("task manifest owns state fields beyond revision and phase", async () => {
+  const stateSchema = {
+    type: "object",
+    properties: {
+      revision: { type: "integer", minimum: 0 },
+      phase: { enum: ["playing"] },
+      pool: { type: "integer", minimum: 1 },
+      rows: { type: "array", items: { type: "string", pattern: "^[#]*$" } },
+    },
+    required: ["revision", "phase", "pool", "rows"],
+    additionalProperties: false,
+  };
+  const channel = new FrameGameChannel(fixtureFrame({ stateShape: "task-owned" }), 10, 100, stateSchema);
+  const ready = await channel.ready();
+  assert.deepEqual(ready.state, { revision: 0, phase: "playing", pool: 1, rows: ["##", "##"] });
   channel.close();
 });
 

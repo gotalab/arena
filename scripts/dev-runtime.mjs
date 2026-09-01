@@ -289,6 +289,10 @@ try {
         run(wrangler, ["d1", "execute", "arena-runtime-local", "--local", "--persist-to", mainStateRoot, "--config", mainConfig, "--command", `UPDATE tasks SET visible = 0 WHERE id = '${taskId}'`], { cwd: scratch, label: "d1_hide_task" });
         if ((await choiceRequest({ assignmentId, choice: "A" })).status !== 404) fail("smoke_hidden_assignment");
         run(wrangler, ["d1", "execute", "arena-runtime-local", "--local", "--persist-to", mainStateRoot, "--config", mainConfig, "--command", `UPDATE tasks SET visible = 1 WHERE id = '${taskId}'`], { cwd: scratch, label: "d1_show_task" });
+        // The out-of-process D1 CLI can briefly reconnect the local Worker.
+        // Re-establish read-only readiness instead of retrying a POST whose
+        // write may already have committed before the connection dropped.
+        await waitFor(`${mainOrigin}/api/session`);
         expectCommandFailure(wrangler, ["d1", "execute", "arena-runtime-local", "--local", "--persist-to", mainStateRoot, "--config", mainConfig, "--command", "PRAGMA foreign_keys = ON; INSERT INTO blind_choices (id, assignment_id, task_id, choice, actor_sub, created_at) VALUES ('fk-negative', 'missing', 'missing', 'A', 'smoke', datetime('now'))"], { cwd: scratch, label: "d1_foreign_key", pattern: /FOREIGN KEY constraint failed/i });
         if ((await choiceRequest({ assignmentId, choice: "A" }, { Origin: "http://localhost:8787" })).status !== 403) fail("smoke_origin_negative");
         if ((await choiceRequest({ assignmentId, choice: "NOPE" })).status !== 400) fail("smoke_choice_negative");

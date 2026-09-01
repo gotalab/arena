@@ -6,7 +6,7 @@ import { formatCompactTokens, formatCost, formatRunDate, formatSeconds, formatTo
 import { cellScoreForTrial, compareByScore, scoreEvidence, scoreValue } from "../../lib/score";
 import { artifactSrc, buildsForTask, trialSummary } from "../../lib/trials";
 import type { ComparisonState } from "../../client-types";
-import type { PublicBuild as Trial, PublicGame as Game, PublicRelease as Release } from "../../public-types";
+import type { PublicBuild as Trial, PublicGame as Game, PublicRelease as Release, PublicTaskManifest } from "../../public-types";
 import { ArenaIcon } from "../ArenaIcon";
 import { ConfigurationName } from "../ConfigurationName";
 import { Stage } from "../Stage";
@@ -24,6 +24,7 @@ import {
 
 interface GameDetailProps {
   task: Game;
+  gameToolsManifest: PublicTaskManifest | null;
   comparison: ComparisonState;
   initialBuild: Trial | null;
   initialBrowse?: boolean;
@@ -71,10 +72,13 @@ interface BuildResultRow {
  * come from the blind flow, and the page stays masked until the reader has
  * either played blind or explicitly asked to see results.
  */
-export function GameDetail({ task, comparison, initialBuild, initialBrowse = false, onBrowseHandled, onCompare, onOpenBenchmark, onOpenBuild, onReveal, release, state, onStateChange }: GameDetailProps) {
+export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, initialBrowse = false, onBrowseHandled, onCompare, onOpenBenchmark, onOpenBuild, onReveal, release, state, onStateChange }: GameDetailProps) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
+  const evidenceRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const criterionTrackingReady = useRef(false);
+  const previousCriterionKey = useRef("");
   const justRevealed = useRef(false);
   const browseAfterReveal = useRef(false);
   const [activeTrialId, setActiveTrialId] = useState<string | null>(null);
@@ -94,12 +98,17 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
     .sort()
     .map((value) => ({ value, label: value || "No effort setting" }));
   const normalizedState = normalizeTaskComparisonState(state, release, task.id);
+  const criterionKey = normalizedState.check.ids.join("\0");
   const selectedBuildIds = new Set(selectTaskBuilds(release, task.id, normalizedState).map((build) => build.id));
   const rows = ranked.filter((trial) => selectedBuildIds.has(trial.id));
   const checkModel = createTaskCheckComparison(release, task.id, normalizedState);
   const allCheckDefinitions = all.flatMap((trial) => trial.checks ?? []);
   const categoryOptions = [...new Set(allCheckDefinitions.map((check) => check.category))].sort();
   const groupOptions = [...new Set(allCheckDefinitions.map((check) => check.group).filter((value): value is string => Boolean(value)))].sort();
+  const criterionOptions = [...new Map(allCheckDefinitions.map((check) => [
+    check.id,
+    { value: check.id, label: check.label?.trim() || check.id },
+  ])).values()];
   const updateState = (patch: Partial<TaskComparisonState>) => {
     onStateChange(normalizeTaskComparisonState({ ...normalizedState, ...patch }, release, task.id));
   };
@@ -116,6 +125,7 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
     || normalizedState.harnesses.length > 0
     || normalizedState.models.length > 0
     || normalizedState.efforts.length > 0
+    || normalizedState.check.ids.length > 0
     || normalizedState.check.categories.length > 0
     || normalizedState.check.groups.length > 0
     || normalizedState.check.outcomes.length > 0
@@ -204,6 +214,19 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
   useEffect(() => {
     if (activeTrialId) stageRef.current?.scrollIntoView({ behavior: "auto", block: "start" });
   }, [activeTrialId]);
+
+  useEffect(() => {
+    if (!criterionTrackingReady.current) {
+      criterionTrackingReady.current = true;
+      previousCriterionKey.current = criterionKey;
+      return;
+    }
+    const previous = previousCriterionKey.current;
+    previousCriterionKey.current = criterionKey;
+    if (previous && previous !== criterionKey && criterionKey) {
+      evidenceRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [criterionKey]);
 
   // Walking the stage follows the table's ranked order.
   const step = (delta: number) => {
@@ -324,6 +347,24 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
             <p className="buildresults__metric-note">Time, tokens, and cost are averages per run.</p>
             <BuildResults rows={resultRows} onToggle={openBuild} />
             </div>
+            {normalizedState.check.ids.length > 0 ? (
+              <section aria-live="polite" className="evaluation-lens">
+                <p className="eyebrow">Selected criteria</p>
+                <h3>Comparing {rows.length} of {ranked.length} Builds on {normalizedState.check.ids.length} criteria</h3>
+                <ul>
+                  {criterionOptions
+                    .filter((option) => normalizedState.check.ids.includes(option.value))
+                    .map((option) => <li key={option.value}>{option.label}</li>)}
+                </ul>
+                <button
+                  className="link-plain evaluation-lens__jump"
+                  onClick={() => evidenceRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                  type="button"
+                >
+                  View results for these criteria
+                </button>
+              </section>
+            ) : null}
             {!played ? (
               <p className="detail__note">You revealed these results without voting, so comparisons stay playable but no longer count as blind picks.</p>
             ) : null}
@@ -349,6 +390,7 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
               <div className="detail__stage" ref={stageRef}>
                 <Stage
                   activeIndex={activeSide}
+                  gameToolsManifest={gameToolsManifest ?? undefined}
                   onSelect={setActiveSide}
                   presentation={task.presentation}
                   barLabel={<b className="deck__name">{seriesOf(release, active.configurationId).label}</b>}
@@ -406,8 +448,14 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
               </div>
             ) : null}
 
-            <div className="detail__evidence">
+            <div className="detail__evidence" ref={evidenceRef}>
               <div aria-label="Evaluator check filters" className="filter-row check-filters" role="group">
+                <FilterSelect
+                  label="Criteria"
+                  onToggle={(value) => updateCheck({ ids: toggleValue(normalizedState.check.ids, value) })}
+                  options={criterionOptions}
+                  selected={new Set(normalizedState.check.ids)}
+                />
                 <FilterSelect
                   label="Check category"
                   onToggle={(value) => updateCheck({ categories: toggleValue(normalizedState.check.categories, value) })}
@@ -438,7 +486,7 @@ export function GameDetail({ task, comparison, initialBuild, initialBrowse = fal
               <p aria-live="polite" className="benchmark-filter-summary">
                 Comparing {rows.length} {rows.length === 1 ? "Build" : "Builds"}; showing {checkModel.total} of {checkModel.totalBeforeFilters} evaluator checks.
               </p>
-              <ChecksTable model={checkModel} taskName={task.name} />
+              <ChecksTable model={checkModel} open={normalizedState.check.ids.length > 0} taskName={task.name} />
               <TaskPrompt taskId={task.id} taskName={task.name} />
             </div>
           </>

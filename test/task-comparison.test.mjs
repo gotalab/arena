@@ -121,6 +121,7 @@ test("normalizes identity and check filters, retaining outcome distinctions", ()
     models: ["not real"],
     efforts: ["none"],
     check: {
+      ids: ["gate.loads", "not-real"],
       categories: ["gate", "not-real"],
       groups: ["Blocking"],
       outcomes: ["missing", "grader_error", "unknown"],
@@ -134,6 +135,7 @@ test("normalizes identity and check filters, retaining outcome distinctions", ()
     models: [],
     efforts: [""],
     check: {
+      ids: ["gate.loads"],
       categories: ["gate"],
       groups: ["Blocking"],
       outcomes: ["grader_error", "missing"],
@@ -150,6 +152,7 @@ test("task comparison URL round-trips deterministic repeated params", () => {
     models: ["Model B", "Model A"],
     efforts: ["high", "none"],
     check: {
+      ids: ["req.controls", "gate.loads"],
       categories: ["requirement", "gate"],
       groups: ["Controls", "Blocking"],
       outcomes: ["fail", "pass"],
@@ -158,7 +161,7 @@ test("task comparison URL round-trips deterministic repeated params", () => {
     },
   }, release, "task-a");
   const query = serializeTaskComparisonSearchParams(state, release, "task-a");
-  assert.equal(query.toString(), "build=build-2&build=build-4&harness=Codex&harness=Cursor&model=Model+A&model=Model+B&effort=high&effort=none&category=gate&category=requirement&group=Blocking&group=Controls&outcome=fail&outcome=pass&blocking=1&differences=1");
+  assert.equal(query.toString(), "build=build-2&build=build-4&harness=Codex&harness=Cursor&model=Model+A&model=Model+B&effort=high&effort=none&criterion=gate.loads&criterion=req.controls&category=gate&category=requirement&group=Blocking&group=Controls&outcome=fail&outcome=pass&blocking=1&differences=1");
   assert.deepEqual(parseTaskComparisonSearchParams(query, release, "task-a"), state);
 });
 
@@ -208,6 +211,14 @@ test("rows and evidence are bounded independently with continuation metadata", (
   assert.equal(evidence.evidence[0].checkId, "gate.loads");
   assert.equal(evidence.evidence[0].outcome, "pass");
   assert.ok(selectTaskComparisonEvidence(release, "task-a", {}, ["gate.loads"]).length >= 6);
+});
+
+test("criteria disclose definitions without Build cells or explanations", () => {
+  const result = createTaskComparisonResult(release, "task-a", {}, { stage: "criteria", limit: 2 });
+  assert.equal(result.criteria.length, 2);
+  assert.equal(result.rows.length, 0);
+  assert.equal(result.evidence.length, 0);
+  assert.ok(result.criteria.every((criterion) => Object.keys(criterion).sort().join(",") === "category,checkId,group,label,lane"));
 });
 
 test("Build columns page independently so large selections never widen row cells", () => {

@@ -118,7 +118,7 @@ export function App() {
     harnesses: [],
     models: [],
     efforts: [],
-    check: { categories: [], groups: [], outcomes: [], blockingOnly: false, differencesOnly: false },
+    check: { ids: [], categories: [], groups: [], outcomes: [], blockingOnly: false, differencesOnly: false },
   });
   const webMcpProbe = (import.meta.env.DEV || import.meta.env.VITE_WEBMCP_PROBE === "true")
     && new URLSearchParams(window.location.search).get("webmcp-probe") === "1";
@@ -135,6 +135,10 @@ export function App() {
   const slugTask = useMemo(
     () => tasks.find((task) => task.slug === location.slug) ?? null,
     [location.slug],
+  );
+  const slugTaskManifest = useMemo(
+    () => taskManifests.find((manifest) => manifest.taskId === slugTask?.id) ?? null,
+    [slugTask?.id],
   );
   const namedBuild = useMemo(
     () => slugTask && namedRelease ? buildBySlug(namedRelease, slugTask.id, location.buildSlug) : null,
@@ -253,7 +257,7 @@ export function App() {
     taskManifests,
     release: namedRelease,
     benchmarkController,
-    openTask: (taskId: string) => navigate("task", taskId),
+    openTask: (taskId: string, view: "results" | "blind") => navigate(view === "blind" ? "compare" : "task", taskId),
     openBuild: (taskId: string, buildId: string) => {
       const build = namedRelease?.builds.find((candidate) => candidate.id === buildId && candidate.taskId === taskId);
       if (!build) throw new Error("public build not found");
@@ -346,6 +350,7 @@ export function App() {
             assignmentFor={assignmentFor}
             battlesRemaining={battlesRemaining(slugTask.id)}
             choice={comparison.choices[slugTask.id]}
+            gameToolsManifest={slugTaskManifest}
             identitySeen={Boolean(comparison.previews[slugTask.id])}
             nextTask={nextUnjudgedGame(tasks, slugTask.id, comparison.choices)}
             onChoice={saveChoice}
@@ -370,6 +375,7 @@ export function App() {
         {(route === "task" || route === "build") && slugTask && namedRelease && (route !== "build" || namedBuild) && (
           <GameDetail
             comparison={comparison}
+            gameToolsManifest={slugTaskManifest}
             initialBuild={namedBuild}
             initialBrowse={browseRequestedTask === slugTask.id}
             key={`${route}:${location.buildSlug ?? "task"}`}

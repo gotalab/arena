@@ -20,13 +20,13 @@ export interface ArenaToolContext {
   taskManifests: PublicTaskManifest[];
   release: PublicRelease | null;
   benchmarkController: ArenaBenchmarkController;
-  openTask: (taskId: string) => void;
+  openTask: (taskId: string, view: "results" | "blind") => void;
   openBuild: (taskId: string, buildId: string) => void;
   authorized: () => boolean;
 }
 
 const TASK_SEARCH_PAGE_SIZE = 20;
-const TOOL_CELL_BUDGET = 500;
+const TOOL_CELL_BUDGET = 160;
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -102,7 +102,10 @@ function namedBuild(context: ArenaToolContext, build: PublicBuild) {
     taskId: build.taskId,
     configuration: configurationParts(configuration).name,
     score: cell?.score.mean ?? null,
+    scoreEvidence: cell?.score ?? null,
     estimatedCost: cell?.operational.estimatedCost.mean ?? null,
+    operational: cell?.operational ?? null,
+    requirementSummary: build.requirementSummary,
     playable: build.playability === "playable",
     agentPlayEvidence: buildAgentPlayEvidence(context, build),
   };
@@ -156,18 +159,20 @@ function openTaskTool(context: ArenaToolContext): WebMcpTool {
     description: "Open one Arena task so its game and, when allowed, its named Build results are visible.",
     inputSchema: {
       type: "object",
-      properties: { taskId: { type: "string" } },
+      properties: { taskId: { type: "string" }, view: { enum: ["results", "blind"] } },
       required: ["taskId"],
       additionalProperties: false,
     },
     annotations: { readOnlyHint: false, untrustedContentHint: false },
     execute(input) {
       assertCurrent(context);
-      const value = inputObject(input, ["taskId"], "open task");
+      const value = inputObject(input, ["taskId", "view"], "open task");
       const taskId = stringValue(value.taskId, "taskId");
       if (!taskId || !context.games.some((game) => game.id === taskId)) throw new Error("public task not found");
-      context.openTask(taskId);
-      return result({ accepted: true, taskId });
+      const view = stringValue(value.view, "view") ?? "results";
+      if (view !== "results" && view !== "blind") throw new TypeError("view must be results or blind");
+      context.openTask(taskId, view);
+      return result({ accepted: true, taskId, view });
     },
   };
 }
@@ -241,7 +246,7 @@ function filterBenchmarkTool(context: ArenaToolContext): WebMcpTool {
 function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
   return {
     name: "compare_task_builds",
-    description: "Select any number of visible Builds and filter this task's published evaluator checks. The Build table, check matrix and URL update together; request evidence only for specific check ids.",
+    description: "Focus the visible Build table and evaluator matrix. Start with summary, page criteria, inspect bounded rows, then request evidence for exact check ids; include Build details only after narrowing candidates.",
     inputSchema: {
       type: "object",
       properties: {
@@ -252,6 +257,7 @@ function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
         check: {
           type: "object",
           properties: {
+            ids: STRING_ARRAY,
             categories: STRING_ARRAY,
             groups: STRING_ARRAY,
             outcomes: { type: "array", items: { enum: ["pass", "fail", "not_evaluated", "grader_error", "missing"] } },
@@ -260,11 +266,12 @@ function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
           },
           additionalProperties: false,
         },
-        stage: { enum: ["summary", "rows", "evidence"] },
+        stage: { enum: ["summary", "criteria", "rows", "evidence"] },
         limit: { type: "integer", minimum: 1, maximum: 100 },
         cursor: { type: "string", pattern: "^[0-9]+$" },
         buildLimit: { type: "integer", minimum: 1, maximum: 100 },
         buildCursor: { type: "string", pattern: "^[0-9]+$" },
+        includeBuildDetails: { type: "boolean" },
         checkIds: STRING_ARRAY,
         evidenceBuildIds: STRING_ARRAY,
       },
@@ -274,18 +281,19 @@ function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
     execute(input) {
       assertCurrent(context);
       if (!context.release || !context.activeTaskId || !["task", "build"].includes(context.route)) throw new Error("Build comparison is available only on a named task route");
-      const value = inputObject(input, ["buildIds", "harnesses", "models", "efforts", "check", "stage", "limit", "cursor", "buildLimit", "buildCursor", "checkIds", "evidenceBuildIds"], "task Build comparison");
+      const value = inputObject(input, ["buildIds", "harnesses", "models", "efforts", "check", "stage", "limit", "cursor", "buildLimit", "buildCursor", "includeBuildDetails", "checkIds", "evidenceBuildIds"], "task Build comparison");
       const current = context.benchmarkController.task.state;
       const requestedBuildIds = stringArray(value.buildIds, "buildIds");
       const taskBuildIds = new Set(context.release.builds.filter((build) => build.taskId === context.activeTaskId).map((build) => build.id));
       if (requestedBuildIds?.some((buildId) => !taskBuildIds.has(buildId))) throw new Error("buildIds must belong to the active public task");
       let nextCheck = current.check;
       if (value.check !== undefined) {
-        const check = inputObject(value.check, ["categories", "groups", "outcomes", "blockingOnly", "differencesOnly"], "check filter");
+        const check = inputObject(value.check, ["ids", "categories", "groups", "outcomes", "blockingOnly", "differencesOnly"], "check filter");
         const outcomes = stringArray(check.outcomes, "outcomes");
         const allowedOutcomes = new Set(["pass", "fail", "not_evaluated", "grader_error", "missing"]);
         if (outcomes?.some((outcome) => !allowedOutcomes.has(outcome))) throw new TypeError("invalid check outcome");
         nextCheck = {
+          ids: stringArray(check.ids, "check ids") ?? current.check.ids,
           categories: stringArray(check.categories, "categories") ?? current.check.categories,
           groups: stringArray(check.groups, "groups") ?? current.check.groups,
           outcomes: (outcomes as TaskCheckOutcome[] | undefined) ?? current.check.outcomes,
@@ -305,9 +313,10 @@ function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
       context.benchmarkController.task.setState(next);
       const requestedLimit = numberValue(value.limit, "limit") ?? 20;
       const requestedBuildLimit = numberValue(value.buildLimit, "buildLimit") ?? 20;
+      const includeBuildDetails = booleanValue(value.includeBuildDetails, "includeBuildDetails") ?? false;
       const cellBoundedLimit = Math.max(1, Math.min(requestedLimit, Math.floor(TOOL_CELL_BUDGET / requestedBuildLimit)));
       const stageValue = stringValue(value.stage, "stage");
-      if (stageValue !== undefined && !["summary", "rows", "evidence"].includes(stageValue)) throw new TypeError("invalid comparison stage");
+      if (stageValue !== undefined && !["summary", "criteria", "rows", "evidence"].includes(stageValue)) throw new TypeError("invalid comparison stage");
       const stage = stageValue as TaskComparisonPageRequest["stage"] | undefined;
       const requestedCheckIds = stringArray(value.checkIds, "checkIds");
       const knownCheckIds = new Set(context.release.builds.filter((build) => build.taskId === taskId).flatMap((build) => build.checks.map((check) => check.id)));
@@ -327,7 +336,12 @@ function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
         taskId,
         activeFilters: page.activeFilters,
         summary: page.summary,
-        builds: page.builds.map((build) => ({ buildId: build.id, configurationId: build.configurationId, name: build.name })),
+        builds: page.builds.map((build) => {
+          if (!includeBuildDetails) return { buildId: build.id, configurationId: build.configurationId, name: build.name };
+          const raw = context.release!.builds.find((candidate) => candidate.id === build.id)!;
+          return { configurationId: build.configurationId, name: build.name, ...namedBuild(context, raw) };
+        }),
+        criteria: page.criteria,
         rows: page.rows.map((row) => ({
           checkId: row.id,
           label: row.label,

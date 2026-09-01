@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { allPanesPlayable, type PaneStatus } from "../lib/artifact-frame";
+import type { BlindPaneStatus, BlindSide } from "../lib/blind-tools";
 import { revealLines, sideIndex, sideLabel } from "../lib/blind";
 import { blindPairReady as isReleaseReady, seriesOf } from "../lib/configurations";
 import { cellScoreForTrial } from "../lib/score";
 import { artifactSrc, trialsByIds } from "../lib/trials";
+import { useBlindWebMcpTools } from "../hooks/useBlindWebMcpTools";
 import type { Assignment } from "../client-types";
-import type { PublicBuild, PublicGame, PublicPlayableBuild, PublicPlayableRelease, PublicRelease } from "../public-types";
+import type { PublicBuild, PublicGame, PublicPlayableBuild, PublicPlayableRelease, PublicRelease, PublicTaskManifest } from "../public-types";
 import { ArenaIcon } from "./ArenaIcon";
 import { Stage } from "./Stage";
 import { TrialCard } from "./benchmark/TrialCard";
@@ -76,6 +78,7 @@ function ShareLink({ name, slug }: { name: string; slug: string }) {
 
 interface GameBrowserProps {
   selectedTask: PublicGame;
+  gameToolsManifest: PublicTaskManifest | null;
   /** The next unjudged game in list order after this one, or null when none remain. */
   nextTask: PublicGame | null;
   identitySeen: boolean;
@@ -98,6 +101,7 @@ interface GameBrowserProps {
 
 export function GameBrowser({
   selectedTask,
+  gameToolsManifest,
   nextTask,
   identitySeen,
   onOpenStage,
@@ -159,9 +163,23 @@ export function GameBrowser({
     )).filter((trial): trial is PublicBuild => Boolean(trial));
   }, [choice, revealRelease, trials]);
 
-  const showSide = (index: number) => {
+  const showSide = useCallback((index: number) => {
     setActiveSide(index);
-  };
+  }, []);
+
+  const blindToolContext = useMemo(() => {
+    if (!assignment || choice || trials.length !== 2) return null;
+    const statusFor = (index: number): BlindPaneStatus => paneStatus[trials[index].id] ?? "idle";
+    return {
+      taskId: selectedTask.id,
+      taskName: selectedTask.name,
+      activeSide: sideLabel(activeSide) as BlindSide,
+      blindChoiceAvailable: !identitySeen,
+      sideStatus: { A: statusFor(0), B: statusFor(1) },
+      openSide: (side: BlindSide) => showSide(side === "A" ? 0 : 1),
+    };
+  }, [activeSide, assignment, choice, identitySeen, paneStatus, selectedTask.id, selectedTask.name, showSide, trials]);
+  useBlindWebMcpTools(blindToolContext);
 
   const onPaneStatus = useCallback((id: string, status: PaneStatus) => {
     setPaneStatus((current) => (current[id] === status ? current : { ...current, [id]: status }));
@@ -235,6 +253,7 @@ export function GameBrowser({
         <div className="arena__floor">
           <Stage
             activeIndex={activeSide}
+            gameToolsManifest={gameToolsManifest ?? undefined}
             key={assignment!.id}
             onPaneStatus={onPaneStatus}
             onSelect={showSide}

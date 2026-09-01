@@ -18,7 +18,7 @@ function controller(overrides = {}) {
         harnesses: [],
         models: [],
         efforts: [],
-        check: { categories: [], groups: [], outcomes: [], blockingOnly: false, differencesOnly: false },
+        check: { ids: [], categories: [], groups: [], outcomes: [], blockingOnly: false, differencesOnly: false },
       },
       setState() {},
     },
@@ -83,7 +83,7 @@ test("task search reports Agent Play policy and open_task changes the visible ro
     maxMessageBytes: 32768,
   };
   const opened = [];
-  const tools = arenaToolDefinitions(context({ taskManifests: [manifest], openTask: (id) => opened.push(id) }));
+  const tools = arenaToolDefinitions(context({ taskManifests: [manifest], openTask: (id, view) => opened.push({ id, view }) }));
   const byName = new Map(tools.map((tool) => [tool.name, tool]));
   const tasks = (await byName.get("search_tasks").execute({ agentPlay: "supported" })).structuredContent.tasks;
   assert.equal(tasks.length, 1);
@@ -92,8 +92,8 @@ test("task search reports Agent Play policy and open_task changes the visible ro
     protocol: "arena.game.v1",
     tools: ["get_game_state", "take_game_action"],
   });
-  await byName.get("open_task").execute({ taskId });
-  assert.deepEqual(opened, [taskId]);
+  await byName.get("open_task").execute({ taskId, view: "blind" });
+  assert.deepEqual(opened, [{ id: taskId, view: "blind" }]);
 });
 
 test("Benchmark tool mutates the shared controller and returns a bounded compact page", async () => {
@@ -149,6 +149,13 @@ test("task Build tool supports arbitrary selection, staged rows and explicit exp
   assert.equal(buildPage.structuredContent.rows[0].cells.length, 2);
   assert.equal(buildPage.structuredContent.buildNextCursor, "2");
   assert.equal(Object.hasOwn(buildPage.structuredContent, "activeState"), false);
+  const criteria = await compare.execute({ stage: "criteria", limit: 2 });
+  assert.equal(criteria.structuredContent.criteria.length, 2);
+  assert.equal(criteria.structuredContent.rows.length, 0);
+  const focused = await compare.execute({ check: { ids: [criteria.structuredContent.criteria[0].checkId] }, stage: "summary", includeBuildDetails: true });
+  assert.deepEqual(visibleState.check.ids, [criteria.structuredContent.criteria[0].checkId]);
+  assert.equal(focused.structuredContent.summary.matchedChecks, 1);
+  assert.ok(focused.structuredContent.builds.every((build) => Object.hasOwn(build, "scoreEvidence") && Object.hasOwn(build, "operational")));
   const checkId = rows.structuredContent.rows[0]?.checkId;
   if (checkId) {
     const evidence = await compare.execute({ stage: "evidence", checkIds: [checkId], limit: 2 });

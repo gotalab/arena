@@ -928,6 +928,37 @@ th.board__rank { width: 34px; }
 }
 .detail__sectionrow .link-quiet { white-space: nowrap; }
 
+.evaluation-lens {
+  display: grid;
+  gap: 8px;
+  margin: clamp(18px, 2.5vw, 28px) 0 0;
+  padding: clamp(16px, 2.4vw, 24px);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--accent) 6%, var(--panel));
+}
+.evaluation-lens .eyebrow,
+.evaluation-lens h3,
+.evaluation-lens p { margin: 0; }
+.evaluation-lens h3 { font-size: var(--t-lg); letter-spacing: -0.02em; }
+.evaluation-lens p:not(.eyebrow) { color: var(--ink-2); font-size: var(--t-sm); }
+.evaluation-lens ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.evaluation-lens li {
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--panel);
+  font-size: var(--t-xs);
+}
+.evaluation-lens__jump { justify-self: start; margin-top: 2px; }
+
 /* The comparison table: one row per build, numbers aligned, play per row.
    min-width: 0 so a flex/grid ancestor cannot grow the page to the table's
    min-content width — overflow stays inside this scroller. */

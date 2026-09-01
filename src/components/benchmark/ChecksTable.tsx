@@ -14,6 +14,7 @@ const GLYPHS: Record<string, string> = {
 
 interface ChecksTableProps {
   model: TaskCheckComparison;
+  open?: boolean;
   taskName: string;
 }
 
@@ -33,7 +34,7 @@ function outcomeCounts(cells: readonly { outcome: string }[]) {
  * instead of being printed into the grid, which buried the pattern the table
  * exists to show.
  */
-export function ChecksTable({ model, taskName }: ChecksTableProps) {
+export function ChecksTable({ model, open = false, taskName }: ChecksTableProps) {
   const [openRows, setOpenRows] = useState<ReadonlySet<string>>(new Set());
   if (model.totalBeforeFilters === 0) return null;
 
@@ -52,7 +53,7 @@ export function ChecksTable({ model, taskName }: ChecksTableProps) {
   );
 
   return (
-    <details className="checks">
+    <details className="checks" open={open || undefined}>
       <summary>
         <span className="checks__title">Evaluator checks, side by side</span>
         <span className="checks__hint">

@@ -286,10 +286,10 @@
             "reported": 3
           },
           "estimatedCost": {
-            "mean": null,
-            "reported": 0
+            "mean": 0.697976,
+            "reported": 3
           },
-          "costAtListPrice": false
+          "costAtListPrice": true
         },
         "replicas": [
           {
@@ -1351,10 +1351,10 @@
             "reported": 3
           },
           "estimatedCost": {
-            "mean": null,
-            "reported": 0
+            "mean": 0.730427,
+            "reported": 3
           },
-          "costAtListPrice": false
+          "costAtListPrice": true
         },
         "replicas": [
           {
@@ -2409,10 +2409,10 @@
             "reported": 3
           },
           "estimatedCost": {
-            "mean": null,
-            "reported": 0
+            "mean": 0.634441,
+            "reported": 3
           },
-          "costAtListPrice": false
+          "costAtListPrice": true
         },
         "replicas": [
           {
@@ -3473,10 +3473,10 @@
             "reported": 3
           },
           "estimatedCost": {
-            "mean": null,
-            "reported": 0
+            "mean": 0.750504,
+            "reported": 3
           },
-          "costAtListPrice": false
+          "costAtListPrice": true
         },
         "replicas": [
           {
@@ -4523,10 +4523,10 @@
             "reported": 3
           },
           "estimatedCost": {
-            "mean": null,
-            "reported": 0
+            "mean": 0.813097,
+            "reported": 3
           },
-          "costAtListPrice": false
+          "costAtListPrice": true
         },
         "replicas": [
           {
@@ -6157,10 +6157,14 @@
           "reasoning_tokens": 29649
         },
         "totalReportedTokens": 859880,
+        "estimatedApiCost": {
+          "amount": 0.499137,
+          "currency": "USD"
+        },
         "meterSources": {
           "time": "harness wall clock",
           "tokens": "provider CLI stream",
-          "cost": "not reported"
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-09-03)"
         },
         "agentPlayEvidence": {
           "status": "not_applicable",
@@ -11199,10 +11203,14 @@
           "reasoning_tokens": 34165
         },
         "totalReportedTokens": 3653314,
+        "estimatedApiCost": {
+          "amount": 0.922960875,
+          "currency": "USD"
+        },
         "meterSources": {
           "time": "harness wall clock",
           "tokens": "provider CLI stream",
-          "cost": "not reported"
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-09-03)"
         },
         "agentPlayEvidence": {
           "status": "not_applicable",
@@ -17990,10 +17998,14 @@
           "reasoning_tokens": 27755
         },
         "totalReportedTokens": 2006399,
+        "estimatedApiCost": {
+          "amount": 0.6363931500000001,
+          "currency": "USD"
+        },
         "meterSources": {
           "time": "harness wall clock",
           "tokens": "provider CLI stream",
-          "cost": "not reported"
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-09-03)"
         },
         "agentPlayEvidence": {
           "status": "not_applicable",
@@ -22193,10 +22205,14 @@
           "reasoning_tokens": 36333
         },
         "totalReportedTokens": 2739942,
+        "estimatedApiCost": {
+          "amount": 0.7986426750000001,
+          "currency": "USD"
+        },
         "meterSources": {
           "time": "harness wall clock",
           "tokens": "provider CLI stream",
-          "cost": "not reported"
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-09-03)"
         },
         "agentPlayEvidence": {
           "status": "not_evaluated",
@@ -25980,10 +25996,14 @@
           "reasoning_tokens": 43429
         },
         "totalReportedTokens": 2291897,
+        "estimatedApiCost": {
+          "amount": 0.773109975,
+          "currency": "USD"
+        },
         "meterSources": {
           "time": "harness wall clock",
           "tokens": "provider CLI stream",
-          "cost": "not reported"
+          "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-09-03)"
         },
         "agentPlayEvidence": {
           "status": "not_evaluated",

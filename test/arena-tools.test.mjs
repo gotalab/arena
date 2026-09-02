@@ -101,6 +101,35 @@ test("task search reports Agent Play policy and open_task changes the visible ro
   assert.deepEqual(opened, [{ id: taskId, view: "blind" }]);
 });
 
+test("open_task starts a review only from 2 to 4 playable Builds selected on the active task", async () => {
+  const task = bundle.catalog.find((candidate) => bundle.release.builds.filter((build) => build.taskId === candidate.id && build.playability === "playable").length >= 2);
+  assert.ok(task);
+  const builds = bundle.release.builds.filter((build) => build.taskId === task.id && build.playability === "playable").slice(0, 2);
+  const opened = [];
+  const benchmarkController = controller();
+  benchmarkController.task.state = { ...benchmarkController.task.state, buildIds: builds.map((build) => build.id) };
+  const tools = arenaToolDefinitions(context({
+    route: "task",
+    activeTaskId: task.id,
+    identityAvailable: true,
+    release: bundle.release,
+    benchmarkController,
+    openTask: (id, view) => opened.push({ id, view }),
+  }));
+  await tools.find((tool) => tool.name === "open_task").execute({ taskId: task.id, view: "review" });
+  assert.deepEqual(opened, [{ id: task.id, view: "review" }]);
+
+  benchmarkController.task.state = { ...benchmarkController.task.state, buildIds: builds.slice(0, 1).map((build) => build.id) };
+  assert.throws(
+    () => tools.find((tool) => tool.name === "open_task").execute({ taskId: task.id, view: "review" }),
+    /requires 2 to 4 Builds/,
+  );
+  assert.throws(
+    () => tools.find((tool) => tool.name === "open_task").execute({ taskId: bundle.catalog.find((candidate) => candidate.id !== task.id).id, view: "review" }),
+    /active named task results/,
+  );
+});
+
 test("Benchmark tool mutates the shared controller and returns a bounded compact page", async () => {
   let visibleState = null;
   const benchmarkController = controller();

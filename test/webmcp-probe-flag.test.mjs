@@ -24,12 +24,12 @@ test("production WebMCP probe is a declared content-addressed Artifact", () => {
   assert.match(component, /artifactOrigin\(\).*probeContract\.treeSha256/s);
 });
 
-test("normal named and Blind game stages receive the task-owned manifest", () => {
+test("normal named, Blind and selected-review game stages receive the task-owned manifest", () => {
   const app = readFileSync(resolve(import.meta.dirname, "../src/App.tsx"), "utf8");
   const detail = readFileSync(resolve(import.meta.dirname, "../src/components/benchmark/GameDetail.tsx"), "utf8");
   const blind = readFileSync(resolve(import.meta.dirname, "../src/components/GameBrowser.tsx"), "utf8");
   assert.match(app, /taskManifests\.find\(\(manifest\) => manifest\.taskId === slugTask\?\.id\)/);
-  assert.equal((app.match(/gameToolsManifest=\{slugTaskManifest\}/g) ?? []).length, 2);
+  assert.equal((app.match(/gameToolsManifest=\{slugTaskManifest\}/g) ?? []).length, 3);
   assert.match(detail, /<Stage[\s\S]*gameToolsManifest=\{gameToolsManifest \?\? undefined\}/);
   assert.match(blind, /<Stage[\s\S]*gameToolsManifest=\{gameToolsManifest \?\? undefined\}/);
 });

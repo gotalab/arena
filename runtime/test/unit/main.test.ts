@@ -255,6 +255,7 @@ test("task paths carry the task's own metadata", () => {
   assert.equal(routeMeta("/benchmark").title, "Benchmark · Playable Arena");
   assert.equal(routeMeta("/task/delve").title, "DELVE · Playable Arena");
   assert.equal(routeMeta("/task/delve/compare").title, "DELVE blind comparison · Playable Arena");
+  assert.equal(routeMeta("/task/delve/review").title, "DELVE selected review · Playable Arena");
   assert.equal(routeMeta("/task/delve/build/0123456789ab").title, "DELVE · Playable Arena");
   assert.equal(routeMeta("/task/../etc").title, "Not found · Playable Arena");
 });
@@ -284,6 +285,7 @@ test("known HTML routes get their own absolute canonical", () => {
   assert.equal(canonicalHref("/play", origin), `${origin}/play`);
   assert.equal(canonicalHref("/task/delve/", origin), `${origin}/task/delve`);
   assert.equal(canonicalHref("/task/delve/compare", origin), `${origin}/task/delve/compare`);
+  assert.equal(canonicalHref("/task/delve/review", origin), `${origin}/task/delve/review`);
   assert.equal(canonicalHref("/task/delve/build/0123456789ab", origin), `${origin}/task/delve/build/0123456789ab`);
   assert.equal(canonicalHref("/about", origin), null);
   assert.equal(canonicalHref("/method", origin), `${origin}/method`);

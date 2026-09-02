@@ -5,6 +5,7 @@ import { GitHubMark } from "./components/GitHubMark";
 import { HomeView } from "./components/HomeView";
 import { MethodView } from "./components/MethodView";
 import { PlayList } from "./components/PlayList";
+import { SelectedReview } from "./components/SelectedReview";
 import { TaskIntro } from "./components/TaskIntro";
 import { WebMcpProbe } from "./components/WebMcpProbe";
 import { GameDetail } from "./components/benchmark/GameDetail";
@@ -22,8 +23,9 @@ import {
   type BenchmarkOverviewState,
 } from "./lib/benchmark-view";
 import { configurationParts } from "./lib/configurations";
+import { checkLabel } from "./lib/format";
 import { knownHtmlPath } from "./lib/match-path";
-import { buildBySlug, buildSlug, comparePath, taskPath } from "./lib/paths";
+import { buildBySlug, buildSlug, comparePath, reviewPath, taskPath } from "./lib/paths";
 import {
   normalizeTaskComparisonState,
   parseTaskComparisonSearchParams,
@@ -51,6 +53,7 @@ function locationPath(location: Location): string {
   if (location.route === "home") return "/";
   if (location.route === "task" && location.slug) return taskPath(location.slug);
   if (location.route === "compare" && location.slug) return comparePath(location.slug);
+  if (location.route === "review" && location.slug) return reviewPath(location.slug);
   if (location.route === "build" && location.slug && location.buildSlug) {
     return `${taskPath(location.slug)}/build/${location.buildSlug}`;
   }
@@ -75,6 +78,7 @@ function readLocation(): Location {
   }
   const route = segments.length === 2 ? "task"
     : segments[2] === "compare" && segments.length === 3 ? "compare"
+    : segments[2] === "review" && segments.length === 3 ? "review"
     : segments[2] === "build" && segments.length === 4 ? "build"
     : "not-found";
   const location = {
@@ -146,6 +150,7 @@ export function App() {
   );
   const needsNamedRelease = route === "benchmark"
     || route === "build"
+    || route === "review"
     || (route === "task" && slugTask != null && Boolean(comparison.previews[slugTask.id] || comparison.choices[slugTask.id]))
     || (route === "compare" && slugTask != null && Boolean(comparison.choices[slugTask.id]));
 
@@ -164,7 +169,7 @@ export function App() {
   }, [historyRevision, namedRelease, route]);
 
   useEffect(() => {
-    if (!["task", "build"].includes(route) || !namedRelease || !slugTask) return;
+    if (!["task", "build", "review"].includes(route) || !namedRelease || !slugTask) return;
     setTaskComparisonState(parseTaskComparisonSearchParams(window.location.search, namedRelease, slugTask.id));
   }, [historyRevision, namedRelease, route, slugTask]);
 
@@ -205,6 +210,7 @@ export function App() {
       : route === "not-found" ? "Not found"
       : route === "build" && slugTask && buildName ? `${slugTask.name} by ${buildName}`
       : route === "compare" && slugTask ? `${slugTask.name} blind comparison`
+      : route === "review" && slugTask ? `${slugTask.name} selected review`
       : slugTask?.name ?? "Play";
     document.title = page === "Playable Arena" ? page : `${page} · Playable Arena`;
   }, [route, slugTask, namedBuild, namedRelease]);
@@ -218,8 +224,8 @@ export function App() {
       slug,
       buildSlug: trial ? buildSlug(trial) : null,
     };
-    const preserveTaskSearch = ["task", "build"].includes(route)
-      && ["task", "build"].includes(location.route)
+    const preserveTaskSearch = ["task", "build", "review"].includes(route)
+      && ["task", "build", "review"].includes(location.route)
       && location.slug === slug;
     window.history.pushState(null, "", `${locationPath(target)}${preserveTaskSearch ? window.location.search : ""}`);
     setLocation(target);
@@ -240,7 +246,7 @@ export function App() {
     || (route === "task" && slugTask && (comparison.previews[slugTask.id] || comparison.choices[slugTask.id]))
     || (route === "compare" && slugTask && comparison.choices[slugTask.id])
   ));
-  const activeToolTaskId = ["task", "build", "compare"].includes(route) ? slugTask?.id ?? null : null;
+  const activeToolTaskId = ["task", "build", "compare", "review"].includes(route) ? slugTask?.id ?? null : null;
   const visibleToolState = route === "benchmark" ? benchmarkState : ["task", "build"].includes(route) ? taskComparisonState : null;
   const toolAuthorizationKey = `${webMcpProbe ? "probe" : route}:${activeToolTaskId ?? "all"}:${identityAvailable}:${namedRelease?.releaseId ?? ""}:${JSON.stringify(visibleToolState)}`;
   const toolAuthorizationRef = useRef(toolAuthorizationKey);
@@ -257,7 +263,7 @@ export function App() {
     taskManifests,
     release: namedRelease,
     benchmarkController,
-    openTask: (taskId: string, view: "results" | "blind") => navigate(view === "blind" ? "compare" : "task", taskId),
+    openTask: (taskId: string, view: "results" | "blind" | "review") => navigate(view === "blind" ? "compare" : view === "review" ? "review" : "task", taskId),
     openBuild: (taskId: string, buildId: string) => {
       const build = namedRelease?.builds.find((candidate) => candidate.id === buildId && candidate.taskId === taskId);
       if (!build) throw new Error("public build not found");
@@ -390,6 +396,40 @@ export function App() {
             task={slugTask}
           />
         )}
+        {route === "review" && slugTask && namedRelease && (() => {
+          const selectedBuilds = taskComparisonState.buildIds
+            .map((buildId) => namedRelease.builds.find((build) => build.id === buildId && build.taskId === slugTask.id))
+            .filter((build): build is PublicBuild => Boolean(build && build.playability === "playable"));
+          const validSelection = selectedBuilds.length === taskComparisonState.buildIds.length
+            && selectedBuilds.length >= 2
+            && selectedBuilds.length <= 4;
+          if (!validSelection) {
+            return (
+              <section className="doc" aria-labelledby="review-recovery-heading">
+                <p className="doc__eyebrow">Selected review</p>
+                <h1 className="doc__title" id="review-recovery-heading">Choose 2–4 playable Builds first</h1>
+                <p className="doc__lede">Return to the task results, select a shortlist, then ask WebMCP to open the review.</p>
+                <button className="btn-primary btn-primary--inline" onClick={() => navigate("task", slugTask.id)} type="button">Back to {slugTask.name} results</button>
+              </section>
+            );
+          }
+          const checks = new Map(namedRelease.builds
+            .filter((build) => build.taskId === slugTask.id)
+            .flatMap((build) => build.checks.map((check) => [check.id, checkLabel(check)] as const)));
+          const selectedCriteria = taskComparisonState.check.ids.map((id) => checks.get(id) ?? checkLabel(id));
+          const totalBuilds = namedRelease.builds.filter((build) => build.taskId === slugTask.id).length;
+          return (
+            <SelectedReview
+              builds={selectedBuilds}
+              gameToolsManifest={slugTaskManifest}
+              onClose={() => navigate("task", slugTask.id)}
+              release={namedRelease}
+              selectedCriteria={selectedCriteria}
+              task={slugTask}
+              totalBuilds={totalBuilds}
+            />
+          );
+        })()}
         {route === "benchmark" && namedRelease && (
           <ResultsView
             onOpenGame={openTask}

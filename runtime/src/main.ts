@@ -193,12 +193,16 @@ export function routeMeta(pathname: string): RouteMeta {
   if (path === "/") return HOME_META;
   const exact = ROUTE_META[path];
   if (exact) return exact;
-  const task = /^\/task\/([a-z0-9-]{1,32})(?:\/(compare)|\/build\/[a-f0-9]{12})?$/.exec(path);
+  const task = /^\/task\/([a-z0-9-]{1,32})(?:\/(compare|review)|\/build\/[a-f0-9]{12})?$/.exec(path);
   if (task) {
     const name = task[1].toUpperCase();
-    return task[2]
-      ? { title: `${name} blind comparison · Playable Arena`, description: "Play two builds without names, then choose which one you would keep playing." }
-      : { title: `${name} · Playable Arena`, description: `Play ${name} builds and inspect the benchmark evidence.` };
+    if (task[2] === "compare") {
+      return { title: `${name} blind comparison · Playable Arena`, description: "Play two builds without names, then choose which one you would keep playing." };
+    }
+    if (task[2] === "review") {
+      return { title: `${name} selected review · Playable Arena`, description: `Review the ${name} builds selected from detailed benchmark evidence, then make your own choice.` };
+    }
+    return { title: `${name} · Playable Arena`, description: `Play ${name} builds and inspect the benchmark evidence.` };
   }
   return NOT_FOUND_META;
 }

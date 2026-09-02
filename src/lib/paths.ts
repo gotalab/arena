@@ -8,6 +8,10 @@ export function comparePath(slug: string): string {
   return `${taskPath(slug)}/compare`;
 }
 
+export function reviewPath(slug: string): string {
+  return `${taskPath(slug)}/review`;
+}
+
 /** A stable, neutral public name for one published showcase build. */
 export function buildSlug(trial: Trial): string {
   return trial.artifact.sha256.slice(0, 12);

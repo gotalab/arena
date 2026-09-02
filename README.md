@@ -6,7 +6,9 @@ seeing who made them, and play them in the browser.
 
 WebMCP gives agents a structured way to explore the same Arena. An agent can
 find tasks and builds, compare evidence, and use game controls when the active
-build exposes a trusted Agent Play contract.
+build exposes a trusted Agent Play contract. It can also hand a 2–4 Build
+shortlist to an anonymous human review: the person plays first, chooses in the
+UI, and only then sees names and published scores.
 
 **[Open Playable Arena](https://arena.gotalab.dev)**
 
@@ -31,6 +33,8 @@ an interface is understandable, satisfying, or right for a particular use.
 - **Compare:** open an anonymous pair made from the same brief, try both, then
   reveal who made them.
 - **Play:** interact with the real generated games in isolated frames.
+- **Review a shortlist:** let an Agent narrow the detailed evidence, then make
+  the final anonymous choice yourself before identities are revealed.
 - **Use an agent:** let an agent search Arena through WebMCP instead of
   guessing its way through the visual interface.
 
@@ -42,13 +46,21 @@ Open the live app in ChatGPT's in-app browser. You can ask things like:
 - “Filter the Benchmark to GPT-5.6 Sol.”
 - “Open EMBER and compare these Builds.”
 - “Show only the failed checks and explain the published evidence.”
+- “Choose four playable LUMEN YARD Builds for these criteria, then open an
+  anonymous review for me.”
 
 The tools follow the page you are on:
 
 - Home and Play expose `search_tasks` and `open_task`.
 - Benchmark adds `filter_benchmark_results` and `open_build`.
 - A named task adds `compare_task_builds` and `open_build`.
+- A named task can open an Agent-selected anonymous review after exactly 2–4
+  playable Builds are selected.
 - Blind comparison hides builder identity until reveal.
+- Selected review exposes `get_selected_review` and
+  `open_review_candidate`; it never exposes a tool that makes the human choice.
+  After the person chooses in the UI, `get_selected_review_result` becomes
+  available with the revealed identities and scores.
 - Game controls appear only after the active frame completes the trusted
   `arena.game.v1` handshake.
 
@@ -65,7 +77,7 @@ multiple coding-agent configurations
       ↓
 playable builds + evaluation evidence
       ↓
-benchmark exploration, blind comparison, and WebMCP tools
+benchmark exploration, Agent-selected review, blind comparison, and WebMCP tools
 ```
 
 The published games run inside opaque-origin frames with

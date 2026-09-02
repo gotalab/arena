@@ -43,6 +43,8 @@ interface StageProps {
   presentation?: TaskPresentation;
   /** Optional trusted contract for the active frame. Generated HTML never supplies this. */
   gameToolsManifest?: PublicGameTaskManifest;
+  /** Accessible name for a multi-pane switcher. */
+  tablistLabel?: string;
 }
 
 export type { PaneStatus };
@@ -222,7 +224,7 @@ function Frame({ pane, active, onStatus, onReadyFocus, onRetry, onFrameElement }
 
 const DEFAULT_VIEWPORT = { width: 390, height: 780 } as const;
 
-export function Stage({ panes, activeIndex, onSelect, barLabel, barExtra, onPaneStatus, presentation, gameToolsManifest }: StageProps) {
+export function Stage({ panes, activeIndex, onSelect, barLabel, barExtra, onPaneStatus, presentation, gameToolsManifest, tablistLabel = "A or B" }: StageProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const [fullscreenMode, setFullscreenMode] = useState<"none" | "native" | "viewport">("none");
@@ -362,7 +364,7 @@ export function Stage({ panes, activeIndex, onSelect, barLabel, barExtra, onPane
     >
       <div className="deck__bar">
         {panes.length > 1 ? (
-          <div aria-label="A or B" className="tabs deck__switch" role="tablist">
+          <div aria-label={tablistLabel} className="tabs deck__switch" role="tablist">
             {panes.map((pane, index) => (
               <button
                 aria-controls={`stage-panel-${index}`}

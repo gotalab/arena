@@ -8,6 +8,8 @@ interface TrialCardProps {
   buildLabel?: string;
   compact?: boolean;
   preferred?: boolean;
+  /** Keep the configuration name visible when a review card also carries the pick badge. */
+  showIdentityWhenPreferred?: boolean;
   /**
    * The published score of the cell this build showcases — the mean over its
    * replicas. Without it the card falls back to this one run's own share,
@@ -28,9 +30,9 @@ interface TrialCardProps {
  * checks table and the sealed records, not on the card. Full on the Benchmark
  * pair, compact on the Play reveal (side letters are blind-flow vocabulary).
  */
-export function TrialCard({ buildLabel, compact = false, preferred = false, score = null, series, trial }: TrialCardProps) {
+export function TrialCard({ buildLabel, compact = false, preferred = false, showIdentityWhenPreferred = false, score = null, series, trial }: TrialCardProps) {
   const summary = trialSummary(trial);
-  const namedAbove = compact && preferred;
+  const namedAbove = compact && preferred && !showIdentityWhenPreferred;
   // The run card is an evidence surface, so a blocked build says WHY it
   // rated 0 (ADR 0015): the blocking failure is named before the number.
   const gateFailed = Boolean(score) && !score!.gatesPassed;

@@ -289,6 +289,65 @@ kbd {
   border-radius: var(--r-md);
 }
 
+/* Agent-selected review — evidence narrows the field, play stays anonymous,
+   and the human's choice remains visibly separate from the public record. */
+.review__eyebrow,
+.review__selection {
+  margin: 0;
+  color: var(--ink-2);
+  font: 700 var(--t-xs) / 1.4 var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.review__selection { text-align: right; }
+.review__brief {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.8fr);
+  gap: 16px 32px;
+  align-items: start;
+  margin-top: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--panel);
+}
+.review__brief p { margin: 0; max-width: 58ch; color: var(--ink-2); }
+.review__brief ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.review__brief li {
+  padding: 5px 8px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  font-size: var(--t-sm);
+  line-height: 1.25;
+}
+.review__criteria-empty { font-size: var(--t-sm); }
+.review__options { grid-template-columns: minmax(0, 1fr) minmax(0, 0.65fr); max-width: 720px; }
+.review__cards { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.review__cards .cfg-name { flex-wrap: wrap; max-width: 100%; white-space: normal; }
+.review__cards .cfg-name__part { flex: 1 1 auto; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+.review__cards .run--compact.is-preferred .run__id { padding-top: 0; }
+.review__provenance {
+  margin: 24px 0 0;
+  padding: 14px 16px;
+  border-left: 3px solid var(--ink);
+  color: var(--ink-2);
+  background: var(--panel);
+}
+
+@media (max-width: 720px) {
+  .arena--review .arena__bar { grid-template-columns: auto minmax(0, 1fr); }
+  .arena--review .review__selection { grid-column: 2; text-align: left; }
+  .review__brief { grid-template-columns: 1fr; }
+  .review__options { grid-template-columns: 1fr; }
+}
+
 /* Both panes stay mounted: switching sides must never reload a sandboxed build
    and throw away the reader's run. */
 .deck { display: grid; gap: 10px; }

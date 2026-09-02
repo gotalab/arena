@@ -2,7 +2,7 @@
 
 Arena existed before the WebMCP Challenge as a private benchmark that gave multiple coding-agent configurations the same game brief, measured their builds, and let people compare playable results blind. The submitted public repository is a clean product export rather than a rewrite of that private history.
 
-Work added during the August 25–September 3, 2026 submission period includes the clean public/evaluation repository boundary, route-scoped WebMCP exploration tools, the isolated `arena.game.v1` broker and probe, Agent Play capability evidence, public schemas and leak scanners, and the complete public Worker/D1 runtime. The clean export and all subsequent commits together carry this challenge delta relative to the attested private baseline.
+Work added during the August 25–September 3, 2026 submission period includes the clean public/evaluation repository boundary, route-scoped WebMCP exploration tools, the isolated `arena.game.v1` broker and probe, Agent Play capability evidence, an Agent-selected anonymous human review that reveals identities only after a UI choice, public schemas and leak scanners, and the complete public Worker/D1 runtime. The clean export and all subsequent commits together carry this challenge delta relative to the attested private baseline.
 
 The private baseline identifiers below prove the cutoff without publishing the private tree. Its timestamp is August 25 at 3:42 a.m. Pacific, before the August 25 at 11:00 a.m. Pacific submission start. Before publication, the product history was consolidated to remove production identifiers. Inspect the clean export with `git show 646f9164` and its subsequent attestations with `git log 646f9164..HEAD`.
 

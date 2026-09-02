@@ -10,7 +10,7 @@ import {
   type TaskCheckOutcome,
 } from "./task-comparison";
 
-export type ArenaToolRoute = "home" | "play" | "benchmark" | "task" | "build" | "compare" | "method" | "not-found";
+export type ArenaToolRoute = "home" | "play" | "benchmark" | "task" | "build" | "compare" | "review" | "method" | "not-found";
 
 export interface ArenaToolContext {
   route: ArenaToolRoute;
@@ -20,7 +20,7 @@ export interface ArenaToolContext {
   taskManifests: PublicTaskManifest[];
   release: PublicRelease | null;
   benchmarkController: ArenaBenchmarkController;
-  openTask: (taskId: string, view: "results" | "blind") => void;
+  openTask: (taskId: string, view: "results" | "blind" | "review") => void;
   openBuild: (taskId: string, buildId: string) => void;
   authorized: () => boolean;
 }
@@ -159,7 +159,7 @@ function openTaskTool(context: ArenaToolContext): WebMcpTool {
     description: "Open one Arena task so its game and, when allowed, its named Build results are visible.",
     inputSchema: {
       type: "object",
-      properties: { taskId: { type: "string" }, view: { enum: ["results", "blind"] } },
+      properties: { taskId: { type: "string" }, view: { enum: ["results", "blind", "review"] } },
       required: ["taskId"],
       additionalProperties: false,
     },
@@ -170,7 +170,18 @@ function openTaskTool(context: ArenaToolContext): WebMcpTool {
       const taskId = stringValue(value.taskId, "taskId");
       if (!taskId || !context.games.some((game) => game.id === taskId)) throw new Error("public task not found");
       const view = stringValue(value.view, "view") ?? "results";
-      if (view !== "results" && view !== "blind") throw new TypeError("view must be results or blind");
+      if (view !== "results" && view !== "blind" && view !== "review") throw new TypeError("view must be results, blind or review");
+      if (view === "review") {
+        if (!context.release || !["task", "build"].includes(context.route) || context.activeTaskId !== taskId) {
+          throw new Error("selected review must start from the active named task results");
+        }
+        const selected = context.benchmarkController.task.state.buildIds;
+        if (selected.length < 2 || selected.length > 4) throw new Error("selected review requires 2 to 4 Builds");
+        const builds = selected.map((buildId) => context.release!.builds.find((build) => build.id === buildId));
+        if (builds.some((build) => !build || build.taskId !== taskId || build.playability !== "playable")) {
+          throw new Error("selected review requires playable Builds from the active task");
+        }
+      }
       context.openTask(taskId, view);
       return result({ accepted: true, taskId, view });
     },

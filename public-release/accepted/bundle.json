@@ -561,10 +561,10 @@
         "configurationId": "cursor-agent-auto-default",
         "showcaseBuildId": "build_4d2d87b8d0db776a4c4c",
         "score": {
-          "mean": 0.267857,
-          "ciHalfWidth": 3.403391,
-          "n": 2,
-          "replicasCounted": 2,
+          "mean": 0.178571,
+          "ciHalfWidth": 0.768392,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": false,
@@ -933,10 +933,10 @@
         "configurationId": "opencode-deepseek-v4-flash-high",
         "showcaseBuildId": "build_9ba366975958695a1f5d",
         "score": {
-          "mean": 0.803572,
-          "ciHalfWidth": 0.226897,
-          "n": 2,
-          "replicasCounted": 2,
+          "mean": 0.535714,
+          "ciHalfWidth": 1.153443,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": true,
@@ -1549,10 +1549,10 @@
         "configurationId": "cursor-agent-auto-default",
         "showcaseBuildId": "build_b028a5ceeb435adba1b0",
         "score": {
-          "mean": 0.364584,
-          "ciHalfWidth": 4.632398,
-          "n": 2,
-          "replicasCounted": 2,
+          "mean": 0.243056,
+          "ciHalfWidth": 1.045869,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": false,
@@ -1777,10 +1777,10 @@
         "configurationId": "cursor-agent-cursor-grok-4.6-high",
         "showcaseBuildId": "build_3345396e6ba1209b0f12",
         "score": {
-          "mean": 0.78125,
-          "ciHalfWidth": 0.397063,
-          "n": 2,
-          "replicasCounted": 2,
+          "mean": 0.520833,
+          "ciHalfWidth": 1.123259,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": true,
@@ -1839,10 +1839,10 @@
         "configurationId": "cursor-agent-claude-opus-5-thinking-high",
         "showcaseBuildId": "build_9729d2983b39d88d8a93",
         "score": {
-          "mean": 0.875,
-          "ciHalfWidth": 0.264704,
-          "n": 2,
-          "replicasCounted": 2,
+          "mean": 0.583333,
+          "ciHalfWidth": 1.256108,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": true,
@@ -2521,8 +2521,8 @@
         "score": {
           "mean": 0,
           "ciHalfWidth": 0,
-          "n": 2,
-          "replicasCounted": 2,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": false,
@@ -2663,10 +2663,10 @@
         "configurationId": "cursor-agent-gpt-5.6-sol-medium",
         "showcaseBuildId": "build_f7760f27007969e43af1",
         "score": {
-          "mean": 0.851852,
-          "ciHalfWidth": 0.941184,
-          "n": 2,
-          "replicasCounted": 2,
+          "mean": 0.666667,
+          "ciHalfWidth": 0.718478,
+          "n": 4,
+          "replicasCounted": 4,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": true,
@@ -2674,18 +2674,18 @@
           "gateUnverified": []
         },
         "operational": {
-          "runs": 2,
+          "runs": 3,
           "time": {
-            "mean": 458.280649,
-            "reported": 2
+            "mean": 456.802323,
+            "reported": 3
           },
           "tokens": {
-            "mean": 1403306,
-            "reported": 2
+            "mean": 1602096,
+            "reported": 3
           },
           "estimatedCost": {
-            "mean": 1.189884,
-            "reported": 2
+            "mean": 1.330699,
+            "reported": 3
           },
           "costAtListPrice": true
         },
@@ -2717,6 +2717,20 @@
             "gatesPassed": true,
             "gateFailures": [],
             "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 4,
+            "showcase": false,
+            "rate": 0.962963,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 27,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
           }
         ]
       },
@@ -2725,10 +2739,10 @@
         "configurationId": "cursor-agent-cursor-grok-4.6-high",
         "showcaseBuildId": "build_4b8affd7ce80ace6e003",
         "score": {
-          "mean": 0.444445,
-          "ciHalfWidth": 5.647112,
-          "n": 2,
-          "replicasCounted": 2,
+          "mean": 0.296296,
+          "ciHalfWidth": 1.274963,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": false,
@@ -2793,10 +2807,10 @@
         "configurationId": "cursor-agent-claude-opus-5-thinking-high",
         "showcaseBuildId": "build_008d03f9d18610dc8e9d",
         "score": {
-          "mean": 0.907408,
-          "ciHalfWidth": 0.235296,
-          "n": 2,
-          "replicasCounted": 2,
+          "mean": 0.604938,
+          "ciHalfWidth": 1.302338,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": true,
@@ -3499,9 +3513,9 @@
         "showcaseBuildId": "build_c826eaf63ad3867b890b",
         "score": {
           "mean": 0,
-          "ciHalfWidth": null,
-          "n": 1,
-          "replicasCounted": 1,
+          "ciHalfWidth": 0,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 2,
           "gatesPassed": false,
@@ -3792,10 +3806,10 @@
         "configurationId": "cursor-agent-claude-opus-5-thinking-high",
         "showcaseBuildId": "build_fcb8a2635dbce007c024",
         "score": {
-          "mean": 0.916667,
-          "ciHalfWidth": 0.352941,
-          "n": 2,
-          "replicasCounted": 2,
+          "mean": 0.611111,
+          "ciHalfWidth": 1.316615,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": true,
@@ -4940,10 +4954,10 @@
         "configurationId": "opencode-deepseek-v4-flash-high",
         "showcaseBuildId": "build_4a6a99759d60aa8a5948",
         "score": {
-          "mean": 0.3625,
-          "ciHalfWidth": 4.605925,
-          "n": 2,
-          "replicasCounted": 2,
+          "mean": 0.241667,
+          "ciHalfWidth": 1.039892,
+          "n": 3,
+          "replicasCounted": 3,
           "replicasNullRate": 0,
           "replicasHeldInvalid": 1,
           "gatesPassed": false,
@@ -29212,8 +29226,8 @@
       {
         "taskId": "stomp@0.7.0",
         "configurationId": "cursor-agent-gpt-5.6-sol-medium",
-        "attempted": 3,
-        "succeeded": 2
+        "attempted": 4,
+        "succeeded": 3
       },
       {
         "taskId": "stomp@0.7.0",
@@ -29319,12 +29333,6 @@
       },
       {
         "taskId": "lumenyard@0.3.0",
-        "configurationId": "opencode-glm-5.3-flash-high",
-        "attempted": 3,
-        "succeeded": 0
-      },
-      {
-        "taskId": "lumenyard@0.3.0",
         "configurationId": "pi-gpt-5.6-sol-medium",
         "attempted": 3,
         "succeeded": 3
@@ -29400,12 +29408,6 @@
         "configurationId": "opencode-deepseek-v4-flash-high",
         "attempted": 3,
         "succeeded": 2
-      },
-      {
-        "taskId": "shoal@0.2.0",
-        "configurationId": "opencode-glm-5.3-flash-high",
-        "attempted": 3,
-        "succeeded": 0
       },
       {
         "taskId": "shoal@0.2.0",

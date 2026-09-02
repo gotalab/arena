@@ -240,18 +240,6 @@
       "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
     },
     {
-      "treeSha256": "05957457b49147e39439ac1c5ba6814ceb05a6736368c125e8fd095e55119379",
-      "fileCount": 3,
-      "taskId": "shoal@0.2.0",
-      "buildId": "build_05957457b49147e39439",
-      "configurationId": "fx-gpt-5.6-sol-medium",
-      "owner": "Gota",
-      "source": "Arena-generated build selected into the sanitized public fixture",
-      "license": "MIT",
-      "redistributionAttested": true,
-      "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
-    },
-    {
       "treeSha256": "07aa613d8c2341d7138bad4bc7d0ab46ee627b9ee20c7f297309740a8f2a3bb2",
       "fileCount": 1,
       "taskId": "lumenyard@0.3.0",
@@ -305,6 +293,18 @@
       "taskId": "shoal@0.2.0",
       "buildId": "build_1539efaaecf199e61e1b",
       "configurationId": "cursor-agent-cursor-grok-4.6-high",
+      "owner": "Gota",
+      "source": "Arena-generated build selected into the sanitized public fixture",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "170117048744bf5535b79c47383a80b50dd98892fcf991c5a745d4bcce5190b5",
+      "fileCount": 4,
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_170117048744bf5535b7",
+      "configurationId": "fx-gpt-5.6-sol-medium",
       "owner": "Gota",
       "source": "Arena-generated build selected into the sanitized public fixture",
       "license": "MIT",
@@ -840,6 +840,18 @@
       "attestationBasis": "Entrant-owned agent output; README and tree state no external images, fonts, or network runtime."
     },
     {
+      "treeSha256": "d1f985e1e52413a179d07c69036b39d44b0afd280ea7e1a27753d44c2efc43a9",
+      "fileCount": 3,
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_d1f985e1e52413a179d0",
+      "configurationId": "fx-gpt-5.6-sol-medium",
+      "owner": "Gota",
+      "source": "Arena-generated build selected into the sanitized public fixture",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
       "treeSha256": "dc660935e16ebcc1776f9cbb19822c8a759815458d0ae702008da18dbc9a7dc9",
       "fileCount": 11,
       "taskId": "ember@1.3.0",
@@ -893,18 +905,6 @@
       "taskId": "ember@1.3.0",
       "buildId": "build_f57078acad34e5285b8a",
       "configurationId": "cursor-agent-cursor-grok-4.6-high",
-      "owner": "Gota",
-      "source": "Arena-generated build selected into the sanitized public fixture",
-      "license": "MIT",
-      "redistributionAttested": true,
-      "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
-    },
-    {
-      "treeSha256": "f6ad43112de49aa0211385ec8fe2a0262157fd53ee59ab4db5ec6634ebe649de",
-      "fileCount": 3,
-      "taskId": "lumenyard@0.3.0",
-      "buildId": "build_f6ad43112de49aa02113",
-      "configurationId": "fx-gpt-5.6-sol-medium",
       "owner": "Gota",
       "source": "Arena-generated build selected into the sanitized public fixture",
       "license": "MIT",
@@ -996,7 +996,7 @@
       "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
     }
   ],
-  "artifactAttestationSha256": "7ac0d0d6a8c0b6f031c3e97642285d1e41cd534af5d556348b1a840759c0db8b",
+  "artifactAttestationSha256": "0355fe4ce367a242ee7eef3824629b91e1f90a61e15c39b0b4f2715876c1e7b8",
   "artifactExternalTools": [
     {
       "package": "playwright",

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#082c38">
+  <title>SHOAL</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game" aria-label="Shoal deduction game">
+    <div class="caustics" aria-hidden="true"></div>
+    <header>
+      <div class="brand"><b>SHOAL</b><span id="pool-label">POOL 1</span></div>
+      <div class="score"><span>PEARLS</span><strong id="pearls">0</strong></div>
+    </header>
+    <section class="tide-wrap" aria-label="Tide remaining"><span>TIDE</span><div class="tide"><i id="tide-fill"></i></div><span id="tide-text">FULL</span></section>
+    <section id="pool" class="pool">
+      <div id="board" class="board" role="grid" aria-label="Shell pool"></div>
+      <div id="host" class="host" aria-hidden="true"><i class="feel"></i><i class="eye e1"></i><i class="eye e2"></i><i class="tail"></i></div>
+      <div id="ripple-layer" aria-hidden="true"></div>
+    </section>
+    <footer>
+      <div class="counter"><span class="mini-flag">◆</span><strong id="left">5</strong><small>URCHINS LEFT</small></div>
+      <div id="hint">Tap any shell. The first ripple is safe.</div>
+    </footer>
+    <div id="ceremony" class="ceremony" hidden>
+      <div class="card">
+        <p>THE WATER REMEMBERS</p><h1 id="rank">DRIFT</h1>
+        <div class="result"><div><span>PEARLS</span><b id="final-pearls">0</b></div><div><span>SESSION BEST</span><b id="best">0</b></div></div>
+        <div class="signature"><span>WIDEST RIPPLE</span><b id="ripple-stat">0 shells</b></div>
+        <div id="ladder" class="ladder"></div>
+        <button id="restart">ONE MORE TIDE</button>
+        <small>Every urchin is shown beneath the water.</small>
+      </div>
+    </div>
+  </main>
+  <script src="engine.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

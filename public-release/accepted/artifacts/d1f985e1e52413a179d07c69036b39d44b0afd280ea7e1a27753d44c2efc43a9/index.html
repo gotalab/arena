@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#07151a">
+  <title>Lumen Yard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app">
+    <header class="topbar">
+      <button id="brand" class="brand" aria-label="Open board map"><span class="brand-mark">LY</span><span><b>LUMEN YARD</b><small id="chapterLabel">OPENING RESTORATION</small></span></button>
+      <div class="top-actions">
+        <button id="mapBtn" class="icon-btn" aria-label="Open board map" title="Board map"><span aria-hidden="true">▦</span></button>
+        <button id="settingsBtn" class="icon-btn" aria-label="Open settings" title="Settings"><span aria-hidden="true">⚙</span></button>
+      </div>
+    </header>
+
+    <section class="game-shell" aria-label="Lumen Yard puzzle">
+      <div class="statusbar">
+        <div><span class="eyebrow" id="levelNumber">CIRCUIT 01</span><h1 id="levelName">FIRST LIGHT</h1></div>
+        <div class="meters" aria-live="polite">
+          <div><span>Moves</span><strong id="moves">0</strong></div>
+          <div><span>Pushes</span><strong id="pushes">0</strong></div>
+          <div><span>Power</span><strong id="power">0/1</strong></div>
+        </div>
+      </div>
+
+      <div id="yardWrap" class="yard-wrap">
+        <div class="skyline" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div id="yard" class="yard" role="application" aria-label="Power yard. Swipe or tap an adjacent tile to move."></div>
+        <div id="surge" class="surge" aria-hidden="true"></div>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        <div id="invitation" class="invitation"><span>RESTORE THE GRID</span><small>Swipe or tap beside Bolt</small></div>
+      </div>
+
+      <div class="controls">
+        <button id="undoBtn" class="control-btn" disabled><span aria-hidden="true">↶</span> Undo</button>
+        <div class="dpad" aria-label="Movement controls">
+          <button data-dir="up" aria-label="Move up">▲</button>
+          <button data-dir="left" aria-label="Move left">◀</button>
+          <button data-dir="down" aria-label="Move down">▼</button>
+          <button data-dir="right" aria-label="Move right">▶</button>
+        </div>
+        <button id="restartBtn" class="control-btn"><span aria-hidden="true">↻</span> Restart</button>
+      </div>
+      <p id="bestLine" class="best-line">No best yet — wake this circuit.</p>
+    </section>
+  </main>
+
+  <div id="scrim" class="scrim" hidden></div>
+
+  <section id="mapPanel" class="panel map-panel" role="dialog" aria-modal="true" aria-labelledby="mapTitle" hidden>
+    <div class="panel-head"><div><span class="eyebrow">YARD SCHEMATIC</span><h2 id="mapTitle">Board Map</h2></div><button class="close-btn" data-close aria-label="Close board map">×</button></div>
+    <div id="mapGrid" class="map-grid"></div>
+  </section>
+
+  <section id="settingsPanel" class="panel settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
+    <div class="panel-head"><div><span class="eyebrow">CONTROL CABINET</span><h2 id="settingsTitle">Settings</h2></div><button class="close-btn" data-close aria-label="Close settings">×</button></div>
+    <div class="setting-row"><div><b>Sound</b><small>Steps, relays and current</small></div><button id="soundToggle" role="switch" aria-checked="true">ON</button></div>
+    <div class="setting-row"><div><b>Motion</b><small>Decorative yard movement</small></div><button id="motionToggle" role="switch" aria-checked="true">ON</button></div>
+    <p class="keys">Keyboard: Arrow keys / WASD · U to undo · R to restart</p>
+  </section>
+
+  <section id="completePanel" class="panel complete-panel" role="dialog" aria-modal="true" aria-labelledby="completeTitle" hidden>
+    <div class="completion-glyph" aria-hidden="true"><span>⚡</span></div>
+    <span class="eyebrow" id="completeKicker">CIRCUIT ONLINE</span>
+    <h2 id="completeTitle">Power Restored</h2>
+    <p id="completeCopy"></p>
+    <div id="summary" class="summary" hidden></div>
+    <div class="complete-actions">
+      <button id="nextBtn" class="primary-btn">Next Circuit</button>
+      <button id="replayBtn" class="secondary-btn">Replay</button>
+      <button id="completeMapBtn" class="secondary-btn">Board Map</button>
+    </div>
+  </section>
+
+  <script src="game.js"></script>
+</body>
+</html>

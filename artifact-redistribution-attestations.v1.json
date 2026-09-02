@@ -23,9 +23,9 @@
       "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
     },
     {
-      "treeSha256": "05957457b49147e39439ac1c5ba6814ceb05a6736368c125e8fd095e55119379",
+      "treeSha256": "170117048744bf5535b79c47383a80b50dd98892fcf991c5a745d4bcce5190b5",
       "taskId": "shoal@0.2.0",
-      "buildId": "build_05957457b49147e39439",
+      "buildId": "build_170117048744bf5535b7",
       "configurationId": "fx-gpt-5.6-sol-medium",
       "license": "MIT",
       "redistributionAttested": true,
@@ -518,9 +518,9 @@
       "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
     },
     {
-      "treeSha256": "f6ad43112de49aa0211385ec8fe2a0262157fd53ee59ab4db5ec6634ebe649de",
+      "treeSha256": "d1f985e1e52413a179d07c69036b39d44b0afd280ea7e1a27753d44c2efc43a9",
       "taskId": "lumenyard@0.3.0",
-      "buildId": "build_f6ad43112de49aa02113",
+      "buildId": "build_d1f985e1e52413a179d0",
       "configurationId": "fx-gpt-5.6-sol-medium",
       "license": "MIT",
       "redistributionAttested": true,

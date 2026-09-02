@@ -1,9 +1,9 @@
 {
   "schema": "arena.runtime-d1.v1",
   "schemaSha256": "c982b27b94c623cb3c5f1792af37f635b37efbb1de594c68ccc5760a53656a00",
-  "fixtureSha256": "57b33f09277479aaf986d6705328cc41cbb89c46f0f96e5d9c1e3b60530a8c80",
+  "fixtureSha256": "bbe092145e908cd5eff16485046327a8ebd0d229b2a9e1c3bd0c6e81dcc79cce",
   "taskCount": 5,
   "artifactCount": 63,
   "assignmentCount": 732,
-  "assignmentSetSha256": "969b11ef0fbe661e978d82776654a81b7127e836397a2aff87b46f382fa6698e"
+  "assignmentSetSha256": "5c6a747e1392af520032e5a1d02289aa74e59beeff0b99487d334a30237b7511"
 }

@@ -3866,10 +3866,10 @@
       {
         "taskId": "lumenyard@0.3.0",
         "configurationId": "fx-gpt-5.6-sol-medium",
-        "showcaseBuildId": "build_f6ad43112de49aa02113",
+        "showcaseBuildId": "build_d1f985e1e52413a179d0",
         "score": {
-          "mean": 0.777778,
-          "ciHalfWidth": 0.138019,
+          "mean": 0.87037,
+          "ciHalfWidth": 0.079686,
           "n": 3,
           "replicasCounted": 3,
           "replicasNullRate": 0,
@@ -3881,27 +3881,27 @@
         "operational": {
           "runs": 3,
           "time": {
-            "mean": 197.756671,
+            "mean": 432.094447,
             "reported": 3
           },
           "tokens": {
             "mean": null,
-            "reported": 0
+            "reported": 1
           },
           "estimatedCost": {
             "mean": null,
-            "reported": 0
+            "reported": 1
           },
           "costAtListPrice": false
         },
         "replicas": [
           {
-            "buildId": "build_f6ad43112de49aa02113",
+            "buildId": "build_d1f985e1e52413a179d0",
             "replica": 1,
             "showcase": true,
-            "rate": 0.722222,
+            "rate": 0.888889,
             "countedInMean": true,
-            "passed": 13,
+            "passed": 16,
             "applicable": 18,
             "notEvaluated": 0,
             "graderErrors": 0,
@@ -3913,9 +3913,9 @@
             "buildId": null,
             "replica": 2,
             "showcase": false,
-            "rate": 0.833333,
+            "rate": 0.888889,
             "countedInMean": true,
-            "passed": 15,
+            "passed": 16,
             "applicable": 18,
             "notEvaluated": 0,
             "graderErrors": 0,
@@ -3927,9 +3927,9 @@
             "buildId": null,
             "replica": 3,
             "showcase": false,
-            "rate": 0.777778,
+            "rate": 0.833333,
             "countedInMean": true,
-            "passed": 14,
+            "passed": 15,
             "applicable": 18,
             "notEvaluated": 0,
             "graderErrors": 0,
@@ -4876,10 +4876,10 @@
       {
         "taskId": "shoal@0.2.0",
         "configurationId": "fx-gpt-5.6-sol-medium",
-        "showcaseBuildId": "build_05957457b49147e39439",
+        "showcaseBuildId": "build_170117048744bf5535b7",
         "score": {
-          "mean": 0.783333,
-          "ciHalfWidth": 0.156303,
+          "mean": 0.85,
+          "ciHalfWidth": 0.164324,
           "n": 3,
           "replicasCounted": 3,
           "replicasNullRate": 0,
@@ -4891,27 +4891,27 @@
         "operational": {
           "runs": 3,
           "time": {
-            "mean": 244.022376,
+            "mean": 191.537062,
             "reported": 3
           },
           "tokens": {
             "mean": null,
-            "reported": 0
+            "reported": 2
           },
           "estimatedCost": {
             "mean": null,
-            "reported": 0
+            "reported": 2
           },
           "costAtListPrice": false
         },
         "replicas": [
           {
-            "buildId": "build_05957457b49147e39439",
+            "buildId": "build_170117048744bf5535b7",
             "replica": 1,
             "showcase": true,
-            "rate": 0.775,
+            "rate": 0.925,
             "countedInMean": true,
-            "passed": 31,
+            "passed": 37,
             "applicable": 40,
             "notEvaluated": 0,
             "graderErrors": 0,
@@ -4923,11 +4923,11 @@
             "buildId": null,
             "replica": 2,
             "showcase": false,
-            "rate": 0.725,
+            "rate": 0.825,
             "countedInMean": true,
-            "passed": 29,
+            "passed": 33,
             "applicable": 40,
-            "notEvaluated": 3,
+            "notEvaluated": 1,
             "graderErrors": 0,
             "gatesPassed": true,
             "gateFailures": [],
@@ -4937,11 +4937,11 @@
             "buildId": null,
             "replica": 3,
             "showcase": false,
-            "rate": 0.85,
+            "rate": 0.8,
             "countedInMean": true,
-            "passed": 34,
+            "passed": 32,
             "applicable": 40,
-            "notEvaluated": 1,
+            "notEvaluated": 3,
             "graderErrors": 0,
             "gatesPassed": true,
             "gateFailures": [],
@@ -22596,24 +22596,24 @@
         }
       },
       {
-        "id": "build_f6ad43112de49aa02113",
+        "id": "build_d1f985e1e52413a179d0",
         "taskId": "lumenyard@0.3.0",
         "status": "succeeded",
         "playability": "playable",
         "artifact": {
-          "sha256": "f6ad43112de49aa0211385ec8fe2a0262157fd53ee59ab4db5ec6634ebe649de",
-          "publicBase": "/artifacts/f6ad43112de49aa0211385ec8fe2a0262157fd53ee59ab4db5ec6634ebe649de/",
-          "byteLength": 3552
+          "sha256": "d1f985e1e52413a179d07c69036b39d44b0afd280ea7e1a27753d44c2efc43a9",
+          "publicBase": "/artifacts/d1f985e1e52413a179d07c69036b39d44b0afd280ea7e1a27753d44c2efc43a9/",
+          "byteLength": 4535
         },
         "configurationId": "fx-gpt-5.6-sol-medium",
         "requirementSummary": {
-          "passed": 13,
-          "failed": 5,
+          "passed": 16,
+          "failed": 2,
           "notEvaluated": 0,
           "graderErrors": 0,
           "evaluated": 18,
           "applicable": 18,
-          "rate": 0.7222222222222222
+          "rate": 0.8888888888888888
         },
         "checks": [
           {
@@ -22748,7 +22748,8 @@
             "lane": "measured",
             "group": "Arena integration",
             "label": "Stale actions do not mutate",
-            "outcome": "fail"
+            "outcome": "pass",
+            "explanation": "stale revision 0 rejected at 1"
           },
           {
             "id": "lumenyard.twenty_levels_are_solvable",
@@ -22765,7 +22766,7 @@
             "group": "Presentation",
             "label": "The invitation is the live yard",
             "outcome": "pass",
-            "explanation": "confidence high: The opening portrait screenshot shows a finished, dim electrical-yard composition rather than symbols or a debug grid: a 7×7 framed floor with heavy dark wall tiles, faintly lit interior tiles, a readable teal maintenance robot, a distinct relay core, and a copper/orange socket. The only invitation is the concise visible button text “RESTORE THE GRID.” The remaining text is lightweight status/UI information (FIRST LIGHT, 0 MOVES, 0 PUSHES, 0/1 POWERED, Undo, Restart), not a control manual."
+            "explanation": "confidence high: The opening portrait screenshot visibly opens on the playable FIRST LIGHT yard rather than a menu: it shows a composed dark electrical board with perimeter infrastructure, a mint maintenance robot, a distinct orange relay core, and a glowing framed socket. The central in-world prompt is the concise \"RESTORE THE GRID,\" supported by a faintly energized socket and yard-like night skyline. Board status and Undo/Restart are present without replacing the yard with instructions."
           },
           {
             "id": "lumenyard.board_states_read_at_a_glance",
@@ -22774,7 +22775,7 @@
             "group": "Presentation",
             "label": "Board states read at a glance",
             "outcome": "fail",
-            "explanation": "confidence high: In opening, wrong-push, and recovered, the board entities are generally differentiated: the perimeter walls are dark riveted blocks, floor is made of recessed plain panels, the empty socket is an orange circular lattice, the relay is a square gray housing with an orange center, and the robot is a distinct turquoise circular-bodied character. The wrong-push and recovered shots also keep the moved relay and robot separately legible while the HUD remains at 0/1 powered."
+            "explanation": "confidence high: In opening, the striped wall tiles, dark floor cells, orange-bar empty socket, orange/cyan relay core, and mint robot are visually differentiated. The relay core is also visibly relocated between opening and wrong-push, then returned in recovered."
           },
           {
             "id": "lumenyard.electrical_feedback_tells_progress",
@@ -22783,7 +22784,7 @@
             "group": "Presentation",
             "label": "Electrical feedback tells progress",
             "outcome": "fail",
-            "explanation": "confidence high: In wrong-push, the live board remains readable and distinguishes the empty orange socket from the relay core; the HUD shows 2 moves, 1 push, and 0/1 powered. The complete screen provides clear Replay and Next Circuit actions."
+            "explanation": "confidence high: In wrong-push, the live board remains readable after a successful push: counters show Moves 2, Pushes 1, Power 0/1, and the relay and empty socket are visibly distinct. In complete, socket completion is marked with a lightning icon, warm highlighted control, and a “CIRCUIT ONLINE” completion treatment."
           },
           {
             "id": "lumenyard.completion_transforms_the_scene",
@@ -22791,8 +22792,8 @@
             "lane": "judged",
             "group": "Presentation",
             "label": "Chapter and final endings are distinct",
-            "outcome": "fail",
-            "explanation": "confidence high: Both provided screenshots show the same final-style modal: “YARD ONLINE,” “DAWN SEQUENCE COMPLETE,” 20/20 restored, 763 best moves, with Replay, Replay Campaign, and Board Map. The final-dawn presentation is visibly conclusive and includes the required 20/20 campaign summary."
+            "outcome": "pass",
+            "explanation": "confidence medium: The chapter screenshot presents an authored ending rather than a number-only result: it labels the moment “OPENING RESTORED” and “GRID RESTORED,” explains that “Three lines are alive” and the deeper yard awaits, and gives the large highlighted primary action “NEXT CIRCUIT,” with Replay and Board Map secondary. The dawn screenshot is visibly and narratively conclusive: “THE YARD AWAKES / DAWN SEQUENCE,” copy about every circuit singing and the first sun, a yard-crew credit, and a primary “REPLAY FIRST LIGHT” action rather than a progression action. Both screens show 20/20 restored and 763 best moves, consistent with the final campaign-complete presentation, while their headings, copy, and primary actions distinguish chapter continuation from final replay."
           },
           {
             "id": "lumenyard.campaign_shell_is_complete",
@@ -22800,8 +22801,8 @@
             "lane": "judged",
             "group": "Presentation",
             "label": "The campaign has a complete product shell",
-            "outcome": "fail",
-            "explanation": "confidence high: The screenshot supplied as the chapter state shows the final-end screen instead: “DAWN SEQUENCE COMPLETE,” “20/20 RESTORED,” 763 best moves, Replay/Replay Campaign, and Board Map. It does not show a distinct post-board-three “GRID RESTORED” chapter ending or a Continue action into split-bus. No supplied screenshot shows an opened Settings surface with explicit Sound and reduced-motion choices; the opening only shows two unlabeled circular icons. The Board Map screenshot is an opened 20-board grid at 0/20, so it also does not demonstrate completed-board bests."
+            "outcome": "pass",
+            "explanation": "confidence medium: The opening screenshot leads directly with the live FIRST LIGHT yard and a single “RESTORE THE GRID” invitation, rather than a level-menu wall. A compact grid icon opens the Board Map: its card grid marks 01 FIRST LIGHT as current and lists numbered boards with status text, while the opening surface retains visible undo, restart, and directional navigation controls. Settings is directly accessible from the gear and presents separate Sound and Motion controls, both visibly stateful (ON). The chapter screen gives a focused, prominent NEXT CIRCUIT action plus Replay and Board Map. The final DAWN SEQUENCE summary visibly reports 20/20 RESTORED and 763 BEST MOVES, credits the yard crew in its message, and offers Replay and Board Map actions. The yellow outline on NEXT CIRCUIT also provides affirmative visible focus feedback."
           },
           {
             "id": "gate.input_liveness",
@@ -22814,8 +22815,8 @@
         ],
         "replica": 1,
         "runResult": "finished",
-        "startedAt": "2026-09-01T16:55:15.898019Z",
-        "wallClockSeconds": 182.391907,
+        "startedAt": "2026-09-02T05:40:49.716442Z",
+        "wallClockSeconds": 857.44923,
         "meterSources": {
           "time": "harness wall clock",
           "tokens": "not reported",
@@ -27714,24 +27715,24 @@
         }
       },
       {
-        "id": "build_05957457b49147e39439",
+        "id": "build_170117048744bf5535b7",
         "taskId": "shoal@0.2.0",
         "status": "succeeded",
         "playability": "playable",
         "artifact": {
-          "sha256": "05957457b49147e39439ac1c5ba6814ceb05a6736368c125e8fd095e55119379",
-          "publicBase": "/artifacts/05957457b49147e39439ac1c5ba6814ceb05a6736368c125e8fd095e55119379/",
-          "byteLength": 1837
+          "sha256": "170117048744bf5535b79c47383a80b50dd98892fcf991c5a745d4bcce5190b5",
+          "publicBase": "/artifacts/170117048744bf5535b79c47383a80b50dd98892fcf991c5a745d4bcce5190b5/",
+          "byteLength": 1959
         },
         "configurationId": "fx-gpt-5.6-sol-medium",
         "requirementSummary": {
-          "passed": 31,
-          "failed": 9,
+          "passed": 37,
+          "failed": 3,
           "notEvaluated": 0,
           "graderErrors": 0,
           "evaluated": 40,
           "applicable": 40,
-          "rate": 0.775
+          "rate": 0.925
         },
         "checks": [
           {
@@ -27741,7 +27742,7 @@
             "group": "Blocking checks",
             "label": "Artifact is valid",
             "outcome": "pass",
-            "explanation": "sealed tree: 3 file(s), 26164 bytes, no external references at rest or at runtime"
+            "explanation": "sealed tree: 4 file(s), 31995 bytes, no external references at rest or at runtime"
           },
           {
             "id": "gate.loads",
@@ -27768,7 +27769,7 @@
             "group": "Platform gates",
             "label": "A tap turns a shell",
             "outcome": "pass",
-            "explanation": "a click at (47,231) changed real state (revision 1, phase playing)"
+            "explanation": "a click at (54,176) changed real state (revision 1, phase playing)"
           },
           {
             "id": "shoal.touch_gestures_drive_the_pool",
@@ -27795,7 +27796,7 @@
             "group": "Controls",
             "label": "The ceremony restarts on a tap",
             "outcome": "pass",
-            "explanation": "ceremony restart observed (click: {\"worked\":false,\"phase\":\"ended\",\"attempt\":47}, tap: {\"worked\":true,\"phase\":\"ready\"})"
+            "explanation": "ceremony restart observed (click: {\"worked\":true,\"phase\":\"ready\",\"attempt\":48}, tap: {\"worked\":true,\"phase\":\"ready\"})"
           },
           {
             "id": "shoal.ready_freezes_until_first_turn",
@@ -27822,7 +27823,7 @@
             "group": "The promise",
             "label": "The board is a function of seed and first turn",
             "outcome": "pass",
-            "explanation": "two discovery runs with the same fixed run and first turn revealed identical 8-urchin layouts despite different play, and an identical action prefix reproduced identical rows"
+            "explanation": "two discovery runs with the same fixed run and first turn revealed identical 5-urchin layouts despite different play, and an identical action prefix reproduced identical rows"
           },
           {
             "id": "shoal.numbers_tell_the_truth",
@@ -27830,8 +27831,8 @@
             "lane": "measured",
             "group": "The promise",
             "label": "Numbers tell the truth",
-            "outcome": "fail",
-            "explanation": "wrong numbers: [{\"x\":1,\"y\":2,\"shown\":1,\"actual\":0},{\"x\":2,\"y\":2,\"shown\":1,\"actual\":2},{\"x\":0,\"y\":3,\"shown\":1,\"actual\":2},{\"x\":1,\"y\":3,\"shown\":1,\"actual\":2},{\"x\":2,\"y\":3,\"shown\":0,\"actual\":3}]"
+            "outcome": "pass",
+            "explanation": "76 revealed numbers checked against the discovered layouts of pools 1 and 2, boundaries included; every one equals its adjacent urchin count"
           },
           {
             "id": "shoal.zero_ripples_the_quiet_region",
@@ -27839,8 +27840,8 @@
             "lane": "measured",
             "group": "The promise",
             "label": "A zero ripples its whole quiet region",
-            "outcome": "fail",
-            "explanation": "ripple mismatches: [{\"action\":{\"type\":\"open\",\"x\":0,\"y\":1},\"predicted\":7,\"actual\":1},{\"action\":{\"type\":\"open\",\"x\":1,\"y\":1},\"predicted\":6,\"actual\":1}]"
+            "outcome": "pass",
+            "explanation": "10 observed opens matched the predicted reveal exactly (zero region plus numbered rim, nothing else)"
           },
           {
             "id": "shoal.no_guess_from_first_turn",
@@ -27867,7 +27868,7 @@
             "group": "The promise",
             "label": "A sting ends the run on that shell",
             "outcome": "pass",
-            "explanation": "opening a known urchin ended the run in the same action: phase ended, stungAt (3,0) marked X, rank \"DRIFTWOOD\", later actions rejected"
+            "explanation": "opening a known urchin ended the run in the same action: phase ended, stungAt (2,5) marked X, rank \"DRIFT\", later actions rejected"
           },
           {
             "id": "shoal.post_mortem_tells_the_whole_truth",
@@ -27875,7 +27876,8 @@
             "lane": "measured",
             "group": "The promise",
             "label": "The post-mortem tells the whole truth",
-            "outcome": "fail"
+            "outcome": "pass",
+            "explanation": "*, X and + account for exactly the 5 urchins and match the discovered layout; + graded the right pennant, - graded the wrong one, and the played numbers stayed visible"
           },
           {
             "id": "shoal.pennant_blocks_the_turn",
@@ -27901,7 +27903,8 @@
             "lane": "measured",
             "group": "Turns and pennants",
             "label": "A sweep opens exactly the rest",
-            "outcome": "fail"
+            "outcome": "pass",
+            "explanation": "a satisfied number at (0,1) swept exactly its 1 predicted shells; an unsatisfied sweep was rejected without change"
           },
           {
             "id": "shoal.sweep_trusts_the_pennants",
@@ -27910,7 +27913,7 @@
             "group": "Turns and pennants",
             "label": "The sweep trusts the pennants completely",
             "outcome": "pass",
-            "explanation": "a sweep satisfied by a wrong pennant opened the unpennanted urchin at (3,1) and the run ended"
+            "explanation": "a sweep satisfied by a wrong pennant opened the unpennanted urchin at (1,0) and the run ended"
           },
           {
             "id": "shoal.illegal_actions_change_nothing",
@@ -27927,7 +27930,8 @@
             "lane": "measured",
             "group": "The ladder",
             "label": "Clearing a pool advances the ladder",
-            "outcome": "fail"
+            "outcome": "pass",
+            "explanation": "turning the last safe shell moved the run to pool 2: a fully covered 6x7 board, phase still playing, 65 pearls kept"
           },
           {
             "id": "shoal.ladder_escalates",
@@ -27936,7 +27940,7 @@
             "group": "The ladder",
             "label": "Each early pool is a bigger ask",
             "outcome": "pass",
-            "explanation": "urchins 6 -> 8 -> 10 strictly increase; board areas 30 -> 30 -> 42 never shrink"
+            "explanation": "urchins 5 -> 8 -> 11 strictly increase; board areas 30 -> 42 -> 56 never shrink"
           },
           {
             "id": "shoal.tide_drains_only_in_play",
@@ -27945,7 +27949,7 @@
             "group": "Tide and pearls",
             "label": "The tide drains only while its pool is played",
             "outcome": "pass",
-            "explanation": "tide 0.995 -> 0.814 -> 0.634 under advance(), frozen at 1 before a pool's first turn, floor 0 after a full drain"
+            "explanation": "tide 0.995 -> 0.837 -> 0.679 under advance(), frozen at 1 before a pool's first turn, floor 0 after a full drain"
           },
           {
             "id": "shoal.tide_never_ends_a_run",
@@ -27963,7 +27967,7 @@
             "group": "Tide and pearls",
             "label": "The tide prices hesitation",
             "outcome": "pass",
-            "explanation": "the same clear paid 76 pearls fresh and 24 after a full drain; hesitation cost the bonus, never the run"
+            "explanation": "the same clear paid 65 pearls fresh and 25 after a full drain; hesitation cost the bonus, never the run"
           },
           {
             "id": "shoal.pearls_come_from_progress",
@@ -27972,7 +27976,7 @@
             "group": "Tide and pearls",
             "label": "Pearls come from progress",
             "outcome": "pass",
-            "explanation": "4 driven opens each increased pearls; flag, unflag, and advance() paid nothing"
+            "explanation": "6 driven opens each increased pearls; flag, unflag, and advance() paid nothing"
           },
           {
             "id": "shoal.rank_is_monotone_on_the_ladder",
@@ -27981,7 +27985,7 @@
             "group": "Tide and pearls",
             "label": "The rank ladder is monotone",
             "outcome": "pass",
-            "explanation": "rankLadder is a fixed 5-grade ladder; pearls 18 -> \"DRIFTWOOD\" (index 0), pearls 341 -> \"SEA GLASS\" (index 1); an identical replay earned the identical rank"
+            "explanation": "rankLadder is a fixed 5-grade ladder; pearls 19 -> \"DRIFT\" (index 0), pearls 173 -> \"GLINT\" (index 1); an identical replay earned the identical rank"
           },
           {
             "id": "common.restart_is_complete",
@@ -28008,7 +28012,7 @@
             "group": "Runtime contract",
             "label": "Event history is ordered and bounded",
             "outcome": "pass",
-            "explanation": "history empty after reset; the first open event carried opened=18; after 261 events the list kept 240 entries with contiguous seq and valid kinds; reset restarted the numbering"
+            "explanation": "history empty after reset; the first open event carried opened=19; after 261 events the list kept 240 entries with contiguous seq and valid kinds; reset restarted the numbering"
           },
           {
             "id": "shoal.no_audio_before_first_input",
@@ -28053,7 +28057,7 @@
             "group": "Presentation",
             "label": "The board reads at a glance",
             "outcome": "pass",
-            "explanation": "confidence high: The midpool screenshot clearly separates covered shells (large tan concentric-shell discs), turned shells (mint water tiles), and pennanted shells (tan discs with prominent red pennants). Digits 0, 1, and 2 are large, high-contrast, and readily readable at the captured portrait cell size; their treatments visibly differ, with 0 muted teal, 1 blue, and 2 green. The urchin counter is immediately findable in the upper-right dark pill, showing an urchin icon and “4.”"
+            "explanation": "confidence high: The provided canonical portrait mid-pool screenshot is live play and clearly shows all required shell states on a 5-by-6 board: covered shells are large raised gold shells, turned shells are flat teal water circles containing numbers, and pennanted shells retain the gold shell but have prominent red triangular pennants. The visible digits are readable at the roughly thumb-sized cell scale: 1 is pale green, 2 is gold/orange, 3 is red, and zeroes use a distinct pale dot treatment, making the visible numeric frontier read by color as well as glyph. The public counter is readily findable at lower left as a red diamond followed by “3 URCHINS LEFT.”"
           },
           {
             "id": "shoal.title_screen_invites_not_instructs",
@@ -28062,7 +28066,7 @@
             "group": "Presentation",
             "label": "The title screen invites, not instructs",
             "outcome": "pass",
-            "explanation": "confidence high: The pre-input title screenshot shows a fully composed tide-pool game scene: a 5×5 field of illustrated shells, layered teal water/pool rings, a small orange host creature, and live status chrome. Its only instructional prose is the single short start gesture, “Tap a shell to begin.” “SHOAL” is the game name; labels such as PEARLS, TIDE, POOL 1, and the urchin count are game status chrome and do not constitute instructions."
+            "explanation": "confidence high: The pre-input title screenshot shows a composed tide-pool board: a full 5×6 shell grid, watery background, and a small creature at the lower right. Text is limited to the title “SHOAL” and one concise start hint, “Tap any shell. The first ripple is safe.” The remaining visible labels—Pool 1, Pearls 0, Tide/High, and Urchins Left 5—are live-game status chrome and do not form instructions. There is no manual, numbered list, paragraph, or text-dominated empty frame."
           },
           {
             "id": "shoal.ripple_propagates_visibly",
@@ -28071,7 +28075,7 @@
             "group": "Presentation",
             "label": "The ripple visibly propagates",
             "outcome": "fail",
-            "explanation": "confidence high: The captured sequence shows the entire eventual ripple footprint changing at once rather than expanding shell by shell. At 63 ms (ripple-00) all shells are covered; by 130 ms (ripple-01), all 18 cells that will open are already simultaneously in the same bright transitional shell state. At 257 ms (ripple-02), that complete footprint is revealed with numbers, and frames 387–938 ms (ripple-03 through ripple-07) retain that same final board. No frame shows a smaller coherent revealed area or moving water-front between the initial and complete region."
+            "explanation": "confidence high: The 19-shell reveal is already complete in ripple-01 at 295 ms: it shows 19 pearls and the full revealed water/number region. Frames ripple-02 through ripple-07 (502–1554 ms) retain the same completed board, with no partially revealed shell-by-shell state visible. ripple-00 at 135 ms is still fully covered, so the region changes from covered to final between the first two captures rather than spreading across the captured sequence."
           },
           {
             "id": "shoal.post_mortem_composes_the_lesson",
@@ -28079,8 +28083,8 @@
             "lane": "judged",
             "group": "Presentation",
             "label": "The post-mortem composes the lesson",
-            "outcome": "fail",
-            "explanation": "confidence high: In [attached capture] the central ceremony card is readable but the board behind and around it is heavily darkened/blurred. No revealed urchin is visibly readable as an urchin, and no fatal shell is visibly distinguishable from ordinary revealed urchins. Thus the post-mortem cannot serve as an honest, readable board lesson from this captured end screen."
+            "outcome": "pass",
+            "explanation": "confidence high: The postmortem screenshot shows a composed overlay while retaining the readable frozen grid behind it. The ceremony visibly presents PEARLS 19 beside SESSION BEST 173, awards the rank DRIFT, and gives the run stat WIDEST RIPPLE — 19 shells. Revealed purple urchins remain visible on the board (including a distinct highlighted/marked upper-row urchin versus the ordinary revealed urchin below), supporting both the reveal and fatal-shell distinction requirements. The overlay text also states, “Every urchin is shown beneath the water.”"
           },
           {
             "id": "shoal.host_expressions_read",
@@ -28088,8 +28092,8 @@
             "lane": "judged",
             "group": "Presentation",
             "label": "The host reacts and its states read",
-            "outcome": "pass",
-            "explanation": "confidence medium: A recognizable orange rim-dwelling host is visible at upper left in the title, pool-clear, midpool, and after-ripple screenshots. Its face is recognizably different in midpool: compared with the settled title face's small flat/smiling mouth, midpool shows a more conspicuous round open mouth, reading as a worried/held-breath reaction while the board has turned cells and two pennants. This is a contextual expression change rather than merely water motion."
+            "outcome": "fail",
+            "explanation": "confidence high: A recognisable small pink rim creature is visible at the lower right in title, pool-clear, midpool, and after-ripple. Its visible design—oval pink body, two round white eyes, and right-side appendage—appears materially the same in each of those captures. The postmortem/end-of-run screenshot instead shows the ceremony panel over the lower scene, with no visible host expression. Thus the captured moments do not show recognisably distinct creature expressions that read as reactions to rest, ripple, and run end."
           },
           {
             "id": "shoal.visual_identity_is_coherent",
@@ -28098,7 +28102,7 @@
             "group": "Presentation",
             "label": "One committed visual identity",
             "outcome": "pass",
-            "explanation": "confidence high: All four screenshots use a unified low-tide palette of deep teal water, aqua revealed shells, warm sand/peach covered shells, and restrained cream-gold type and controls. The title and after-ripple shots share the same concentric rounded shell language, arcing water-light background, compact top HUD, and small peach tide-pool host. Midpool keeps that language intact: rounded aqua number cells, coral pennants, and colored numerals read as authored game elements rather than default controls. The postmortem ceremony is a matching dark-teal rounded panel with cream typography and a warm rounded 'ONE MORE TIDE' button, visibly belonging to the same production. The screens read as a composed, cohesive illustrated game throughout."
+            "explanation": "confidence high: All four usable screenshots show a strongly unified authored tide-pool identity. The title and after-ripple screens pair deep teal water with soft looping current lines, a dark rounded pool frame, luminous turquoise opened cells, and warm gold circular shells; the small coral host and coral pennant accents belong to the same limited palette. Midpool retains that system across covered shells, aqua number cells, red pennants, pearl/tide HUD, and instructional text, with no default-styled controls. The postmortem ceremony preserves the teal, gold, coral, rounded-corner language: the DRIFT panel, stat cards, pagination dots, and ONE MORE TIDE button are visibly designed as part of the same presentation while the revealed board remains underneath."
           },
           {
             "id": "shoal.pool_transition_celebrates_progress",
@@ -28107,7 +28111,7 @@
             "group": "Presentation",
             "label": "The next pool feels like progress",
             "outcome": "pass",
-            "explanation": "confidence high: The supplied pool-clear screenshot visibly shows a fresh fully covered board labeled “POOL 2,” while a centered toast reads “Pool 1 clear +52.” Retained run progress remains explicit through “PEARLS 76,” alongside the new pool’s visible urchin count of 8 and reset tide bar. Together these make the completed pool and advancement to the next pool unmistakable."
+            "explanation": "confidence high: The pool-clear screenshot unmistakably presents a fresh covered board while labeling it \"POOL 2\" at upper left, clearly communicating advancement beyond pool 1. Retained run progress remains visible as \"PEARLS 65\" at upper right, and the bottom prompt, \"A fresh pool. Choose your first shell.\", frames this as the start of the next step rather than a silent replacement."
           },
           {
             "id": "shoal.low_tide_pressure_stays_readable",
@@ -28115,8 +28119,8 @@
             "lane": "judged",
             "group": "Presentation",
             "label": "Low tide adds pressure without hiding the proof",
-            "outcome": "fail",
-            "explanation": "confidence high: Both provided stills, \"tide-full\" and \"tide-empty,\" visually show the same large centered \"THE WATER REMEMBERS / DRIFTWOOD\" ceremony modal with Pearls 18 and Session Best 341. No discernible tide meter, low-tide color shift, or other visible urgency treatment distinguishes empty tide from full tide. The modal and heavy background blur also obscure the live board: shell numbers, covered-shell states, pennants, and the in-play counter cannot be read."
+            "outcome": "pass",
+            "explanation": "confidence high: Both required stills are present and show the same live 5-column by 6-row board. In tide-full, the TIDE bar is visibly filled in bright aqua and labeled HIGH; in tide-empty, the same bar is empty/dark and labeled LOW. The low-tide state does not add any warning overlay or alter the board: covered gold shells, opened aqua cells, and their 1, 2, and 3 values remain equally clear. PEARLS 19 and the urchins-left counter 5 remain unobscured and readable."
           },
           {
             "id": "gate.input_liveness",
@@ -28129,12 +28133,24 @@
         ],
         "replica": 1,
         "runResult": "finished",
-        "startedAt": "2026-09-01T23:06:38.456652Z",
-        "wallClockSeconds": 247.250535,
+        "startedAt": "2026-09-02T05:44:37.929779Z",
+        "wallClockSeconds": 201.934344,
+        "usage": {
+          "input_tokens": 292750,
+          "cached_input_tokens": 262418,
+          "cache_creation_input_tokens": 30296,
+          "output_tokens": 16027,
+          "reasoning_tokens": 2298
+        },
+        "totalReportedTokens": 601491,
+        "estimatedApiCost": {
+          "amount": 0.28856560000000003,
+          "currency": "USD"
+        },
         "meterSources": {
           "time": "harness wall clock",
-          "tokens": "not reported",
-          "cost": "not reported"
+          "tokens": "provider CLI stream",
+          "cost": "cli_reported"
         },
         "agentPlayEvidence": {
           "status": "not_evaluated",
@@ -30018,14 +30034,14 @@
         }
       },
       {
-        "id": "build_f6ad43112de49aa02113",
+        "id": "build_d1f985e1e52413a179d0",
         "taskId": "lumenyard@0.3.0",
         "status": "succeeded",
         "playability": "playable",
         "artifact": {
-          "sha256": "f6ad43112de49aa0211385ec8fe2a0262157fd53ee59ab4db5ec6634ebe649de",
-          "publicBase": "/artifacts/f6ad43112de49aa0211385ec8fe2a0262157fd53ee59ab4db5ec6634ebe649de/",
-          "byteLength": 3552
+          "sha256": "d1f985e1e52413a179d07c69036b39d44b0afd280ea7e1a27753d44c2efc43a9",
+          "publicBase": "/artifacts/d1f985e1e52413a179d07c69036b39d44b0afd280ea7e1a27753d44c2efc43a9/",
+          "byteLength": 4535
         }
       },
       {
@@ -30161,14 +30177,14 @@
         }
       },
       {
-        "id": "build_05957457b49147e39439",
+        "id": "build_170117048744bf5535b7",
         "taskId": "shoal@0.2.0",
         "status": "succeeded",
         "playability": "playable",
         "artifact": {
-          "sha256": "05957457b49147e39439ac1c5ba6814ceb05a6736368c125e8fd095e55119379",
-          "publicBase": "/artifacts/05957457b49147e39439ac1c5ba6814ceb05a6736368c125e8fd095e55119379/",
-          "byteLength": 1837
+          "sha256": "170117048744bf5535b79c47383a80b50dd98892fcf991c5a745d4bcce5190b5",
+          "publicBase": "/artifacts/170117048744bf5535b79c47383a80b50dd98892fcf991c5a745d4bcce5190b5/",
+          "byteLength": 1959
         }
       },
       {

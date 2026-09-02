@@ -348,11 +348,35 @@
       "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
     },
     {
+      "treeSha256": "26f3905157aaf373ef39ea938a31336916bb0b388264f612f8ba82a1dd4e1311",
+      "fileCount": 5,
+      "taskId": "ember@1.3.0",
+      "buildId": "build_26f3905157aaf373ef39",
+      "configurationId": "antigravity-gemini-3.8-flash-medium",
+      "owner": "Gota",
+      "source": "Arena-generated build selected into the sanitized public fixture",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
       "treeSha256": "2af83578ae2e77a9f3d074536c47b47d22faf4423bbe7d53d0569b4d68a41302",
       "fileCount": 3,
       "taskId": "shoal@0.2.0",
       "buildId": "build_2af83578ae2e77a9f3d0",
       "configurationId": "pi-gpt-5.6-sol-medium",
+      "owner": "Gota",
+      "source": "Arena-generated build selected into the sanitized public fixture",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "30a2b242405a4c6b88921c104f3276b75c7d89bbe9dafd2c0e29942f0fc1144f",
+      "fileCount": 13,
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_30a2b242405a4c6b8892",
+      "configurationId": "antigravity-gemini-3.8-flash-medium",
       "owner": "Gota",
       "source": "Arena-generated build selected into the sanitized public fixture",
       "license": "MIT",
@@ -612,6 +636,18 @@
       "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
     },
     {
+      "treeSha256": "807e726d4ebb2b9215eae3e6c2caff154bae4b692c3f5be266ac7bdc1163a61f",
+      "fileCount": 9,
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_807e726d4ebb2b9215ea",
+      "configurationId": "antigravity-gemini-3.8-flash-medium",
+      "owner": "Gota",
+      "source": "Arena-generated build selected into the sanitized public fixture",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
       "treeSha256": "849491d36ed74cf68921628f9e38c233be89713139b38c85cbc84cc4c6d0aa78",
       "fileCount": 1,
       "taskId": "stomp@0.7.0",
@@ -780,6 +816,18 @@
       "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
     },
     {
+      "treeSha256": "b3fe42683f915f674747ecaea23382ac19a6ee28cfc772d26d88a25cce106867",
+      "fileCount": 3,
+      "taskId": "delve@0.6.0",
+      "buildId": "build_b3fe42683f915f674747",
+      "configurationId": "antigravity-gemini-3.8-flash-medium",
+      "owner": "Gota",
+      "source": "Arena-generated build selected into the sanitized public fixture",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
       "treeSha256": "b903b0652d3150a85ce326f115e230f8d78b5e5e3ded3766683d6c5edd5329db",
       "fileCount": 1,
       "taskId": "ember@1.3.0",
@@ -845,6 +893,18 @@
       "taskId": "lumenyard@0.3.0",
       "buildId": "build_d1f985e1e52413a179d0",
       "configurationId": "fx-gpt-5.6-sol-medium",
+      "owner": "Gota",
+      "source": "Arena-generated build selected into the sanitized public fixture",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "d6677ad0eb8df550a4f8e6532d25dae006a2784a236b07c3a5c6c3c0008f62e0",
+      "fileCount": 14,
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_d6677ad0eb8df550a4f8",
+      "configurationId": "antigravity-gemini-3.8-flash-medium",
       "owner": "Gota",
       "source": "Arena-generated build selected into the sanitized public fixture",
       "license": "MIT",
@@ -996,7 +1056,7 @@
       "attestationBasis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
     }
   ],
-  "artifactAttestationSha256": "0355fe4ce367a242ee7eef3824629b91e1f90a61e15c39b0b4f2715876c1e7b8",
+  "artifactAttestationSha256": "198bd7244d438e9633d2d958abc8fa85936f2b0c851e8696790cb72b14e92089",
   "artifactExternalTools": [
     {
       "package": "playwright",

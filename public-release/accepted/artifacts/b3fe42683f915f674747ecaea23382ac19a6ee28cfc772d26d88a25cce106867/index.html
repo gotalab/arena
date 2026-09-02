@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#080a0f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>DELVE: Deep Core Descent</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <div id="viewport-wrapper">
+      <canvas id="game-canvas"></canvas>
+
+      <div id="ui-layer">
+        <!-- Top HUD -->
+        <div class="hud-top">
+          <div class="hud-pill" id="hud-depth">
+            <span class="hud-label">DEPTH</span>
+            <span class="hud-value" id="val-depth">0m</span>
+          </div>
+
+          <div class="timer-container" id="hud-timer">
+            <span class="hud-label">CHRONO-METER</span>
+            <span class="timer-value" id="val-timer">20.0s</span>
+            <div class="timer-bar-track">
+              <div class="timer-bar-fill" id="val-timer-bar"></div>
+            </div>
+          </div>
+
+          <div class="hud-pill" id="hud-speed">
+            <span class="hud-label">SPEED</span>
+            <span class="hud-value" id="val-speed">0</span>
+          </div>
+        </div>
+
+        <!-- Overdrive Banner -->
+        <div id="overdrive-banner">★ OVERDRIVE: CRUSH ROCKS ★</div>
+
+        <!-- Near Miss Streak -->
+        <div id="streak-indicator">
+          <span class="streak-text">NEAR MISS</span>
+          <span class="streak-count" id="val-streak">x1</span>
+        </div>
+
+        <!-- Start / Controls Prompt -->
+        <div id="start-prompt">
+          <div class="prompt-main">HOLD [↓] / [SPACE] OR DRAG DOWN</div>
+          <div class="prompt-sub">Dig deeper • Collect Chrono Fragments • Dodge or Crush Rocks</div>
+        </div>
+      </div>
+
+      <!-- Touch Presentation Stick -->
+      <div id="touch-stick">
+        <div id="touch-nub"></div>
+      </div>
+
+      <!-- End of Run Ceremony Screen -->
+      <div id="gameover-screen">
+        <div class="gameover-card">
+          <div class="gameover-title">EXPEDITION LOG</div>
+          <div class="gameover-rank" id="go-rank">A</div>
+          <div class="gameover-rank-title" id="go-rank-title">DEPTH RUNNER</div>
+
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-title">FINAL DEPTH</span>
+              <span class="stat-val" id="go-depth">0m</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-title">SCORE</span>
+              <span class="stat-val" id="go-score">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-title">SESSION BEST</span>
+              <span class="stat-val" id="go-best">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-title">FRAGMENTS</span>
+              <span class="stat-val" id="go-fragments">0</span>
+            </div>
+          </div>
+
+          <!-- Signature Stat Card -->
+          <div class="signature-card">
+            <span class="signature-label" id="go-sig-label">MAX GRAZE STREAK</span>
+            <span class="signature-value" id="go-sig-value">5 IN A ROW</span>
+          </div>
+
+          <button class="restart-btn" id="go-restart-btn">DIVE AGAIN</button>
+          <div class="restart-hint">Press R or Tap anywhere to restart</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>STOMP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="arcade-container">
+    <!-- Top Minimal Bar -->
+    <header class="arcade-header">
+      <div class="arcade-title">STOMP</div>
+      <div class="header-buttons">
+        <button id="muteBtn" class="icon-btn" title="Toggle Sound" aria-label="Toggle Sound">🔊</button>
+        <button id="restartBtn" class="icon-btn" title="Restart Seed (R)" aria-label="Restart Run">↺ [R]</button>
+      </div>
+    </header>
+
+    <!-- Canvas Stage -->
+    <main class="canvas-wrapper">
+      <canvas id="gameCanvas"></canvas>
+    </main>
+
+    <!-- Visual Touch / Mouse Control Surfaces -->
+    <div class="controls-overlay">
+      <!-- Steer Surface (Bottom Left) -->
+      <div id="steerArea" class="steer-surface" role="button" aria-label="Steer Left or Right">
+        <div class="steer-track"></div>
+        <div id="steerThumb" class="steer-thumb">↔</div>
+        <div class="steer-label">STEER</div>
+      </div>
+
+      <!-- Jump Surface (Bottom Right) -->
+      <div id="jumpBtn" class="jump-surface" role="button" aria-label="Jump">
+        <div class="jump-icon">▲</div>
+        <div class="jump-label">JUMP</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

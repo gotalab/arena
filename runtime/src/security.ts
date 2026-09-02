@@ -64,12 +64,16 @@ export function artifactSecurityHeaders(mainOrigin: string, treeBase?: string): 
     // would block every subresource a tree loads (status 0, no violation).
     // Embedding is the purpose; access control is the capability token.
     "Cross-Origin-Resource-Policy": "cross-origin",
-    // The trusted shell HEADs this URL to tell a 404 from a hang before it
-    // unlocks a vote. Only the named Main origin may read the status.
+    // A sandboxed Artifact document has an opaque `null` origin. JavaScript
+    // modules are CORS fetches even when their URL sits beside index.html, so
+    // successful files from an already-authorized sealed tree must be readable
+    // from that opaque document. Authentication, capability-token validation,
+    // and the content-addressed tree allowlist happen before these headers are
+    // applied. Non-tree responses stay readable only by the trusted Main.
     ...(mainOrigin === "'none'" ? {} : {
-      "Access-Control-Allow-Origin": mainOrigin,
+      "Access-Control-Allow-Origin": treeBase ? "*" : mainOrigin,
       "Access-Control-Allow-Methods": "GET, HEAD",
-      Vary: "Origin",
+      ...(treeBase ? {} : { Vary: "Origin" }),
     }),
   };
 }

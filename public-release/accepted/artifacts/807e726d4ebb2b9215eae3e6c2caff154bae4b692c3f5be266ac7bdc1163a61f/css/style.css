@@ -1,0 +1,624 @@
+/* SHOAL - Atmospheric Tide Pool Styling */
+:root {
+  --bg-deep: #0e1a1c;
+  --bg-sand: #182e30;
+  --bg-water: #1b3a3c;
+  --water-accent: #38bdf8;
+  --water-glow: rgba(56, 189, 248, 0.25);
+  --pearl: #fff8e7;
+  --pearl-glow: rgba(255, 248, 231, 0.4);
+  --shell-cover-top: #faeed7;
+  --shell-cover-mid: #dfcaa7;
+  --shell-cover-bot: #b89f7a;
+  --shell-shadow: rgba(8, 18, 20, 0.6);
+  --cell-turned: #142a2b;
+  --cell-turned-border: #1d3e3f;
+  --urchin-dark: #2a1127;
+  --urchin-spine: #70265f;
+  --urchin-glow: #e879f9;
+  --fatal-glow: #ef4444;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-deep);
+  font-family: var(--font-family);
+  color: #e2e8f0;
+}
+
+#app-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 30%, #1a3c3e 0%, #0d1e20 70%, #081214 100%);
+}
+
+/* Water caustics background canvas */
+#caustic-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+/* Header & Host Area */
+#header {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 500px;
+  padding: 6px 12px 2px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  background: rgba(14, 30, 32, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  border-radius: 12px;
+  padding: 4px 10px;
+  min-width: 78px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.stat-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f8fafc;
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-sub {
+  font-size: 9px;
+  color: #64748b;
+}
+
+#host-wrap {
+  position: relative;
+  width: 110px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#host-canvas {
+  width: 110px;
+  height: 60px;
+  cursor: pointer;
+}
+
+/* Tide Bar and Pool Depth */
+.tide-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.pool-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: rgba(45, 212, 191, 0.15);
+  color: #2dd4bf;
+  border: 1px solid rgba(45, 212, 191, 0.3);
+  white-space: nowrap;
+}
+
+.tide-meter-container {
+  position: relative;
+  flex: 1;
+  height: 10px;
+  background: rgba(14, 30, 32, 0.8);
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.tide-meter-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #0284c7, #38bdf8, #2dd4bf);
+  border-radius: 5px;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px var(--water-glow);
+}
+
+.tide-meter-fill.low {
+  background: linear-gradient(90deg, #ea580c, #f97316, #fbbf24);
+  animation: pulse-low 1s infinite alternate;
+}
+
+@keyframes pulse-low {
+  from { opacity: 0.75; }
+  to { opacity: 1; filter: brightness(1.2); }
+}
+
+.audio-btn, .restart-btn {
+  background: rgba(14, 30, 32, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  border-radius: 8px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.audio-btn:hover, .restart-btn:hover {
+  background: rgba(56, 189, 248, 0.2);
+  color: #f8fafc;
+}
+
+/* Playfield & Board */
+#playfield {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  touch-action: none;
+}
+
+#board-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 24, 26, 0.65);
+  border: 2px solid rgba(56, 189, 248, 0.18);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+#board {
+  display: grid;
+  gap: 3px;
+  touch-action: none;
+}
+
+/* Shell Cell */
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 800;
+  font-family: var(--font-family);
+  font-size: calc(var(--cell-size) * 0.52);
+  line-height: 1;
+  transition: transform 0.08s ease, filter 0.1s ease;
+  will-change: transform;
+}
+
+.cell:active {
+  transform: scale(0.94);
+}
+
+/* Covered Shell */
+.cell.covered {
+  background: linear-gradient(145deg, var(--shell-cover-top) 0%, var(--shell-cover-mid) 50%, var(--shell-cover-bot) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 2px solid #8e7354;
+  box-shadow: 0 2px 5px var(--shell-shadow), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+/* Shell ridge texture overlay */
+.cell.covered::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 120%, transparent 40%, rgba(142, 115, 84, 0.22) 80%);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.cell.covered:hover {
+  filter: brightness(1.06);
+}
+
+/* Turned Shell */
+.cell.turned {
+  background: radial-gradient(circle at 50% 40%, #193638 0%, #102425 100%);
+  border: 1px solid var(--cell-turned-border);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.cell.turned.empty {
+  opacity: 0.85;
+}
+
+/* Pennanted Shell */
+.cell.flagged {
+  background: linear-gradient(145deg, var(--shell-cover-top) 0%, var(--shell-cover-mid) 60%, var(--shell-cover-bot) 100%);
+  border: 1px solid rgba(45, 212, 191, 0.5);
+  box-shadow: 0 2px 6px rgba(45, 212, 191, 0.3);
+}
+
+.pennant-icon {
+  font-size: calc(var(--cell-size) * 0.58);
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+  animation: flag-snap 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes flag-snap {
+  0% { transform: scale(0.3) translateY(8px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Number Colors */
+.cell[data-num="1"] { color: #38bdf8; text-shadow: 0 0 6px rgba(56, 189, 248, 0.4); }
+.cell[data-num="2"] { color: #4ade80; text-shadow: 0 0 6px rgba(74, 222, 128, 0.4); }
+.cell[data-num="3"] { color: #f87171; text-shadow: 0 0 6px rgba(248, 113, 113, 0.4); }
+.cell[data-num="4"] { color: #a78bfa; text-shadow: 0 0 6px rgba(167, 139, 250, 0.4); }
+.cell[data-num="5"] { color: #fb923c; text-shadow: 0 0 6px rgba(251, 146, 60, 0.4); }
+.cell[data-num="6"] { color: #2dd4bf; text-shadow: 0 0 6px rgba(45, 212, 191, 0.4); }
+.cell[data-num="7"] { color: #f472b6; text-shadow: 0 0 6px rgba(244, 114, 182, 0.4); }
+.cell[data-num="8"] { color: #e2e8f0; text-shadow: 0 0 6px rgba(226, 232, 240, 0.4); }
+
+/* Post-Mortem Cell States */
+.cell.urchin-unflagged {
+  background: radial-gradient(circle, var(--urchin-spine) 0%, var(--urchin-dark) 80%);
+  border: 1px solid var(--urchin-glow);
+  box-shadow: 0 0 8px rgba(232, 121, 249, 0.4);
+}
+
+.cell.fatal-sting {
+  background: radial-gradient(circle, #dc2626 0%, #7f1d1d 80%);
+  border: 2px solid #ef4444;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.8);
+  animation: fatal-pulse 0.8s infinite alternate;
+}
+
+@keyframes fatal-pulse {
+  from { filter: brightness(1); transform: scale(0.96); }
+  to { filter: brightness(1.3); transform: scale(1.04); }
+}
+
+.cell.flag-correct {
+  background: radial-gradient(circle, #065f46 0%, #064e3b 80%);
+  border: 1px solid #34d399;
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.4);
+}
+
+.cell.flag-wrong {
+  background: radial-gradient(circle, #475569 0%, #1e293b 80%);
+  border: 1px solid #94a3b8;
+  opacity: 0.7;
+}
+
+/* Long press progress ring */
+.hold-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  margin-left: -22px;
+  pointer-events: none;
+  z-index: 25;
+  transform: rotate(-90deg);
+}
+
+.hold-ring circle {
+  fill: none;
+  stroke: #2dd4bf;
+  stroke-width: 4;
+  stroke-dasharray: 126;
+  stroke-dashoffset: 126;
+  transition: stroke-dashoffset 0.05s linear;
+}
+
+/* Footer / Start Hint */
+#footer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 500px;
+  padding: 4px 12px 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+}
+
+#hint-text {
+  font-size: 13px;
+  color: #94a3b8;
+  letter-spacing: 0.4px;
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+/* Title start header (alive, unhurried) */
+#title-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.game-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+/* Ceremony & Post-Mortem Overlay */
+#ceremony-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  background: rgba(8, 18, 20, 0.72);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+#ceremony-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.ceremony-card {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  background: linear-gradient(160deg, rgba(22, 45, 48, 0.95) 0%, rgba(13, 26, 28, 0.98) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 24px var(--water-glow);
+  transform: translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#ceremony-overlay.active .ceremony-card {
+  transform: translateY(0);
+}
+
+.ceremony-header {
+  text-align: center;
+}
+
+.ceremony-subtitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #2dd4bf;
+  margin-bottom: 2px;
+}
+
+.ceremony-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.rank-badge-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(8, 18, 20, 0.6);
+  border: 1px solid rgba(45, 212, 191, 0.25);
+  border-radius: 14px;
+  padding: 10px 18px;
+  width: 100%;
+}
+
+.rank-title-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.rank-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fef08a;
+  text-shadow: 0 0 10px rgba(254, 240, 138, 0.4);
+}
+
+.ceremony-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.ceremony-stat-item {
+  background: rgba(14, 30, 32, 0.6);
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ceremony-stat-label {
+  font-size: 10px;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.ceremony-stat-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.signature-stat-box {
+  width: 100%;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px dashed rgba(56, 189, 248, 0.3);
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signature-label {
+  font-size: 11px;
+  color: #bae6fd;
+}
+
+.signature-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.ceremony-legend {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  font-size: 10px;
+  color: #94a3b8;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ceremony-legend span {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.ceremony-prompt {
+  font-size: 12px;
+  color: #2dd4bf;
+  letter-spacing: 0.5px;
+  animation: pulse-slow 1.5s infinite alternate;
+}
+
+@keyframes pulse-slow {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+/* Clear Celebration Banner (brief toast) */
+#clear-toast {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: rgba(14, 34, 36, 0.95);
+  border: 1px solid #2dd4bf;
+  border-radius: 14px;
+  padding: 10px 20px;
+  color: #f8fafc;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(45, 212, 191, 0.4);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 40;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#clear-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* Ripple wave animation on cell reveal */
+.cell.ripple-anim {
+  animation: cell-ripple 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes cell-ripple {
+  0% { transform: scale(0.7); filter: brightness(1.6); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* Screen shake on sting */
+.screen-shake {
+  animation: shake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, -1px, 0); }
+  30%, 50%, 70% { transform: translate3d(-5px, 2px, 0); }
+  40%, 60% { transform: translate3d(5px, -2px, 0); }
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Lumen Yard - Original one-screen puzzle about restoring a sleeping power yard one deliberate push at a time.">
+  <meta name="theme-color" content="#070a10">
+  <title>LUMEN YARD</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- TOP HUD -->
+    <header id="hud-header" role="banner">
+      <div class="hud-group">
+        <div class="hud-title-wrap">
+          <span class="hud-brand">LUMEN YARD</span>
+          <span id="hud-level" class="hud-level-name" aria-live="polite">01. First Light</span>
+        </div>
+      </div>
+
+      <div class="hud-group">
+        <div class="hud-metric" title="Moves made in current attempt">
+          <span class="metric-label">Moves</span>
+          <span id="hud-moves" class="metric-value">0</span>
+          <span id="hud-best" class="metric-sub">Best: —</span>
+        </div>
+
+        <div class="hud-metric" title="Relay pushes made">
+          <span class="metric-label">Pushes</span>
+          <span id="hud-pushes" class="metric-value">0</span>
+        </div>
+
+        <div class="hud-metric hud-sockets-metric" title="Sockets powered">
+          <span class="metric-label">Power</span>
+          <span id="hud-sockets" class="metric-value metric-value-sockets" aria-live="polite">⚡ ○ 0/1</span>
+        </div>
+      </div>
+
+      <div class="hud-actions">
+        <button id="btn-undo" class="hud-btn" type="button" title="Undo last move (U or Backspace)" aria-label="Undo move" disabled>
+          <span aria-hidden="true">⎌</span> Undo <span class="key-hint" aria-hidden="true">[U]</span>
+        </button>
+        <button id="btn-restart" class="hud-btn" type="button" title="Restart circuit (R)" aria-label="Restart circuit">
+          <span aria-hidden="true">↺</span> Restart <span class="key-hint" aria-hidden="true">[R]</span>
+        </button>
+        <button id="btn-map" class="hud-btn" type="button" title="Circuit Map (M or Esc)" aria-label="Open circuit map">
+          <span aria-hidden="true">▦</span> Map <span class="key-hint" aria-hidden="true">[M]</span>
+        </button>
+        <button id="btn-settings" class="hud-btn" type="button" title="Settings" aria-label="Open settings">
+          <span aria-hidden="true">⚙</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- LIVE POWER YARD CANVAS -->
+    <main id="stage-container" role="main">
+      <div id="invitation-badge" aria-live="polite">Restore the grid.</div>
+      <canvas id="game-canvas" aria-label="Lumen Yard interactive power grid"></canvas>
+    </main>
+
+    <!-- MOBILE TOUCH CLUSTER -->
+    <footer id="bottom-controls" role="region" aria-label="Virtual Touch Controls">
+      <div class="dpad-cluster">
+        <button id="dpad-up" class="dpad-btn" type="button" aria-label="Move Up">▲</button>
+        <button id="dpad-left" class="dpad-btn" type="button" aria-label="Move Left">◀</button>
+        <button id="dpad-down" class="dpad-btn" type="button" aria-label="Move Down">▼</button>
+        <button id="dpad-right" class="dpad-btn" type="button" aria-label="Move Right">▶</button>
+      </div>
+      <div class="bottom-aux-actions">
+        <span style="font-size:0.75rem; color:var(--text-dim); text-align:center;">Swipe or tap adjacent tile</span>
+      </div>
+    </footer>
+
+    <!-- MODALS OVERLAY -->
+    <div id="modal-overlay" class="hidden" role="dialog" aria-modal="true">
+      <!-- 1. BOARD MAP DRAWER -->
+      <div id="board-map-modal" class="modal-dialog hidden">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="modal-subtitle">Yard Directory</span>
+            <h2>SUBSTATION SECTORS</h2>
+          </div>
+          <span id="map-progress-counter" style="font-size:0.8rem; font-weight:700; color:var(--cyan-glow); font-family:monospace;">0 / 20 RESTORED</span>
+        </div>
+        <div id="board-list-items" role="list"></div>
+      </div>
+
+      <!-- 2. STANDARD VICTORY MODAL -->
+      <div id="victory-modal" class="modal-dialog hidden">
+        <div class="celebrate-card">
+          <div class="celebrate-icon" aria-hidden="true">⚡</div>
+          <span class="chapter-badge">CIRCUIT RESTORED</span>
+          <h2 id="victory-title">First Light Restored</h2>
+          <p>Current flows freely into the copper busbar. The local yard wakes up.</p>
+          <div id="victory-stats" class="victory-stats"></div>
+          <div class="modal-actions">
+            <button id="btn-next-level" class="btn-primary" type="button">Next Circuit →</button>
+            <button id="btn-replay" class="btn-secondary" type="button">Replay Circuit [R]</button>
+            <button id="btn-victory-map" class="btn-secondary" type="button">Board Map [M]</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. CHAPTER 1 MILESTONE: "GRID RESTORED" -->
+      <div id="chapter-modal" class="modal-dialog hidden">
+        <div class="celebrate-card">
+          <div class="celebrate-icon" aria-hidden="true">⚡</div>
+          <span class="chapter-badge">CHAPTER 1 COMPLETE</span>
+          <h2>GRID RESTORED</h2>
+          <p>The primary substation has reached stable ignition across Black Start! The blackout is officially broken. Deeper industrial yards now await restoration.</p>
+          <div class="modal-actions">
+            <button id="btn-chapter-continue" class="btn-primary" type="button">Continue to Split-Bus →</button>
+            <button id="btn-chapter-replay" class="btn-secondary" type="button">Replay Black-Start</button>
+            <button id="btn-chapter-map" class="btn-secondary" type="button">Board Map</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. DAWN SEQUENCE / CAMPAIGN COMPLETION -->
+      <div id="dawn-modal" class="modal-dialog hidden">
+        <div class="celebrate-card">
+          <div id="dawn-summary"></div>
+          <div class="modal-actions" style="margin-top:16px;">
+            <button id="btn-dawn-replay" class="btn-primary" type="button">Replay Circuit</button>
+            <button id="btn-dawn-map" class="btn-secondary" type="button">Board Map</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. SETTINGS MODAL -->
+      <div id="settings-modal" class="modal-dialog hidden">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <span class="modal-subtitle">Substation Console</span>
+            <h2>SETTINGS</h2>
+          </div>
+          <button id="btn-close-settings" class="modal-close-btn" type="button" aria-label="Close settings">×</button>
+        </div>
+        <div class="settings-list">
+          <div class="setting-item">
+            <div class="setting-meta">
+              <span class="setting-title">Synthesized Audio</span>
+              <span class="setting-desc">Electrical relays, mechanical servos, and power surges</span>
+            </div>
+            <label class="toggle-switch">
+              <input id="toggle-sound" type="checkbox" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-meta">
+              <span class="setting-title">Motion & Sparks</span>
+              <span class="setting-desc">Traveling electrical current and particle effects</span>
+            </div>
+            <label class="toggle-switch">
+              <input id="toggle-motion" type="checkbox" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="controls-help">
+          <h4>Input Reference</h4>
+          <div class="help-grid">
+            <span class="help-key">WASD / Arrows</span><span>Move robot 1 cell</span>
+            <span class="help-key">Swipe / Tap</span><span>Touch movement on grid</span>
+            <span class="help-key">U / Backspace</span><span>Undo last move</span>
+            <span class="help-key">R</span><span>Restart current board</span>
+            <span class="help-key">M / Esc</span><span>Toggle Board Map</span>
+            <span class="help-key">Gamepad</span><span>D-Pad move, B undo, Start restart</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

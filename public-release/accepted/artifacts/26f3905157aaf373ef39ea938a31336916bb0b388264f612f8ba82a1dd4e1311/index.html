@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>EMBER</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-wrapper">
+    <div id="stage-container">
+      <canvas id="game-canvas"></canvas>
+
+      <!-- Heads-Up Display -->
+      <div id="hud">
+        <div class="hud-top">
+          <div class="score-display">
+            <span class="hud-label">Ascent</span>
+            <span class="score-val" id="score-val">0</span>
+            <span class="session-best-val" id="session-best-val">BEST: 0</span>
+          </div>
+
+          <!-- Glow Stock Pips -->
+          <div class="glow-stock-display" title="Glow Reserve">
+            <div class="glow-pip active" id="pip-1"></div>
+            <div class="glow-pip active" id="pip-2"></div>
+            <div class="glow-pip active" id="pip-3"></div>
+          </div>
+        </div>
+
+        <!-- Chain Escalation Banner -->
+        <div id="chain-banner">CHAIN x1!</div>
+
+        <!-- First-Run Gentle Tutorial Hint -->
+        <div id="tutorial-hint">
+          <div class="hint-icon"></div>
+          <span>Pull &amp; release to launch</span>
+        </div>
+      </div>
+
+      <!-- End of Run Ceremony Overlay -->
+      <div id="ceremony-overlay">
+        <div class="ceremony-card">
+          <div class="ceremony-title">The Damp Took The Light</div>
+          
+          <div class="rank-wrapper">
+            <div class="rank-badge" id="rank-badge">B</div>
+            <div class="rank-title" id="rank-title">Rising Blaze</div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-item full-width">
+              <span class="hud-label">Score</span>
+              <span class="stat-num highlight" id="final-score">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="hud-label">Session Best</span>
+              <span class="stat-num" id="final-best">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="hud-label">Best Chain</span>
+              <span class="stat-num" id="final-chain">x0</span>
+            </div>
+            <div class="stat-item full-width">
+              <span class="hud-label">Peak Height</span>
+              <span class="stat-num" id="final-height">0m</span>
+            </div>
+          </div>
+
+          <div class="tap-prompt">Tap Anywhere To Rise Again</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Scripts -->
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+  <script src="renderer.js"></script>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const canvas = document.getElementById('game-canvas');
+      const game = window.emberGame;
+      const renderer = new window.EmberRenderer(canvas, game);
+
+      // Wire Platform Interface extension for manual step if needed
+      window.__ARENA_GAME__.step = () => game.tickStep();
+
+      // Pointer Event Listeners
+      canvas.addEventListener('pointerdown', function(e) {
+        e.preventDefault();
+        canvas.setPointerCapture(e.pointerId);
+        game.onPointerDown(e.clientX, e.clientY);
+      }, { passive: false });
+
+      canvas.addEventListener('pointermove', function(e) {
+        e.preventDefault();
+        game.onPointerMove(e.clientX, e.clientY);
+      }, { passive: false });
+
+      function onPointerEnd(e) {
+        e.preventDefault();
+        try {
+          if (canvas.hasPointerCapture(e.pointerId)) {
+            canvas.releasePointerCapture(e.pointerId);
+          }
+        } catch (err) {}
+        game.onPointerUp();
+      }
+
+      canvas.addEventListener('pointerup', onPointerEnd, { passive: false });
+      canvas.addEventListener('pointercancel', onPointerEnd, { passive: false });
+
+      // End of run overlay tap to restart
+      const ceremonyOverlay = document.getElementById('ceremony-overlay');
+      ceremonyOverlay.addEventListener('pointerdown', function(e) {
+        e.preventDefault();
+        if (game.phase === 'gameover') {
+          game.reset(game.currentSeed);
+        }
+      }, { passive: false });
+
+      // Fixed 60Hz deterministic loop accumulator
+      const FIXED_STEP = 1 / 60;
+      let lastTime = performance.now();
+      let accumulator = 0;
+
+      function loop(now) {
+        const delta = Math.min(0.1, (now - lastTime) / 1000); // cap max delta to avoid spiral
+        lastTime = now;
+        accumulator += delta;
+
+        // Run fixed 60 Hz simulation ticks
+        while (accumulator >= FIXED_STEP) {
+          game.tickStep();
+          accumulator -= FIXED_STEP;
+        }
+
+        // Render visual frame
+        renderer.render(delta);
+
+        requestAnimationFrame(loop);
+      }
+
+      requestAnimationFrame(loop);
+    })();
+  </script>
+</body>
+</html>

@@ -164,7 +164,7 @@ test("artifact 200 and 404 tell Main the status so a blank frame is not judged",
     { authenticate },
   );
   assert.equal(found.status, 200);
-  assert.equal(found.headers.get("Access-Control-Allow-Origin"), "https://arena.gotalab.dev");
+  assert.equal(found.headers.get("Access-Control-Allow-Origin"), "*");
   const missing = await handleArtifactRequest(
     new Request(`https://artifacts.arena.gotalab.dev/artifacts/${"b".repeat(64)}/index.html`, { method: "HEAD" }),
     artifactEnv(),
@@ -191,6 +191,7 @@ test("a valid token serves the tree without any Access identity", async () => {
   );
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("Content-Type"), "text/javascript; charset=utf-8");
+  assert.equal(response.headers.get("Access-Control-Allow-Origin"), "*");
   // The CSP admits exactly this token-prefixed tree, so relative references
   // inside the sealed files keep working under the capability path.
   assert.match(

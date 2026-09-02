@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SHOAL - A Tide Pool Deduction Game</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Water caustics backdrop canvas -->
+    <canvas id="caustic-canvas"></canvas>
+
+    <!-- Header bar with Barnaby, counters, tide meter -->
+    <header id="header">
+      <div class="top-bar">
+        <!-- Urchin counter -->
+        <div class="stat-box" title="Urchins remaining">
+          <div class="stat-label"><span>🦔</span> URCHINS</div>
+          <div class="stat-value" id="urchin-count">--</div>
+        </div>
+
+        <!-- Host Barnaby container -->
+        <div id="host-wrap" title="Barnaby the Hermit Crab">
+          <canvas id="host-canvas" width="160" height="90"></canvas>
+        </div>
+
+        <!-- Pearls score & best -->
+        <div class="stat-box" title="Pearls collected">
+          <div class="stat-label"><span>⚪</span> PEARLS</div>
+          <div class="stat-value" id="pearl-count">0</div>
+          <div class="stat-sub">Best: <span id="best-count">0</span></div>
+        </div>
+      </div>
+
+      <!-- Tide meter and pool level row -->
+      <div class="tide-row">
+        <div class="pool-badge" id="pool-badge">TIDE 1</div>
+        <div class="tide-meter-container" title="Tide Meter - Clearing before tide empties awards bonus pearls!">
+          <div class="tide-meter-fill" id="tide-fill"></div>
+        </div>
+        <button class="audio-btn" id="audio-btn" title="Toggle Sound" aria-label="Toggle Sound">🔊</button>
+        <button class="restart-btn" id="restart-btn" title="Restart (R)" aria-label="Restart">↻</button>
+      </div>
+    </header>
+
+    <!-- Main Playfield -->
+    <main id="playfield">
+      <div id="board-wrap">
+        <div id="board"></div>
+      </div>
+    </main>
+
+    <!-- Footer hint and title banner -->
+    <footer id="footer">
+      <div id="hint-text">Turn a shell to begin</div>
+    </footer>
+
+    <!-- Long-press radial progress ring -->
+    <svg id="hold-ring-svg" class="hold-ring" viewBox="0 0 44 44" style="display: none;">
+      <circle id="hold-ring-circle" cx="22" cy="22" r="18"></circle>
+    </svg>
+
+    <!-- Pool Clear Brief Toast -->
+    <div id="clear-toast">🌊 Tide Cleared!</div>
+
+    <!-- Ceremony / Post-Mortem Overlay -->
+    <div id="ceremony-overlay">
+      <div class="ceremony-card">
+        <div class="ceremony-header">
+          <div class="ceremony-subtitle">Tide Ended</div>
+          <h2 class="ceremony-title">The Water Spoke</h2>
+        </div>
+
+        <div class="rank-badge-box">
+          <span class="rank-title-label">Awarded Rank</span>
+          <span class="rank-name" id="ceremony-rank">Driftwood</span>
+        </div>
+
+        <div class="ceremony-stats">
+          <div class="ceremony-stat-item">
+            <span class="ceremony-stat-label">Run Pearls</span>
+            <span class="ceremony-stat-val" id="ceremony-pearls">⚪ 0</span>
+          </div>
+          <div class="ceremony-stat-item">
+            <span class="ceremony-stat-label">Session Best</span>
+            <span class="ceremony-stat-val" id="ceremony-best">⚪ 0</span>
+          </div>
+        </div>
+
+        <div class="signature-stat-box">
+          <span class="signature-label">Greatest Ripple</span>
+          <span class="signature-val" id="ceremony-sig-val">🌊 1 Shell</span>
+        </div>
+
+        <div class="ceremony-legend">
+          <span>🦔 Unmarked Urchin</span>
+          <span>💥 Fatal Sting</span>
+          <span>🚩 Proven Belief</span>
+        </div>
+
+        <div class="ceremony-prompt">Tap anywhere or press [R] to try another tide</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/prng.js"></script>
+  <script src="js/solver.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/creature.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/bridge.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", function() {
+      const game = new ShoalGame(10001);
+      const ui = new ShoalUI(game);
+      setupBridge(game, ui);
+    });
+  </script>
+</body>
+</html>

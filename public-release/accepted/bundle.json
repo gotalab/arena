@@ -71,6 +71,14 @@
         "effort": "Medium"
       },
       {
+        "id": "antigravity-gemini-3.8-flash-medium",
+        "harnessId": "antigravity",
+        "harness": "antigravity",
+        "harnessVersion": "1.1.20",
+        "model": "gemini-3.8-flash",
+        "effort": "Medium"
+      },
+      {
         "id": "claude-code-claude-opus-5-high",
         "harnessId": "claude-code",
         "harness": "Claude Code",
@@ -245,6 +253,82 @@
             "passed": 17,
             "applicable": 28,
             "notEvaluated": 6,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "ember@1.3.0",
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "showcaseBuildId": "build_26f3905157aaf373ef39",
+        "score": {
+          "mean": 0.916667,
+          "ciHalfWidth": 0.223289,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 274.47581,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 1494477,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": null,
+            "reported": 0
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_26f3905157aaf373ef39",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.928571,
+            "countedInMean": true,
+            "passed": 26,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.821429,
+            "countedInMean": true,
+            "passed": 23,
+            "applicable": 28,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 1,
+            "countedInMean": true,
+            "passed": 28,
+            "applicable": 28,
+            "notEvaluated": 0,
             "graderErrors": 0,
             "gatesPassed": true,
             "gateFailures": [],
@@ -1238,6 +1322,92 @@
       },
       {
         "taskId": "delve@0.6.0",
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "showcaseBuildId": "build_b3fe42683f915f674747",
+        "score": {
+          "mean": 0.506944,
+          "ciHalfWidth": 1.090998,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.loads",
+            "gate.no_blocking_uncaught_error"
+          ],
+          "gateUnverified": [
+            "gate.input_liveness"
+          ]
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 302.657753,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 2497325,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": null,
+            "reported": 0
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_b3fe42683f915f674747",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.75,
+            "countedInMean": true,
+            "passed": 36,
+            "applicable": 48,
+            "notEvaluated": 10,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.770833,
+            "countedInMean": true,
+            "passed": 37,
+            "applicable": 48,
+            "notEvaluated": 5,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 0,
+            "applicable": 48,
+            "notEvaluated": 48,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.loads",
+              "gate.no_blocking_uncaught_error"
+            ],
+            "gateUnverified": [
+              "gate.input_liveness"
+            ]
+          }
+        ]
+      },
+      {
+        "taskId": "delve@0.6.0",
         "configurationId": "claude-code-claude-opus-5-high",
         "showcaseBuildId": "build_50c65501b4f7a9722e23",
         "score": {
@@ -2206,6 +2376,88 @@
             "gateFailures": [
               "gate.input_liveness"
             ],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "showcaseBuildId": "build_d6677ad0eb8df550a4f8",
+        "score": {
+          "mean": 0.407408,
+          "ciHalfWidth": 0.877744,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [
+            "gate.artifact_valid",
+            "gate.no_blocking_uncaught_error"
+          ],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 250.84978,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 1874536,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": null,
+            "reported": 0
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": null,
+            "replica": 1,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 20,
+            "applicable": 27,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [
+              "gate.artifact_valid",
+              "gate.no_blocking_uncaught_error"
+            ],
+            "gateUnverified": []
+          },
+          {
+            "buildId": "build_d6677ad0eb8df550a4f8",
+            "replica": 2,
+            "showcase": true,
+            "rate": 0.62963,
+            "countedInMean": true,
+            "passed": 17,
+            "applicable": 27,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.592593,
+            "countedInMean": true,
+            "passed": 16,
+            "applicable": 27,
+            "notEvaluated": 4,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
             "gateUnverified": []
           }
         ]
@@ -3197,6 +3449,82 @@
       },
       {
         "taskId": "lumenyard@0.3.0",
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "showcaseBuildId": "build_30a2b242405a4c6b8892",
+        "score": {
+          "mean": 0.796296,
+          "ciHalfWidth": 0.15937,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": true,
+          "gateFailures": [],
+          "gateUnverified": []
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 359.913241,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 2624217,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": null,
+            "reported": 0
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_30a2b242405a4c6b8892",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.722222,
+            "countedInMean": true,
+            "passed": 13,
+            "applicable": 18,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.833333,
+            "countedInMean": true,
+            "passed": 15,
+            "applicable": 18,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0.833333,
+            "countedInMean": true,
+            "passed": 15,
+            "applicable": 18,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "lumenyard@0.3.0",
         "configurationId": "claude-code-claude-opus-5-high",
         "showcaseBuildId": "build_aa7ed189e54ea2938c99",
         "score": {
@@ -4164,6 +4492,86 @@
             "gatesPassed": true,
             "gateFailures": [],
             "gateUnverified": []
+          }
+        ]
+      },
+      {
+        "taskId": "shoal@0.2.0",
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "showcaseBuildId": "build_807e726d4ebb2b9215ea",
+        "score": {
+          "mean": 0.566667,
+          "ciHalfWidth": 1.219183,
+          "n": 3,
+          "replicasCounted": 3,
+          "replicasNullRate": 0,
+          "replicasHeldInvalid": 0,
+          "gatesPassed": false,
+          "gateFailures": [],
+          "gateUnverified": [
+            "gate.input_liveness"
+          ]
+        },
+        "operational": {
+          "runs": 3,
+          "time": {
+            "mean": 368.913167,
+            "reported": 3
+          },
+          "tokens": {
+            "mean": 2573956,
+            "reported": 3
+          },
+          "estimatedCost": {
+            "mean": null,
+            "reported": 0
+          },
+          "costAtListPrice": false
+        },
+        "replicas": [
+          {
+            "buildId": "build_807e726d4ebb2b9215ea",
+            "replica": 1,
+            "showcase": true,
+            "rate": 0.85,
+            "countedInMean": true,
+            "passed": 34,
+            "applicable": 40,
+            "notEvaluated": 1,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 2,
+            "showcase": false,
+            "rate": 0.85,
+            "countedInMean": true,
+            "passed": 34,
+            "applicable": 40,
+            "notEvaluated": 0,
+            "graderErrors": 0,
+            "gatesPassed": true,
+            "gateFailures": [],
+            "gateUnverified": []
+          },
+          {
+            "buildId": null,
+            "replica": 3,
+            "showcase": false,
+            "rate": 0,
+            "countedInMean": true,
+            "passed": 33,
+            "applicable": 40,
+            "notEvaluated": 2,
+            "graderErrors": 0,
+            "gatesPassed": false,
+            "gateFailures": [],
+            "gateUnverified": [
+              "gate.input_liveness"
+            ]
           }
         ]
       },
@@ -5422,6 +5830,337 @@
           "time": "harness wall clock",
           "tokens": "provider CLI stream",
           "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_26f3905157aaf373ef39",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "26f3905157aaf373ef39ea938a31336916bb0b388264f612f8ba82a1dd4e1311",
+          "publicBase": "/artifacts/26f3905157aaf373ef39ea938a31336916bb0b388264f612f8ba82a1dd4e1311/",
+          "byteLength": 4898
+        },
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "requirementSummary": {
+          "passed": 26,
+          "failed": 2,
+          "notEvaluated": 0,
+          "graderErrors": 0,
+          "evaluated": 28,
+          "applicable": 28,
+          "rate": 0.9285714285714286
+        },
+        "checks": [
+          {
+            "id": "gate.artifact_valid",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Artifact is valid",
+            "outcome": "pass",
+            "explanation": "5 file(s) scanned, every src/href/url() resolves inside the tree by relative path; 0 off-origin and 0 failing same-tree requests in 6 observed"
+          },
+          {
+            "id": "gate.loads",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Game loads",
+            "outcome": "pass",
+            "explanation": "loaded; __ARENA_GAME__ exposes reset/snapshot; snapshot has 37 fields"
+          },
+          {
+            "id": "gate.no_blocking_uncaught_error",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "No blocking browser error",
+            "outcome": "pass",
+            "explanation": "no uncaught page errors during boot, launch, hunt, camp and restart scenarios"
+          },
+          {
+            "id": "gate.canonical_input_changes_state",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "The pointer gesture responds",
+            "outcome": "pass",
+            "explanation": "one drag-and-release: launches 0 -> 1, y 12 -> 224.48, tick 0 -> 57"
+          },
+          {
+            "id": "gate.progress_changes",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "Core loop makes progress",
+            "outcome": "pass",
+            "explanation": "height 0 -> 5499.56 over the driven climb"
+          },
+          {
+            "id": "gate.restart_works",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "Restart works",
+            "outcome": "pass",
+            "explanation": "tap on the end-of-run screen left phase ready, score 0, height 0, matching reset(fixed run)"
+          },
+          {
+            "id": "ember.ready_freezes_until_first_launch",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Ready is frozen until the first launch",
+            "outcome": "pass",
+            "explanation": "idle 700ms: tick stayed 0 and phase stayed ready; after one release phase=playing, tick=57"
+          },
+          {
+            "id": "ember.drag_aims_direction_and_power",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "The drag aims direction and power",
+            "outcome": "pass",
+            "explanation": "down-left pull vx 423.04, down-right pull vx -423.04; 80px pull speed 455.01 vs 200px 606.33; held aim tick 15 -> 61"
+          },
+          {
+            "id": "ember.touch_matches_mouse",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Touch and mouse are the same gesture",
+            "outcome": "pass",
+            "explanation": "a touch pull down-left launched (launches=1) with vx 423.04 > 0; no mouse or keyboard event was dispatched"
+          },
+          {
+            "id": "ember.launch_spends_one_glow",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Glow economy",
+            "label": "Every launch spends one glow",
+            "outcome": "pass",
+            "explanation": "rest launch stock 3 -> 2, mid-air launch stock 2 -> 1; each spent exactly one"
+          },
+          {
+            "id": "ember.empty_stock_cannot_launch",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Glow economy",
+            "label": "An empty stock cannot launch",
+            "outcome": "fail",
+            "explanation": "at stock 0: launches 3 -> 3, vy 319.33 -> 511.97"
+          },
+          {
+            "id": "ember.landing_refills_the_stock",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Glow economy",
+            "label": "Landing refills the stock",
+            "outcome": "pass",
+            "explanation": "17 landings all refilled to capacity with anchorKind ledge/wall"
+          },
+          {
+            "id": "ember.bounce_refunds_exactly_one",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Glow economy",
+            "label": "A moth burst refunds exactly one glow",
+            "outcome": "pass",
+            "explanation": "15 refund(s): +1 up to cap, upward kick, no score paid; moth 1 became inactive at the burst"
+          },
+          {
+            "id": "ember.chain_accounting_is_exact",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Chain",
+            "label": "Chain accounting is exact",
+            "outcome": "pass",
+            "explanation": "2 driven mid-air link(s) each incremented chainCount exactly, the chain event fired, and the landing banked: chainCount 0, chainBest 4 >= 2, chainBank observed; chainCount was 0 in all 562 anchored samples and chainBest never decreased"
+          },
+          {
+            "id": "ember.wall_cling_slips",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The flue",
+            "label": "Walls hold but slip",
+            "outcome": "pass",
+            "explanation": "wall cling slid -25.13 (-26/s, gentle); ledge held steady (dy 0)"
+          },
+          {
+            "id": "ember.glimmer_contact_scores",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Prizes",
+            "label": "Glimmers score on contact",
+            "outcome": "pass",
+            "explanation": "7 collection(s), each paying a score bonus beyond the height gain of the same frames; glimmer 2 became inactive at the collection"
+          },
+          {
+            "id": "ember.damp_rises_and_takes_the_run",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The damp",
+            "label": "The damp rises and ends the run",
+            "outcome": "pass",
+            "explanation": "dampY non-decreasing over 2185 playing steps; camping run ended with damp at 120.14 vs spark 132.14; score/height frozen after the end"
+          },
+          {
+            "id": "ember.camping_spark_is_taken",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The damp",
+            "label": "Camping is death",
+            "outcome": "pass",
+            "explanation": "camping on a ledge with no further input, the damp took the spark after 5.9s of simulated time (limit 120s), observed live to phase gameover"
+          },
+          {
+            "id": "ember.safe_road_always_exists",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The flue",
+            "label": "The safe road always exists",
+            "outcome": "pass",
+            "explanation": "58 anchored samples each had at least one active ledge within the launchReach box above"
+          },
+          {
+            "id": "ember.no_spawn_inside_player",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The flue",
+            "label": "Nothing spawns on the spark",
+            "outcome": "pass",
+            "explanation": "80 item activations, none closer than playerRadius + collisionRadius"
+          },
+          {
+            "id": "ember.visible_size_matches_hitbox",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The flue",
+            "label": "Visible size matches the hitbox",
+            "outcome": "pass",
+            "explanation": "2003 item observations, worst collisionRadius/visualRadius 1 <= 1.1"
+          },
+          {
+            "id": "ember.pressure_rises_with_height",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The damp",
+            "label": "Pressure rises with height",
+            "outcome": "pass",
+            "explanation": "difficulty 0 -> 5 over height 21.73 -> 5499.56; monotone: dampSpeed 59.502 -> 92.348 -> 119.575"
+          },
+          {
+            "id": "ember.no_audio_before_first_input",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Sound",
+            "label": "No audio before the first input",
+            "outcome": "pass",
+            "explanation": "no instrumented audio construct existed before the first input (0 contexts, 0 media plays); the constraint holds for everything the instruments can see; after input: 1 context(s) created, 1 running"
+          },
+          {
+            "id": "ember.run_end_awards_monotone_rank",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Scoring and end of run",
+            "label": "A finished run awards a rank",
+            "outcome": "pass",
+            "explanation": "4 finished runs, per-grade score intervals disjoint and equal scores equal-graded (camp-scenario: score 1577 -> \"B\"; policy-camp: score 1577 -> \"B\"; restart-entry: score 1577 -> \"B\"; climb-then-end: score 17535 -> \"S+\"); rank stayed null across 2194 playing samples; the ladder's label order itself is judged from the run-end screenshot, not here"
+          },
+          {
+            "id": "ember.seed_reproduces_the_flue",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Determinism",
+            "label": "A seed reproduces the flue",
+            "outcome": "pass",
+            "explanation": "reset(4201) twice produced identical ready snapshots (6 ledges, 5 items, rngState match); reset(4202) produced a different course"
+          },
+          {
+            "id": "common.restart_is_complete",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Scoring and end of run",
+            "label": "Restart resets the whole run",
+            "outcome": "pass",
+            "explanation": "after the end-of-run tap, all 22 compared fields (economy counters, score, height, damp, rank, rngState, spawnIndex, entity ids) equal the freshly initial view"
+          },
+          {
+            "id": "ember.damp_presentation_menaces",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "The damp",
+            "label": "The damp looks like a menace",
+            "outcome": "fail",
+            "explanation": "confidence high: In the gameplay screenshot (the shot showing ASCENT 5,597), the lower threat area reads only as a very dark, largely uniform band/gradient with straight horizontal boundaries. No visible textured body, uneven front contour, tendrils, or reaching forms establish an encroaching damp. The two gameover captures are heavily darkened behind the results panel and likewise show no discernible shaped damp front."
+          },
+          {
+            "id": "ember.field_stays_readable_in_portrait",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The flue stays readable in portrait",
+            "outcome": "pass",
+            "explanation": "confidence high: At the stated 390x780 portrait viewport, the field is consistently readable across the captured active states. The spark is a large, high-contrast orange character; the top-right glow stock is clearly countable as three circular pips, including depleted states with dark pips (for example expr-emptyfall). Ledges remain distinct as separated horizontal gray perches, while prizes are visually differentiated at a glance: glimmers are bright white-gold diamonds and moths have visible wing silhouettes. The start, mid (height 2204.7), and high (height 4415.8) captures all present multiple visible upward ledges and/or prizes rather than a blank or obstructed view ahead. The damp is visibly differentiated from the dark shaft by its blue, wavy front at the bottom in the idle and burst/damp-near field views. Aim and chain feedback remain localized: the dotted aim path in expr-aim and the CHAIN labels/particles in chain captures do not cover the next ledges or items."
+          },
+          {
+            "id": "ember.impact_feedback_supports_readability",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "Impact feedback celebrates without obscuring",
+            "outcome": "pass",
+            "explanation": "confidence high: The captured moments show localized, legible response beyond simple movement: expr-aim has a visibly wound/squashed spark and a thin dotted sling trajectory; expr-flight and the mid/high frames show stretched flame bodies, glow, and small ember trails; expr-chain1 and expr-chain2 show active chain banners plus ember effects; expr-bank shows a compact landing flare/particle cluster and '+960 BANKED!'; and expr-burst shows a bright, contained burst aura with orbiting fragments. These effects remain small relative to the shaft: ledges and glowing prizes are readable around the effects in every frame, including at heights 2204.7 (mid) and 4415.8 (high). In expr-burst, the blue damp wave remains plainly visible along the bottom rather than being covered by the burst feedback."
+          },
+          {
+            "id": "ember.spark_expression_states_read",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The spark is a character with legible states",
+            "outcome": "pass",
+            "explanation": "confidence medium: The captured shots show a recognizable flame protagonist with a drawn face, bright core, orange outline, and orbiting ember details rather than a generic dot. Its silhouette/body language changes substantially: upright and settled in expr-idle, long and vertically stretched in expr-flight, strongly sideways/leaning under the dotted sling in expr-aim, pressed to the left wall in expr-cling, tense and isolated with all three stock pips dark in expr-emptyfall, and rounder/brighter with an open, delighted-looking face and burst ring in expr-burst. Moths visible across the expression shots have a central dark body, paired outlined gold wings, and antenna-like marks; they read as small stylized creatures rather than collection circles."
+          },
+          {
+            "id": "ember.visual_identity_is_coherent",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "Visual identity is coherent and legible",
+            "outcome": "pass",
+            "explanation": "confidence high: Across start, mid (height 2204.7), high (height 4415.8), and the expression shots, the presentation consistently uses a dark blue-black flue, charcoal rounded ledges and panels, and ember-gold/orange highlights. The spark is an expressive flame character with glowing orange silhouette and facial features; prizes are luminous gold diamonds; moths share the thin gold-outlined, dark-bodied treatment; and the glow stock, chain plaques, score accents, and landing/burst particles all use the same warm light language. The flue has visible depth cues through inset walls, segmented dark interior bands/grid lines, ledges at varied planes, and the layered navy/cyan wave treatment of the damp in start and damp-close. The gameover screen clearly belongs to this world: its navy-black rounded card, amber score/rank ring and borders, cyan 'THE DAMP TOOK THE LIGHT' heading, and dim blurred flue backdrop preserve the established palette and shape language rather than switching to an unrelated screen style."
+          },
+          {
+            "id": "gate.input_liveness",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Public input responds",
+            "outcome": "pass"
+          }
+        ],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-09-02T17:05:07.193116Z",
+        "wallClockSeconds": 223.317849,
+        "usage": {
+          "input_tokens": 122609,
+          "cached_input_tokens": 641520,
+          "cache_creation_input_tokens": null,
+          "output_tokens": 66102,
+          "reasoning_tokens": 29649
+        },
+        "totalReportedTokens": 859880,
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "not reported"
         },
         "agentPlayEvidence": {
           "status": "not_applicable",
@@ -9953,6 +10692,517 @@
           "time": "harness wall clock",
           "tokens": "provider CLI stream",
           "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_b3fe42683f915f674747",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "b3fe42683f915f674747ecaea23382ac19a6ee28cfc772d26d88a25cce106867",
+          "publicBase": "/artifacts/b3fe42683f915f674747ecaea23382ac19a6ee28cfc772d26d88a25cce106867/",
+          "byteLength": 3546
+        },
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "requirementSummary": {
+          "passed": 36,
+          "failed": 2,
+          "notEvaluated": 10,
+          "graderErrors": 0,
+          "evaluated": 38,
+          "applicable": 48,
+          "rate": null
+        },
+        "checks": [
+          {
+            "id": "gate.artifact_valid",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Artifact is valid",
+            "outcome": "pass",
+            "explanation": "3 file(s) scanned, every src/href/url() resolves inside the tree by relative path; 0 off-origin and 0 failing same-tree requests in 4 observed"
+          },
+          {
+            "id": "gate.loads",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Game loads",
+            "outcome": "pass",
+            "explanation": "loaded; __ARENA_GAME__ exposes reset/snapshot; snapshot has 31 fields"
+          },
+          {
+            "id": "gate.no_blocking_uncaught_error",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "No blocking browser error",
+            "outcome": "pass",
+            "explanation": "no uncaught page errors during boot, play, collision and restart scenarios"
+          },
+          {
+            "id": "gate.canonical_input_changes_state",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "Simple controls respond",
+            "outcome": "pass",
+            "explanation": "accel depth 0 -> 174.1, steer moved x by 78; keys were delivered to the document with no prior click"
+          },
+          {
+            "id": "gate.progress_changes",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "Core loop makes progress",
+            "outcome": "pass",
+            "explanation": "depth 1.6 -> 174.1 over 700ms of held accelerator"
+          },
+          {
+            "id": "gate.restart_works",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "Restart works",
+            "outcome": "pass",
+            "explanation": "R (r) reset depth 359.5 -> 0, score 359 -> 0"
+          },
+          {
+            "id": "delve.canonical_inputs_start_and_progress",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Accelerate and steer start the run",
+            "outcome": "pass",
+            "explanation": "phase ready -> playing, depth 1.6 -> 174.1 under ArrowDown"
+          },
+          {
+            "id": "delve.ready_freezes_until_first_input",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Ready is frozen until the first input",
+            "outcome": "pass",
+            "explanation": "idle 700ms after reset: tick stayed 0, elapsedMs/timeMs stayed 0, phase stayed ready; under the accelerator phase=playing, tick=46"
+          },
+          {
+            "id": "delve.touch_drives_the_same_machine",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Touch accelerates and steers",
+            "outcome": "pass",
+            "explanation": "held downward drag depth 156.47 vs no-input 0 over 700ms, then with the drag eased off a leftward offset moved x by -131.43; no key was pressed"
+          },
+          {
+            "id": "delve.mouse_drives_the_same_machine",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Mouse drives the one-thumb machine",
+            "outcome": "pass",
+            "explanation": "mouse drag depth 162.25 vs no-input 0, then leftward offset moved x by -129.62; no key was pressed"
+          },
+          {
+            "id": "delve.acceleration_increases_speed_and_depth",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Speed vs control",
+            "label": "Acceleration increases speed and depth",
+            "outcome": "pass",
+            "explanation": "same fixed run, 700ms windows: speed 90->358.33, depth 0->174.1, score 0->174"
+          },
+          {
+            "id": "delve.speed_reduces_steering_authority",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Speed vs control",
+            "label": "High speed reduces steering authority",
+            "outcome": "pass",
+            "explanation": "authority |dx|/ddepth low 0.9186 @speed 90 vs high 0.2136 @speed 460; |dx|/ms low 0.24152 vs high 0.11265 (per-depth ratio 0.233, per-time ratio 0.466, both < 0.85)"
+          },
+          {
+            "id": "delve.release_restores_steering_authority",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Speed vs control",
+            "label": "Releasing acceleration restores control",
+            "outcome": "fail",
+            "explanation": "same run: held-throttle authority 0.2136 then released 0.21 (ratio 0.983 not above 1.1)"
+          },
+          {
+            "id": "delve.idle_crawl_keeps_machine_moving",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Speed vs control",
+            "label": "The machine always creeps forward",
+            "outcome": "pass",
+            "explanation": "no-input depth rate 0.09/ms vs accelerated 0.23/ms over 1783.34ms"
+          },
+          {
+            "id": "delve.walls_exist_and_bound_the_corridor",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "Walls bound the corridor",
+            "outcome": "pass",
+            "explanation": "91 wall samples: ordered, extend past player depth, leftX<rightX, corridorHalfWidth matches wall pair"
+          },
+          {
+            "id": "delve.wall_contact_stops_motion",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "Wall contact drops the machine to the crawl",
+            "outcome": "pass",
+            "explanation": "speed 340.83 -> 90 within 250ms of the wall contact (crawl ceiling 121.5), phase playing, recovered to 422.5 under held throttle"
+          },
+          {
+            "id": "delve.wall_and_rock_costs_are_equivalent",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "Walls and rocks cost the same",
+            "outcome": "pass",
+            "explanation": "wall min 90 recover 363ms, rock min 90 recover 483ms (ratio 1.33)"
+          },
+          {
+            "id": "delve.ordinary_rock_collision_stops_motion",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "Ordinary rocks drop the machine to the crawl and shatter",
+            "outcome": "pass",
+            "explanation": "speed 460 -> 90 within 250ms of the rock hit (crawl ceiling 121.5), phase playing, recovered to 445.83; struck rock 2 shattered, no time credited"
+          },
+          {
+            "id": "delve.invincibility_transforms_rocks_only",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "Invincibility transforms rocks, not walls",
+            "outcome": "pass",
+            "explanation": "14 powered wall contact(s): speed collapsed to the crawl, rocksBroken unchanged, remainingMs not credited"
+          },
+          {
+            "id": "delve.rocks_live_inside_the_corridor",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "Rocks sit inside the corridor",
+            "outcome": "pass",
+            "explanation": "574 rock observations all strictly inside the wall pair at their depth"
+          },
+          {
+            "id": "delve.corridor_always_traversable",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "A passable line always exists",
+            "outcome": "pass",
+            "explanation": "safeHalfWidth min 36 > playerRadius 14 across 902 samples; narrowest free gap 87.21 over 2821 depth slices"
+          },
+          {
+            "id": "delve.turns_are_telegraphed_before_contact",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "Turns are telegraphed",
+            "outcome": "pass",
+            "explanation": "previewMs > 0 in all 902 samples and >= crossing time in all 902 comparisons; best measured lateral rate 0.22827 x-units/ms near top speed across 8 recording(s)"
+          },
+          {
+            "id": "delve.no_rock_spawns_on_the_player",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "No rock spawns on the player",
+            "outcome": "pass",
+            "explanation": "34 rock activations, none closer than playerRadius + collisionRadius"
+          },
+          {
+            "id": "delve.visible_rock_size_matches_collision_hitbox",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "Visible size matches the hitbox",
+            "outcome": "pass",
+            "explanation": "1153 entity observations, worst collisionRadius/visualRadius 1 <= 1.1"
+          },
+          {
+            "id": "delve.pressure_increases_with_depth",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "Pressure rises with depth",
+            "outcome": "pass",
+            "explanation": "difficulty 1 -> 1.6 over depth 0 -> 4836.76; rock density 6.477->6.723->6.911"
+          },
+          {
+            "id": "delve.fragment_contact_increases_remaining_time",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Collectibles",
+            "label": "Fragments add time on contact",
+            "outcome": "pass",
+            "explanation": "18/18 fragment pickups credited remainingMs; no unexplained gain in 902 frames"
+          },
+          {
+            "id": "delve.fragments_belong_to_formations",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Collectibles",
+            "label": "Fragments come in formations",
+            "outcome": "pass",
+            "explanation": "7 formations with >=3 contiguous-index members; 4 formationKind values (chevron, line, triangle, arc)"
+          },
+          {
+            "id": "delve.formation_members_form_a_flowable_path",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Collectibles",
+            "label": "Formations are sweepable in one movement",
+            "outcome": "pass",
+            "explanation": "25 consecutive member steps: all strictly depth-ordered and within the best measured 0.27907 lateral x-units/ms over the crawl-rate descent time (0.09 depth-units/ms)"
+          },
+          {
+            "id": "delve.clock_takes_the_idle_run",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Collectibles",
+            "label": "The clock takes the idle run",
+            "outcome": "not_evaluated",
+            "explanation": "timer scenario did not run (verifier budget exhausted)"
+          },
+          {
+            "id": "delve.power_items_are_rare",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Power state",
+            "label": "Power items stay rare",
+            "outcome": "pass",
+            "explanation": "1 power vs 33 fragments (ratio 0.03), max simultaneous power 1, from the long run (fixed run)"
+          },
+          {
+            "id": "delve.power_item_starts_finite_invincibility",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Power state",
+            "label": "Power item starts finite invincibility",
+            "outcome": "pass",
+            "explanation": "invincibility started at +6500ms, decreased monotonically over 390 frames, expired without restart"
+          },
+          {
+            "id": "delve.powered_rock_contact_breaks_and_adds_time",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "Powered rock hits become rewards",
+            "outcome": "pass",
+            "explanation": "powered rock break at tick 1092: rocksBroken +1, speed stayed 460, remainingMs credited +1600ms"
+          },
+          {
+            "id": "delve.no_audio_before_first_input",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Sound",
+            "label": "No audio before the first input",
+            "outcome": "pass",
+            "explanation": "no instrumented audio construct existed before the first input (0 contexts, 0 media plays); the constraint holds for everything the instruments can see; after input: 1 context(s) created, 1 running"
+          },
+          {
+            "id": "delve.timer_zero_ends_run",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Scoring and restart",
+            "label": "The run ends when time reaches zero",
+            "outcome": "not_evaluated",
+            "explanation": "timer scenario did not run (verifier budget exhausted)"
+          },
+          {
+            "id": "common.restart_is_complete",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Scoring and restart",
+            "label": "Restart resets the whole run",
+            "outcome": "pass",
+            "explanation": "after R all 15 tracked fields equal the freshly initial view (fixed run)"
+          },
+          {
+            "id": "delve.score_is_primarily_depth_derived",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Scoring and restart",
+            "label": "Score tracks depth",
+            "outcome": "not_evaluated",
+            "explanation": "policy run(s) full-throttle, modulated, minimum-speed, casual-line were not produced; the score-versus-depth ordering needs the whole shared-fixed run table"
+          },
+          {
+            "id": "delve.time_bonuses_do_not_fake_depth",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Scoring and restart",
+            "label": "Time bonuses do not fake depth",
+            "outcome": "pass",
+            "explanation": "18 collections, none advancing depth beyond the run's own per-tick trend (median step 5.68)"
+          },
+          {
+            "id": "delve.risk_beats_farming",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Collectibles",
+            "label": "Risk outscores farming",
+            "outcome": "not_evaluated",
+            "explanation": "policy run(s) full-throttle, modulated, minimum-speed were not produced; the risk economy is compared only within one shared-fixed run table"
+          },
+          {
+            "id": "delve.run_end_awards_monotone_rank",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Scoring and end of run",
+            "label": "A finished run awards a rank",
+            "outcome": "not_evaluated",
+            "explanation": "no run reached its end inside the verifier budget; rank award not observable"
+          },
+          {
+            "id": "delve.wall_stop_is_recoverable",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The course",
+            "label": "The wall stop is a real setback the run survives",
+            "outcome": "pass",
+            "explanation": "depth gained 84.1 in the 600ms after the wall contact against 192.3 over the same window of free-running digging in the same run; run continued=true, speed recovered above the crawl=true"
+          },
+          {
+            "id": "delve.timer_pressure_is_real",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Collectibles",
+            "label": "The timer genuinely threatens the run",
+            "outcome": "not_evaluated",
+            "explanation": "the casual-line policy run was not produced"
+          },
+          {
+            "id": "delve.power_state_changes_the_optimal_route",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Power state",
+            "label": "The power state changes what a rock is worth",
+            "outcome": "pass",
+            "explanation": "powered rock contact kept speed 460 -> 460 (crawl ceiling 121.5) and credited 1600ms, against the ordinary hit's 460 -> 90"
+          },
+          {
+            "id": "delve.advance_matches_real_time",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "Simulated-time stepping is the same game",
+            "outcome": "not_evaluated",
+            "explanation": "the real-time reference run never advanced (tick 0), so parity is not measurable"
+          },
+          {
+            "id": "delve.event_history_is_ordered_and_bounded",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "The event history is ordered and bounded",
+            "outcome": "pass",
+            "explanation": "12 entries, seq 1..12 strictly +1, kinds rock_hit/near_miss/fragment, lastEvent aliases the newest entry, empty after reset"
+          },
+          {
+            "id": "delve.power_item_appears_within_the_guaranteed_window",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Power state",
+            "label": "The first power item arrives on schedule",
+            "outcome": "pass",
+            "explanation": "the first power item arrived inside the contracted 60s window on every probed fixed run (fixed run: 9.8s, fixed run: 19.2s)"
+          },
+          {
+            "id": "delve.run_end_ceremony_reads",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Scoring and end of run",
+            "label": "The end of a run is a ceremony",
+            "outcome": "not_evaluated",
+            "explanation": "confidence high: The evidence explicitly contains no screenshots and no runEndSamples, with the note: \"no run-end sample was produced (see scenarioErrors for the reason)\". Therefore there is no end-of-run still from which to verify score, session best, rank, and a signature stat."
+          },
+          {
+            "id": "delve.obstacle_density_stays_readable",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "The course",
+            "label": "Density stays readable",
+            "outcome": "not_evaluated",
+            "explanation": "confidence high: No screenshots were captured: \"screenshots\": []. The verifier note says \"the screenshot policy run captured no depth milestone,\" so there is no observed corridor, obstacle field, machine, timer, gap, or upcoming bend to assess."
+          },
+          {
+            "id": "delve.machine_expression_states_read",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The machine is a character with legible states",
+            "outcome": "pass",
+            "explanation": "confidence high: The machine is an authored drill-pod character with a prominent cyan, eye-like central lens rather than an undifferentiated marker. Its body language changes clearly across the captured shots: expr-ready shows the compact upright pod at DEPTH 0m/SPEED 90 with no thrust trail; expr-dig at 81m/SPEED 253 adds a small active exhaust; and expr-topspeed at 367m/SPEED 460 has a much longer bright cyan-and-amber plume, visibly stretching the craft with speed. The close-call capture visibly places the pod tightly among rocks and shows the on-scene \"NEAR MISS X2\" reaction. The collision-aftermath image is especially distinct: the formerly vertical pod is flattened into a broad horizontal, crumpled-looking shape around its eye, reading as recoil/stun rather than normal travel. The coasting capture also presents a reduced-speed (SPEED 322) angled, gathered posture rather than the topspeed stretch."
+          },
+          {
+            "id": "delve.impact_feedback_supports_readability",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "Impact feedback celebrates without obscuring",
+            "outcome": "fail",
+            "explanation": "confidence high: Readability is strong in all three shots: the corridor walls, rocks, and the HUD remain unobstructed, including the CHRONO-METER at 16.8s/18.7s and the SPEED readout. Dangerous speed has a clear restrained cyan/orange streak at SPEED 460 in shot-expr-topspeed, and shot-expr-impact shows a visibly flattened/changed machine state at SPEED 326 after impact."
+          },
+          {
+            "id": "delve.visual_identity_is_coherent",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "Visual identity is coherent and legible",
+            "outcome": "not_evaluated",
+            "explanation": "confidence high: The sole captured screenshot, expr-ready, shows a deliberate dark descent presentation: blue-gray angular corridor walls, cyan glowing fragments, and a matching outlined machine/UI treatment with yellow accent text and meter. This supports coherence in the ready scene."
+          },
+          {
+            "id": "delve.powered_state_reads_in_the_scene",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Power state",
+            "label": "The powered state is visibly a different state",
+            "outcome": "pass",
+            "explanation": "confidence high: The powered screenshot (expr-powered) is visibly a distinct scene state without consulting the HUD numbers: the machine has a strong gold/orange outer shell and glow instead of the ordinary frame's small cyan-blue pod, the rocks ahead change from muted blue-gray to bright orange glowing targets, and gold vertical rush streaks appear through the corridor. A large bottom treatment also visually reinforces the active mode. Despite these effects, the dark corridor walls, orange rocks, and cyan fragment near the bottom remain clearly readable."
+          },
+          {
+            "id": "gate.input_liveness",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Public input responds",
+            "outcome": "pass"
+          }
+        ],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-09-02T17:08:59.168217Z",
+        "wallClockSeconds": 352.287123,
+        "usage": {
+          "input_tokens": 230803,
+          "cached_input_tokens": 3288315,
+          "cache_creation_input_tokens": null,
+          "output_tokens": 100031,
+          "reasoning_tokens": 34165
+        },
+        "totalReportedTokens": 3653314,
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "not reported"
         },
         "agentPlayEvidence": {
           "status": "not_applicable",
@@ -16443,6 +17693,314 @@
         }
       },
       {
+        "id": "build_d6677ad0eb8df550a4f8",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "d6677ad0eb8df550a4f8e6532d25dae006a2784a236b07c3a5c6c3c0008f62e0",
+          "publicBase": "/artifacts/d6677ad0eb8df550a4f8e6532d25dae006a2784a236b07c3a5c6c3c0008f62e0/",
+          "byteLength": 1508
+        },
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "requirementSummary": {
+          "passed": 17,
+          "failed": 6,
+          "notEvaluated": 4,
+          "graderErrors": 0,
+          "evaluated": 23,
+          "applicable": 27,
+          "rate": null
+        },
+        "checks": [
+          {
+            "id": "gate.artifact_valid",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Artifact is valid",
+            "outcome": "pass"
+          },
+          {
+            "id": "gate.loads",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Game loads",
+            "outcome": "pass",
+            "explanation": "window.__ARENA_GAME__ exposes reset(fixed run) and snapshot()"
+          },
+          {
+            "id": "gate.no_blocking_uncaught_error",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "No blocking browser error",
+            "outcome": "pass",
+            "explanation": "no uncaught page or console error was observed"
+          },
+          {
+            "id": "gate.canonical_input_changes_state",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Canonical controls respond",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.opening_air_game_is_available",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Opening",
+            "label": "The opening exposes both air lanes",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.opening_route_is_guaranteed",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Opening",
+            "label": "The opening pursuit is always available",
+            "outcome": "fail",
+            "explanation": "fixed run run 1: the run ended after 50s of clean play, before the opening could teach one pursuit; fixed run run 1: the run ended after 53s of clean play, before the opening could teach one pursuit (fixed run [advance] 2 run(s), 60s observed, first low target 2s, 6 slow targets, largest empty stretch 2s, first destruction none, stopped: window_complete; fixed run [advance] 2 run(s), 60s observed, first low target 2s, 6 slow targets, largest empty stretch 2s, first destruction none, stopped: window_complete)"
+          },
+          {
+            "id": "stomp.advance_matches_real_time",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Replay",
+            "label": "Stepped time is the same game",
+            "outcome": "pass",
+            "explanation": "advance is inert in the frozen ready phase and reproduces 90 ticks of real-time held-direction play field for field"
+          },
+          {
+            "id": "stomp.ready_freezes_until_first_input",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Opening",
+            "label": "Ready is frozen",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.touch_matches_keyboard",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Touch preserves movement and jump",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.mouse_controls_move_and_jump",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Mouse can move and jump",
+            "outcome": "fail"
+          },
+          {
+            "id": "stomp.jump_is_single_stage",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "The machine has one grounded jump",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.bounce_bands_are_ordered",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Ball control",
+            "label": "Return timing creates three reach bands",
+            "outcome": "fail"
+          },
+          {
+            "id": "stomp.machine_motion_aims_the_ball",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Ball control",
+            "label": "Moving under the ball aims it",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.top_contact_advances_one_hit",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Pursuit",
+            "label": "A descending top contact counts once",
+            "outcome": "fail",
+            "explanation": "an observed top hit contradicted the one-hit transition"
+          },
+          {
+            "id": "stomp.air_enemies_require_three_hits",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Pursuit",
+            "label": "One airborne target requires three clean hits",
+            "outcome": "not_evaluated",
+            "explanation": "the driven policies did not complete three separated top contacts on one target"
+          },
+          {
+            "id": "stomp.third_hit_pays_the_most",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Pursuit",
+            "label": "Finishing the pursuit pays",
+            "outcome": "not_evaluated",
+            "explanation": "three separated top contacts on one target were not observed"
+          },
+          {
+            "id": "stomp.wrong_side_hit_is_painful",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Mistakes",
+            "label": "Wrong-side contact is a real mistake",
+            "outcome": "fail",
+            "explanation": "an observed wrong-side contact changed protected state or charged incorrectly"
+          },
+          {
+            "id": "stomp.ball_drop_costs_more_and_recovers",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Mistakes",
+            "label": "A drop hurts most and recovers",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.timer_drains_and_ends_the_run",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Clock",
+            "label": "The clock is the loss condition",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.attack_beats_safe_returning",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Clock",
+            "label": "A completed pursuit buys survival",
+            "outcome": "not_evaluated",
+            "explanation": "no completed public-input airborne pursuit was observed"
+          },
+          {
+            "id": "stomp.pressure_rises_with_success",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Escalation",
+            "label": "Score raises bounded pressure",
+            "outcome": "not_evaluated",
+            "explanation": "no progression policy completed a target and continued into a later pattern"
+          },
+          {
+            "id": "stomp.seed_and_restart_are_complete",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Replay",
+            "label": "Seed and restart reproduce the run",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.visible_size_matches_hitbox",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Fairness",
+            "label": "Visible size matches collision size",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.stage_fits_machine_reach",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Fairness",
+            "label": "The stage never outruns the machine",
+            "outcome": "pass"
+          },
+          {
+            "id": "stomp.ready_stage_invites",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Invitation",
+            "label": "The pre-run stage invites instead of instructing",
+            "outcome": "pass",
+            "explanation": "confidence high: All eight attached ready-state frames show a composed portrait stage: a small expressive ground machine is centered above the ground line with a bright ball resting immediately on its top, and both dashed air lanes are clearly readable as HIGH LANE 2 and LOW LANE 1. The only instructional sentence is the short invitation “MOVE OR JUMP TO START”; the timer, score/rank, title, and visible STEER/JUMP touch surfaces are interface rather than a control manual. The capture is confirmed frozen in rules (phase \"ready\", no input, rulesFrozenDuringCapture true), while distinctFrameImages is 8 across 910 ms, visibly supported by small ambient particle/light changes, so the stage has presentation motion without advancing play."
+          },
+          {
+            "id": "stomp.machine_and_ball_are_authored",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The machine and ball are an authored pair",
+            "outcome": "pass",
+            "explanation": "confidence high: All four attached screenshots show a cohesive neon character pair rather than primitives: the machine is a compact outlined robot with a rounded cyan body, glowing central light, and a distinct horizontal top platform; the ball is a glowing teal-and-yellow oval partner with an eye-like interior. In ready, the ball visibly waits on the machine's top. In ordinary-flight it is separated and vertically stretched/outlined in flight. In top-hit it gains a strong yellow glow while the hit is called out as \"HIT 1/3,\" and in enemy-defeat it is airborne above a large multicolor \"BURST! +12s\" celebration. The pair share the same cyan/yellow luminous linework and dark-grid stage language, while the pink/green flyer is visually distinct from both."
+          },
+          {
+            "id": "stomp.ball_flight_reads_as_buoyant",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "Ball flight reads as buoyant",
+            "outcome": "pass",
+            "explanation": "confidence high: The attached uninterrupted flight shows a clear upward launch at tick 70 (y=466.25, vy=-16.8), a sustained ascent through ticks 82 and 98 (y=286.49 then 109.53), and a distinct direction reversal near the top: y=17.98 with vy=+4.13 at tick 115. The fall is visibly and numerically spaced across five shorter-stride samples, from y=67.75 at tick 124 through 140.20, 235.33, 353.14 at tick 151, rather than an immediate drop. The ball remains visibly distinct in all screenshots, with only a small glow and no obscuring effects."
+          },
+          {
+            "id": "stomp.contact_direction_reads",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "Combat direction and damage read clearly",
+            "outcome": "pass",
+            "explanation": "confidence medium: The top-hit screenshot clearly places the ball above the flyer's green-crowned top and shows '+3s [HIT 1/3],' while wrong-side shows the ball contacting from below/side at the flyer's pink underside details with a conspicuous red '-4s WRONG SIDE!' response. The state shots distinguish an unhit flyer from the explicitly displayed '[HIT 1/3]' and '[HIT 2/3]' states; the twice-hit flyer also has a much brighter red/orange body treatment. The defeat shot escalates to 'BURST! +12s' while the next ball is visibly separated above the burst, so the effect does not hide its return. Event evidence corroborates the ordered three-hit progression: for enemy 1, sequences 7, 8, and 9 advance hitsTaken 0→1→2→3 with increasing rewards of 3000, 6000, and 12000 ms, and the third makes the enemy inactive."
+          },
+          {
+            "id": "stomp.field_stays_readable_in_portrait",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The portrait stage has one readable identity",
+            "outcome": "pass",
+            "explanation": "confidence medium: At 390×780, the ready shot composes the 75.0s timer, score/status UI, both clearly color-coded dashed lanes, the machine-and-ball pair, ground, and touch controls without overlap or cropping. Opening-low visibly places a distinct low-lane flyer inside the field while the bright ball, airborne machine, timer (71.8s), and lane remain separable. Opening-high likewise shows a fully visible high-lane flyer, ball, recovery machine, and readable status (89.7s, score 900, Defeated: 1, Rank B). The ordinary-flight frame keeps the machine and single ball coherently paired at ground level with the full lane geometry and timer (73.7s) still clear. Across frames, the consistent dark-grid/neon palette, expressive cyan machine, glowing ball, lane colors, and distinct saucer-like targets read as a single intentionally authored presentation rather than unrelated placeholders. No shown machine, ball, lane, target, or timer is cut off by the layout, and the uncluttered field leaves visible recovery space."
+          },
+          {
+            "id": "stomp.end_ceremony_reads",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The ending invites another run",
+            "outcome": "fail",
+            "explanation": "confidence high: The attached gameover screenshot is a cohesive STOMP-styled end panel and clearly shows FINAL SCORE 700, SESSION BEST 700, LONGEST PURSUIT 2, RANK C, and the restart invitation “TAP OR PRESS [R] TO PLAY AGAIN.” The terminal snapshot corroborates game_over with score 0 and rank C for its separate terminal run, confirming the screenshot is the relevant end-screen modality rather than a missing capture."
+          },
+          {
+            "id": "gate.input_liveness",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Public input responds",
+            "outcome": "pass"
+          }
+        ],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-09-02T17:15:10.416705Z",
+        "wallClockSeconds": 238.648641,
+        "usage": {
+          "input_tokens": 175378,
+          "cached_input_tokens": 1731012,
+          "cache_creation_input_tokens": null,
+          "output_tokens": 72254,
+          "reasoning_tokens": 27755
+        },
+        "totalReportedTokens": 2006399,
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "not reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_applicable",
+          "receiptAvailable": false
+        }
+      },
+      {
         "id": "build_9e6c1551397990117ebb",
         "taskId": "stomp@0.7.0",
         "status": "succeeded",
@@ -20407,6 +21965,245 @@
         }
       },
       {
+        "id": "build_30a2b242405a4c6b8892",
+        "taskId": "lumenyard@0.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "30a2b242405a4c6b88921c104f3276b75c7d89bbe9dafd2c0e29942f0fc1144f",
+          "publicBase": "/artifacts/30a2b242405a4c6b88921c104f3276b75c7d89bbe9dafd2c0e29942f0fc1144f/",
+          "byteLength": 8537
+        },
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "requirementSummary": {
+          "passed": 13,
+          "failed": 4,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 17,
+          "applicable": 18,
+          "rate": null
+        },
+        "checks": [
+          {
+            "id": "gate.artifact_valid",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Artifact is self-contained",
+            "outcome": "pass",
+            "explanation": "13 files; no symlink, invalid name, or off-origin runtime reference"
+          },
+          {
+            "id": "gate.loads",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Game loads",
+            "outcome": "pass",
+            "explanation": "visible board; state keys attempt,crates,goals,height,legalActions,levelId,moveCount,outcome,phase,player,poweredGoals,pushCount,revision,undoAvailable,walls,width"
+          },
+          {
+            "id": "gate.no_blocking_uncaught_error",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "No blocking browser error",
+            "outcome": "pass",
+            "explanation": "no uncaught page error during boot, rules, solve, undo, restart, or bridge scenarios"
+          },
+          {
+            "id": "gate.canonical_input_changes_state",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "Public input responds",
+            "outcome": "pass",
+            "explanation": "ArrowRight moved {\"row\":4,\"col\":2} -> {\"row\":4,\"col\":3}"
+          },
+          {
+            "id": "gate.progress_changes",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "The puzzle can be completed",
+            "outcome": "pass",
+            "explanation": "first-light solved in 6 moves"
+          },
+          {
+            "id": "gate.restart_works",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "Restart starts a clean attempt",
+            "outcome": "pass",
+            "explanation": "attempt 1 -> 2; revision 21 -> 22"
+          },
+          {
+            "id": "lumenyard.visible_state_is_closed",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Arena integration",
+            "label": "Arena state is visible and closed",
+            "outcome": "pass",
+            "explanation": "exact keys: attempt, crates, goals, height, legalActions, levelId, moveCount, outcome, phase, player, poweredGoals, pushCount, revision, undoAvailable, walls, width"
+          },
+          {
+            "id": "lumenyard.walls_and_bounds_block",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Puzzle rules",
+            "label": "Walls and board bounds block movement",
+            "outcome": "pass",
+            "explanation": "left wall rejected at revision 4"
+          },
+          {
+            "id": "lumenyard.pushes_one_relay",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Puzzle rules",
+            "label": "One relay can be pushed",
+            "outcome": "pass",
+            "explanation": "relay moved to 3,4 and robot occupied 3,3"
+          },
+          {
+            "id": "lumenyard.two_relays_cannot_be_pushed",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Puzzle rules",
+            "label": "Two relays block a push",
+            "outcome": "pass",
+            "explanation": "two adjacent relays rejected without mutation"
+          },
+          {
+            "id": "lumenyard.relay_cannot_be_pulled",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Puzzle rules",
+            "label": "Relays cannot be pulled",
+            "outcome": "pass",
+            "explanation": "walking away left relay coordinates unchanged"
+          },
+          {
+            "id": "lumenyard.all_goals_power_the_level",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Puzzle rules",
+            "label": "Every socket is required",
+            "outcome": "pass",
+            "explanation": "1/1 sockets powered"
+          },
+          {
+            "id": "lumenyard.undo_restores_exact_board",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Recovery",
+            "label": "Undo restores the exact board",
+            "outcome": "pass",
+            "explanation": "board and counters restored; revision 7 -> 8"
+          },
+          {
+            "id": "lumenyard.agent_bridge_matches_human_state",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Arena integration",
+            "label": "Human and Agent actions share one state",
+            "outcome": "pass",
+            "explanation": "act revision 0 -> 1; production state and visible frame changed together; restart attempt 1 -> 2"
+          },
+          {
+            "id": "lumenyard.stale_action_is_rejected",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Arena integration",
+            "label": "Stale actions do not mutate",
+            "outcome": "fail"
+          },
+          {
+            "id": "lumenyard.twenty_levels_are_solvable",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Level set",
+            "label": "All twenty authored levels are solvable",
+            "outcome": "pass"
+          },
+          {
+            "id": "lumenyard.invitation_is_the_live_yard",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The invitation is the live yard",
+            "outcome": "pass",
+            "explanation": "confidence high: The canonical portrait opening screenshot visibly centers a composed 7×7 night-time electrical yard rather than a menu: it shows a yellow maintenance robot near the lower board, a distinct relay core at center, and a copper-ringed empty socket above it. The surrounding rail/wall tiles, indicator lamps, dark grid floor, and Power 0/1 status make the board read as an electrical place. The only prominent invitation is the concise “RESTORE THE GRID.” pill, with no wall of rules or debug-symbol presentation."
+          },
+          {
+            "id": "lumenyard.board_states_read_at_a_glance",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "Board states read at a glance",
+            "outcome": "not_evaluated",
+            "explanation": "confidence high: The opening screenshot clearly shows visually different wall tiles, dark gridded floor, an orange-ring empty socket, an outlined relay core, and a yellow/cyan robot. However, the wrong-push and recovered screenshots display only a narrow, cropped left portion of the yard, with the remainder of each image blank/dark; they do not visibly show the moved/recovered relay and robot states needed for the requested comparison. The complete screenshot is likewise cropped and cannot reliably establish the powered-socket/relay appearance."
+          },
+          {
+            "id": "lumenyard.electrical_feedback_tells_progress",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "Electrical feedback tells progress",
+            "outcome": "fail",
+            "explanation": "confidence high: The complete screenshot contains a completion treatment: a large “restored” panel and a strongly highlighted action button, so final success is communicated visually rather than only through the top HUD."
+          },
+          {
+            "id": "lumenyard.completion_transforms_the_scene",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "Chapter and final endings are distinct",
+            "outcome": "fail",
+            "explanation": "confidence high: The chapter screenshot shows a completion card, but it is horizontally clipped off the left edge: its title is visible only as “ORED,” and the highlighted primary action only as “Bus →.” The word “Continue” and the full destination are not visible, so it is not a clear Continue action into the remaining boards. The dawn screenshot is likewise clipped, showing only the end of its title (“DAWN”) inside an almost identically sized, positioned, dark outlined modal. Although the dawn card visibly includes a “COLLECTIVE BEST” area and a crew/location line, neither screenshot visibly shows a transformed yard or a fully readable, conclusive final-dawn presentation."
+          },
+          {
+            "id": "lumenyard.campaign_shell_is_complete",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The campaign has a complete product shell",
+            "outcome": "fail",
+            "explanation": "confidence high: The opening screenshot does keep the live yard central and uses the short invitation “RESTORE THE GRID.” It also shows a compact “Map [M]” control rather than twenty visible tabs. Settings visibly contains two toggle switches, and the chapter screenshot shows a focused continuation button ending in “Bus →”."
+          },
+          {
+            "id": "gate.input_liveness",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Public input responds",
+            "outcome": "pass"
+          }
+        ],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-09-02T16:47:29.322504Z",
+        "wallClockSeconds": 366.780828,
+        "usage": {
+          "input_tokens": 203598,
+          "cached_input_tokens": 2412339,
+          "cache_creation_input_tokens": null,
+          "output_tokens": 87672,
+          "reasoning_tokens": 36333
+        },
+        "totalReportedTokens": 2739942,
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "not reported"
+        },
+        "agentPlayEvidence": {
+          "status": "not_evaluated",
+          "receiptAvailable": false
+        }
+      },
+      {
         "id": "build_aa7ed189e54ea2938c99",
         "taskId": "lumenyard@0.3.0",
         "status": "succeeded",
@@ -23749,6 +25546,444 @@
           "time": "harness wall clock",
           "tokens": "provider CLI stream",
           "cost": "computed from sealed token usage at model-prices.json rates (as of 2026-08-28)"
+        },
+        "agentPlayEvidence": {
+          "status": "not_evaluated",
+          "receiptAvailable": false
+        }
+      },
+      {
+        "id": "build_807e726d4ebb2b9215ea",
+        "taskId": "shoal@0.2.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "807e726d4ebb2b9215eae3e6c2caff154bae4b692c3f5be266ac7bdc1163a61f",
+          "publicBase": "/artifacts/807e726d4ebb2b9215eae3e6c2caff154bae4b692c3f5be266ac7bdc1163a61f/",
+          "byteLength": 4325
+        },
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "requirementSummary": {
+          "passed": 34,
+          "failed": 5,
+          "notEvaluated": 1,
+          "graderErrors": 0,
+          "evaluated": 39,
+          "applicable": 40,
+          "rate": null
+        },
+        "checks": [
+          {
+            "id": "gate.artifact_valid",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Artifact is valid",
+            "outcome": "pass",
+            "explanation": "sealed tree: 9 file(s), 84308 bytes, no external references at rest or at runtime"
+          },
+          {
+            "id": "gate.loads",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Game loads",
+            "outcome": "pass",
+            "explanation": "page loaded and the runtime contract answered with a usable snapshot"
+          },
+          {
+            "id": "gate.no_blocking_uncaught_error",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "No blocking browser error",
+            "outcome": "pass",
+            "explanation": "no uncaught page errors during the measured session"
+          },
+          {
+            "id": "gate.canonical_input_changes_state",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Platform gates",
+            "label": "A tap turns a shell",
+            "outcome": "pass",
+            "explanation": "a click at (195,390) changed real state (revision 1, phase playing)"
+          },
+          {
+            "id": "shoal.touch_gestures_drive_the_pool",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Touch plays the whole loop",
+            "outcome": "pass",
+            "explanation": "touch tap opened a shell; a held touch planted a pennant and the same hold lifted it"
+          },
+          {
+            "id": "shoal.mouse_gestures_drive_the_pool",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Mouse plays the whole loop",
+            "outcome": "pass",
+            "explanation": "click opened; right click planted and lifted a pennant; a held press planted without opening"
+          },
+          {
+            "id": "shoal.tap_restart_from_ceremony",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "The ceremony restarts on a tap",
+            "outcome": "pass",
+            "explanation": "ceremony restart observed (click: {\"worked\":false,\"phase\":\"ended\",\"attempt\":6}, tap: {\"worked\":true,\"phase\":\"ready\"})"
+          },
+          {
+            "id": "shoal.ready_freezes_until_first_turn",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Controls",
+            "label": "Ready is frozen until the first turn",
+            "outcome": "pass",
+            "explanation": "clock frozen through idle and advance(); a ready-phase flag was accepted at tick 0; the first open started the run (tick 60)"
+          },
+          {
+            "id": "shoal.first_turn_is_quiet_water",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The promise",
+            "label": "The first turn of every pool is free",
+            "outcome": "pass",
+            "explanation": "9 first turns across 3 fixed run and 3 positions all opened quiet water, and so did pool 2 and 3"
+          },
+          {
+            "id": "shoal.board_is_fixed_by_seed_and_first_turn",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The promise",
+            "label": "The board is a function of seed and first turn",
+            "outcome": "pass",
+            "explanation": "two discovery runs with the same fixed run and first turn revealed identical 6-urchin layouts despite different play, and an identical action prefix reproduced identical rows"
+          },
+          {
+            "id": "shoal.numbers_tell_the_truth",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The promise",
+            "label": "Numbers tell the truth",
+            "outcome": "pass",
+            "explanation": "131 revealed numbers checked against the discovered layouts of pools 1 and 2, boundaries included; every one equals its adjacent urchin count"
+          },
+          {
+            "id": "shoal.zero_ripples_the_quiet_region",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The promise",
+            "label": "A zero ripples its whole quiet region",
+            "outcome": "pass",
+            "explanation": "37 observed opens matched the predicted reveal exactly (zero region plus numbered rim, nothing else)"
+          },
+          {
+            "id": "shoal.no_guess_from_first_turn",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The promise",
+            "label": "The water never lies",
+            "outcome": "pass",
+            "explanation": "certain moves alone cleared pool 1 on fixed run, 7102, 7103 and pool 2 on fixed run; a provably safe open existed at every state"
+          },
+          {
+            "id": "shoal.covered_shells_keep_their_secret",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The promise",
+            "label": "Covered shells keep their secret",
+            "outcome": "pass",
+            "explanation": "live rows use only #, F, digits; covered urchin and covered safe shells are indistinguishable against the discovered layout; bridge state keys stay inside the manifest"
+          },
+          {
+            "id": "shoal.sting_ends_the_run_at_once",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The promise",
+            "label": "A sting ends the run on that shell",
+            "outcome": "pass",
+            "explanation": "opening a known urchin ended the run in the same action: phase ended, stungAt (3,5) marked X, rank \"Driftwood\", later actions rejected"
+          },
+          {
+            "id": "shoal.post_mortem_tells_the_whole_truth",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The promise",
+            "label": "The post-mortem tells the whole truth",
+            "outcome": "pass",
+            "explanation": "*, X and + account for exactly the 6 urchins and match the discovered layout; + graded the right pennant, - graded the wrong one, and the played numbers stayed visible"
+          },
+          {
+            "id": "shoal.pennant_blocks_the_turn",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Turns and pennants",
+            "label": "A pennant blocks the turn",
+            "outcome": "pass",
+            "explanation": "an open on a pennanted shell was rejected without change; after lifting the pennant the same open was accepted"
+          },
+          {
+            "id": "shoal.pennant_bookkeeping_is_exact",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Turns and pennants",
+            "label": "Pennant bookkeeping is exact",
+            "outcome": "pass",
+            "explanation": "urchinsLeft equalled urchinsTotal minus pennants at every observed revision, flagsPlaced tracked the rows, and double-flag, flag-on-open, and bare-unflag were rejected"
+          },
+          {
+            "id": "shoal.sweep_opens_exactly_the_rest",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Turns and pennants",
+            "label": "A sweep opens exactly the rest",
+            "outcome": "pass",
+            "explanation": "a satisfied number at (0,2) swept exactly its 1 predicted shells; an unsatisfied sweep was rejected without change"
+          },
+          {
+            "id": "shoal.sweep_trusts_the_pennants",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Turns and pennants",
+            "label": "The sweep trusts the pennants completely",
+            "outcome": "pass",
+            "explanation": "a sweep satisfied by a wrong pennant opened the unpennanted urchin at (1,1) and the run ended"
+          },
+          {
+            "id": "shoal.illegal_actions_change_nothing",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Turns and pennants",
+            "label": "Illegal actions change nothing",
+            "outcome": "pass",
+            "explanation": "6 illegal actions (re-open, out-of-bounds, negative coordinates, sweep-on-covered, post-end open and flag) were rejected with rows, revision, pearls, and counters untouched"
+          },
+          {
+            "id": "shoal.pool_clear_advances_the_ladder",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The ladder",
+            "label": "Clearing a pool advances the ladder",
+            "outcome": "pass",
+            "explanation": "turning the last safe shell moved the run to pool 2: a fully covered 7x9 board, phase still playing, 143 pearls kept"
+          },
+          {
+            "id": "shoal.ladder_escalates",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "The ladder",
+            "label": "Each early pool is a bigger ask",
+            "outcome": "pass",
+            "explanation": "urchins 6 -> 9 -> 13 strictly increase; board areas 49 -> 63 -> 80 never shrink"
+          },
+          {
+            "id": "shoal.tide_drains_only_in_play",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Tide and pearls",
+            "label": "The tide drains only while its pool is played",
+            "outcome": "pass",
+            "explanation": "tide 0.991 -> 0.658 -> 0.324 under advance(), frozen at 1 before a pool's first turn, floor 0 after a full drain"
+          },
+          {
+            "id": "shoal.tide_never_ends_a_run",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Tide and pearls",
+            "label": "The tide never kills",
+            "outcome": "pass",
+            "explanation": "twenty simulated minutes drained the meter to zero with the run still playing and the board untouched, and the pool then cleared normally"
+          },
+          {
+            "id": "shoal.tide_prices_the_clear",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Tide and pearls",
+            "label": "The tide prices hesitation",
+            "outcome": "pass",
+            "explanation": "the same clear paid 143 pearls fresh and 93 after a full drain; hesitation cost the bonus, never the run"
+          },
+          {
+            "id": "shoal.pearls_come_from_progress",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Tide and pearls",
+            "label": "Pearls come from progress",
+            "outcome": "pass",
+            "explanation": "25 driven opens each increased pearls; flag, unflag, and advance() paid nothing"
+          },
+          {
+            "id": "shoal.rank_is_monotone_on_the_ladder",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Tide and pearls",
+            "label": "The rank ladder is monotone",
+            "outcome": "pass",
+            "explanation": "rankLadder is a fixed 8-grade ladder; pearls 18 -> \"Driftwood\" (index 0), pearls 437 -> \"Hermit Crab\" (index 3); an identical replay earned the identical rank"
+          },
+          {
+            "id": "common.restart_is_complete",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Runtime contract",
+            "label": "Restart restores the initial state",
+            "outcome": "pass",
+            "explanation": "restart() reproduced the fresh reset field for field (attempt incremented, sessionBest kept), emptied the history, and the same first turn met the same board"
+          },
+          {
+            "id": "shoal.advance_matches_real_time",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Runtime contract",
+            "label": "advance() is the same clock, faster",
+            "outcome": "fail"
+          },
+          {
+            "id": "shoal.event_history_is_ordered_and_bounded",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Runtime contract",
+            "label": "Event history is ordered and bounded",
+            "outcome": "pass",
+            "explanation": "history empty after reset; the first open event carried opened=18; after 261 events the list kept 250 entries with contiguous seq and valid kinds; reset restarted the numbering"
+          },
+          {
+            "id": "shoal.no_audio_before_first_input",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Runtime contract",
+            "label": "No audio before the first input",
+            "outcome": "fail",
+            "explanation": "AudioContext constructed 1 time(s) before any user gesture"
+          },
+          {
+            "id": "shoal.bridge_connects_and_observes",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Arena bridge",
+            "label": "The bridge connects and observes",
+            "outcome": "pass",
+            "explanation": "connect produced a ready envelope with the session identity and matching revision; observe answered with exactly the snapshot minus events"
+          },
+          {
+            "id": "shoal.bridge_acts_on_the_one_board",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Arena bridge",
+            "label": "The bridge acts on the one board",
+            "outcome": "pass",
+            "explanation": "a bridge open was accepted, advanced the revision by one, and matched the runtime snapshot; a later action at the current revision worked; bridge restart produced the fresh attempt the snapshot confirms"
+          },
+          {
+            "id": "shoal.bridge_rejects_stale_and_illegal",
+            "category": "requirement",
+            "lane": "measured",
+            "group": "Arena bridge",
+            "label": "The bridge rejects stale and illegal actions",
+            "outcome": "pass",
+            "explanation": "stale acts, illegal acts, and a stale restart were rejected with errors and no state change; after the run ended, act was rejected while observe still answered"
+          },
+          {
+            "id": "shoal.board_reads_at_a_glance",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The board reads at a glance",
+            "outcome": "not_evaluated",
+            "explanation": "confidence high: The supplied midpool.png visibly contains a board with pale covered shells, dark turned shells, bright red pennants, legible cyan/green/red digits, and an URCHINS counter at upper left."
+          },
+          {
+            "id": "shoal.title_screen_invites_not_instructs",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The title screen invites, not instructs",
+            "outcome": "pass",
+            "explanation": "confidence high: The pre-input screenshot \"title\" visibly presents a tide-pool game scene: a full 7-by-7 field of shell tiles, water-toned background, a small fish-like host at the pool edge, and live-game status chrome (URCHINS, PEARLS, TIDE 1). The only prose instruction is the single short start gesture, \"Turn a shell to begin.\" There is no explanatory wall, rule list, or document-like text dominating the frame."
+          },
+          {
+            "id": "shoal.ripple_propagates_visibly",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The ripple visibly propagates",
+            "outcome": "fail",
+            "explanation": "confidence high: At 59 ms (ripple-00), the 7×7 board is entirely covered. By 110 ms (ripple-01), the full 18-shell revealed region is already present, reflected by PEARLS 18. Frames at 250, 387, and 523 ms retain the identical revealed-cell layout; no captured frame shows a partially revealed shell-by-shell frontier."
+          },
+          {
+            "id": "shoal.post_mortem_composes_the_lesson",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The post-mortem composes the lesson",
+            "outcome": "fail",
+            "explanation": "confidence high: The postmortem screenshot clearly presents the score ceremony: RUN PEARLS 18 beside SESSION BEST 437, awarded rank Driftwood, and the signature stat Greatest Ripple — 18 Shells. However, the board behind the modal is darkened and heavily blurred; the small uncovered strip of tiles at the bottom is not readable as revealed urchins, and no fatal shell can be visibly distinguished from an ordinary revealed urchin. This fails the required readable-board post-mortem half."
+          },
+          {
+            "id": "shoal.host_expressions_read",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The host reacts and its states read",
+            "outcome": "pass",
+            "explanation": "confidence medium: In title.png, a recognizable orange rim-dwelling crab-like host is clearly visible in a settled pose above the board. In pool-clear.png and the active-board/ripple capture, the same host is visibly changed: it is accompanied by a large white splash/bubble flourish and a yellow star-like celebratory accent, which reads as a reaction to the clear/ripple rather than an incidental motion phase. This supplies distinct, expressive captured states."
+          },
+          {
+            "id": "shoal.visual_identity_is_coherent",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "One committed visual identity",
+            "outcome": "pass",
+            "explanation": "confidence high: Across the usable title, board, and ceremony stills, the production holds a consistent dark-teal tide-pool palette with cyan outlines/glows, softly rounded panels, and warm sand-colored shell tiles. The title screen integrates the urchin and pearls counters, tide bar, orange pool host, and 7×7 shell board into the same rounded, aquatic visual family. The board shot continues that language with cyan/green/red glowing numbers, decisive bright-red pennants, dark opened cells, and matching host/UI treatment. The ceremony retains the same navy-teal field, cyan framed card and dividers, rounded stat blocks, and wave/pennant/urchin motifs; the warm yellow \"Driftwood\" rank provides a controlled accent rather than a clash. The screens read as authored game presentation rather than default controls on a flat background."
+          },
+          {
+            "id": "shoal.pool_transition_celebrates_progress",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "The next pool feels like progress",
+            "outcome": "pass",
+            "explanation": "confidence high: The pool-clear screenshot visibly shows a fresh fully covered grid, a transition message reading “Tide 1 Cleared! Rising deeper…,” and a persistent “TIDE 2” label. Run progress is retained in the top-right “PEARLS 143” display (with Best 143), so the composition clearly reads as advancement from the completed first pool into a later pool."
+          },
+          {
+            "id": "shoal.low_tide_pressure_stays_readable",
+            "category": "requirement",
+            "lane": "judged",
+            "group": "Presentation",
+            "label": "Low tide adds pressure without hiding the proof",
+            "outcome": "fail",
+            "explanation": "confidence high: Both provided stills, \"tide-full\" and \"tide-empty\", visibly show the same large \"TIDE ENDED / The Water Spoke\" ceremony overlay. The board behind it is heavily blurred and obscured, rather than presented as a readable live deduction view. The two captured interfaces do not communicate a visible full-versus-empty tide distinction."
+          },
+          {
+            "id": "gate.input_liveness",
+            "category": "gate",
+            "lane": "measured",
+            "group": "Blocking checks",
+            "label": "Public input responds",
+            "outcome": "pass"
+          }
+        ],
+        "replica": 1,
+        "runResult": "finished",
+        "startedAt": "2026-09-02T16:53:04.962828Z",
+        "wallClockSeconds": 337.940141,
+        "usage": {
+          "input_tokens": 175674,
+          "cached_input_tokens": 1984893,
+          "cache_creation_input_tokens": null,
+          "output_tokens": 87901,
+          "reasoning_tokens": 43429
+        },
+        "totalReportedTokens": 2291897,
+        "meterSources": {
+          "time": "harness wall clock",
+          "tokens": "provider CLI stream",
+          "cost": "not reported"
         },
         "agentPlayEvidence": {
           "status": "not_evaluated",
@@ -29049,6 +31284,12 @@
       },
       {
         "taskId": "ember@1.3.0",
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "ember@1.3.0",
         "configurationId": "claude-code-claude-opus-5-high",
         "attempted": 3,
         "succeeded": 3
@@ -29122,6 +31363,12 @@
       {
         "taskId": "delve@0.6.0",
         "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "delve@0.6.0",
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
         "attempted": 3,
         "succeeded": 3
       },
@@ -29200,6 +31447,12 @@
       {
         "taskId": "stomp@0.7.0",
         "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "stomp@0.7.0",
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
         "attempted": 3,
         "succeeded": 3
       },
@@ -29283,6 +31536,12 @@
       },
       {
         "taskId": "lumenyard@0.3.0",
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "lumenyard@0.3.0",
         "configurationId": "claude-code-claude-opus-5-high",
         "attempted": 3,
         "succeeded": 3
@@ -29356,6 +31615,12 @@
       {
         "taskId": "shoal@0.2.0",
         "configurationId": "antigravity-gemini-3.7-flash-medium",
+        "attempted": 3,
+        "succeeded": 3
+      },
+      {
+        "taskId": "shoal@0.2.0",
+        "configurationId": "antigravity-gemini-3.8-flash-medium",
         "attempted": 3,
         "succeeded": 3
       },
@@ -29435,7 +31700,7 @@
   },
   "blind": {
     "releaseId": "round-v8",
-    "configurationCount": 14,
+    "configurationCount": 15,
     "tasks": [
       {
         "id": "ember@1.3.0",
@@ -29503,6 +31768,17 @@
           "sha256": "170ade79eaba2284cf2e26c347512188d14b4d9874299bd2a6587ab1dc929865",
           "publicBase": "/artifacts/170ade79eaba2284cf2e26c347512188d14b4d9874299bd2a6587ab1dc929865/",
           "byteLength": 384
+        }
+      },
+      {
+        "id": "build_26f3905157aaf373ef39",
+        "taskId": "ember@1.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "26f3905157aaf373ef39ea938a31336916bb0b388264f612f8ba82a1dd4e1311",
+          "publicBase": "/artifacts/26f3905157aaf373ef39ea938a31336916bb0b388264f612f8ba82a1dd4e1311/",
+          "byteLength": 4898
         }
       },
       {
@@ -29649,6 +31925,17 @@
         }
       },
       {
+        "id": "build_b3fe42683f915f674747",
+        "taskId": "delve@0.6.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "b3fe42683f915f674747ecaea23382ac19a6ee28cfc772d26d88a25cce106867",
+          "publicBase": "/artifacts/b3fe42683f915f674747ecaea23382ac19a6ee28cfc772d26d88a25cce106867/",
+          "byteLength": 3546
+        }
+      },
+      {
         "id": "build_50c65501b4f7a9722e23",
         "taskId": "delve@0.6.0",
         "status": "succeeded",
@@ -29789,6 +32076,17 @@
           "sha256": "849491d36ed74cf68921628f9e38c233be89713139b38c85cbc84cc4c6d0aa78",
           "publicBase": "/artifacts/849491d36ed74cf68921628f9e38c233be89713139b38c85cbc84cc4c6d0aa78/",
           "byteLength": 62891
+        }
+      },
+      {
+        "id": "build_d6677ad0eb8df550a4f8",
+        "taskId": "stomp@0.7.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "d6677ad0eb8df550a4f8e6532d25dae006a2784a236b07c3a5c6c3c0008f62e0",
+          "publicBase": "/artifacts/d6677ad0eb8df550a4f8e6532d25dae006a2784a236b07c3a5c6c3c0008f62e0/",
+          "byteLength": 1508
         }
       },
       {
@@ -29935,6 +32233,17 @@
         }
       },
       {
+        "id": "build_30a2b242405a4c6b8892",
+        "taskId": "lumenyard@0.3.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "30a2b242405a4c6b88921c104f3276b75c7d89bbe9dafd2c0e29942f0fc1144f",
+          "publicBase": "/artifacts/30a2b242405a4c6b88921c104f3276b75c7d89bbe9dafd2c0e29942f0fc1144f/",
+          "byteLength": 8537
+        }
+      },
+      {
         "id": "build_aa7ed189e54ea2938c99",
         "taskId": "lumenyard@0.3.0",
         "status": "succeeded",
@@ -30075,6 +32384,17 @@
           "sha256": "38c82eb03e6897df308057b27b37caa84abf0eb9eadfda6f9e9c8a856e00bc89",
           "publicBase": "/artifacts/38c82eb03e6897df308057b27b37caa84abf0eb9eadfda6f9e9c8a856e00bc89/",
           "byteLength": 4181
+        }
+      },
+      {
+        "id": "build_807e726d4ebb2b9215ea",
+        "taskId": "shoal@0.2.0",
+        "status": "succeeded",
+        "playability": "playable",
+        "artifact": {
+          "sha256": "807e726d4ebb2b9215eae3e6c2caff154bae4b692c3f5be266ac7bdc1163a61f",
+          "publicBase": "/artifacts/807e726d4ebb2b9215eae3e6c2caff154bae4b692c3f5be266ac7bdc1163a61f/",
+          "byteLength": 4325
         }
       },
       {

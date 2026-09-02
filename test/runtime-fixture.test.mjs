@@ -67,9 +67,9 @@ test("current public projection has five tasks and the complete ordered assignme
 
   assert.equal(output.tasks.length, 5);
   assert.deepEqual(output.tasks.map((task) => task.id), accepted.catalog.map((task) => task.id));
-  assert.equal(rows.length, 732);
-  assert.equal(output.manifest.assignmentCount, 732);
-  assert.equal(output.manifest.artifactCount, 63);
+  assert.equal(rows.length, 858);
+  assert.equal(output.manifest.assignmentCount, 858);
+  assert.equal(output.manifest.artifactCount, 68);
   assert.deepEqual(rows.map((row) => row.id), expectedIds);
   assert.equal(new Set(rows.map((row) => row.id)).size, rows.length);
   assert.equal(output.manifest.assignmentSetSha256, setDigest(expectedIds));

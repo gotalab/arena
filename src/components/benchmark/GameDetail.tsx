@@ -383,9 +383,9 @@ export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, 
               <p className="detail__note">
                 {unfinished.map((attempt) => {
                   const name = configurationParts(configurations.get(attempt.configurationId)).name;
-                  return `${name} finished 0 of ${attempt.attempted} attempted ${attempt.attempted === 1 ? "run" : "runs"}`;
+                  return `${name} finished 0 of ${attempt.attempted} attempted ${attempt.attempted === 1 ? "run" : "runs"}; ${attempt.attempted === 1 ? "it scores" : "they score"} zero in the Benchmark total`;
                 }).join("; ")}
-                , so there is no game to play or score.
+                , so there is no game to play.
               </p>
             ) : null}
 

@@ -73,6 +73,7 @@ const EMPTY_SCORE: CellScore = {
  * without a code change.
  */
 const GATE_SHORT_NAMES: Record<string, string> = {
+  "gate.valid_build": "valid build",
   "gate.artifact_valid": "artifact",
   "gate.loads": "loads",
   "gate.no_blocking_uncaught_error": "blocking error",
@@ -157,35 +158,47 @@ export function cellScoreForTrial(release: Release, trial: { taskId: string; con
 /**
  * One configuration's score across the released tasks.
  *
- * Every counted replica of every cell enters one mean, so a cell run five times
- * carries five times the weight of a cell run once. With one task per release
- * that is exactly the cell score. When a release ships several tasks with
- * uneven replica counts, macro-averaging (mean per task, then across tasks)
- * is the correction to make — a data-shape change, noted here rather than
- * guessed at now.
+ * Each ranked task contributes one value. A published cell contributes its
+ * participant-attempt mean; a task with participant attempts but no valid
+ * Build contributes 0 from its Attempt record. A task never attempted remains
+ * absent so coverage logic can keep the configuration unranked.
  */
 export function configurationScore(release: Release, configuration: Configuration, taskIds: Set<string>): CellScore {
   const cells = (release.cells ?? []).filter(
     (cell) => cell.configurationId === configuration.id && taskIds.has(cell.taskId),
   );
-  // One game, one vote: the cross-task mean averages each cell's own mean,
+  const zeroBuildAttempts = (release.attempts ?? []).filter(
+    (attempt) => attempt.configurationId === configuration.id
+      && taskIds.has(attempt.taskId)
+      && attempt.attempted > 0
+      && attempt.succeeded === 0
+      && !cells.some((cell) => cell.taskId === attempt.taskId),
+  );
+  // One game, one vote: the cross-task mean averages each task's own mean,
   // so a game that ran extra replicas refines its cell without outweighing
   // the other games. Pooling replicas across tasks would let n=2 on one game
   // count double against n=1 on another, which is a weighting no benchmark
   // reader expects.
-  const cellMeans = cells
+  const taskMeans = cells
     .map((cell) => cell.score.mean)
-    .filter((mean): mean is number => mean != null);
-  const replicasCounted = cells.reduce((sum, cell) => sum + cell.score.replicasCounted, 0);
+    .filter((mean): mean is number => mean != null)
+    .concat(zeroBuildAttempts.map(() => 0));
+  const zeroBuildRuns = zeroBuildAttempts.reduce((sum, attempt) => sum + attempt.attempted, 0);
+  const replicasCounted = cells.reduce((sum, cell) => sum + cell.score.replicasCounted, 0) + zeroBuildRuns;
   return {
-    ...aggregateRates(cellMeans),
+    ...aggregateRates(taskMeans),
     replicasCounted,
     replicasNullRate: cells.reduce((sum, cell) => sum + cell.score.replicasNullRate, 0),
-    replicasHeldInvalid: cells.reduce((sum, cell) => sum + cell.score.replicasHeldInvalid, 0),
+    replicasHeldInvalid: cells.reduce((sum, cell) => sum + cell.score.replicasHeldInvalid, 0) + zeroBuildRuns,
     // AND all the way up: a configuration passes the gate only where every one
     // of its cells did. One task that never loads is not averaged away.
-    gatesPassed: cells.length > 0 && cells.every((cell) => cell.score.gatesPassed),
-    gateFailures: [...new Set(cells.flatMap((cell) => cell.score.gateFailures))],
+    gatesPassed: cells.length > 0
+      && zeroBuildAttempts.length === 0
+      && cells.every((cell) => cell.score.gatesPassed),
+    gateFailures: [...new Set([
+      ...cells.flatMap((cell) => cell.score.gateFailures),
+      ...(zeroBuildAttempts.length > 0 ? ["gate.valid_build"] : []),
+    ])],
     gateUnverified: [...new Set(cells.flatMap((cell) => cell.score.gateUnverified ?? []))],
   };
 }
@@ -270,7 +283,7 @@ export function scoreQualifier(score: CellScore | null | undefined): string {
     notes.push(`${score.replicasNullRate} ${score.replicasNullRate === 1 ? "replica" : "replicas"} could not be scored and stayed out of the mean.`);
   }
   if (score.replicasHeldInvalid > 0) {
-    notes.push(`${score.replicasHeldInvalid} ${score.replicasHeldInvalid === 1 ? "replica" : "replicas"} never produced a valid build and are outside the score.`);
+    notes.push(`${score.replicasHeldInvalid} ${score.replicasHeldInvalid === 1 ? "replica" : "replicas"} never produced a valid build and counted as zero.`);
   }
   return notes.join(" ");
 }

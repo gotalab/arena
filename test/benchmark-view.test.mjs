@@ -2,6 +2,7 @@ import "./typescript.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createBenchmarkOverviewResult, normalizeBenchmarkOverviewState, parseBenchmarkOverviewSearchParams, selectBenchmarkOverviewRows, selectRankableTasks, selectVisibleConfigurationIds, selectVisibleTasks, serializeBenchmarkOverviewSearchParams } from "../src/lib/benchmark-view.ts";
+import { configurationSummaries } from "../src/lib/configurations.ts";
 
 function releaseFixture() {
   const tasks = [
@@ -173,4 +174,32 @@ test("a preview-only task has no combined ranking instead of ranking zero-task r
   const preview = structuredClone(release);
   preview.builds = preview.builds.filter((build) => build.taskId !== "task-a" || build.configurationId === "cfg-codex");
   assert.deepEqual(selectRankableTasks(preview, [games[0]]), []);
+});
+
+test("a task attempted without a valid build completes coverage and contributes zero", () => {
+  const failed = structuredClone(release);
+  failed.builds = failed.builds.filter(
+    (build) => build.taskId !== "task-c" || build.configurationId !== "cfg-cursor",
+  );
+  failed.cells = failed.cells.filter(
+    (cell) => cell.taskId !== "task-c" || cell.configurationId !== "cfg-cursor",
+  );
+  failed.attempts.push({
+    taskId: "task-c",
+    configurationId: "cfg-cursor",
+    attempted: 3,
+    succeeded: 0,
+  });
+
+  const cursor = configurationSummaries(failed, games)
+    .find((summary) => summary.configuration.id === "cfg-cursor");
+  assert.ok(cursor);
+  assert.equal(cursor.tasksCovered, 3);
+  assert.equal(cursor.score.mean, 0.4);
+  assert.equal(cursor.score.n, 3);
+  assert.equal(cursor.score.replicasCounted, 5);
+  assert.equal(cursor.score.replicasHeldInvalid, 3);
+  assert.equal(cursor.score.gatesPassed, false);
+  assert.deepEqual(cursor.score.gateFailures, ["gate.loads", "gate.valid_build"]);
+  assert.equal(cursor.time, null);
 });

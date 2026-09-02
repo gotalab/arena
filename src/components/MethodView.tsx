@@ -48,9 +48,9 @@ export function MethodView() {
           ))}
         </ol>
         <p className="method-flow__note">
-          A fixed task is handed to an agent. Each attempt is a run, and each
-          run ships a build. Builds are checked in a real browser, and those
-          checks become the score.
+          A fixed task is handed to an agent. Each attempt is a run. A valid
+          build is checked in a real browser; a participant run with no valid
+          build scores zero. Those outcomes become the score.
         </p>
       </section>
 
@@ -71,7 +71,9 @@ export function MethodView() {
           Each agent works alone in a sandboxed environment. Its score is the
           average across all of its runs, failures included, not its best
           one. There are no hidden retries, and no best-of-N behind the
-          number.
+          number. A participant run that produces no valid build scores zero.
+          Arena or provider-environment failures are reported separately and
+          stay outside the denominator.
         </p>
       </section>
 

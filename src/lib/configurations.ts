@@ -11,7 +11,7 @@ import { blindReadyForTask, buildsForTask, trialSummary } from "./trials";
 
 export interface ConfigurationSummary {
   configuration: Configuration;
-  /** The published score: mean of replica rates, with its 95% CI and n. */
+  /** The published aggregate score: one mean per ranked task, with task n. */
   score: CellScore;
   /** Showcase builds in this total — one per cell, not the replica count. */
   trialCount: number;
@@ -33,9 +33,9 @@ export interface ConfigurationSummary {
   /** True when any counted dollar in the total is a view-time computation from
    * sealed token counts at API list prices rather than a provider estimate. */
   costAtListPrice: boolean;
-  /** How many of the released tasks this configuration has a run for. A
-   * configuration that ran only some games has totals that compare with
-   * nothing and ranks nowhere; the surfaces say so instead of hiding it. */
+  /** How many released tasks this configuration attempted. A task with only
+   * participant failures still counts as covered and contributes 0; a task
+   * never attempted remains missing coverage and ranks nowhere. */
   tasksCovered: number;
   /** Reliability across the released tasks: sealed runs attempted, and runs
    * that produced a valid succeeded build. Falls back to the published trial
@@ -67,8 +67,8 @@ export interface Series {
 /**
  * Aggregate one configuration across the released tasks.
  *
- * `score` is the published number — the mean over the configuration's replica
- * rates with its 95% interval and n (see `lib/score.ts`). The requirement
+ * `score` is the published number — participant attempts are averaged within
+ * each task, then ranked tasks are weighted equally (see `lib/score.ts`). The requirement
  * counters below it stay as raw evidence of the showcase builds: they say what
  * the reader can inspect check by check, and are not the score.
  * Coverage counters keep partial reporting visible instead of implying a total.
@@ -87,13 +87,18 @@ export function configurationSummary(
   const cells = release.cells.filter(
     (cell) => cell.configurationId === configuration.id && taskIds.has(cell.taskId),
   );
+  const zeroBuildAttempts = attempts.filter(
+    (attempt) => attempt.attempted > 0
+      && attempt.succeeded === 0
+      && !cells.some((cell) => cell.taskId === attempt.taskId),
+  );
   const metricRunCount = cells.reduce((sum, cell) => sum + cell.operational.runs, 0);
   const timeCoverage = cells.reduce((sum, cell) => sum + cell.operational.time.reported, 0);
   const tokenCoverage = cells.reduce((sum, cell) => sum + cell.operational.tokens.reported, 0);
   const costCoverage = cells.reduce((sum, cell) => sum + cell.operational.estimatedCost.reported, 0);
-  const completeTime = cells.length > 0 && cells.every((cell) => cell.operational.time.mean != null);
-  const completeTokens = cells.length > 0 && cells.every((cell) => cell.operational.tokens.mean != null);
-  const completeCost = cells.length > 0 && cells.every((cell) => cell.operational.estimatedCost.mean != null);
+  const completeTime = cells.length === taskIds.size && cells.every((cell) => cell.operational.time.mean != null);
+  const completeTokens = cells.length === taskIds.size && cells.every((cell) => cell.operational.tokens.mean != null);
+  const completeCost = cells.length === taskIds.size && cells.every((cell) => cell.operational.estimatedCost.mean != null);
   const passed = trials.reduce((sum, trial) => sum + trial.requirements.passed, 0);
   const applicable = trials.reduce((sum, trial) => sum + trial.requirements.applicable, 0);
   const notEvaluated = trials.reduce((sum, trial) => sum + trial.requirements.notEvaluated, 0);
@@ -131,7 +136,10 @@ export function configurationSummary(
     metricRunCount,
     // The ~ marker qualifies a shown total; a withheld total has nothing to mark.
     costAtListPrice: completeCost && cells.some((cell) => cell.operational.costAtListPrice),
-    tasksCovered: new Set(cells.map((cell) => cell.taskId)).size,
+    tasksCovered: new Set([
+      ...cells.map((cell) => cell.taskId),
+      ...zeroBuildAttempts.map((attempt) => attempt.taskId),
+    ]).size,
     runsAttempted: attempts.length > 0
       ? attempts.reduce((sum, attempt) => sum + attempt.attempted, 0)
       : trials.length,

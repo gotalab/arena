@@ -18,8 +18,9 @@ import { ConfigurationName } from "../ConfigurationName";
  * no muted percentage. Why a build rated 0 is evidence, and lives on the
  * evidence surfaces.
  *
- * The score is the mean over replicas with its 95% interval, so the rank is
- * a rank of means. Two configurations whose intervals overlap are not
+ * Participant attempts are averaged within each task, then ranked tasks are
+ * weighted equally, so the rank is a rank of task means. Two configurations
+ * whose intervals overlap are not
  * separated by the evidence, and the table does not yet say so: CI-overlap
  * tie handling (a shared rank, or a "not separated" mark) is future work, and
  * needs the five-replica cohort before it would show anything.

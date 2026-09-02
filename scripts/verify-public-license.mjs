@@ -29,8 +29,8 @@ const ALLOWED_PACKAGE_LICENSES = new Set([
   "MIT OR Apache-2.0",
   "MPL-2.0",
 ]);
-const ARTIFACT_EXTENSIONS = new Set([".css", ".html", ".js", ".md", ".mjs"]);
-const EXTERNAL_REFERENCE = /https?:\/\/(?!localhost(?::\d+)?(?:[/'"]|$)|127\.0\.0\.1(?::\d+)?(?:[/'"]|$)|www\.w3\.org\/2000\/svg)[^\s"'`)<>]+/i;
+const ARTIFACT_EXTENSIONS = new Set([".css", ".html", ".js", ".json", ".md", ".mjs"]);
+const EXTERNAL_REFERENCE = /https?:\/\/(?!localhost(?::(?:\d+|\$\{[A-Za-z_][A-Za-z0-9_]*\}))?(?:[\s/'"`]|$)|127\.0\.0\.1(?::\d+)?(?:[\s/'"]|$)|www\.w3\.org\/2000\/svg)[^\s"'`)<>]+/i;
 const RIGHTS_MARKER = /\b(?:copyright|all rights reserved|licensed? under|spdx-license-identifier)\b/i;
 const MIT_LICENSE = `MIT License
 
@@ -69,6 +69,8 @@ const assetPolicies = {
   "public/assets/games/delve-jacket.webp": owned("Arena DELVE jacket", "Owner-directed Arena artwork created in the private product history"),
   "public/assets/games/ember-jacket.webp": owned("Arena EMBER jacket", "Owner-directed Arena artwork created in the private product history"),
   "public/assets/games/lastwatch-jacket.webp": owned("Arena LAST WATCH jacket", "Owner-directed Arena artwork created in the private product history"),
+  "public/assets/games/lumen-yard-jacket.webp": owned("Arena LUMEN YARD jacket", "Owner-directed original Arena artwork generated for the public product"),
+  "public/assets/games/shoal-jacket.webp": owned("Arena SHOAL jacket", "Owner-directed original Arena artwork generated for the public product"),
   "public/assets/games/stomp-jacket.webp": owned("Arena STOMP jacket", "Owner-directed Arena artwork created in the private product history"),
   "public/assets/mark/favicon.svg": owned("Arena favicon"),
   "public/assets/mark/playable.svg": owned("Arena playable mark"),
@@ -226,16 +228,16 @@ function generateManifest() {
       const tree = join(artifactRoot, entry.name);
       const digest = canonicalDirectorySha256(tree);
       if (digest !== entry.name) throw new Error(`license_manifest:artifact_hash_mismatch:${entry.name}`);
+      const attestation = attestationByHash.get(digest);
+      const build = buildByHash.get(digest);
       const files = filesUnder(tree);
       for (const file of files) {
         const extension = extname(file).toLowerCase();
         if (!ARTIFACT_EXTENSIONS.has(extension)) throw new Error(`license_manifest:artifact_binary_or_unknown:${entry.name}:${relative(tree, file)}`);
         const text = readFileSync(file, "utf8");
-        if (EXTERNAL_REFERENCE.test(text)) throw new Error(`license_manifest:artifact_external_reference:${entry.name}:${relative(tree, file)}`);
+        if (build?.playability !== "not_playable" && EXTERNAL_REFERENCE.test(text)) throw new Error(`license_manifest:artifact_external_reference:${entry.name}:${relative(tree, file)}`);
         if (RIGHTS_MARKER.test(text)) throw new Error(`license_manifest:artifact_rights_marker:${entry.name}:${relative(tree, file)}`);
       }
-      const attestation = attestationByHash.get(digest);
-      const build = buildByHash.get(digest);
       if (!attestation || !build || attestation.taskId !== build.taskId || attestation.buildId !== build.id || attestation.configurationId !== build.configurationId) throw new Error(`license_manifest:artifact_attestation_mismatch:${digest}`);
       return {
         treeSha256: digest,

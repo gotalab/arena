@@ -1,47 +1,593 @@
 {
   "schema": "arena.artifact-redistribution-attestations.v1",
   "attestedBy": "Gota",
-  "attestedAt": "2026-08-31",
+  "attestedAt": "2026-09-02",
   "ownerDirection": "License entrant-owned generated builds in the sanitized public product under MIT; separately noticed third-party brand assets are excluded.",
   "artifacts": [
-    {"treeSha256":"008d03f9d18610dc8e9da9686e3087421e96bcce17cb825bccaef542c025bb69","taskId":"stomp@0.7.0","buildId":"build_008d03f9d18610dc8e9d","configurationId":"cursor-agent-claude-opus-5-thinking-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has source-only runtime and separately noticed author-only tooling."},
-    {"treeSha256":"121be8b911cda81cd3b1f461b69e82af8b9d4bce2e571db6b7ae06d0c5ef9623","taskId":"stomp@0.7.0","buildId":"build_121be8b911cda81cd3b1","configurationId":"opencode-glm-5.3-flash-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"127f1a2b32b9f740ed46245d3cb32ea5a0ef5e2686388f9042e990c50cfd17c5","taskId":"delve@0.6.0","buildId":"build_127f1a2b32b9f740ed46","configurationId":"pi-gpt-5.6-sol-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"170ade79eaba2284cf2e26c347512188d14b4d9874299bd2a6587ab1dc929865","taskId":"ember@1.3.0","buildId":"build_170ade79eaba2284cf2e","configurationId":"antigravity-gemini-3.7-flash-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"1a778474d00b68aca665af87139c2b7425a9df08ef60bc46ab83140d64315edc","taskId":"delve@0.6.0","buildId":"build_1a778474d00b68aca665","configurationId":"claude-code-claude-sonnet-5-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"310c33af7f2e7cc88cb71e9221cb00a53524b1b3f70232d1df81042eda865d8a","taskId":"stomp@0.7.0","buildId":"build_310c33af7f2e7cc88cb7","configurationId":"cursor-agent-auto-default","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"3345396e6ba1209b0f129d08cd3bbc9c0a81ad316d57b301aef053e13c269ebb","taskId":"delve@0.6.0","buildId":"build_3345396e6ba1209b0f12","configurationId":"cursor-agent-cursor-grok-4.6-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"346993e3908a4cc377bd0278034e03b10454a197d38f4fdbdc7b26548bb42a5e","taskId":"ember@1.3.0","buildId":"build_346993e3908a4cc377bd","configurationId":"opencode-glm-5.3-flash-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"47604726e9ed4fb935f2618ef310f2ee4d08ac317292110f30b51865dc1eceb4","taskId":"delve@0.6.0","buildId":"build_47604726e9ed4fb935f2","configurationId":"opencode-glm-5.3-flash-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"4b8affd7ce80ace6e0032c12eeb36dea5b8d3d35f0ec018a3760ac945687bb2d","taskId":"stomp@0.7.0","buildId":"build_4b8affd7ce80ace6e003","configurationId":"cursor-agent-cursor-grok-4.6-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"4cd24e942bf87043221f396074e4d6145494eae7326e74f4f2fa841edb507744","taskId":"ember@1.3.0","buildId":"build_4cd24e942bf87043221f","configurationId":"cursor-agent-gemini-3.7-flash-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"4d2d87b8d0db776a4c4c2df4a13b38cfe9bfdcf0a86dda20e49ef71c3a502a35","taskId":"ember@1.3.0","buildId":"build_4d2d87b8d0db776a4c4c","configurationId":"cursor-agent-auto-default","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"50c65501b4f7a9722e23d6719c050a79b5f506c1a8608b7feac8119d0e48a8fb","taskId":"delve@0.6.0","buildId":"build_50c65501b4f7a9722e23","configurationId":"claude-code-claude-opus-5-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"585d00c6b718a36324e32b1db774c4fcea98180cd5ecde8473b8243ffa86763c","taskId":"delve@0.6.0","buildId":"build_585d00c6b718a36324e3","configurationId":"codex-cli-gpt-5.6-sol-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"5a900753377b793ea7608a1262f3fcaab65d858fced9ff6d5119695c4941ef8c","taskId":"delve@0.6.0","buildId":"build_5a900753377b793ea760","configurationId":"cursor-agent-gpt-5.6-sol-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"64c0a4c7089b083851bac959016a11f1dbd4e9ab4fddee63a060359b838819eb","taskId":"delve@0.6.0","buildId":"build_64c0a4c7089b083851ba","configurationId":"cursor-agent-gemini-3.7-flash-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"719fd9a34c7ed5069bdd6f3c02c7386886e9418d77cf4a6760c7c0930f4f6beb","taskId":"stomp@0.7.0","buildId":"build_719fd9a34c7ed5069bdd","configurationId":"cursor-agent-gemini-3.7-flash-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"7a370af3978b9e77a18357cc41aadba5ebad9a1a33fc47bc2f9c7587aee81f32","taskId":"stomp@0.7.0","buildId":"build_7a370af3978b9e77a183","configurationId":"pi-gpt-5.6-sol-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"849491d36ed74cf68921628f9e38c233be89713139b38c85cbc84cc4c6d0aa78","taskId":"stomp@0.7.0","buildId":"build_849491d36ed74cf68921","configurationId":"antigravity-gemini-3.7-flash-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"87850e4ba47a9efd0aa0da913a0a17d0a75778814046213fd8df6827e1a19d8b","taskId":"ember@1.3.0","buildId":"build_87850e4ba47a9efd0aa0","configurationId":"codex-cli-gpt-5.6-sol-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"894be9bc9725356cc4f152da0e3cf8e12ec6a632cf57f506e92c551f1e309d56","taskId":"stomp@0.7.0","buildId":"build_894be9bc9725356cc4f1","configurationId":"codex-cli-gpt-5.6-luna-max","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"970328c67136ee8b754991ec2d140ee26569ae65d7e9abc9cc488b9180bca838","taskId":"stomp@0.7.0","buildId":"build_970328c67136ee8b7549","configurationId":"codex-cli-gpt-5.6-sol-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"9729d2983b39d88d8a93b39a95e26870b2934afe36735e5cce6fb80be3439a91","taskId":"delve@0.6.0","buildId":"build_9729d2983b39d88d8a93","configurationId":"cursor-agent-claude-opus-5-thinking-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed runtime is self-contained; separately noticed screenshot helper package references are not runtime dependencies."},
-    {"treeSha256":"9a2bdabab8a72a07477120be883d98ee1c6fd6fc41afea10434bcce547979807","taskId":"delve@0.6.0","buildId":"build_9a2bdabab8a72a074771","configurationId":"opencode-deepseek-v4-flash-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"9a35cb54a00d3932de30c858c87ecc35e1de44463de0fc17ebc150f6d9796935","taskId":"stomp@0.7.0","buildId":"build_9a35cb54a00d3932de30","configurationId":"claude-code-claude-sonnet-5-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"9ba366975958695a1f5d2a22cef65d3e4a2de684834036f44cbb6cf68a4300fd","taskId":"ember@1.3.0","buildId":"build_9ba366975958695a1f5d","configurationId":"opencode-deepseek-v4-flash-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"9e6c1551397990117ebb2586649f0e46606b202db9c5704a694c719408f6d72f","taskId":"stomp@0.7.0","buildId":"build_9e6c1551397990117ebb","configurationId":"claude-code-claude-opus-5-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed inline SVG data uses no external runtime asset."},
-    {"treeSha256":"aa6bb8d7352b5756558b85922a15474ceb5a87216c248adeffc670d76ebacd67","taskId":"stomp@0.7.0","buildId":"build_aa6bb8d7352b5756558b","configurationId":"opencode-deepseek-v4-flash-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"b028a5ceeb435adba1b05d046eff0f8a1847797d3f8345d70137940ff303492d","taskId":"delve@0.6.0","buildId":"build_b028a5ceeb435adba1b0","configurationId":"cursor-agent-auto-default","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"b903b0652d3150a85ce326f115e230f8d78b5e5e3ded3766683d6c5edd5329db","taskId":"ember@1.3.0","buildId":"build_b903b0652d3150a85ce3","configurationId":"codex-cli-gpt-5.6-luna-max","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"c9bc86515d256036bdf7debbcfe02dbf08890b9e647dbbb558350bdd43bb8a47","taskId":"ember@1.3.0","buildId":"build_c9bc86515d256036bdf7","configurationId":"cursor-agent-gpt-5.6-sol-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"ceb65c23b6015f06645780b317cfa9d1154835de9d6eb2760ad669531bb3fa25","taskId":"ember@1.3.0","buildId":"build_ceb65c23b6015f066457","configurationId":"claude-code-claude-opus-5-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; README and tree state no external images, fonts, or network runtime."},
-    {"treeSha256":"dc660935e16ebcc1776f9cbb19822c8a759815458d0ae702008da18dbc9a7dc9","taskId":"ember@1.3.0","buildId":"build_dc660935e16ebcc1776f","configurationId":"cursor-agent-claude-opus-5-thinking-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"dc73aa2c34db7fc2f30aaaef18eec885c171c5623260245ab1c827ecbc14a961","taskId":"delve@0.6.0","buildId":"build_dc73aa2c34db7fc2f30a","configurationId":"codex-cli-gpt-5.6-luna-max","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"e60decb056754c51fc01559c4d028b1fd30fee0f392c634fe4f31dbc8cc8973d","taskId":"ember@1.3.0","buildId":"build_e60decb056754c51fc01","configurationId":"claude-code-claude-sonnet-5-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"f57078acad34e5285b8a3278668f4c493945f841ab4ab9135685b6dd530ef334","taskId":"ember@1.3.0","buildId":"build_f57078acad34e5285b8a","configurationId":"cursor-agent-cursor-grok-4.6-high","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"f76117d3456668dfdcb4f99b4ea659bda389cdc4e9049ce2ab9042b818c6be6a","taskId":"ember@1.3.0","buildId":"build_f76117d3456668dfdcb4","configurationId":"pi-gpt-5.6-sol-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"f7760f27007969e43af16c390eca864eb8afc86a8bba6462366b189d3c6a5ca2","taskId":"stomp@0.7.0","buildId":"build_f7760f27007969e43af1","configurationId":"cursor-agent-gpt-5.6-sol-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."},
-    {"treeSha256":"fc1500f2ca978af31e3322348e82bbaac9d659b43ba2b3631c920024107dde74","taskId":"delve@0.6.0","buildId":"build_fc1500f2ca978af31e33","configurationId":"antigravity-gemini-3.7-flash-medium","license":"MIT","redistributionAttested":true,"basis":"Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."}
+    {
+      "treeSha256": "008d03f9d18610dc8e9da9686e3087421e96bcce17cb825bccaef542c025bb69",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_008d03f9d18610dc8e9d",
+      "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has source-only runtime and separately noticed author-only tooling."
+    },
+    {
+      "treeSha256": "0471afe27dbd89f02a8f35ad1d44e8224106ce0a5e1dc95889fb1e61841fb26e",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_0471afe27dbd89f02a8f",
+      "configurationId": "claude-code-claude-sonnet-5-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "05957457b49147e39439ac1c5ba6814ceb05a6736368c125e8fd095e55119379",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_05957457b49147e39439",
+      "configurationId": "fx-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "07aa613d8c2341d7138bad4bc7d0ab46ee627b9ee20c7f297309740a8f2a3bb2",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_07aa613d8c2341d7138b",
+      "configurationId": "codex-cli-gpt-5.6-luna-max",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "121be8b911cda81cd3b1f461b69e82af8b9d4bce2e571db6b7ae06d0c5ef9623",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_121be8b911cda81cd3b1",
+      "configurationId": "opencode-glm-5.3-flash-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "127f1a2b32b9f740ed46245d3cb32ea5a0ef5e2686388f9042e990c50cfd17c5",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_127f1a2b32b9f740ed46",
+      "configurationId": "pi-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "135ba436e5d18fa649bee7ae6ff8208a4c9c4e190a4bd894718e890719d2b9c1",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_135ba436e5d18fa649be",
+      "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "1539efaaecf199e61e1bc86d118c09e12f353e72209c2ba721e0a2b9942999b4",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_1539efaaecf199e61e1b",
+      "configurationId": "cursor-agent-cursor-grok-4.6-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "170ade79eaba2284cf2e26c347512188d14b4d9874299bd2a6587ab1dc929865",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_170ade79eaba2284cf2e",
+      "configurationId": "antigravity-gemini-3.7-flash-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "1a778474d00b68aca665af87139c2b7425a9df08ef60bc46ab83140d64315edc",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_1a778474d00b68aca665",
+      "configurationId": "claude-code-claude-sonnet-5-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "2084021c68233d41c94b3efecc4d77e0db17b2c8e5d2cd31a3de0fee361bdbc7",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_2084021c68233d41c94b",
+      "configurationId": "claude-code-claude-opus-5-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "2af83578ae2e77a9f3d074536c47b47d22faf4423bbe7d53d0569b4d68a41302",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_2af83578ae2e77a9f3d0",
+      "configurationId": "pi-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "310c33af7f2e7cc88cb71e9221cb00a53524b1b3f70232d1df81042eda865d8a",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_310c33af7f2e7cc88cb7",
+      "configurationId": "cursor-agent-auto-default",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "3290ce36f57d485b00c9bb785f5b6e4c3fe89f1790c34d842399b6e67f277c83",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_3290ce36f57d485b00c9",
+      "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "3345396e6ba1209b0f129d08cd3bbc9c0a81ad316d57b301aef053e13c269ebb",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_3345396e6ba1209b0f12",
+      "configurationId": "cursor-agent-cursor-grok-4.6-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "346993e3908a4cc377bd0278034e03b10454a197d38f4fdbdc7b26548bb42a5e",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_346993e3908a4cc377bd",
+      "configurationId": "opencode-glm-5.3-flash-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "354fb8ffb11aa69e986b8915c619b81770773151f80ccab0722b84a0addd3dc0",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_354fb8ffb11aa69e986b",
+      "configurationId": "codex-cli-gpt-5.6-luna-max",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "38c82eb03e6897df308057b27b37caa84abf0eb9eadfda6f9e9c8a856e00bc89",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_38c82eb03e6897df3080",
+      "configurationId": "antigravity-gemini-3.7-flash-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "3f4e9784cb1689d4d623ed3908ea54e6372c6b10432331c36599710527d67228",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_3f4e9784cb1689d4d623",
+      "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "47604726e9ed4fb935f2618ef310f2ee4d08ac317292110f30b51865dc1eceb4",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_47604726e9ed4fb935f2",
+      "configurationId": "opencode-glm-5.3-flash-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "4a6a99759d60aa8a5948a082d65994a892c4c817f2f9aedb2f8d225d2da74d68",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_4a6a99759d60aa8a5948",
+      "configurationId": "opencode-deepseek-v4-flash-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "4b8affd7ce80ace6e0032c12eeb36dea5b8d3d35f0ec018a3760ac945687bb2d",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_4b8affd7ce80ace6e003",
+      "configurationId": "cursor-agent-cursor-grok-4.6-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "4cd24e942bf87043221f396074e4d6145494eae7326e74f4f2fa841edb507744",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_4cd24e942bf87043221f",
+      "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "4d2d87b8d0db776a4c4c2df4a13b38cfe9bfdcf0a86dda20e49ef71c3a502a35",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_4d2d87b8d0db776a4c4c",
+      "configurationId": "cursor-agent-auto-default",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "50c65501b4f7a9722e23d6719c050a79b5f506c1a8608b7feac8119d0e48a8fb",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_50c65501b4f7a9722e23",
+      "configurationId": "claude-code-claude-opus-5-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "519422af3f0770d286156be6cbbdffb6dd116bb7d94173a075d18e7d61426d3a",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_519422af3f0770d28615",
+      "configurationId": "antigravity-gemini-3.7-flash-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "585d00c6b718a36324e32b1db774c4fcea98180cd5ecde8473b8243ffa86763c",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_585d00c6b718a36324e3",
+      "configurationId": "codex-cli-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "5a900753377b793ea7608a1262f3fcaab65d858fced9ff6d5119695c4941ef8c",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_5a900753377b793ea760",
+      "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "64c0a4c7089b083851bac959016a11f1dbd4e9ab4fddee63a060359b838819eb",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_64c0a4c7089b083851ba",
+      "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "6cdec60ffb6e3043879f353cb1fb3cf14c7391c6c9149c5cccdcca59200aeb47",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_6cdec60ffb6e3043879f",
+      "configurationId": "cursor-agent-auto-default",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "6d5d1654710ece2d319010df2234a8b908b3e97ac613b64b213e7eec19da38cb",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_6d5d1654710ece2d3190",
+      "configurationId": "pi-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "719fd9a34c7ed5069bdd6f3c02c7386886e9418d77cf4a6760c7c0930f4f6beb",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_719fd9a34c7ed5069bdd",
+      "configurationId": "cursor-agent-gemini-3.7-flash-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "7a370af3978b9e77a18357cc41aadba5ebad9a1a33fc47bc2f9c7587aee81f32",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_7a370af3978b9e77a183",
+      "configurationId": "pi-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "849491d36ed74cf68921628f9e38c233be89713139b38c85cbc84cc4c6d0aa78",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_849491d36ed74cf68921",
+      "configurationId": "antigravity-gemini-3.7-flash-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "87850e4ba47a9efd0aa0da913a0a17d0a75778814046213fd8df6827e1a19d8b",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_87850e4ba47a9efd0aa0",
+      "configurationId": "codex-cli-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "894be9bc9725356cc4f152da0e3cf8e12ec6a632cf57f506e92c551f1e309d56",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_894be9bc9725356cc4f1",
+      "configurationId": "codex-cli-gpt-5.6-luna-max",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "8cefd459fcdb2de50b2f654deb16b27491362ac5dafb04f32d4d5cc995fa59e5",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_8cefd459fcdb2de50b2f",
+      "configurationId": "claude-code-claude-sonnet-5-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "9143361ad0a8a756819bb3d772faa4aebb8c325629ed5fffc29ce6299ceac38c",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_9143361ad0a8a756819b",
+      "configurationId": "codex-cli-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "970328c67136ee8b754991ec2d140ee26569ae65d7e9abc9cc488b9180bca838",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_970328c67136ee8b7549",
+      "configurationId": "codex-cli-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "9729d2983b39d88d8a93b39a95e26870b2934afe36735e5cce6fb80be3439a91",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_9729d2983b39d88d8a93",
+      "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed runtime is self-contained; separately noticed screenshot helper package references are not runtime dependencies."
+    },
+    {
+      "treeSha256": "9a2bdabab8a72a07477120be883d98ee1c6fd6fc41afea10434bcce547979807",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_9a2bdabab8a72a074771",
+      "configurationId": "opencode-deepseek-v4-flash-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "9a35cb54a00d3932de30c858c87ecc35e1de44463de0fc17ebc150f6d9796935",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_9a35cb54a00d3932de30",
+      "configurationId": "claude-code-claude-sonnet-5-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "9ba366975958695a1f5d2a22cef65d3e4a2de684834036f44cbb6cf68a4300fd",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_9ba366975958695a1f5d",
+      "configurationId": "opencode-deepseek-v4-flash-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "9e6c1551397990117ebb2586649f0e46606b202db9c5704a694c719408f6d72f",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_9e6c1551397990117ebb",
+      "configurationId": "claude-code-claude-opus-5-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed inline SVG data uses no external runtime asset."
+    },
+    {
+      "treeSha256": "aa6bb8d7352b5756558b85922a15474ceb5a87216c248adeffc670d76ebacd67",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_aa6bb8d7352b5756558b",
+      "configurationId": "opencode-deepseek-v4-flash-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "aa7ed189e54ea2938c996065a57c4e4e714d1fc2af1f7cc86a6bb34989af5e92",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_aa7ed189e54ea2938c99",
+      "configurationId": "claude-code-claude-opus-5-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "b028a5ceeb435adba1b05d046eff0f8a1847797d3f8345d70137940ff303492d",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_b028a5ceeb435adba1b0",
+      "configurationId": "cursor-agent-auto-default",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "b903b0652d3150a85ce326f115e230f8d78b5e5e3ded3766683d6c5edd5329db",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_b903b0652d3150a85ce3",
+      "configurationId": "codex-cli-gpt-5.6-luna-max",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "bd62dcfccd28bb33d6d62ce3a58f3b7bec5b2c83cfeac2ca4ea296b09f90d97e",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_bd62dcfccd28bb33d6d6",
+      "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "c826eaf63ad3867b890bd487de86ea14b708eea58d79a98b7b7701e03ee7ced0",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_c826eaf63ad3867b890b",
+      "configurationId": "cursor-agent-auto-default",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; non-playable tree references external fonts but redistributes no third-party font bytes."
+    },
+    {
+      "treeSha256": "c9bc86515d256036bdf7debbcfe02dbf08890b9e647dbbb558350bdd43bb8a47",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_c9bc86515d256036bdf7",
+      "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "ceb65c23b6015f06645780b317cfa9d1154835de9d6eb2760ad669531bb3fa25",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_ceb65c23b6015f066457",
+      "configurationId": "claude-code-claude-opus-5-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; README and tree state no external images, fonts, or network runtime."
+    },
+    {
+      "treeSha256": "dc660935e16ebcc1776f9cbb19822c8a759815458d0ae702008da18dbc9a7dc9",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_dc660935e16ebcc1776f",
+      "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "dc73aa2c34db7fc2f30aaaef18eec885c171c5623260245ab1c827ecbc14a961",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_dc73aa2c34db7fc2f30a",
+      "configurationId": "codex-cli-gpt-5.6-luna-max",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "e60decb056754c51fc01559c4d028b1fd30fee0f392c634fe4f31dbc8cc8973d",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_e60decb056754c51fc01",
+      "configurationId": "claude-code-claude-sonnet-5-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "f364dd2bd8096e0557ef386925ea25a40cc8a7af159c0c88818b1529b2661d50",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_f364dd2bd8096e0557ef",
+      "configurationId": "codex-cli-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "f57078acad34e5285b8a3278668f4c493945f841ab4ab9135685b6dd530ef334",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_f57078acad34e5285b8a",
+      "configurationId": "cursor-agent-cursor-grok-4.6-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "f6ad43112de49aa0211385ec8fe2a0262157fd53ee59ab4db5ec6634ebe649de",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_f6ad43112de49aa02113",
+      "configurationId": "fx-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "f76117d3456668dfdcb4f99b4ea659bda389cdc4e9049ce2ab9042b818c6be6a",
+      "taskId": "ember@1.3.0",
+      "buildId": "build_f76117d3456668dfdcb4",
+      "configurationId": "pi-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "f770c73fdddb73372b0a748decf296dbe0d6ece12f408da920600bd9f051b07a",
+      "taskId": "shoal@0.2.0",
+      "buildId": "build_f770c73fdddb73372b0a",
+      "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "f7760f27007969e43af16c390eca864eb8afc86a8bba6462366b189d3c6a5ca2",
+      "taskId": "stomp@0.7.0",
+      "buildId": "build_f7760f27007969e43af1",
+      "configurationId": "cursor-agent-gpt-5.6-sol-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "fa8a34d713e397818ab5a62bd16af076e6ec885ab94fff8692d83db4fea13970",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_fa8a34d713e397818ab5",
+      "configurationId": "cursor-agent-cursor-grok-4.6-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "fc1500f2ca978af31e3322348e82bbaac9d659b43ba2b3631c920024107dde74",
+      "taskId": "delve@0.6.0",
+      "buildId": "build_fc1500f2ca978af31e33",
+      "configurationId": "antigravity-gemini-3.7-flash-medium",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "fc612ad57a0361e1ab602ac69fedc145faf603f26c50a62fda8c6f8db8736065",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_fc612ad57a0361e1ab60",
+      "configurationId": "opencode-deepseek-v4-flash-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    },
+    {
+      "treeSha256": "fcb8a2635dbce007c02421bb7c11ad621db13e90cbe5a810f3b8f427632926d0",
+      "taskId": "lumenyard@0.3.0",
+      "buildId": "build_fcb8a2635dbce007c024",
+      "configurationId": "cursor-agent-claude-opus-5-thinking-high",
+      "license": "MIT",
+      "redistributionAttested": true,
+      "basis": "Entrant-owned agent output; reviewed public tree has no external runtime asset or rights marker."
+    }
   ]
 }

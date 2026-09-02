@@ -1,0 +1,8 @@
+{
+  "name": "lumen-yard",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/engine.test.mjs test/arena.test.mjs"
+  }
+}

@@ -1,0 +1,439 @@
+/* SHOAL - one committed identity: cold deep water, warm pearl, coral accents. */
+
+:root {
+  --abyss: #03151d;
+  --deep: #072633;
+  --water: #0b3a4a;
+  --foam: #d7f5f0;
+  --mist: #9fc9cd;
+  --coral: #ff7a5c;
+  --gold: #ffd479;
+  --urchin: #a98bff;
+  --hud-h: clamp(46px, 9vh, 66px);
+  --ui: ui-rounded, "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #03151d;
+  color: var(--foam);
+  font-family: var(--ui);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------- HUD */
+
+#hud {
+  flex: 0 0 auto;
+  padding: max(4px, env(safe-area-inset-top)) 10px 4px;
+  background: linear-gradient(180deg, #05202c 0%, #06222f 60%, rgba(6,34,47,0) 100%);
+  z-index: 3;
+}
+
+#tideRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#tideLabel {
+  font-size: clamp(8px, 2.2vw, 10px);
+  letter-spacing: 0.22em;
+  color: #6fa3ad;
+  font-weight: 700;
+}
+
+#tideTrack {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(120, 200, 205, 0.14);
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.35);
+}
+
+#tideFill {
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2ec6bd, #7ff0e2);
+  transition: background-color 0.4s linear;
+}
+
+#tideFill.low { background: linear-gradient(90deg, #d8a03c, #ffd479); }
+#tideFill.out { background: linear-gradient(90deg, #6a5a52, #94847a); }
+
+#soundBtn {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #6fa3ad;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+#soundBtn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+#soundBtn .spk { fill: currentColor; stroke-width: 1.2; }
+#soundBtn .mute { display: none; }
+#soundBtn.off { color: #4b6f77; }
+#soundBtn.off .wave { display: none; }
+#soundBtn.off .mute { display: inline; }
+
+#statRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(11, 58, 74, 0.62);
+  border: 1px solid rgba(126, 214, 214, 0.12);
+  line-height: 1;
+}
+
+.stat .k {
+  font-size: clamp(8px, 2.1vw, 9.5px);
+  letter-spacing: 0.16em;
+  color: #6fa3ad;
+  font-weight: 700;
+}
+
+.stat .v {
+  font-size: clamp(13px, 3.9vw, 18px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--foam);
+}
+
+.stat.best { margin-left: auto; background: transparent; border-color: transparent; }
+.stat.best .v { font-size: clamp(11px, 3vw, 14px); color: #7fb3bb; }
+
+.stat .ico { width: clamp(13px, 3.6vw, 17px); height: clamp(13px, 3.6vw, 17px); flex: 0 0 auto; }
+#urchinStat .ico .spikes { stroke: var(--urchin); stroke-width: 1.7; stroke-linecap: round; fill: none; }
+#urchinStat .ico .core { fill: #3a2568; stroke: var(--urchin); stroke-width: 1.6; }
+#urchinStat .v { color: #d3c4ff; }
+#urchinStat.over { border-color: rgba(255, 122, 92, 0.55); }
+#urchinStat.over .v { color: var(--coral); }
+.ico.pearl circle { fill: #f4e6c4; }
+.ico.pearl .shine { fill: #fffdf5; }
+.stat .v.bump { animation: bump 0.34s ease-out; }
+
+@keyframes bump {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}
+
+/* ----------------------------------------------------------------- stage */
+
+#stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#board {
+  position: absolute;
+  inset: 0;
+  display: block;
+  touch-action: none;
+}
+
+/* ------------------------------------------------------------------ title */
+
+#title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+
+#title.show { opacity: 1; }
+
+/* The pool shows through, but the name still has to carry across a room. */
+#title::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  height: 34%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse at center,
+    rgba(2, 16, 24, 0.62) 0%,
+    rgba(2, 16, 24, 0.46) 36%,
+    rgba(2, 16, 24, 0.18) 62%,
+    rgba(2, 16, 24, 0) 78%);
+}
+
+#title h1 {
+  position: relative;
+  margin: 0;
+  font-size: clamp(44px, 17vw, 96px);
+  letter-spacing: 0.26em;
+  text-indent: 0.26em;
+  font-weight: 800;
+  color: #f2fffc;
+  /* The letters carry their own contrast so the scrim can stay light and the
+     pool keeps glittering behind them. */
+  text-shadow:
+    0 0 10px rgba(2, 16, 24, 1),
+    0 0 24px rgba(2, 16, 24, 0.9),
+    0 0 38px rgba(60, 215, 205, 0.6),
+    0 4px 20px rgba(0, 0, 0, 0.8);
+  animation: drift 7s ease-in-out infinite;
+}
+
+#title p {
+  position: relative;
+  margin: 12px 0 0;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(4, 24, 33, 0.72);
+  border: 1px solid rgba(126, 214, 214, 0.28);
+  font-size: clamp(12px, 3.6vw, 16px);
+  letter-spacing: 0.2em;
+  color: #d6f6f4;
+  animation: pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes drift {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-7px) scale(1.012); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+/* ------------------------------------------------------- toast and banner */
+
+#toast {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  transform: translate(-50%, 8px);
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(6, 32, 42, 0.9);
+  border: 1px solid rgba(126, 214, 214, 0.22);
+  color: #cdeeee;
+  font-size: clamp(11px, 3.2vw, 13px);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  z-index: 4;
+  max-width: 92%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+#banner {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  transform: translate(-50%, 0) scale(0.9);
+  text-align: center;
+  padding: 12px 22px;
+  border-radius: 18px;
+  background: rgba(4, 22, 31, 0.82);
+  border: 1px solid rgba(126, 214, 214, 0.24);
+  box-shadow: 0 10px 34px rgba(0,0,0,0.5);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
+  transition: opacity 0.3s ease, transform 0.45s cubic-bezier(.2,1.5,.4,1);
+}
+
+#banner.show { opacity: 1; transform: translate(-50%, -6px) scale(1); }
+
+#banner .big {
+  font-size: clamp(20px, 6.4vw, 30px);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #eafffb;
+  text-shadow: 0 0 22px rgba(70, 220, 210, 0.7);
+}
+
+#banner .sub {
+  margin-top: 4px;
+  font-size: clamp(13px, 4vw, 18px);
+  font-weight: 700;
+  color: var(--gold);
+  text-shadow: 0 0 14px rgba(255, 200, 100, 0.5);
+}
+
+/* -------------------------------------------------------------- ceremony */
+
+#ceremony {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 10px max(10px, env(safe-area-inset-bottom));
+  /* The post-mortem is the content, so the scrim stays light over the
+     evidence and the host, and only settles behind the card itself. */
+  background: linear-gradient(180deg, rgba(3,18,26,0) 0%, rgba(3,18,26,0.04) 55%, rgba(3,18,26,0.2) 74%, rgba(3,18,26,0.6) 88%);
+  z-index: 5;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+#ceremony.hidden { opacity: 0; pointer-events: none; }
+
+.cer-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 20px;
+  padding: 14px 16px 12px;
+  background: rgba(6, 30, 40, 0.92);
+  border: 1px solid rgba(126, 214, 214, 0.22);
+  box-shadow: 0 -8px 44px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06);
+  text-align: center;
+  animation: rise 0.5s cubic-bezier(.2,1.1,.3,1) both;
+}
+
+@keyframes rise {
+  from { transform: translateY(26px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.cer-kicker {
+  font-size: clamp(9px, 2.6vw, 11px);
+  letter-spacing: 0.3em;
+  color: #7fb3bb;
+  text-transform: uppercase;
+}
+
+.cer-pearls {
+  margin-top: 2px;
+  font-size: clamp(34px, 11vw, 52px);
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 26px rgba(255, 200, 110, 0.35);
+}
+
+.cer-pearls small {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: clamp(11px, 3.2vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #b79a63;
+  text-shadow: none;
+}
+
+.cer-rank {
+  margin-top: 1px;
+  font-size: clamp(15px, 4.6vw, 20px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #eafffb;
+}
+
+.cer-ladder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin: 8px 0 10px;
+}
+
+.cer-ladder i {
+  width: 100%;
+  max-width: 34px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(126, 214, 214, 0.16);
+  transition: background 0.3s ease;
+}
+
+.cer-ladder i.on { background: linear-gradient(90deg, #ffb95c, var(--gold)); }
+.cer-ladder i.cur { box-shadow: 0 0 10px rgba(255, 212, 121, 0.8); }
+
+.cer-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 9px 0 4px;
+  border-top: 1px solid rgba(126, 214, 214, 0.14);
+}
+
+.cer-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: clamp(11px, 3.2vw, 13px);
+  color: #8fbfc6;
+  letter-spacing: 0.05em;
+}
+
+.cer-line b {
+  color: #eafffb;
+  font-size: clamp(13px, 3.8vw, 16px);
+  font-variant-numeric: tabular-nums;
+}
+
+.cer-line.best b { color: var(--gold); }
+
+.cer-hint {
+  margin-top: 9px;
+  font-size: clamp(11px, 3.2vw, 13px);
+  letter-spacing: 0.16em;
+  color: #9fd0d0;
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #title h1, #title p, .cer-hint, .cer-card { animation: none; }
+}
+
+/* Wide frames: keep the pool portrait and centred rather than stretched. */
+@media (min-aspect-ratio: 1/1) {
+  #hud { padding-left: max(10px, 8vw); padding-right: max(10px, 8vw); }
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no"
+    />
+    <meta name="theme-color" content="#0b1218" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Lumen Yard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/game.css" />
+  </head>
+  <body>
+    <div id="app" class="app">
+      <div class="sky" aria-hidden="true">
+        <div class="sky__glow"></div>
+        <div class="sky__grid"></div>
+        <div class="sky__windows"></div>
+      </div>
+
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <div class="brand__text">
+            <h1 class="brand__title">Lumen Yard</h1>
+            <p class="brand__sub" id="board-name">First Light</p>
+          </div>
+        </div>
+        <div class="meters" aria-live="polite">
+          <div class="meter" title="Moves">
+            <span class="meter__label">Moves</span>
+            <span class="meter__value" id="move-count">0</span>
+          </div>
+          <div class="meter" title="Pushes">
+            <span class="meter__label">Pushes</span>
+            <span class="meter__value" id="push-count">0</span>
+          </div>
+          <div class="meter meter--power" title="Powered sockets">
+            <span class="meter__label">Live</span>
+            <span class="meter__value" id="power-count">0/1</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="stage" id="stage">
+        <div class="yard-wrap" id="yard-wrap">
+          <div class="yard" id="yard" role="application" aria-label="Power yard board"></div>
+          <div class="current-hum" id="current-hum" aria-hidden="true"></div>
+        </div>
+
+        <div class="title-overlay" id="title-overlay">
+          <p class="title-invite">Restore the grid.</p>
+          <p class="title-hint">Swipe or tap to begin</p>
+        </div>
+
+        <div class="banner banner--chapter hidden" id="chapter-banner" role="dialog" aria-labelledby="chapter-title">
+          <div class="banner__inner">
+            <p class="banner__kicker">Opening restoration</p>
+            <h2 class="banner__title" id="chapter-title">GRID RESTORED</h2>
+            <p class="banner__copy">The first three circuits hold. Continue into the split bus.</p>
+            <div class="banner__actions">
+              <button type="button" class="btn btn--primary" id="chapter-continue">Continue</button>
+              <button type="button" class="btn btn--ghost" id="chapter-replay">Replay</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="banner banner--complete hidden" id="board-banner" role="dialog" aria-labelledby="board-banner-title">
+          <div class="banner__inner">
+            <p class="banner__kicker" id="board-banner-kicker">Circuit live</p>
+            <h2 class="banner__title" id="board-banner-title">Yard powered</h2>
+            <p class="banner__copy" id="board-banner-copy"></p>
+            <div class="banner__actions">
+              <button type="button" class="btn btn--primary" id="banner-next">Next board</button>
+              <button type="button" class="btn btn--ghost" id="banner-replay">Replay</button>
+              <button type="button" class="btn btn--ghost" id="banner-map">Board map</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="banner banner--finale hidden" id="finale-banner" role="dialog" aria-labelledby="finale-title">
+          <div class="banner__inner">
+            <p class="banner__kicker">Campaign complete</p>
+            <h2 class="banner__title" id="finale-title">Dawn over the yard</h2>
+            <p class="banner__copy" id="finale-copy">20/20 restored</p>
+            <p class="banner__credit">— Yard crew: night shift, copper hands, quiet pride.</p>
+            <div class="banner__actions">
+              <button type="button" class="btn btn--primary" id="finale-replay">Replay dawn</button>
+              <button type="button" class="btn btn--ghost" id="finale-map">Board map</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="dock">
+        <div class="dock__tools">
+          <button type="button" class="tool" id="btn-undo" aria-label="Undo" title="Undo (U)">
+            <span class="tool__icon" aria-hidden="true">↺</span>
+            <span class="tool__label">Undo</span>
+          </button>
+          <button type="button" class="tool" id="btn-restart" aria-label="Restart" title="Restart (R)">
+            <span class="tool__icon" aria-hidden="true">⟳</span>
+            <span class="tool__label">Restart</span>
+          </button>
+          <button type="button" class="tool" id="btn-boards" aria-label="Open board map" aria-expanded="false" aria-controls="board-drawer">
+            <span class="tool__icon" aria-hidden="true">▦</span>
+            <span class="tool__label">Boards</span>
+          </button>
+          <button type="button" class="tool" id="btn-settings" aria-label="Open settings" aria-expanded="false" aria-controls="settings-panel">
+            <span class="tool__icon" aria-hidden="true">⚙</span>
+            <span class="tool__label">Settings</span>
+          </button>
+        </div>
+      </footer>
+
+      <aside class="drawer hidden" id="board-drawer" role="dialog" aria-label="Board map">
+        <div class="drawer__head">
+          <h2 class="drawer__title">Board map</h2>
+          <button type="button" class="icon-btn" id="drawer-close" aria-label="Close board map">✕</button>
+        </div>
+        <div class="drawer__progress" id="drawer-progress"></div>
+        <div class="board-grid" id="board-grid"></div>
+      </aside>
+      <div class="scrim hidden" id="scrim" hidden></div>
+
+      <aside class="settings hidden" id="settings-panel" role="dialog" aria-label="Settings">
+        <div class="settings__head">
+          <h2 class="drawer__title">Settings</h2>
+          <button type="button" class="icon-btn" id="settings-close" aria-label="Close settings">✕</button>
+        </div>
+        <label class="toggle">
+          <span>Sound</span>
+          <input type="checkbox" id="toggle-sound" />
+          <span class="toggle__track" aria-hidden="true"></span>
+        </label>
+        <label class="toggle">
+          <span>Motion</span>
+          <input type="checkbox" id="toggle-motion" />
+          <span class="toggle__track" aria-hidden="true"></span>
+        </label>
+        <p class="settings__note">Reduced motion keeps state changes clear and calms decoration only.</p>
+      </aside>
+    </div>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

@@ -29,8 +29,10 @@ test("task policy and named-Build evidence agree", () => {
   const value = structuredClone(accepted);
   const taskId = value.release.tasks[0].id;
   value.taskManifests = [manifest(taskId)];
-  for (const candidate of value.release.builds.filter((item) => item.taskId === taskId)) {
-    candidate.agentPlayEvidence = { status: "not_evaluated", receiptAvailable: false };
+  for (const candidate of value.release.builds) {
+    candidate.agentPlayEvidence = candidate.taskId === taskId
+      ? { status: "not_evaluated", receiptAvailable: false }
+      : { status: "not_applicable", receiptAvailable: false };
   }
   const build = value.release.builds.find((candidate) => candidate.taskId === taskId);
   build.agentPlayEvidence = { status: "passed", receiptAvailable: true };

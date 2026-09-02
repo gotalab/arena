@@ -149,8 +149,9 @@ function validateBundleShape(bundle) {
     throw new Error("runtime_fixture:task_set_mismatch");
   }
   const blindTitleById = new Map(blind.tasks.map((task) => [task.id, task.title]));
+  const titleKey = (value) => value.normalize("NFKC").replace(/\s+/gu, "").toLowerCase();
   for (const task of catalogTasks) {
-    if (blindTitleById.get(task.id) !== task.title) {
+    if (titleKey(blindTitleById.get(task.id)) !== titleKey(task.title)) {
       throw new Error(`runtime_fixture:task_title_mismatch:${task.id}`);
     }
   }

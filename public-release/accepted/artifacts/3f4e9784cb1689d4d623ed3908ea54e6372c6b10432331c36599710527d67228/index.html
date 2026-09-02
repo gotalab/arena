@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>LUMEN YARD - 導通の夜</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Game Header -->
+    <header class="game-header">
+      <div class="header-left">
+        <span class="brand-title">LUMEN YARD</span>
+        <span id="level-badge" class="level-badge">CH 1</span>
+        <div class="header-level-info">
+          <span id="level-title" class="level-title">1. First Light</span>
+          <span id="level-subtitle" class="level-subtitle">回路の初期化</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-levels" class="btn btn-icon" aria-label="回路一覧" title="回路一覧 (Level Select)">☰ 回路</button>
+        <button id="btn-settings" class="btn btn-icon" aria-label="設定" title="設定 (Settings)">⚙</button>
+      </div>
+    </header>
+
+    <!-- Stats HUD -->
+    <section class="stats-bar" aria-label="稼働状況">
+      <div class="stat-item">
+        <span class="stat-label">手数:</span>
+        <span id="moves-count" class="stat-val">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">押下:</span>
+        <span id="pushes-count" class="stat-val">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">通電:</span>
+        <span id="power-count" class="stat-val">0/1</span>
+      </div>
+      <div class="stat-item">
+        <span id="best-record" class="stat-best">BEST: --</span>
+      </div>
+    </section>
+
+    <!-- Main Board Stage -->
+    <main class="stage-container">
+      <canvas id="game-canvas"></canvas>
+      <div class="invitation-prompt">⚡ 送電網を復旧せよ (スワイプ / タップ / キーボードで操作)</div>
+    </main>
+
+    <!-- Controls Bar -->
+    <footer class="controls-bar">
+      <div class="controls-left">
+        <button id="btn-undo" class="btn" aria-label="1手戻す" title="巻戻し (U / Backspace)">↺ 巻戻し (U)</button>
+        <button id="btn-restart" class="btn" aria-label="回路をリセット" title="最初から (R)">⟳ 初期化 (R)</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Level Select Drawer / Modal -->
+  <div id="drawer-levels" class="modal-overlay" role="dialog" aria-modal="true" aria-label="回路一覧">
+    <div class="modal-card drawer-card">
+      <div class="modal-header">
+        <h2 class="modal-title">変電所 回路マップ</h2>
+        <button id="btn-close-drawer" class="btn btn-icon" aria-label="閉じる">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="levels-list" class="levels-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="modal-settings" class="modal-overlay" role="dialog" aria-modal="true" aria-label="設定">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">環境設定</h2>
+        <button id="btn-close-settings" class="btn btn-icon" aria-label="閉じる">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-row">
+          <div class="setting-label">
+            <span class="setting-name">効果音 (Sound FX)</span>
+            <span class="setting-desc">電気リレーと機構の動作音</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-sound" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">
+            <span class="setting-name">視覚効果の抑制 (Reduced Motion)</span>
+            <span class="setting-desc">画面振動や装飾アニメーションを抑制</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-motion">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="guide-box">
+          <strong>操作ガイド:</strong><br>
+          • <strong>移動:</strong> スワイプ、隣接タイルのタップ/クリック、矢印キー / WASD<br>
+          • <strong>巻戻し:</strong> [U] または [Backspace] キー、巻戻しボタン<br>
+          • <strong>初期化:</strong> [R] キー、初期化ボタン<br>
+          • <strong>ゲームパッド:</strong> 十字キー/左スティックで移動、(A)で決定、(B)で巻戻し、(START)で初期化
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory / Chapter Clear Modal -->
+  <div id="modal-victory" class="modal-overlay" role="dialog" aria-modal="true" aria-label="通電完了">
+    <div class="modal-card">
+      <div id="victory-content" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Main Game Script -->
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

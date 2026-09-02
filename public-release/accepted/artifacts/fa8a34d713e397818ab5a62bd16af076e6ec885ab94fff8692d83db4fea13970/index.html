@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#070b14" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Lumen Yard</title>
+    <link rel="stylesheet" href="css/lumen.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="chrome" aria-label="Yard status">
+        <div class="brand">
+          <span class="wordmark">Lumen Yard</span>
+          <span class="shift">Night Shift Three</span>
+        </div>
+        <div class="readout" aria-live="polite">
+          <p class="board" id="board-name">First Light</p>
+          <ul class="meters">
+            <li><span class="k">Moves</span> <strong id="stat-moves">0</strong></li>
+            <li><span class="k">Pushes</span> <strong id="stat-pushes">0</strong></li>
+            <li>
+              <span class="k">Sockets</span>
+              <strong id="stat-power">0/1</strong>
+            </li>
+          </ul>
+        </div>
+        <div class="tools">
+          <button type="button" id="btn-map" aria-expanded="false" aria-controls="drawer">
+            Circuits
+          </button>
+          <button type="button" id="btn-settings" aria-expanded="false" aria-controls="settings">
+            Settings
+          </button>
+        </div>
+      </header>
+
+      <main class="stage">
+        <div id="yard-wrap">
+          <canvas id="yard" aria-label="Power yard"></canvas>
+        </div>
+
+        <div id="invite" class="float-copy">
+          <p class="title">Lumen Yard</p>
+          <p class="line">Restore the grid.</p>
+        </div>
+
+        <section id="plaque" class="plaque" hidden role="dialog" aria-labelledby="plaque-title">
+          <p class="eyebrow" id="plaque-eye"></p>
+          <h2 id="plaque-title"></h2>
+          <p class="body" id="plaque-body"></p>
+          <p class="meta" id="plaque-meta"></p>
+          <div class="actions" id="plaque-actions"></div>
+        </section>
+      </main>
+
+      <footer class="dock">
+        <button type="button" id="btn-undo" disabled aria-keyshortcuts="u Backspace" title="Undo (U)">
+          <span class="glyph" aria-hidden="true">↺</span> Undo
+        </button>
+        <button type="button" id="btn-restart" aria-keyshortcuts="r" title="Restart (R)">
+          <span class="glyph" aria-hidden="true">⌂</span> Restart
+        </button>
+      </footer>
+
+      <aside id="drawer" class="sheet" hidden>
+        <div class="sheet-head">
+          <h2>Circuit map</h2>
+          <div class="sheet-tools">
+            <button type="button" id="btn-map-restart">Restart bay</button>
+            <button type="button" id="btn-map-close" class="icon-close">Close</button>
+          </div>
+        </div>
+        <p class="sheet-note">Restored bays keep their best path. The live yard stays behind this map.</p>
+        <div id="map-grid" class="map-grid"></div>
+      </aside>
+
+      <aside id="settings" class="sheet sheet-small" hidden>
+        <div class="sheet-head">
+          <h2>Settings</h2>
+          <button type="button" id="btn-settings-close" class="icon-close">Close</button>
+        </div>
+        <div class="toggles">
+          <button type="button" id="tog-sound" class="toggle" aria-pressed="true">
+            <span class="toggle-label">Sound</span>
+            <span class="toggle-state" id="tog-sound-state">On</span>
+          </button>
+          <button type="button" id="tog-motion" class="toggle" aria-pressed="true">
+            <span class="toggle-label">Motion</span>
+            <span class="toggle-state" id="tog-motion-state">On</span>
+          </button>
+        </div>
+        <p class="sheet-note">Motion follows your system preference until you change it. The yard stays playable in silence.</p>
+      </aside>
+    </div>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

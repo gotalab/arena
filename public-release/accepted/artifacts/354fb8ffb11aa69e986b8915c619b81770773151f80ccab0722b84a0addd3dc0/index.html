@@ -1,0 +1,2543 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#071c28">
+  <title>SHOAL — low tide logic</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #071b27;
+      --ink-soft: #0b2835;
+      --water: #0d3e4d;
+      --water-light: #185d68;
+      --foam: #d7f3e9;
+      --foam-dim: #8bbeb8;
+      --pearl: #ffe7a8;
+      --coral: #ff896d;
+      --coral-deep: #bd4e63;
+      --violet: #a997e8;
+      --mint: #83e4c0;
+      --line: rgba(180, 235, 220, .16);
+      --line-bright: rgba(190, 247, 226, .34);
+      --shadow: rgba(0, 5, 14, .32);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+      background: var(--ink);
+    }
+
+    body {
+      color: var(--foam);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    button { font: inherit; }
+
+    .app {
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 50% -15%, rgba(55, 149, 143, .22), transparent 47%),
+        linear-gradient(155deg, #082633 0%, #061b27 52%, #071722 100%);
+    }
+
+    .app::before,
+    .app::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: .18;
+      mix-blend-mode: screen;
+    }
+
+    .app::before {
+      width: 46vw;
+      height: 27vw;
+      left: -13vw;
+      bottom: -9vw;
+      background: radial-gradient(ellipse, #2fada6, transparent 69%);
+      animation: waterDrift 17s ease-in-out infinite alternate;
+    }
+
+    .app::after {
+      width: 38vw;
+      height: 30vw;
+      right: -10vw;
+      top: 17vh;
+      background: radial-gradient(ellipse, #3554a8, transparent 67%);
+      animation: waterDrift 21s ease-in-out infinite alternate-reverse;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex: 0 0 auto;
+      width: min(100%, 1120px);
+      height: clamp(62px, 9vh, 84px);
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 46px);
+      border-bottom: 1px solid rgba(198, 241, 222, .11);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      line-height: 1;
+    }
+
+    .brand-name {
+      color: var(--foam);
+      font-size: clamp(21px, 3.2vw, 29px);
+      font-weight: 800;
+      letter-spacing: .19em;
+      margin-right: -.19em;
+    }
+
+    .brand-sub {
+      color: var(--foam-dim);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+    }
+
+    .run-readout {
+      display: flex;
+      align-items: center;
+      gap: clamp(10px, 2.5vw, 22px);
+    }
+
+    .pool-chip,
+    .score-readout {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .pool-chip {
+      color: var(--foam-dim);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .pool-chip .signal {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 0 4px rgba(131, 228, 192, .09), 0 0 13px rgba(131, 228, 192, .72);
+      animation: signalPulse 2.2s ease-in-out infinite;
+    }
+
+    .score-readout {
+      padding-left: clamp(10px, 2.2vw, 18px);
+      border-left: 1px solid var(--line);
+    }
+
+    .pearl-mark {
+      position: relative;
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 34% 28%, #fffdf1 0 13%, #ffe9b5 35%, #c8c7e6 100%);
+      box-shadow: 0 0 12px rgba(255, 231, 168, .58);
+    }
+
+    .pearl-mark::after {
+      content: "";
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      top: 2px;
+      left: 3px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.9);
+    }
+
+    .score-number {
+      min-width: 3.2ch;
+      color: var(--pearl);
+      font-size: clamp(17px, 2.6vw, 23px);
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+      letter-spacing: .05em;
+    }
+
+    .score-best {
+      color: var(--foam-dim);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .1em;
+    }
+
+    .main-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 224px;
+      gap: clamp(14px, 3vw, 38px);
+      flex: 1 1 auto;
+      min-height: 0;
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: clamp(12px, 2.3vh, 25px) clamp(16px, 4vw, 46px) clamp(12px, 2.2vh, 24px);
+    }
+
+    .play-panel {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .board-topline {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      height: clamp(31px, 5vh, 50px);
+      padding: 0 2px 10px;
+    }
+
+    .location {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--foam-dim);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .location::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border: 1px solid rgba(215, 243, 233, .56);
+      border-radius: 50% 50% 44% 56%;
+      transform: rotate(38deg);
+      box-shadow: inset 0 0 0 2px rgba(7, 27, 39, .28);
+    }
+
+    .pool-name {
+      overflow: hidden;
+      color: rgba(215, 243, 233, .78);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .board-holder {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .board-frame {
+      position: relative;
+      width: min(100%, 620px);
+      max-height: 100%;
+      aspect-ratio: 4 / 3;
+      padding: clamp(8px, 1.5vw, 14px);
+      overflow: hidden;
+      border: 1px solid rgba(183, 239, 220, .21);
+      border-radius: clamp(18px, 3vw, 28px);
+      background:
+        linear-gradient(145deg, rgba(35, 110, 111, .52), rgba(7, 40, 53, .86)),
+        radial-gradient(ellipse at 26% 12%, rgba(138, 224, 195, .16), transparent 37%);
+      box-shadow:
+        0 25px 70px rgba(0, 6, 18, .29),
+        inset 0 0 0 1px rgba(224, 249, 230, .05),
+        inset 0 -35px 60px rgba(0, 6, 20, .22);
+    }
+
+    .board-frame::before,
+    .board-frame::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+      opacity: .5;
+    }
+
+    .board-frame::before {
+      width: 44%;
+      height: 26%;
+      left: -9%;
+      top: -8%;
+      background: radial-gradient(ellipse, rgba(127, 235, 210, .24), transparent 68%);
+      transform: rotate(-17deg);
+      animation: caustic 8s ease-in-out infinite alternate;
+    }
+
+    .board-frame::after {
+      width: 33%;
+      height: 20%;
+      right: -5%;
+      bottom: -5%;
+      background: radial-gradient(ellipse, rgba(133, 144, 242, .15), transparent 70%);
+      animation: caustic 11s ease-in-out infinite alternate-reverse;
+    }
+
+    #board {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: clamp(3px, .75vw, 7px);
+      width: 100%;
+      height: 100%;
+      padding: clamp(2px, .35vw, 4px);
+      border-radius: clamp(12px, 2vw, 19px);
+      background:
+        radial-gradient(circle at 22% 13%, rgba(158, 239, 207, .13) 0 1.5%, transparent 2%),
+        radial-gradient(circle at 70% 76%, rgba(135, 195, 238, .09) 0 1%, transparent 1.8%),
+        rgba(3, 30, 42, .32);
+      box-shadow: inset 0 1px 0 rgba(219, 251, 232, .08), inset 0 -10px 22px rgba(0, 9, 20, .2);
+    }
+
+    .cell {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      min-height: 0;
+      padding: 0;
+      overflow: hidden;
+      border: 0;
+      border-radius: 48% 52% 50% 46% / 48% 45% 55% 52%;
+      color: var(--foam);
+      cursor: pointer;
+      outline: none;
+      touch-action: none;
+      transform: rotate(var(--tilt));
+      transition: filter .18s ease, transform .18s ease, background .22s ease, box-shadow .22s ease;
+    }
+
+    .cell::before,
+    .cell::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .cell:hover { filter: brightness(1.12); }
+    .cell:focus-visible { box-shadow: 0 0 0 2px var(--pearl), 0 0 0 5px rgba(255, 231, 168, .2); }
+
+    .cell-covered {
+      background:
+        radial-gradient(ellipse at 32% 21%, rgba(255,255,255,.53) 0 3%, transparent 16%),
+        radial-gradient(ellipse at 64% 73%, rgba(10, 60, 67, .3), transparent 58%),
+        linear-gradient(145deg, #b8d2cc 0%, #79b6ae 54%, #438789 100%);
+      box-shadow:
+        inset 2px 2px 0 rgba(240,255,238,.33),
+        inset -3px -4px 0 rgba(7, 46, 57, .28),
+        0 4px 6px rgba(1, 18, 26, .25);
+    }
+
+    .cell-covered::before {
+      width: 52%;
+      height: 47%;
+      border: 1px solid rgba(19, 91, 94, .48);
+      border-right-color: transparent;
+      border-radius: 50%;
+      transform: rotate(-29deg);
+      box-shadow: 4px -2px 0 -1px rgba(223, 250, 220, .19);
+    }
+
+    .cell-covered::after {
+      width: 12%;
+      height: 12%;
+      right: 18%;
+      top: 16%;
+      border-radius: 50%;
+      background: rgba(237, 255, 233, .54);
+      filter: blur(.4px);
+    }
+
+    .cell-flagged {
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.34), transparent 20%),
+        linear-gradient(145deg, #86c0b2, #437e84 76%);
+      box-shadow:
+        inset 2px 2px 0 rgba(240,255,238,.2),
+        inset -3px -4px 0 rgba(7, 46, 57, .3),
+        0 4px 6px rgba(1, 18, 26, .25),
+        0 0 0 1px rgba(255, 137, 109, .22);
+    }
+
+    .cell-flagged::before {
+      width: 18%;
+      height: 54%;
+      left: 46%;
+      bottom: 18%;
+      border-radius: 4px;
+      background: var(--coral);
+      box-shadow: 1px 0 0 rgba(255, 240, 196, .35);
+      transform: rotate(3deg);
+    }
+
+    .cell-flagged::after {
+      width: 43%;
+      height: 28%;
+      left: 34%;
+      top: 19%;
+      border-radius: 4px 80% 5px 4px;
+      background: var(--coral);
+      box-shadow: inset 2px 1px 0 rgba(255, 230, 188, .26);
+      transform: rotate(3deg);
+    }
+
+    .cell-open {
+      border-radius: 41% 59% 47% 53% / 49% 42% 58% 51%;
+      background:
+        radial-gradient(ellipse at 31% 22%, rgba(126, 237, 210, .12), transparent 35%),
+        linear-gradient(145deg, rgba(14, 86, 91, .92), rgba(7, 51, 66, .95));
+      box-shadow: inset 0 1px 0 rgba(190, 241, 220, .12), inset 0 -5px 9px rgba(0, 12, 26, .26);
+      cursor: default;
+    }
+
+    .cell-open::before {
+      width: 48%;
+      height: 34%;
+      left: 11%;
+      top: 18%;
+      border-top: 1px solid rgba(155, 244, 215, .18);
+      border-radius: 50%;
+      transform: rotate(-17deg);
+    }
+
+    .cell-open::after {
+      width: 15%;
+      height: 5%;
+      right: 15%;
+      bottom: 17%;
+      border-radius: 50%;
+      background: rgba(133, 221, 209, .2);
+      transform: rotate(-12deg);
+    }
+
+    .cell-number {
+      position: relative;
+      z-index: 1;
+      color: var(--number-color, var(--foam));
+      font-size: clamp(14px, 3.6vw, 27px);
+      font-variant-numeric: tabular-nums;
+      font-weight: 850;
+      line-height: 1;
+      text-shadow: 0 1px 7px rgba(0, 0, 0, .18);
+    }
+
+    .cell-zero .cell-number {
+      width: auto;
+      height: auto;
+      border: 0;
+      border-radius: 0;
+      font-size: clamp(14px, 3.6vw, 27px);
+      box-shadow: none;
+    }
+
+    .cell-zero::after {
+      width: 42%;
+      height: 42%;
+      right: 12%;
+      bottom: 10%;
+      border: 1px solid rgba(126, 238, 213, .25);
+      border-radius: 50%;
+      background: transparent;
+      box-shadow: 0 0 8px rgba(126, 238, 213, .18);
+    }
+
+    .cell-ended-urchin,
+    .cell-fatal {
+      border-radius: 50%;
+      background: radial-gradient(circle, #f9a58a 0 13%, #c64f67 25%, #57284e 64%, #183a50 100%);
+      box-shadow: 0 0 0 1px rgba(255, 158, 123, .45), 0 0 19px rgba(220, 83, 101, .68), inset 0 0 8px rgba(255, 234, 166, .38);
+      animation: revealedPulse 1.7s ease-in-out infinite;
+    }
+
+    .cell-fatal {
+      background: radial-gradient(circle, #fff0b7 0 12%, #ff7f68 19%, #a52f60 43%, #331f4b 78%);
+      box-shadow: 0 0 0 2px rgba(255, 231, 168, .82), 0 0 25px rgba(255, 102, 105, .9), inset 0 0 10px rgba(255, 245, 187, .58);
+      animation: fatalPulse .78s ease-in-out infinite alternate;
+    }
+
+    .cell-confirmed {
+      background: radial-gradient(ellipse at 31% 21%, rgba(241,255,223,.45), transparent 16%), linear-gradient(145deg, #6cbda5, #28706f);
+      box-shadow: inset 2px 2px 0 rgba(239,255,229,.22), inset -3px -4px 0 rgba(8, 45, 55, .28), 0 0 0 1px rgba(131, 228, 192, .45);
+    }
+
+    .cell-wrong-flag {
+      background: linear-gradient(145deg, #718d94, #41546b);
+      box-shadow: inset 2px 2px 0 rgba(239,255,229,.14), inset -3px -4px 0 rgba(7, 27, 42, .34), 0 0 0 1px rgba(255, 137, 109, .36);
+    }
+
+    .postmark {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      width: 63%;
+      height: 63%;
+      color: var(--foam);
+      font-size: clamp(15px, 4.4vw, 30px);
+      font-weight: 800;
+      line-height: 1;
+      text-shadow: 0 2px 6px rgba(0,0,0,.3);
+    }
+
+    .postmark-cross { color: #a6f0cc; }
+    .postmark-wrong { color: #ffba9a; }
+    .postmark-urchin { color: #ffcf9d; font-size: clamp(16px, 4.6vw, 32px); }
+
+    .ripple-cell {
+      animation: rippleOpen .62s cubic-bezier(.2, .82, .25, 1) both;
+      animation-delay: var(--ripple-delay, 0ms);
+    }
+
+    .sweep-cell {
+      animation: sweepOpen .5s cubic-bezier(.16, .8, .25, 1) both;
+      animation-delay: var(--ripple-delay, 0ms);
+    }
+
+    .board-frame.sting-shock { animation: boardShock .54s cubic-bezier(.2, .9, .3, 1); }
+
+    .start-prompt {
+      position: absolute;
+      z-index: 3;
+      left: 50%;
+      bottom: 6%;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 12px;
+      border: 1px solid rgba(201, 245, 226, .16);
+      border-radius: 999px;
+      color: rgba(222, 249, 227, .78);
+      background: rgba(3, 25, 38, .51);
+      box-shadow: 0 7px 19px rgba(0, 10, 20, .16);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+      transition: opacity .35s ease, transform .35s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .start-prompt::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border: 1px solid var(--pearl);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(255, 231, 168, .52);
+    }
+
+    .start-prompt.hidden { opacity: 0; transform: translate(-50%, 8px); }
+
+    .clear-toast {
+      position: absolute;
+      z-index: 4;
+      top: 50%;
+      left: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: max-content;
+      max-width: 88%;
+      padding: 12px 19px 13px;
+      border: 1px solid rgba(223, 250, 226, .3);
+      border-radius: 15px;
+      background: rgba(9, 62, 69, .88);
+      box-shadow: 0 15px 30px rgba(0, 10, 18, .3), 0 0 24px rgba(119, 229, 194, .14);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, -43%) scale(.92);
+    }
+
+    .clear-toast.visible { animation: toastRise 1.25s ease-out both; }
+
+    .clear-kicker {
+      color: var(--mint);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .clear-title {
+      color: var(--foam);
+      font-size: clamp(15px, 2.9vw, 22px);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .clear-gain {
+      color: var(--pearl);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+    }
+
+    .ceremony {
+      position: absolute;
+      z-index: 8;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6%;
+      background: linear-gradient(180deg, rgba(4, 22, 35, .13), rgba(3, 17, 29, .83) 62%, rgba(4, 16, 27, .94));
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s ease;
+    }
+
+    .ceremony.visible { opacity: 1; pointer-events: auto; }
+
+    .ceremony-card {
+      width: min(100%, 408px);
+      padding: clamp(17px, 3.5vw, 27px);
+      border: 1px solid rgba(255, 231, 168, .24);
+      border-radius: 22px;
+      background: linear-gradient(150deg, rgba(20, 53, 64, .94), rgba(10, 28, 42, .96));
+      box-shadow: 0 24px 45px rgba(0, 5, 14, .47), inset 0 1px 0 rgba(255,255,255,.08);
+      text-align: center;
+      transform: translateY(12px);
+      transition: transform .42s cubic-bezier(.2, .82, .25, 1);
+    }
+
+    .ceremony.visible .ceremony-card { transform: translateY(0); }
+
+    .ceremony-kicker {
+      color: var(--coral);
+      font-size: 9px;
+      font-weight: 850;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+    }
+
+    .ceremony-title {
+      margin: 9px 0 4px;
+      color: var(--foam);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(23px, 5.8vw, 39px);
+      font-weight: 700;
+      letter-spacing: -.025em;
+      line-height: .98;
+    }
+
+    .ceremony-copy {
+      margin: 0 auto 17px;
+      max-width: 32ch;
+      color: rgba(215, 243, 233, .68);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .ceremony-scoreline {
+      display: flex;
+      align-items: end;
+      justify-content: center;
+      gap: 13px;
+      margin: 0 auto 15px;
+    }
+
+    .final-score {
+      color: var(--pearl);
+      font-size: clamp(34px, 9vw, 52px);
+      font-variant-numeric: tabular-nums;
+      font-weight: 850;
+      letter-spacing: .02em;
+      line-height: .85;
+    }
+
+    .final-score-label {
+      padding-bottom: 3px;
+      color: var(--foam-dim);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    .rank-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 9px 0 11px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .rank-label {
+      color: var(--foam-dim);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .rank-value {
+      color: var(--pearl);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: .12em;
+    }
+
+    .ceremony-stats {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      padding: 12px 0 16px;
+      color: rgba(215, 243, 233, .71);
+      font-size: 9px;
+      line-height: 1.4;
+    }
+
+    .ceremony-stats strong {
+      display: block;
+      color: var(--foam);
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .restart-button {
+      width: 100%;
+      min-height: 39px;
+      border: 1px solid rgba(255, 231, 168, .42);
+      border-radius: 11px;
+      color: var(--ink);
+      background: var(--pearl);
+      box-shadow: 0 6px 18px rgba(255, 191, 118, .17);
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      transition: transform .16s ease, filter .16s ease;
+    }
+
+    .restart-button:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    .restart-button:active { transform: translateY(1px) scale(.99); }
+
+    .ceremony-foot {
+      margin-top: 10px;
+      color: rgba(215, 243, 233, .44);
+      font-size: 8px;
+      letter-spacing: .08em;
+    }
+
+    .board-footer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: clamp(12px, 3vw, 28px);
+      min-height: clamp(60px, 9vh, 82px);
+      padding: 12px 2px 0;
+    }
+
+    .tide-block { min-width: 0; }
+
+    .footer-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 7px;
+      color: var(--foam-dim);
+      font-size: 8px;
+      font-weight: 850;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .tide-percent { color: var(--foam); font-variant-numeric: tabular-nums; }
+
+    .tide-track {
+      position: relative;
+      height: 7px;
+      overflow: hidden;
+      border: 1px solid rgba(178, 231, 218, .18);
+      border-radius: 999px;
+      background: rgba(2, 25, 36, .76);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,.28);
+    }
+
+    .tide-fill {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--coral), #f2bd83 43%, var(--mint) 100%);
+      box-shadow: 0 0 12px rgba(131, 228, 192, .34);
+      transform-origin: left center;
+      transition: width .22s linear, filter .2s ease;
+    }
+
+    .tide-fill.low { filter: saturate(1.35) brightness(1.13); animation: lowTidePulse 1.1s ease-in-out infinite; }
+
+    .counter-block {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: max-content;
+      padding: 7px 10px 7px 8px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(8, 38, 49, .43);
+    }
+
+    .urchin-counter {
+      position: relative;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 44% 42%, #ffcf9d 0 13%, #d76a72 20%, #79415d 55%, #203e54 100%);
+      box-shadow: 0 0 11px rgba(255, 137, 109, .25);
+    }
+
+    .urchin-counter::before {
+      content: "✦";
+      position: absolute;
+      inset: -2px 0 0;
+      color: rgba(255, 225, 167, .68);
+      font-size: 24px;
+      line-height: 22px;
+      text-align: center;
+    }
+
+    .counter-number {
+      color: var(--coral);
+      font-size: 17px;
+      font-variant-numeric: tabular-nums;
+      font-weight: 850;
+      line-height: 1;
+    }
+
+    .counter-copy {
+      color: var(--foam-dim);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      line-height: 1.15;
+      text-transform: uppercase;
+    }
+
+    .info-rail {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 13px;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .host-card,
+    .legend-card,
+    .note-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(8, 38, 49, .48);
+      box-shadow: 0 12px 26px rgba(0, 10, 19, .12), inset 0 1px 0 rgba(255,255,255,.035);
+    }
+
+    .host-card {
+      position: relative;
+      min-height: 182px;
+      padding: 15px;
+      overflow: hidden;
+    }
+
+    .host-card::before {
+      content: "";
+      position: absolute;
+      width: 138px;
+      height: 100px;
+      left: 50%;
+      top: 17px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(93, 216, 184, .18), transparent 67%);
+      transform: translateX(-50%);
+    }
+
+    .host-label {
+      position: relative;
+      z-index: 1;
+      color: var(--foam-dim);
+      font-size: 8px;
+      font-weight: 850;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .host-stage {
+      position: relative;
+      display: grid;
+      place-items: center;
+      height: 105px;
+    }
+
+    .host {
+      position: relative;
+      width: 74px;
+      height: 72px;
+      transition: transform .42s cubic-bezier(.2, .8, .25, 1), filter .3s ease;
+      animation: hostFloat 4.2s ease-in-out infinite;
+    }
+
+    .host-aura {
+      position: absolute;
+      width: 67px;
+      height: 48px;
+      left: 4px;
+      top: 16px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(118, 228, 196, .35), transparent 68%);
+      filter: blur(2px);
+      animation: auraBreath 3.4s ease-in-out infinite;
+    }
+
+    .host-body {
+      position: absolute;
+      left: 14px;
+      top: 19px;
+      width: 48px;
+      height: 39px;
+      border: 2px solid rgba(215, 251, 219, .45);
+      border-radius: 49% 51% 43% 57% / 54% 49% 51% 46%;
+      background: linear-gradient(145deg, #b4e7c6 0%, #6bbfae 51%, #3d7788 100%);
+      box-shadow: inset 5px 4px 0 rgba(255,255,255,.24), inset -7px -7px 0 rgba(24, 91, 98, .24), 0 7px 12px rgba(0, 10, 18, .24);
+    }
+
+    .host-body::before,
+    .host-body::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      width: 19px;
+      height: 15px;
+      border: 2px solid rgba(208, 248, 215, .39);
+      border-top: 0;
+      border-radius: 0 0 65% 55%;
+      background: #59a89e;
+    }
+
+    .host-body::before { left: -8px; transform: rotate(23deg); }
+    .host-body::after { right: -8px; transform: scaleX(-1) rotate(23deg); }
+
+    .host-frill {
+      position: absolute;
+      left: 31px;
+      top: 8px;
+      width: 20px;
+      height: 18px;
+      border-radius: 50% 50% 38% 38%;
+      background: linear-gradient(135deg, #ffb487, #ce6780);
+      box-shadow: -12px 6px 0 -5px #ff9f81, 12px 6px 0 -5px #e97e7a, inset 3px 2px 0 rgba(255, 246, 191, .45);
+      transform: rotate(-5deg);
+    }
+
+    .host-face {
+      position: absolute;
+      z-index: 2;
+      left: 24px;
+      top: 28px;
+      display: flex;
+      gap: 11px;
+    }
+
+    .host-eye {
+      position: relative;
+      display: block;
+      width: 6px;
+      height: 8px;
+      border-radius: 50%;
+      background: #153c51;
+      box-shadow: inset 1px 1px 0 rgba(255,255,255,.7);
+    }
+
+    .host-eye::after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      left: 1px;
+      top: 1px;
+      border-radius: 50%;
+      background: #fff8d6;
+    }
+
+    .host-mood {
+      position: absolute;
+      left: 33px;
+      top: 42px;
+      width: 11px;
+      height: 5px;
+      border-bottom: 1.5px solid #235267;
+      border-radius: 50%;
+      transition: transform .25s ease;
+    }
+
+    .host-whisker {
+      position: absolute;
+      top: 40px;
+      width: 16px;
+      height: 8px;
+      border-top: 1px solid rgba(217, 252, 223, .48);
+      border-radius: 50%;
+    }
+
+    .host-whisker.left { left: 0; transform: rotate(13deg); }
+    .host-whisker.right { right: 0; transform: rotate(-13deg); }
+
+    .host.still { transform: translateY(2px) scale(.98); }
+    .host.delight { transform: translateY(-5px) rotate(-5deg) scale(1.05); filter: brightness(1.13); }
+    .host.breath { transform: translateY(1px) scale(.95); filter: saturate(.82); }
+    .host.breath .host-mood { transform: scaleX(.55); }
+    .host.sting { transform: translateY(3px) rotate(9deg) scale(.95); filter: saturate(.72) hue-rotate(325deg); }
+    .host.sting .host-mood { transform: rotate(180deg) scaleX(.8); }
+    .host.proud { transform: translateY(-7px) rotate(-3deg) scale(1.08); filter: brightness(1.15) saturate(1.1); }
+    .host.proud .host-mood { transform: scaleX(1.3) translateY(-2px); }
+
+    .host-copy {
+      position: relative;
+      z-index: 1;
+      min-height: 27px;
+      color: rgba(215, 243, 233, .72);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 12px;
+      font-style: italic;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .host-name {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      color: rgba(215, 243, 233, .39);
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+
+    .legend-card { padding: 14px; }
+
+    .rail-title {
+      margin-bottom: 11px;
+      color: var(--foam-dim);
+      font-size: 8px;
+      font-weight: 850;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 9px;
+      color: rgba(215, 243, 233, .66);
+      font-size: 10px;
+      line-height: 1.2;
+    }
+
+    .legend-icon {
+      position: relative;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 23px;
+      height: 23px;
+      border-radius: 45% 55% 53% 47%;
+      color: var(--pearl);
+      background: rgba(74, 139, 139, .58);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .legend-icon.flag::before { content: ""; width: 3px; height: 13px; background: var(--coral); }
+    .legend-icon.flag::after { content: ""; position: absolute; width: 10px; height: 7px; top: 5px; left: 9px; border-radius: 2px 80% 2px 2px; background: var(--coral); }
+    .legend-icon.sweep { color: var(--mint); border: 1px solid rgba(131,228,192,.3); background: rgba(23, 91, 94, .5); }
+
+    .note-card {
+      padding: 13px 14px;
+      color: rgba(215, 243, 233, .5);
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .note-card strong { color: var(--pearl); font-weight: 800; }
+
+    .app.stung .board-frame { animation: boardShock .54s cubic-bezier(.2, .9, .3, 1); }
+
+    .app.is-ready .run-readout,
+    .app.is-ready .board-topline,
+    .app.is-ready .board-footer,
+    .app.is-ready .host-label,
+    .app.is-ready .host-copy,
+    .app.is-ready .host-name,
+    .app.is-ready .legend-card,
+    .app.is-ready .note-card {
+      visibility: hidden;
+    }
+
+    .app.is-ready .host-card {
+      border-color: transparent;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    @supports (width: 1cqh) {
+      .board-holder { container-type: size; }
+      .board-frame { width: min(100%, 620px, calc(100cqh * 1.3333)); }
+    }
+
+    @keyframes waterDrift {
+      from { transform: translate3d(0, 0, 0) rotate(-4deg); }
+      to { transform: translate3d(6vw, -2vh, 0) rotate(9deg); }
+    }
+
+    @keyframes caustic {
+      from { transform: translate3d(-4%, 1%, 0) rotate(-17deg) scale(.9); opacity: .35; }
+      to { transform: translate3d(12%, 8%, 0) rotate(11deg) scale(1.16); opacity: .68; }
+    }
+
+    @keyframes signalPulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+    @keyframes hostFloat { 0%,100% { margin-top: 0; } 50% { margin-top: -4px; } }
+    @keyframes auraBreath { 0%,100% { transform: scale(.9); opacity: .45; } 50% { transform: scale(1.08); opacity: .82; } }
+    @keyframes lowTidePulse { 0%,100% { opacity: .7; } 50% { opacity: 1; } }
+
+    @keyframes rippleOpen {
+      0% { opacity: .35; transform: rotate(var(--tilt)) scale(.76); filter: brightness(1.55) saturate(.8); }
+      46% { opacity: 1; transform: rotate(var(--tilt)) scale(1.06); }
+      100% { opacity: 1; transform: rotate(var(--tilt)) scale(1); filter: none; }
+    }
+
+    @keyframes sweepOpen {
+      0% { opacity: .2; transform: rotate(var(--tilt)) translateX(-4px) scale(.85); filter: brightness(1.55); }
+      100% { opacity: 1; transform: rotate(var(--tilt)) translateX(0) scale(1); filter: none; }
+    }
+
+    @keyframes revealedPulse { 0%,100% { filter: brightness(.94); } 50% { filter: brightness(1.14); } }
+    @keyframes fatalPulse { from { transform: rotate(var(--tilt)) scale(.96); } to { transform: rotate(var(--tilt)) scale(1.06); } }
+    @keyframes boardShock { 0%,100% { transform: translateX(0); } 16% { transform: translateX(-7px) rotate(-.4deg); } 31% { transform: translateX(6px) rotate(.35deg); } 48% { transform: translateX(-3px); } 65% { transform: translateX(2px); } }
+    @keyframes toastRise { 0% { opacity: 0; transform: translate(-50%, -35%) scale(.9); } 15%,76% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -68%) scale(.98); } }
+
+    @media (max-width: 760px) {
+      .main-stage {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr) auto;
+        gap: 7px;
+      }
+
+      .info-rail {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 8px;
+        max-height: 72px;
+      }
+
+      .host-card {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 58px;
+        height: 58px;
+        padding: 8px 11px;
+        border-radius: 15px;
+      }
+
+      .host-card::before { width: 100px; height: 55px; left: 38px; top: 2px; }
+      .host-label { display: none; }
+      .host-stage { flex: 0 0 62px; height: 48px; }
+      .host { transform: scale(.65); transform-origin: center; }
+      .host.delight { transform: translateY(-4px) rotate(-5deg) scale(.71); }
+      .host.breath { transform: translateY(1px) scale(.63); }
+      .host.sting { transform: translateY(2px) rotate(9deg) scale(.63); }
+      .host.proud { transform: translateY(-6px) rotate(-3deg) scale(.73); }
+      .host-copy { min-height: 0; flex: 1; padding-right: 11px; text-align: left; }
+      .host-name { right: 9px; bottom: 5px; font-size: 6px; }
+      .legend-card { display: flex; align-items: center; gap: 10px; min-height: 58px; padding: 8px 10px; border-radius: 15px; }
+      .rail-title { display: none; }
+      .legend-row { margin: 0; font-size: 0; }
+      .legend-icon { width: 28px; height: 28px; }
+      .note-card { display: none; }
+    }
+
+    @media (max-width: 420px) {
+      .topbar { padding-left: 14px; padding-right: 14px; }
+      .main-stage { padding-left: 12px; padding-right: 12px; padding-top: 8px; padding-bottom: 8px; }
+      .brand-sub { font-size: 7px; }
+      .score-best { display: none; }
+      .run-readout { gap: 11px; }
+      .board-topline { height: 28px; padding-bottom: 7px; }
+      .location { font-size: 8px; }
+      .pool-name { max-width: 48%; font-size: 8px; }
+      .board-footer { min-height: 53px; padding-top: 8px; }
+      .footer-label { margin-bottom: 5px; }
+      .counter-block { padding: 6px 8px 6px 6px; }
+      .urchin-counter { width: 18px; height: 18px; }
+      .urchin-counter::before { font-size: 20px; line-height: 18px; }
+      .counter-number { font-size: 15px; }
+      .counter-copy { font-size: 7px; }
+      .start-prompt { bottom: 7%; padding: 7px 9px; font-size: 8px; }
+    }
+
+    @media (max-height: 540px) {
+      .topbar { height: 54px; }
+      .main-stage { padding-top: 6px; padding-bottom: 6px; }
+      .board-topline { height: 25px; padding-bottom: 5px; }
+      .board-footer { min-height: 43px; padding-top: 5px; }
+      .info-rail { max-height: 50px; }
+      .host-card, .legend-card { min-height: 44px; height: 44px; }
+      .host-card { padding: 4px 8px; }
+      .host-stage { height: 36px; flex-basis: 50px; }
+      .host-copy { font-size: 10px; }
+      .host-name { display: none; }
+      .legend-card { padding: 5px 8px; }
+      .legend-icon { width: 23px; height: 23px; }
+      .counter-block { padding-top: 4px; padding-bottom: 4px; }
+      .ceremony { padding: 3%; }
+      .ceremony-card { padding: 12px 14px; border-radius: 16px; }
+      .ceremony-title { margin-top: 5px; font-size: 25px; }
+      .ceremony-copy { margin-bottom: 9px; font-size: 9px; line-height: 1.25; }
+      .ceremony-scoreline { margin-bottom: 9px; }
+      .final-score { font-size: 34px; }
+      .rank-row { padding-top: 7px; padding-bottom: 7px; }
+      .ceremony-stats { gap: 10px; padding-top: 8px; padding-bottom: 10px; font-size: 8px; }
+      .ceremony-stats strong { font-size: 11px; }
+      .restart-button { min-height: 34px; font-size: 9px; }
+      .ceremony-foot { margin-top: 6px; font-size: 7px; }
+    }
+
+    @media (max-height: 420px) {
+      .ceremony-copy,
+      .ceremony-foot { display: none; }
+      .ceremony-title { margin-bottom: 2px; }
+      .ceremony-scoreline { margin-bottom: 6px; }
+      .ceremony-stats { padding-bottom: 8px; }
+    }
+
+    @media (min-width: 761px) and (max-height: 540px) {
+      .main-stage { grid-template-columns: minmax(0, 1fr); }
+      .info-rail { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="topbar">
+      <div class="brand" aria-label="Shoal, low tide logic">
+        <span class="brand-name">SHOAL</span>
+        <span class="brand-sub">low tide logic</span>
+      </div>
+      <div class="run-readout">
+        <div class="pool-chip"><span class="signal"></span><span id="pool-readout">TIDE 01</span></div>
+        <div class="score-readout"><span class="pearl-mark" aria-hidden="true"></span><span class="score-number" id="score-readout">000</span><span class="score-best" id="best-readout">BEST 000</span></div>
+      </div>
+    </header>
+
+    <main class="main-stage">
+      <section class="play-panel" aria-label="Shoal playfield">
+        <div class="board-topline">
+          <div class="location" id="status-readout">READY WATER</div>
+          <div class="pool-name" id="pool-name">PEBBLE INLET</div>
+        </div>
+
+        <div class="board-holder">
+          <div class="board-frame" id="board-frame">
+            <div id="board" aria-label="Covered shell grid"></div>
+            <div class="start-prompt" id="start-prompt">tap a shell to listen</div>
+            <div class="clear-toast" id="clear-toast" aria-live="polite">
+              <div class="clear-kicker">water answered</div>
+              <div class="clear-title" id="clear-title">pool cleared</div>
+              <div class="clear-gain" id="clear-gain">+00 pearls</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="board-footer">
+          <div class="tide-block">
+            <div class="footer-label"><span>tide remaining</span><span class="tide-percent" id="tide-percent">ready</span></div>
+            <div class="tide-track"><div class="tide-fill" id="tide-fill"></div></div>
+          </div>
+          <div class="counter-block" aria-label="Urchins left to mark">
+            <div class="urchin-counter" aria-hidden="true"></div>
+            <div><div class="counter-number" id="urchin-count">04</div><div class="counter-copy">urchins<br>left</div></div>
+          </div>
+        </div>
+        <div class="ceremony" id="ceremony" aria-live="polite">
+          <div class="ceremony-card">
+            <div class="ceremony-kicker">the tide has turned</div>
+            <h1 class="ceremony-title">A spine in the dark.</h1>
+            <p class="ceremony-copy">The shells keep the evidence. Your pennants are still standing, and the fatal turn is marked.</p>
+            <div class="ceremony-scoreline">
+              <div class="final-score" id="final-score">000</div>
+              <div class="final-score-label">pearls<br>this run</div>
+            </div>
+            <div class="rank-row"><span class="rank-label">shoal grade</span><span class="rank-value" id="rank-value">DRIFT</span></div>
+            <div class="ceremony-stats">
+              <div><strong id="stat-depth">01</strong>deepest pool</div>
+              <div><strong id="stat-ripple">00</strong>largest ripple</div>
+              <div><strong id="stat-moves">00</strong>turns</div>
+            </div>
+            <button class="restart-button" id="restart-button" type="button">try this tide again</button>
+            <div class="ceremony-foot">tap anywhere here · R also restarts</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="info-rail" aria-label="Pool keeper and gesture hints">
+        <div class="host-card">
+          <div class="host-label">your pool keeper</div>
+          <div class="host-stage">
+            <div class="host still" id="host" aria-hidden="true">
+              <div class="host-aura"></div>
+              <div class="host-frill"></div>
+              <div class="host-body"></div>
+              <div class="host-face"><span class="host-eye"></span><span class="host-eye"></span></div>
+              <div class="host-mood"></div>
+              <div class="host-whisker left"></div><div class="host-whisker right"></div>
+            </div>
+          </div>
+          <div class="host-copy" id="host-copy">Pick a shell. I’ll listen.</div>
+          <div class="host-name">MOTE · rim keeper</div>
+        </div>
+        <div class="legend-card">
+          <div class="rail-title">small gestures</div>
+          <div class="legend-row"><span class="legend-icon flag" aria-hidden="true"></span><span>hold to plant / lift</span></div>
+          <div class="legend-row"><span class="legend-icon sweep" aria-hidden="true">3</span><span>tap a satisfied number</span></div>
+        </div>
+        <div class="note-card"><strong>The water never lies.</strong><br>Every ripple gives the numbers you need for a certain next turn. Pennants are your beliefs; the counter is part of the clue.</div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+  (() => {
+    'use strict';
+
+    const WIDTH = 8;
+    const HEIGHT = 6;
+    const SIZE = WIDTH * HEIGHT;
+    const STEP_MS = 1000 / 60;
+    const TIDE_TICKS = 60 * 31;
+    const HOLD_MS = 500;
+    const RANK_LADDER = ['DRIFT', 'SAND BAR', 'CURRENT', 'DEEP BLUE', 'MOON POOL'];
+    const POOL_NAMES = ['PEBBLE INLET', 'GLASS GUTTER', 'MOON SHELF', 'KELP POCKET', 'BLUE HOLLOW', 'STAR LEDGE', 'NIGHT CHANNEL', 'THE FAR TIDE'];
+    const NUMBER_COLORS = ['#83e4c0', '#ffe4a2', '#82e1c8', '#ff9879', '#bcb0f4', '#f18fa6', '#88c9f0', '#e9b7e5', '#f3d19c'];
+    const DEFAULT_SEED = 'shoal-drift';
+
+    const app = document.getElementById('app');
+    const boardElement = document.getElementById('board');
+    const boardFrame = document.getElementById('board-frame');
+    const startPrompt = document.getElementById('start-prompt');
+    const clearToast = document.getElementById('clear-toast');
+    const clearTitle = document.getElementById('clear-title');
+    const clearGain = document.getElementById('clear-gain');
+    const ceremony = document.getElementById('ceremony');
+    const restartButton = document.getElementById('restart-button');
+    const hostElement = document.getElementById('host');
+
+    const ui = {
+      pool: document.getElementById('pool-readout'),
+      score: document.getElementById('score-readout'),
+      best: document.getElementById('best-readout'),
+      status: document.getElementById('status-readout'),
+      poolName: document.getElementById('pool-name'),
+      tideFill: document.getElementById('tide-fill'),
+      tidePercent: document.getElementById('tide-percent'),
+      urchinCount: document.getElementById('urchin-count'),
+      hostCopy: document.getElementById('host-copy'),
+      finalScore: document.getElementById('final-score'),
+      rankValue: document.getElementById('rank-value'),
+      statDepth: document.getElementById('stat-depth'),
+      statRipple: document.getElementById('stat-ripple'),
+      statMoves: document.getElementById('stat-moves')
+    };
+
+    let state;
+    let hiddenBoard = null;
+    let sessionAttempt = 0;
+    let sessionBest = 0;
+    let hasSession = false;
+    let frameHandle = 0;
+    let previousFrameTime = 0;
+    let pointerPress = null;
+    let bridgeConnection = null;
+    let audioContext = null;
+    let audioMaster = null;
+    let ambientStarted = false;
+
+    const view = {
+      fx: null,
+      clearUntil: 0,
+      clearLabel: '',
+      clearGain: 0,
+      ceremonyAt: 0,
+      hostMood: '',
+      hostMoodUntil: 0,
+      lowCuePlayed: false,
+      toastTimer: 0,
+      ceremonyTimer: 0,
+      hostTimer: 0,
+      fxTimer: 0
+    };
+
+    function normalizeSeed(seed) {
+      if (typeof seed === 'string' || typeof seed === 'number') return seed;
+      if (typeof seed === 'bigint') return String(seed);
+      if (seed === undefined || seed === null) return DEFAULT_SEED;
+      return String(seed);
+    }
+
+    function seedText(seed) {
+      return String(seed);
+    }
+
+    function hashString(text) {
+      let hash = 2166136261 >>> 0;
+      for (let i = 0; i < text.length; i += 1) {
+        hash ^= text.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      hash += hash << 13;
+      hash ^= hash >>> 7;
+      hash += hash << 3;
+      hash ^= hash >>> 17;
+      hash += hash << 5;
+      return hash >>> 0;
+    }
+
+    function makeRng(seed, pool, firstX, firstY) {
+      let value = hashString(seedText(seed) + '|' + pool + '|' + firstX + '|' + firstY) >>> 0;
+      return function rng() {
+        value = (value + 0x6D2B79F5) >>> 0;
+        let t = value;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function poolConfig(pool) {
+      return {
+        width: WIDTH,
+        height: HEIGHT,
+        mines: Math.min(12, 4 + Math.max(0, pool - 1) * 2),
+        tideTicks: Math.max(60 * 21, TIDE_TICKS - Math.min(60 * 10, (pool - 1) * 60))
+      };
+    }
+
+    function indexOf(x, y) { return y * WIDTH + x; }
+    function xOf(index) { return index % WIDTH; }
+    function yOf(index) { return Math.floor(index / WIDTH); }
+
+    function neighbors(index) {
+      const x = xOf(index);
+      const y = yOf(index);
+      const result = [];
+      for (let dy = -1; dy <= 1; dy += 1) {
+        for (let dx = -1; dx <= 1; dx += 1) {
+          if (dx === 0 && dy === 0) continue;
+          const nx = x + dx;
+          const ny = y + dy;
+          if (nx >= 0 && nx < WIDTH && ny >= 0 && ny < HEIGHT) result.push(indexOf(nx, ny));
+        }
+      }
+      return result;
+    }
+
+    function shuffled(list, rng) {
+      const result = list.slice();
+      for (let i = result.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(rng() * (i + 1));
+        const temp = result[i];
+        result[i] = result[j];
+        result[j] = temp;
+      }
+      return result;
+    }
+
+    function makeBoardCells(mines) {
+      const cells = Array.from({ length: SIZE }, () => ({ mine: false, number: 0 }));
+      mines.forEach((index) => { cells[index].mine = true; });
+      for (let index = 0; index < SIZE; index += 1) {
+        if (cells[index].mine) continue;
+        cells[index].number = neighbors(index).reduce((count, neighbor) => count + (cells[neighbor].mine ? 1 : 0), 0);
+      }
+      return cells;
+    }
+
+    function floodOpen(board, open, start, flags) {
+      if (open[start] || (flags && flags[start]) || board[start].mine) return 0;
+      const queue = [start];
+      let cursor = 0;
+      let opened = 0;
+      while (cursor < queue.length) {
+        const current = queue[cursor++];
+        if (open[current] || (flags && flags[current]) || board[current].mine) continue;
+        open[current] = true;
+        opened += 1;
+        if (board[current].number !== 0) continue;
+        neighbors(current).forEach((neighbor) => {
+          if (!open[neighbor] && !(flags && flags[neighbor]) && !board[neighbor].mine) queue.push(neighbor);
+        });
+      }
+      return opened;
+    }
+
+    function subsetOf(a, b) {
+      if (a.length >= b.length) return false;
+      const bSet = new Set(b);
+      return a.every((value) => bSet.has(value));
+    }
+
+    function difference(a, b) {
+      const bSet = new Set(b);
+      return a.filter((value) => !bSet.has(value));
+    }
+
+    function enumerateComponent(constraints, variables, forcedSafe, forcedMine) {
+      if (variables.length > 18) return;
+      const assignment = new Map();
+      const canBeMine = new Set();
+      const canBeSafe = new Set();
+      let valid = 0;
+
+      function isViable() {
+        for (const constraint of constraints) {
+          let assigned = 0;
+          let unassigned = 0;
+          for (const variable of constraint.vars) {
+            if (assignment.has(variable)) assigned += assignment.get(variable);
+            else unassigned += 1;
+          }
+          if (assigned > constraint.required || assigned + unassigned < constraint.required) return false;
+        }
+        return true;
+      }
+
+      function visit(position) {
+        if (!isViable()) return;
+        if (position >= variables.length) {
+          valid += 1;
+          variables.forEach((variable) => {
+            if (assignment.get(variable)) canBeMine.add(variable);
+            else canBeSafe.add(variable);
+          });
+          return;
+        }
+        const variable = variables[position];
+        assignment.set(variable, 0);
+        visit(position + 1);
+        assignment.set(variable, 1);
+        visit(position + 1);
+        assignment.delete(variable);
+      }
+
+      visit(0);
+      if (valid === 0) return;
+      variables.forEach((variable) => {
+        if (!canBeMine.has(variable)) forcedSafe.add(variable);
+        if (!canBeSafe.has(variable)) forcedMine.add(variable);
+      });
+    }
+
+    function findForcedMoves(board, open, flags, totalMines) {
+      const safe = new Set();
+      const mines = new Set();
+      const unknown = [];
+      const constraints = [];
+
+      for (let index = 0; index < SIZE; index += 1) {
+        if (!open[index] && !flags[index]) unknown.push(index);
+      }
+
+      if (totalMines - flags.reduce((count, value) => count + (value ? 1 : 0), 0) === 0) {
+        unknown.forEach((index) => safe.add(index));
+      }
+      if (totalMines - flags.reduce((count, value) => count + (value ? 1 : 0), 0) === unknown.length) {
+        unknown.forEach((index) => mines.add(index));
+      }
+
+      for (let index = 0; index < SIZE; index += 1) {
+        if (!open[index]) continue;
+        const around = neighbors(index);
+        const flagged = around.reduce((count, neighbor) => count + (flags[neighbor] ? 1 : 0), 0);
+        const vars = around.filter((neighbor) => !open[neighbor] && !flags[neighbor]);
+        const required = board[index].number - flagged;
+        if (!vars.length) continue;
+        if (required === 0) vars.forEach((value) => safe.add(value));
+        if (required === vars.length) vars.forEach((value) => mines.add(value));
+        if (required >= 0 && required <= vars.length) constraints.push({ vars, required });
+      }
+
+      for (let a = 0; a < constraints.length; a += 1) {
+        for (let b = 0; b < constraints.length; b += 1) {
+          if (a === b) continue;
+          const first = constraints[a];
+          const second = constraints[b];
+          if (subsetOf(first.vars, second.vars)) {
+            const diff = difference(second.vars, first.vars);
+            const required = second.required - first.required;
+            if (required === 0) diff.forEach((value) => safe.add(value));
+            if (required === diff.length) diff.forEach((value) => mines.add(value));
+          }
+        }
+      }
+
+      const variableToConstraints = new Map();
+      constraints.forEach((constraint, constraintIndex) => {
+        constraint.vars.forEach((variable) => {
+          if (!variableToConstraints.has(variable)) variableToConstraints.set(variable, []);
+          variableToConstraints.get(variable).push(constraintIndex);
+        });
+      });
+      const visited = new Set();
+      for (const variable of variableToConstraints.keys()) {
+        if (visited.has(variable)) continue;
+        const variables = [];
+        const componentConstraints = new Set();
+        const queue = [variable];
+        visited.add(variable);
+        while (queue.length) {
+          const current = queue.pop();
+          variables.push(current);
+          (variableToConstraints.get(current) || []).forEach((constraintIndex) => {
+            if (componentConstraints.has(constraintIndex)) return;
+            componentConstraints.add(constraintIndex);
+            constraints[constraintIndex].vars.forEach((neighbor) => {
+              if (!visited.has(neighbor)) {
+                visited.add(neighbor);
+                queue.push(neighbor);
+              }
+            });
+          });
+        }
+        enumerateComponent([...componentConstraints].map((constraintIndex) => constraints[constraintIndex]), variables, safe, mines);
+      }
+
+      return { safe, mines };
+    }
+
+    function logicTrail(board, firstIndex, totalMines) {
+      const open = Array(SIZE).fill(false);
+      const flags = Array(SIZE).fill(false);
+      floodOpen(board, open, firstIndex, flags);
+      const safeTarget = SIZE - totalMines;
+
+      for (let step = 0; step < SIZE * 3; step += 1) {
+        const openedCount = open.reduce((count, value) => count + (value ? 1 : 0), 0);
+        if (openedCount === safeTarget) return true;
+        const forced = findForcedMoves(board, open, flags, totalMines);
+        const candidates = [...forced.safe].filter((index) => !open[index] && !flags[index]);
+        if (candidates.length) {
+          candidates.sort((a, b) => a - b);
+          floodOpen(board, open, candidates[0], flags);
+          continue;
+        }
+        const mineCandidates = [...forced.mines].filter((index) => !open[index] && !flags[index]);
+        if (!mineCandidates.length) return false;
+        mineCandidates.sort((a, b) => a - b);
+        flags[mineCandidates[0]] = true;
+      }
+      return false;
+    }
+
+    function buildHiddenBoard(pool, firstX, firstY) {
+      const config = poolConfig(pool);
+      const first = indexOf(firstX, firstY);
+      const protectedCells = new Set([first, ...neighbors(first)]);
+      const candidates = [];
+      for (let index = 0; index < SIZE; index += 1) {
+        if (!protectedCells.has(index)) candidates.push(index);
+      }
+
+      const rng = makeRng(state.seed, pool, firstX, firstY);
+      let fallback = null;
+      let fallbackScore = -1;
+
+      for (let attempt = 0; attempt < 180; attempt += 1) {
+        const order = shuffled(candidates, rng);
+        const chosen = [];
+        for (const candidate of order) {
+          if (chosen.length >= config.mines) break;
+          const adjacentMine = chosen.some((mine) => neighbors(mine).includes(candidate));
+          const adjacencyAllowance = Math.min(.86, .2 + pool * .09);
+          if (adjacentMine && rng() > adjacencyAllowance && chosen.length < config.mines - 1) continue;
+          chosen.push(candidate);
+        }
+        if (chosen.length < config.mines) {
+          for (const candidate of order) {
+            if (chosen.length >= config.mines) break;
+            if (!chosen.includes(candidate)) chosen.push(candidate);
+          }
+        }
+        const board = makeBoardCells(new Set(chosen));
+        const open = Array(SIZE).fill(false);
+        const flags = Array(SIZE).fill(false);
+        floodOpen(board, open, first, flags);
+        const forced = findForcedMoves(board, open, flags, config.mines);
+        const score = forced.safe.size * 7 + forced.mines.size * 2 + open.reduce((count, value) => count + (value ? 1 : 0), 0) / SIZE;
+        if (forced.safe.size && score > fallbackScore) {
+          fallback = board;
+          fallbackScore = score;
+        }
+        if (forced.safe.size && logicTrail(board, first, config.mines)) return board;
+      }
+      return fallback || makeBoardCells(new Set(candidates.slice(0, config.mines)));
+    }
+
+    function createPlaceholderCells() {
+      return Array.from({ length: SIZE }, () => ({ open: false, flag: false, mine: false, number: 0 }));
+    }
+
+    function resetView() {
+      view.fx = null;
+      view.clearUntil = 0;
+      view.clearLabel = '';
+      view.clearGain = 0;
+      view.ceremonyAt = 0;
+      view.hostMood = '';
+      view.hostMoodUntil = 0;
+      view.lowCuePlayed = false;
+      if (view.toastTimer) clearTimeout(view.toastTimer);
+      if (view.ceremonyTimer) clearTimeout(view.ceremonyTimer);
+      if (view.hostTimer) clearTimeout(view.hostTimer);
+      if (view.fxTimer) clearTimeout(view.fxTimer);
+      view.toastTimer = 0;
+      view.ceremonyTimer = 0;
+      view.hostTimer = 0;
+      view.fxTimer = 0;
+      app.classList.remove('stung');
+      boardFrame.classList.remove('sting-shock');
+    }
+
+    function startPool(pool) {
+      const config = poolConfig(pool);
+      state.phase = 'ready';
+      state.pool = pool;
+      state.gridWidth = config.width;
+      state.gridHeight = config.height;
+      state.urchinsTotal = config.mines;
+      state.firstTurnDone = false;
+      state.tideFraction = 1;
+      state.poolActiveTicks = 0;
+      state.poolTideTicks = config.tideTicks;
+      state.stungAt = null;
+      state.cells = createPlaceholderCells();
+      hiddenBoard = null;
+    }
+
+    function reset(seed) {
+      const normalized = normalizeSeed(seed);
+      if (!hasSession) {
+        hasSession = true;
+        sessionAttempt = 1;
+        sessionBest = 0;
+      } else {
+        sessionAttempt += 1;
+      }
+      resetView();
+      state = {
+        phase: 'ready',
+        tick: 0,
+        elapsedMs: 0,
+        seed: normalized,
+        attempt: sessionAttempt,
+        revision: 0,
+        pool: 1,
+        pearls: 0,
+        sessionBest,
+        moves: 0,
+        rank: null,
+        rankLadder: RANK_LADDER.slice(),
+        gridWidth: WIDTH,
+        gridHeight: HEIGHT,
+        urchinsTotal: 4,
+        flagsPlaced: 0,
+        tideFraction: 1,
+        firstTurnDone: false,
+        stungAt: null,
+        cells: createPlaceholderCells(),
+        poolActiveTicks: 0,
+        poolTideTicks: TIDE_TICKS,
+        nextEventSeq: 1,
+        events: [],
+        lastEvent: null,
+        biggestRipple: 0,
+        deepestPool: 1,
+        fastestPoolTicks: null
+      };
+      startPool(1);
+      render();
+      return snapshot();
+    }
+
+    function countFlags() {
+      return state.cells.reduce((count, cell) => count + (cell.flag ? 1 : 0), 0);
+    }
+
+    function countOpen() {
+      return state.cells.reduce((count, cell) => count + (cell.open ? 1 : 0), 0);
+    }
+
+    function recordEvent(kind, extra) {
+      const event = Object.assign({ seq: state.nextEventSeq++, kind, tick: state.tick }, extra || {});
+      state.events.push(event);
+      if (state.events.length > 200) state.events.shift();
+      state.lastEvent = event;
+      return event;
+    }
+
+    function revealSafe(start, order) {
+      const queue = [start];
+      const queued = new Set();
+      let opened = 0;
+      while (queue.length) {
+        const current = queue.shift();
+        if (queued.has(current)) continue;
+        queued.add(current);
+        const cell = state.cells[current];
+        if (cell.open || cell.flag || cell.mine) continue;
+        cell.open = true;
+        opened += 1;
+        order.push(current);
+        if (cell.number === 0) {
+          neighbors(current).forEach((neighbor) => {
+            if (!state.cells[neighbor].open && !state.cells[neighbor].flag && !state.cells[neighbor].mine) queue.push(neighbor);
+          });
+        }
+      }
+      return opened;
+    }
+
+    function boardIsClear() {
+      return countOpen() >= SIZE - state.urchinsTotal;
+    }
+
+    function rankForPearls(pearls) {
+      if (pearls >= 300) return RANK_LADDER[4];
+      if (pearls >= 180) return RANK_LADDER[3];
+      if (pearls >= 100) return RANK_LADDER[2];
+      if (pearls >= 40) return RANK_LADDER[1];
+      return RANK_LADDER[0];
+    }
+
+    function clearPool() {
+      const clearedPool = state.pool;
+      const tideBonus = Math.round((17 + clearedPool * 5) * state.tideFraction);
+      const depthBonus = 4 + clearedPool * 3;
+      const bonus = tideBonus + depthBonus;
+      state.pearls += bonus;
+      state.deepestPool = Math.max(state.deepestPool, clearedPool + 1);
+      if (state.fastestPoolTicks === null || state.poolActiveTicks < state.fastestPoolTicks) state.fastestPoolTicks = state.poolActiveTicks;
+      recordEvent('pool_clear', { pool: clearedPool });
+      view.clearLabel = 'POOL ' + String(clearedPool).padStart(2, '0') + ' CLEARED';
+      view.clearGain = bonus;
+      view.clearUntil = performance.now() + 1250;
+      state.pool += 1;
+      startPool(state.pool);
+      view.hostMood = 'proud';
+      view.hostMoodUntil = performance.now() + 1350;
+    }
+
+    function endRun(fatalIndex) {
+      state.phase = 'ended';
+      state.stungAt = { x: xOf(fatalIndex), y: yOf(fatalIndex) };
+      state.rank = rankForPearls(state.pearls);
+      sessionBest = Math.max(sessionBest, state.pearls);
+      state.sessionBest = sessionBest;
+      recordEvent('sting');
+      recordEvent('run_end');
+      view.ceremonyAt = performance.now() + 440;
+      view.ceremonyTimer = setTimeout(() => {
+        view.ceremonyTimer = 0;
+        render(false);
+      }, 470);
+      view.hostMood = 'sting';
+      view.hostMoodUntil = performance.now() + 1200;
+      app.classList.add('stung');
+      boardFrame.classList.add('sting-shock');
+    }
+
+    function applyOpen(x, y) {
+      const index = indexOf(x, y);
+      if (state.phase === 'ended') return { accepted: false, code: 'run_ended', message: 'The run has ended.' };
+      const placeholder = state.cells[index];
+      if (placeholder.open) return { accepted: false, code: 'already_open', message: 'That shell is already turned.' };
+      if (placeholder.flag) return { accepted: false, code: 'pennanted', message: 'Lift the pennant before turning this shell.' };
+
+      if (!state.firstTurnDone) {
+        hiddenBoard = buildHiddenBoard(state.pool, x, y);
+        const previousFlags = state.cells.map((cell) => cell.flag);
+        state.cells = hiddenBoard.map((cell, cellIndex) => ({
+          open: false,
+          flag: previousFlags[cellIndex],
+          mine: cell.mine,
+          number: cell.number
+        }));
+        state.firstTurnDone = true;
+        state.phase = 'playing';
+        state.poolActiveTicks = 0;
+        state.tideFraction = 1;
+      }
+
+      const cell = state.cells[index];
+      const order = [];
+      let opened = 0;
+      if (cell.mine) {
+        cell.open = true;
+        order.push(index);
+        opened = 1;
+      } else {
+        opened = revealSafe(index, order);
+      }
+      state.moves += 1;
+      const event = recordEvent('open', { opened });
+      if (cell.mine) {
+        endRun(index);
+        return { accepted: true, event, fx: { kind: 'sting', cells: order } };
+      }
+      state.pearls += opened;
+      state.biggestRipple = Math.max(state.biggestRipple, opened);
+      if (boardIsClear()) {
+        clearPool();
+        return { accepted: true, event, fx: { kind: 'ripple', cells: order, cleared: true } };
+      }
+      return { accepted: true, event, fx: { kind: 'ripple', cells: order } };
+    }
+
+    function applyFlag(x, y, shouldFlag) {
+      if (state.phase === 'ended') return { accepted: false, code: 'run_ended', message: 'The run has ended.' };
+      const cell = state.cells[indexOf(x, y)];
+      if (cell.open) return { accepted: false, code: 'already_open', message: 'An open shell cannot carry a pennant.' };
+      if (shouldFlag && cell.flag) return { accepted: false, code: 'already_pennanted', message: 'That shell already has a pennant.' };
+      if (!shouldFlag && !cell.flag) return { accepted: false, code: 'not_pennanted', message: 'There is no pennant to lift.' };
+      cell.flag = shouldFlag;
+      state.moves += 1;
+      const event = recordEvent(shouldFlag ? 'flag' : 'unflag');
+      return { accepted: true, event, fx: { kind: shouldFlag ? 'flag' : 'unflag', cells: [indexOf(x, y)] } };
+    }
+
+    function applySweep(x, y) {
+      if (state.phase !== 'playing') {
+        return { accepted: false, code: state.phase === 'ended' ? 'run_ended' : 'not_playing', message: 'Turn a shell before sweeping.' };
+      }
+      const index = indexOf(x, y);
+      const cell = state.cells[index];
+      if (!cell.open) return { accepted: false, code: 'covered_shell', message: 'A sweep starts from a turned number.' };
+      const around = neighbors(index);
+      const flags = around.filter((neighbor) => state.cells[neighbor].flag).length;
+      const targets = around.filter((neighbor) => !state.cells[neighbor].open && !state.cells[neighbor].flag);
+      if (flags !== cell.number) return { accepted: false, code: 'unsatisfied_number', message: 'The pennants do not match this number yet.' };
+      if (!targets.length) return { accepted: false, code: 'nothing_to_sweep', message: 'There are no covered neighbors left.' };
+
+      const order = [];
+      let opened = 0;
+      let fatal = -1;
+      for (const target of targets) {
+        if (state.cells[target].mine) {
+          state.cells[target].open = true;
+          order.push(target);
+          opened += 1;
+          fatal = target;
+          break;
+        }
+        opened += revealSafe(target, order);
+      }
+      state.moves += 1;
+      const event = recordEvent('sweep', { opened });
+      if (fatal >= 0) {
+        const safeOpened = Math.max(0, opened - 1);
+        state.pearls += safeOpened;
+        state.biggestRipple = Math.max(state.biggestRipple, safeOpened);
+        endRun(fatal);
+        return { accepted: true, event, fx: { kind: 'sting', cells: order } };
+      }
+      state.pearls += opened;
+      state.biggestRipple = Math.max(state.biggestRipple, opened);
+      if (boardIsClear()) {
+        clearPool();
+        return { accepted: true, event, fx: { kind: 'sweep', cells: order, cleared: true } };
+      }
+      return { accepted: true, event, fx: { kind: 'sweep', cells: order } };
+    }
+
+    function reduceAction(action) {
+      if (!action || typeof action !== 'object' || Array.isArray(action)) return { accepted: false, code: 'invalid_action', message: 'Action must be an object.' };
+      const type = action.type;
+      const x = action.x;
+      const y = action.y;
+      if (!['open', 'flag', 'unflag', 'sweep'].includes(type)) return { accepted: false, code: 'invalid_action', message: 'Unknown action type.' };
+      if (!Number.isInteger(x) || !Number.isInteger(y) || x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return { accepted: false, code: 'out_of_bounds', message: 'The shell is outside this pool.' };
+      if (type === 'open') return applyOpen(x, y);
+      if (type === 'flag') return applyFlag(x, y, true);
+      if (type === 'unflag') return applyFlag(x, y, false);
+      return applySweep(x, y);
+    }
+
+    function triggerViewEffect(result) {
+      if (!result || !result.accepted) return;
+      if (result.fx && result.fx.kind === 'sting') {
+        view.fx = { kind: 'sting', cells: result.fx.cells.slice(), started: performance.now() };
+        view.hostMood = 'sting';
+        view.hostMoodUntil = performance.now() + 1200;
+        playSound('sting');
+      } else if (result.fx && result.fx.kind === 'ripple') {
+        view.fx = { kind: 'ripple', cells: result.fx.cells.slice(), started: performance.now() };
+        view.hostMood = result.fx.cleared ? 'proud' : 'delight';
+        view.hostMoodUntil = performance.now() + (result.fx.cleared ? 1350 : 680);
+        playSound('ripple', result.fx.cells.length);
+      } else if (result.fx && result.fx.kind === 'sweep') {
+        view.fx = { kind: 'sweep', cells: result.fx.cells.slice(), started: performance.now() };
+        view.hostMood = result.fx.cleared ? 'proud' : 'delight';
+        view.hostMoodUntil = performance.now() + (result.fx.cleared ? 1350 : 680);
+        playSound('sweep');
+      } else if (result.fx && result.fx.kind === 'flag') {
+        view.fx = { kind: 'flag', cells: result.fx.cells.slice(), started: performance.now() };
+        view.hostMood = 'still';
+        view.hostMoodUntil = performance.now() + 520;
+        playSound('flag');
+      } else if (result.fx && result.fx.kind === 'unflag') {
+        view.fx = { kind: 'unflag', cells: result.fx.cells.slice(), started: performance.now() };
+        playSound('unflag');
+      }
+      if (view.hostTimer) clearTimeout(view.hostTimer);
+      if (view.hostMoodUntil > performance.now()) {
+        view.hostTimer = setTimeout(() => {
+          view.hostTimer = 0;
+          render(false);
+        }, Math.max(20, view.hostMoodUntil - performance.now() + 20));
+      }
+      if (result.fx && result.fx.cleared) {
+        playSound('clear');
+        if (view.toastTimer) clearTimeout(view.toastTimer);
+        view.toastTimer = setTimeout(() => { view.clearUntil = 0; render(); }, 1300);
+      }
+      if (view.fxTimer) clearTimeout(view.fxTimer);
+      view.fxTimer = setTimeout(() => { view.fx = null; render(); }, 940);
+      render();
+    }
+
+    function performAction(action) {
+      const result = reduceAction(action);
+      if (!result.accepted) return { accepted: false, error: { code: result.code, message: result.message }, state: snapshot() };
+      state.revision += 1;
+      render();
+      triggerViewEffect(result);
+      return { accepted: true, state: snapshot(), result };
+    }
+
+    function advance(ms) {
+      if (!Number.isFinite(ms) || ms <= 0) return snapshot();
+      if (!state || state.phase !== 'playing' || !state.firstTurnDone) return snapshot();
+      state.clockRemainder = (state.clockRemainder || 0) + ms;
+      let stepped = false;
+      while (state.clockRemainder >= STEP_MS) {
+        state.clockRemainder -= STEP_MS;
+        if (state.phase !== 'playing' || !state.firstTurnDone) break;
+        state.tick += 1;
+        state.elapsedMs = Math.round(state.tick * STEP_MS);
+        state.poolActiveTicks += 1;
+        state.tideFraction = Math.max(0, 1 - state.poolActiveTicks / state.poolTideTicks);
+        stepped = true;
+        if (state.tideFraction <= .14 && !view.lowCuePlayed) {
+          view.lowCuePlayed = true;
+          playSound('low');
+        }
+      }
+      if (stepped) render(false);
+      return snapshot();
+    }
+
+    function rowsForSnapshot() {
+      return Array.from({ length: HEIGHT }, (_, y) => {
+        let row = '';
+        for (let x = 0; x < WIDTH; x += 1) {
+          const cell = state.cells[indexOf(x, y)];
+          if (state.phase === 'ended') {
+            if (cell.mine && state.stungAt && state.stungAt.x === x && state.stungAt.y === y) row += 'X';
+            else if (cell.mine && cell.flag) row += '+';
+            else if (cell.mine) row += '*';
+            else if (cell.flag) row += '-';
+            else if (cell.open) row += String(cell.number);
+            else row += '#';
+          } else if (cell.open) row += String(cell.number);
+          else if (cell.flag) row += 'F';
+          else row += '#';
+        }
+        return row;
+      });
+    }
+
+    function snapshot() {
+      const snap = {
+        phase: state.phase,
+        tick: state.tick,
+        elapsedMs: state.elapsedMs,
+        seed: state.seed,
+        attempt: state.attempt,
+        revision: state.revision,
+        pool: state.pool,
+        pearls: state.pearls,
+        sessionBest: state.sessionBest,
+        moves: state.moves,
+        rank: state.rank,
+        rankLadder: state.rankLadder.slice(),
+        gridWidth: state.gridWidth,
+        gridHeight: state.gridHeight,
+        urchinsTotal: state.urchinsTotal,
+        flagsPlaced: countFlags(),
+        urchinsLeft: state.urchinsTotal - countFlags(),
+        tideFraction: state.tideFraction,
+        firstTurnDone: state.firstTurnDone,
+        stungAt: state.stungAt ? { x: state.stungAt.x, y: state.stungAt.y } : null,
+        rows: rowsForSnapshot(),
+        events: state.events.map((event) => Object.assign({}, event)),
+        lastEvent: state.lastEvent ? Object.assign({}, state.lastEvent) : null
+      };
+      return snap;
+    }
+
+    function bridgeState() {
+      const snap = snapshot();
+      delete snap.events;
+      delete snap.lastEvent;
+      return snap;
+    }
+
+    function padScore(value) { return String(Math.max(0, Math.floor(value))).padStart(3, '0'); }
+
+    function charForCell(cell) {
+      if (state.phase === 'ended') {
+        if (cell.mine && state.stungAt && cell === state.cells[indexOf(state.stungAt.x, state.stungAt.y)]) return 'fatal';
+        if (cell.mine && cell.flag) return 'confirmed';
+        if (cell.mine) return 'urchin';
+        if (cell.flag) return 'wrong-flag';
+        if (cell.open) return 'open';
+        return 'covered';
+      }
+      if (cell.open) return 'open';
+      if (cell.flag) return 'flagged';
+      return 'covered';
+    }
+
+    function cellLabel(cell, x, y) {
+      const kind = charForCell(cell);
+      if (kind === 'open') return 'Turned shell, showing ' + cell.number + (cell.number > 0 ? '. Tap to sweep when pennants match.' : '.');
+      if (kind === 'flagged') return 'Pennanted covered shell at column ' + (x + 1) + ', row ' + (y + 1);
+      if (kind === 'fatal') return 'Fatal shell, urchin sting';
+      if (kind === 'urchin') return 'Revealed urchin';
+      if (kind === 'confirmed') return 'Pennant stood on an urchin';
+      if (kind === 'wrong-flag') return 'Pennant stood on a safe shell';
+      return 'Covered shell at column ' + (x + 1) + ', row ' + (y + 1);
+    }
+
+    function renderBoard() {
+      const activeFx = view.fx;
+      const fxCells = activeFx ? activeFx.cells : [];
+      boardElement.innerHTML = '';
+      boardElement.setAttribute('aria-label', state.phase === 'ended' ? 'Revealed post-mortem shell grid' : 'Covered shell grid');
+      for (let y = 0; y < HEIGHT; y += 1) {
+        for (let x = 0; x < WIDTH; x += 1) {
+          const index = indexOf(x, y);
+          const cell = state.cells[index];
+          const kind = charForCell(cell);
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'cell cell-' + kind;
+          button.dataset.x = String(x);
+          button.dataset.y = String(y);
+          button.setAttribute('aria-label', cellLabel(cell, x, y));
+          button.style.setProperty('--tilt', ((index * 17 + x * 3) % 7 - 3) + 'deg');
+          if (activeFx && fxCells.includes(index)) {
+            const fxClass = activeFx.kind === 'sweep' ? 'sweep-cell' : activeFx.kind === 'ripple' ? 'ripple-cell' : activeFx.kind === 'flag' || activeFx.kind === 'unflag' ? 'ripple-cell' : '';
+            if (fxClass) button.classList.add(fxClass);
+            button.style.setProperty('--ripple-delay', Math.min(380, fxCells.indexOf(index) * (activeFx.kind === 'sweep' ? 29 : 42)) + 'ms');
+          }
+          if (kind === 'open') {
+            button.style.setProperty('--number-color', NUMBER_COLORS[cell.number]);
+            button.classList.toggle('cell-zero', cell.number === 0);
+            const number = document.createElement('span');
+            number.className = 'cell-number';
+            number.textContent = String(cell.number);
+            button.appendChild(number);
+          } else if (kind === 'fatal' || kind === 'urchin' || kind === 'confirmed' || kind === 'wrong-flag') {
+            const mark = document.createElement('span');
+            mark.className = 'postmark ' + (kind === 'fatal' || kind === 'urchin' ? 'postmark-urchin' : kind === 'confirmed' ? 'postmark-cross' : 'postmark-wrong');
+            mark.textContent = kind === 'fatal' ? 'X' : kind === 'urchin' ? '✹' : kind === 'confirmed' ? '+' : '−';
+            button.appendChild(mark);
+          }
+          boardElement.appendChild(button);
+        }
+      }
+    }
+
+    function hostMessage() {
+      const event = state.lastEvent;
+      if (state.phase === 'ended') return 'I saw where the proof broke. Keep the shells close.';
+      if (view.hostMood === 'proud' && view.hostMoodUntil > performance.now()) return 'A clean tide. I knew you had it.';
+      if (state.phase === 'ready' && !state.firstTurnDone) return countFlags() ? 'A pennant already? Trust your little hunch.' : 'Pick a shell. I’ll listen.';
+      if (state.tideFraction <= .14) return 'Easy now. The tide is holding its breath.';
+      if (view.hostMood === 'delight' && view.hostMoodUntil > performance.now()) return 'There! Water remembers.';
+      if (event && event.kind === 'flag') return 'A brave little pennant.';
+      if (event && event.kind === 'unflag') return 'Changed your mind. Good reading.';
+      return 'The numbers are talking. Take the sure turn.';
+    }
+
+    function hostMoodClass() {
+      if (state.phase === 'ended') return 'sting';
+      if (view.hostMood && view.hostMoodUntil > performance.now()) return view.hostMood;
+      if (state.phase === 'ready') return 'still';
+      if (state.tideFraction <= .14) return 'breath';
+      return 'still';
+    }
+
+    function render(renderBoardToo = true) {
+      if (!state) return;
+      const currentTime = performance.now();
+      app.classList.toggle('is-ready', state.phase === 'ready' && !state.firstTurnDone);
+      ui.pool.textContent = 'TIDE ' + String(state.pool).padStart(2, '0');
+      ui.score.textContent = padScore(state.pearls);
+      ui.best.textContent = 'BEST ' + padScore(state.sessionBest);
+      ui.poolName.textContent = POOL_NAMES[Math.min(POOL_NAMES.length - 1, state.pool - 1)];
+      ui.status.textContent = state.phase === 'ready' ? (state.pool === 1 ? 'READY WATER' : 'NEXT WATER') : state.phase === 'ended' ? 'TIDE ENDED' : state.firstTurnDone ? 'READ THE FRONTIER' : 'NEXT WATER';
+      const fraction = Math.max(0, Math.min(1, state.tideFraction));
+      ui.tideFill.style.width = (fraction * 100) + '%';
+      ui.tideFill.classList.toggle('low', state.phase === 'playing' && fraction <= .14);
+      ui.tidePercent.textContent = state.phase === 'ready' && !state.firstTurnDone ? 'ready' : Math.round(fraction * 100) + '%';
+      ui.urchinCount.textContent = String(state.urchinsTotal - countFlags()).padStart(2, '0');
+      ui.hostCopy.textContent = hostMessage();
+      hostElement.className = 'host ' + hostMoodClass();
+      startPrompt.classList.toggle('hidden', state.firstTurnDone || countFlags() > 0 || state.phase === 'ended');
+      const showClear = view.clearUntil > currentTime && state.phase !== 'ended';
+      clearToast.classList.toggle('visible', showClear);
+      if (showClear) {
+        clearTitle.textContent = view.clearLabel;
+        clearGain.textContent = '+' + String(view.clearGain).padStart(2, '0') + ' pearls';
+      }
+      const showCeremony = state.phase === 'ended' && currentTime >= view.ceremonyAt;
+      ceremony.classList.toggle('visible', showCeremony);
+      ui.finalScore.textContent = padScore(state.pearls);
+      ui.rankValue.textContent = state.rank || '—';
+      ui.statDepth.textContent = String(state.deepestPool).padStart(2, '0');
+      ui.statRipple.textContent = String(state.biggestRipple).padStart(2, '0');
+      ui.statMoves.textContent = String(state.moves).padStart(2, '0');
+      if (renderBoardToo) renderBoard();
+    }
+
+    function ensureAudio() {
+      if (audioContext) {
+        if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+        startAmbient();
+        return;
+      }
+      try {
+        const Context = window.AudioContext || window.webkitAudioContext;
+        if (!Context) return;
+        audioContext = new Context();
+        audioMaster = audioContext.createGain();
+        audioMaster.gain.value = .045;
+        audioMaster.connect(audioContext.destination);
+        startAmbient();
+      } catch (error) {
+        audioContext = null;
+      }
+    }
+
+    function startAmbient() {
+      if (ambientStarted || !audioContext || !audioMaster) return;
+      try {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        const start = audioContext.currentTime;
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(92, start);
+        gain.gain.setValueAtTime(.0001, start);
+        gain.gain.exponentialRampToValueAtTime(.012, start + .8);
+        oscillator.connect(gain);
+        gain.connect(audioMaster);
+        oscillator.start(start);
+        ambientStarted = true;
+      } catch (error) {}
+    }
+
+    function tone(frequency, duration, offset, type, volume) {
+      if (!audioContext || !audioMaster) return;
+      const start = audioContext.currentTime + (offset || 0);
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      oscillator.type = type || 'sine';
+      oscillator.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(Math.max(.0001, volume || .25), start + .012);
+      gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+      oscillator.connect(gain);
+      gain.connect(audioMaster);
+      oscillator.start(start);
+      oscillator.stop(start + duration + .03);
+    }
+
+    function playSound(kind, count) {
+      if (!audioContext) return;
+      if (kind === 'ripple') {
+        const steps = Math.min(6, Math.max(1, Math.ceil((count || 1) / 4)));
+        for (let i = 0; i < steps; i += 1) tone(270 + i * 38, .14, i * .055, 'sine', .17);
+      } else if (kind === 'sweep') {
+        tone(330, .16, 0, 'triangle', .2); tone(440, .2, .07, 'sine', .16); tone(590, .24, .15, 'sine', .12);
+      } else if (kind === 'flag') {
+        tone(520, .065, 0, 'triangle', .17); tone(760, .12, .05, 'sine', .13);
+      } else if (kind === 'unflag') {
+        tone(430, .1, 0, 'sine', .12);
+      } else if (kind === 'sting') {
+        tone(122, .34, 0, 'sawtooth', .24); tone(78, .48, .08, 'triangle', .2);
+      } else if (kind === 'clear') {
+        tone(360, .18, 0, 'sine', .16); tone(510, .23, .12, 'sine', .15); tone(720, .35, .26, 'sine', .12);
+      } else if (kind === 'low') {
+        tone(155, .65, 0, 'sine', .08);
+      }
+    }
+
+    function handlePointerDown(event) {
+      const target = event.target.closest('.cell');
+      if (!target || !boardElement.contains(target) || state.phase === 'ended') return;
+      const x = Number(target.dataset.x);
+      const y = Number(target.dataset.y);
+      event.preventDefault();
+      ensureAudio();
+      if (event.pointerId !== undefined && target.setPointerCapture) {
+        try { target.setPointerCapture(event.pointerId); } catch (error) {}
+      }
+      const rightButton = event.pointerType === 'mouse' && event.button === 2;
+      pointerPress = { target, x, y, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, moved: false, holdFired: false, rightButton, timer: 0 };
+      if (!rightButton) {
+        pointerPress.timer = setTimeout(() => {
+          if (!pointerPress || pointerPress.target !== target || pointerPress.moved) return;
+          const cell = state.cells[indexOf(x, y)];
+          if (!cell.open) {
+            pointerPress.holdFired = true;
+            performAction({ type: cell.flag ? 'unflag' : 'flag', x, y });
+          }
+        }, HOLD_MS);
+      }
+    }
+
+    function handlePointerMove(event) {
+      if (!pointerPress || (event.pointerId !== undefined && pointerPress.pointerId !== event.pointerId)) return;
+      const dx = event.clientX - pointerPress.startX;
+      const dy = event.clientY - pointerPress.startY;
+      if (Math.hypot(dx, dy) > 12) {
+        pointerPress.moved = true;
+        clearTimeout(pointerPress.timer);
+      }
+    }
+
+    function handlePointerUp(event) {
+      if (!pointerPress || (event.pointerId !== undefined && pointerPress.pointerId !== event.pointerId)) return;
+      const press = pointerPress;
+      pointerPress = null;
+      clearTimeout(press.timer);
+      event.preventDefault();
+      if (press.moved || press.holdFired) return;
+      const cell = state.cells[indexOf(press.x, press.y)];
+      if (press.rightButton) {
+        performAction({ type: cell.flag ? 'unflag' : 'flag', x: press.x, y: press.y });
+      } else if (cell.open) {
+        performAction({ type: 'sweep', x: press.x, y: press.y });
+      } else {
+        performAction({ type: 'open', x: press.x, y: press.y });
+      }
+    }
+
+    function handleKeyboard(event) {
+      if (event.key === 'r' || event.key === 'R') {
+        event.preventDefault();
+        ensureAudio();
+        runtimeRestart();
+        return;
+      }
+      if ((event.key === 'Enter' || event.key === ' ') && state.phase === 'ended') {
+        if (document.activeElement === restartButton || ceremony.classList.contains('visible')) {
+          event.preventDefault();
+          runtimeRestart();
+        }
+      }
+    }
+
+    function handleCellKeyboard(event) {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      const target = event.target.closest('.cell');
+      if (!target || !boardElement.contains(target)) return;
+      const x = Number(target.dataset.x);
+      const y = Number(target.dataset.y);
+      const cell = state.cells[indexOf(x, y)];
+      event.preventDefault();
+      ensureAudio();
+      if (event.shiftKey) performAction({ type: cell.flag ? 'unflag' : 'flag', x, y });
+      else if (cell.open) performAction({ type: 'sweep', x, y });
+      else performAction({ type: 'open', x, y });
+    }
+
+    function runtimeRestart() {
+      reset(state.seed);
+      return snapshot();
+    }
+
+    function exposeRuntime() {
+      window.__ARENA_GAME__ = {
+        reset(seed) { return reset(seed); },
+        snapshot() { return snapshot(); },
+        act(action) { return performAction(action).state; },
+        restart() { return runtimeRestart(); },
+        advance(ms) { return advance(ms); }
+      };
+    }
+
+    function sendBridgeResponse(port, requestId, accepted, error) {
+      if (!bridgeConnection || bridgeConnection.port !== port) return;
+      const response = {
+        protocol: 'arena.game.v1',
+        type: 'response',
+        requestId,
+        sessionId: bridgeConnection.sessionId,
+        generation: bridgeConnection.generation,
+        accepted: !!accepted,
+        revision: state.revision,
+        state: bridgeState()
+      };
+      if (!accepted && error) response.error = { code: error.code, message: error.message };
+      try { port.postMessage(response); } catch (postError) {}
+    }
+
+    function connectBridge(event) {
+      if (event.source !== window.parent) return;
+      const data = event.data;
+      const port = event.ports && event.ports.length === 1 ? event.ports[0] : null;
+      if (!data || data.protocol !== 'arena.game.v1' || data.type !== 'connect' || typeof data.sessionId !== 'string' || !Number.isInteger(data.generation) || !port || typeof port.postMessage !== 'function') return;
+      if (bridgeConnection && bridgeConnection.port && bridgeConnection.port !== port) {
+        try { bridgeConnection.port.close(); } catch (error) {}
+      }
+      bridgeConnection = { port, sessionId: data.sessionId, generation: data.generation };
+      port.onmessage = (messageEvent) => {
+        const request = messageEvent.data;
+        if (!bridgeConnection || bridgeConnection.port !== port) return;
+        if (!request || request.protocol !== 'arena.game.v1' || request.sessionId !== bridgeConnection.sessionId || request.generation !== bridgeConnection.generation) return;
+        const requestId = request.requestId;
+        if (request.command === 'observe') {
+          sendBridgeResponse(port, requestId, true);
+          return;
+        }
+        if (!Number.isInteger(request.expectedRevision) || request.expectedRevision !== state.revision) {
+          sendBridgeResponse(port, requestId, false, { code: 'stale_revision', message: 'The visible state has moved; observe again.' });
+          return;
+        }
+        if (request.command === 'restart') {
+          runtimeRestart();
+          sendBridgeResponse(port, requestId, true);
+          return;
+        }
+        if (request.command === 'act') {
+          const result = performAction(request.action);
+          if (!result.accepted) sendBridgeResponse(port, requestId, false, result.error);
+          else sendBridgeResponse(port, requestId, true);
+          return;
+        }
+        sendBridgeResponse(port, requestId, false, { code: 'invalid_command', message: 'Command must be observe, act, or restart.' });
+      };
+      if (typeof port.start === 'function') port.start();
+      try {
+        port.postMessage({
+          protocol: 'arena.game.v1',
+          type: 'ready',
+          sessionId: data.sessionId,
+          generation: data.generation,
+          accepted: true,
+          revision: state.revision,
+          state: bridgeState()
+        });
+      } catch (error) {}
+    }
+
+    function simulationFrame(now) {
+      if (!previousFrameTime) previousFrameTime = now;
+      const delta = Math.min(120, Math.max(0, now - previousFrameTime));
+      previousFrameTime = now;
+      if (state && state.phase === 'playing' && state.firstTurnDone) advance(delta);
+      frameHandle = window.requestAnimationFrame(simulationFrame);
+    }
+
+    boardElement.addEventListener('pointerdown', handlePointerDown, { passive: false });
+    boardElement.addEventListener('pointermove', handlePointerMove, { passive: false });
+    boardElement.addEventListener('pointerup', handlePointerUp, { passive: false });
+    boardElement.addEventListener('pointercancel', handlePointerUp, { passive: false });
+    boardElement.addEventListener('contextmenu', (event) => event.preventDefault());
+    boardElement.addEventListener('keydown', handleCellKeyboard);
+    ceremony.addEventListener('click', (event) => {
+      event.preventDefault();
+      ensureAudio();
+      runtimeRestart();
+    });
+    restartButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      ensureAudio();
+      runtimeRestart();
+    });
+    document.addEventListener('keydown', handleKeyboard);
+    window.addEventListener('message', connectBridge);
+
+    exposeRuntime();
+    reset(DEFAULT_SEED);
+    frameHandle = window.requestAnimationFrame(simulationFrame);
+  })();
+  </script>
+</body>
+</html>

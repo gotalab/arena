@@ -1,0 +1,596 @@
+/* SHOAL - Production Styling */
+
+:root {
+  --bg-deep: #05131e;
+  --bg-water: #0b2538;
+  --bg-pool: #0f354e;
+  --sand-bed: #143e59;
+  --sand-turned: #0a2030;
+  
+  --pearl-glow: #e0f2fe;
+  --pearl-gold: #fef08a;
+  --accent-cyan: #38bdf8;
+  --accent-coral: #f87171;
+  --accent-emerald: #34d399;
+  --accent-amber: #fbbf24;
+  --accent-purple: #c084fc;
+  
+  --shell-top: #335d79;
+  --shell-bot: #1b3d54;
+  --shell-border: #4a7d9f;
+  --shell-highlight: #7dd3fc;
+  
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-deep);
+  color: #f0f9ff;
+  font-family: var(--font-display);
+  touch-action: manipulation;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  background: radial-gradient(ellipse at 50% 20%, #114263 0%, #082236 60%, #03101b 100%);
+}
+
+/* Background water caustics canvas */
+#caustics-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 1;
+}
+
+/* Header & HUD */
+header.hud {
+  width: 100%;
+  max-width: 540px;
+  padding: 12px 16px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+  color: #bae6fd;
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+}
+
+.pool-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: rgba(14, 165, 233, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: #7dd3fc;
+  text-transform: uppercase;
+}
+
+.stats-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(11, 37, 56, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 14px;
+  backdrop-filter: blur(4px);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.stat-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+.stat-value {
+  font-size: 0.95rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+}
+
+.stat-pearls .stat-value {
+  color: #fef08a;
+  text-shadow: 0 0 8px rgba(254, 240, 138, 0.5);
+}
+
+.sound-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #7dd3fc;
+  opacity: 0.75;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.sound-toggle:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Tide meter gauge */
+.tide-meter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+
+.tide-label-bar {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #93c5fd;
+  text-transform: uppercase;
+}
+
+.tide-track {
+  width: 100%;
+  height: 9px;
+  background: rgba(3, 16, 27, 0.8);
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.tide-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #0284c7, #38bdf8, #7dd3fc);
+  border-radius: 5px;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+  position: relative;
+}
+
+.tide-fill.tide-low {
+  background: linear-gradient(90deg, #b91c1c, #f87171, #fca5a5);
+  box-shadow: 0 0 8px rgba(248, 113, 113, 0.7);
+}
+
+/* Play Area Container */
+main.play-area {
+  flex: 1;
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 8px 12px;
+  z-index: 10;
+}
+
+/* Host creature positioning */
+.host-wrapper {
+  position: absolute;
+  top: -18px;
+  right: 18px;
+  width: 82px;
+  height: 82px;
+  z-index: 15;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#host-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Board frame */
+.board-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: calc(100vh - 170px);
+  max-width: calc(100vh - 170px);
+  background: radial-gradient(circle at 50% 50%, #153c54 0%, #0d283b 100%);
+  border-radius: 18px;
+  padding: 10px;
+  border: 2px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.15);
+  display: grid;
+  gap: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Individual shell cells */
+.shell-cell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  user-select: none;
+  transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+
+.shell-cell:active {
+  transform: scale(0.94);
+}
+
+/* Covered state */
+.shell-cell.covered {
+  background: linear-gradient(145deg, #2b5572, #16364a);
+  border: 1px solid rgba(125, 211, 252, 0.4);
+  box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.25), 0 3px 5px rgba(0, 0, 0, 0.4);
+}
+
+.shell-cell.covered::after {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 60%;
+  height: 50%;
+  border-top: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50% 50% 0 0;
+  pointer-events: none;
+}
+
+.shell-cell.covered:hover {
+  border-color: rgba(125, 211, 252, 0.8);
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4), 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+/* Flagged state */
+.shell-cell.flagged {
+  background: linear-gradient(145deg, #264a63, #153245);
+  border: 1px solid #fbbf24;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2), 0 0 8px rgba(251, 191, 36, 0.35);
+}
+
+.pennant-icon {
+  width: 62%;
+  height: 62%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  animation: plantPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes plantPop {
+  0% { transform: scale(0.2) rotate(-15deg); opacity: 0; }
+  70% { transform: scale(1.2) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Open state */
+.shell-cell.open {
+  background: #081d2c;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6);
+  cursor: default;
+}
+
+.shell-cell.open.sweepable {
+  cursor: pointer;
+}
+
+.shell-cell.open.sweepable:hover {
+  background: #0d283d;
+  box-shadow: inset 0 0 8px rgba(56, 189, 248, 0.3);
+}
+
+/* Number typography and palette */
+.shell-cell .num {
+  font-size: clamp(1rem, 4.5vw, 1.7rem);
+  line-height: 1;
+  font-weight: 900;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.num-1 { color: #38bdf8; }
+.num-2 { color: #34d399; }
+.num-3 { color: #f87171; }
+.num-4 { color: #c084fc; }
+.num-5 { color: #fbbf24; }
+.num-6 { color: #22d3ee; }
+.num-7 { color: #fb7185; }
+.num-8 { color: #e2e8f0; }
+
+/* Urchin / Stung / Post-mortem states */
+.shell-cell.urchin-revealed {
+  background: #1e1329;
+  border: 1px solid rgba(192, 132, 252, 0.5);
+}
+
+.shell-cell.fatal-sting {
+  background: radial-gradient(circle, #7f1d1d 0%, #450a0a 100%);
+  border: 2px solid #ef4444;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.9), inset 0 0 10px rgba(255, 255, 255, 0.4);
+  animation: shockPulse 0.6s infinite alternate;
+}
+
+@keyframes shockPulse {
+  0% { transform: scale(0.96); }
+  100% { transform: scale(1.04); }
+}
+
+.shell-cell.flag-correct {
+  background: #08291b;
+  border: 1px solid #10b981;
+}
+
+.shell-cell.flag-wrong {
+  background: #2a1215;
+  border: 1px solid #f43f5e;
+}
+
+/* Ripple water shockwave effect */
+.ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(125, 211, 252, 0.7);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: waveExpand 0.55s ease-out forwards;
+  z-index: 25;
+}
+
+@keyframes waveExpand {
+  0% { width: 0; height: 0; opacity: 1; }
+  100% { width: 400px; height: 400px; opacity: 0; }
+}
+
+/* Long press charging radial indicator */
+.charge-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: #fbbf24;
+  border-right-color: #fbbf24;
+  pointer-events: none;
+  animation: chargeSpin 0.35s linear forwards;
+  z-index: 20;
+}
+
+@keyframes chargeSpin {
+  0% { transform: translate(-50%, -50%) rotate(0deg) scale(0.6); opacity: 0.3; }
+  100% { transform: translate(-50%, -50%) rotate(360deg) scale(1.1); opacity: 1; }
+}
+
+/* Title prompt banner */
+.title-prompt {
+  position: absolute;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(8, 28, 44, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 8px 18px;
+  border-radius: 20px;
+  color: #bae6fd;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 30;
+}
+
+.title-prompt.hidden {
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+}
+
+/* Post-Mortem & Ceremony Modal Overlay */
+.ceremony-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(3, 14, 23, 0.82);
+  backdrop-filter: blur(5px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 50;
+  cursor: pointer;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.ceremony-card {
+  width: 100%;
+  max-width: 360px;
+  background: linear-gradient(165deg, #0f354e, #092133);
+  border: 2px solid rgba(56, 189, 248, 0.4);
+  border-radius: 20px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), 0 0 24px rgba(56, 189, 248, 0.2);
+}
+
+.ceremony-title {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #f87171;
+  text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
+}
+
+.rank-badge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.rank-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #7dd3fc;
+  text-transform: uppercase;
+}
+
+.rank-name {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #fef08a;
+  letter-spacing: 1px;
+  text-shadow: 0 0 16px rgba(254, 240, 138, 0.6);
+}
+
+.ceremony-stats-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.ceremony-stat-box {
+  background: rgba(3, 16, 27, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ceremony-stat-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #93c5fd;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ceremony-stat-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.signature-stat-box {
+  width: 100%;
+  background: rgba(14, 165, 233, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signature-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #7dd3fc;
+  text-transform: uppercase;
+}
+
+.signature-val {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #fef08a;
+}
+
+.ceremony-prompt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #bae6fd;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+  animation: pulseOpacity 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes pulseOpacity {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* Keyboard focus highlight */
+.shell-cell.focused {
+  outline: 3px solid #fbbf24;
+  outline-offset: 1px;
+  z-index: 10;
+}

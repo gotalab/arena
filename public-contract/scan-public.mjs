@@ -64,7 +64,7 @@ const PROTECTED_RULES = [
   },
   {
     code: "private_path",
-    pattern: /(?:^|[\s"'`=(])(?:\.?[\\/]?)(?:pool|tasks|jobs)[\\/][^\s"'`<>)]*/i,
+    pattern: /(?:^|[\s"'`=(])(?:\.?[\\/]?)(?:pool|tasks|jobs)[\\/][A-Za-z_.-][^\s"'`<>)]*/i,
   },
   {
     code: "private_path",

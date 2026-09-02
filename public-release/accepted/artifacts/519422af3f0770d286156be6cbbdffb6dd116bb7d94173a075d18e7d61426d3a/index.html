@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>LUMEN YARD</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Top HUD Bar -->
+    <header class="header-hud" role="banner">
+      <div class="brand-section">
+        <span class="brand-logo" aria-label="Lumen Yard">⚡ LUMEN YARD</span>
+        <button id="btn-level-select" class="circuit-btn" title="Open Circuit Map (M)" aria-label="Current Circuit Selector">
+          <span id="current-level-name">01 : FIRST-LIGHT</span>
+          <span style="font-size: 0.7rem; color: var(--cyan);">▼</span>
+        </button>
+      </div>
+
+      <div class="stats-bar" role="status" aria-live="polite">
+        <div class="stat-item" title="Powered Sockets">
+          <span class="stat-label">SOCKETS</span>
+          <span id="stat-sockets" class="stat-val">0/1</span>
+        </div>
+        <div class="stat-item" title="Moves">
+          <span class="stat-label">MOVES</span>
+          <span id="stat-moves" class="stat-val">0</span>
+        </div>
+        <div class="stat-item" title="Best Move Record">
+          <span class="stat-label">BEST</span>
+          <span id="stat-best" class="stat-val">—</span>
+        </div>
+        <div class="stat-item" title="Relay Pushes">
+          <span class="stat-label">PUSHES</span>
+          <span id="stat-pushes" class="stat-val">0</span>
+        </div>
+      </div>
+
+      <div class="hud-actions">
+        <button id="btn-map" class="icon-btn" title="Circuit Map (M)" aria-label="Circuit Map">
+          <span>🗂️ MAP</span>
+        </button>
+        <button id="btn-settings" class="icon-btn" title="Settings" aria-label="Settings">
+          <span>⚙️</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Stage / Game Area -->
+    <main class="stage-container" role="main">
+      <canvas id="game-canvas" tabindex="0" aria-label="Lumen Yard interactive electrical board"></canvas>
+      <div id="invitation-overlay" class="invitation-overlay" aria-hidden="true">
+        Restore the grid.
+      </div>
+
+      <!-- Compact Mobile Touch D-Pad Overlay -->
+      <div class="touch-dpad-container" aria-label="Touch Navigation Controls">
+        <button id="dpad-up" class="dpad-btn dpad-up" aria-label="Move Up">▲</button>
+        <button id="dpad-left" class="dpad-btn dpad-left" aria-label="Move Left">◀</button>
+        <button id="dpad-right" class="dpad-btn dpad-right" aria-label="Move Right">▶</button>
+        <button id="dpad-down" class="dpad-btn dpad-down" aria-label="Move Down">▼</button>
+      </div>
+    </main>
+
+    <!-- Bottom Controls Bar -->
+    <footer class="bottom-bar" role="contentinfo">
+      <div class="btn-group">
+        <button id="btn-undo" class="icon-btn btn-accent" title="Undo Last Move (U or Backspace)" aria-label="Undo Move">
+          <span>↺ UNDO [U]</span>
+        </button>
+        <button id="btn-restart" class="icon-btn btn-primary" title="Restart Circuit (R)" aria-label="Restart Circuit">
+          <span>↻ RESTART [R]</span>
+        </button>
+      </div>
+      <div class="btn-group">
+        <span style="font-size: 0.72rem; color: var(--text-muted);">SWIPE / WASD / ARROWS</span>
+      </div>
+    </footer>
+
+    <!-- Board Browser Drawer Modal -->
+    <div id="map-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="map-modal-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="map-modal-title" class="modal-title">⚡ SUBSTATION CIRCUIT DIRECTORY</h2>
+          <button id="btn-close-map" class="icon-btn" aria-label="Close Map">✕</button>
+        </div>
+        <div class="modal-body">
+          <div id="circuit-grid-container"></div>
+        </div>
+        <div class="modal-footer">
+          <span style="font-size: 0.75rem; color: var(--text-muted); margin-right: auto;">20 Authored Sectors</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chapter 1 Completion Modal -->
+    <div id="chapter-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="chapter-title">
+      <div class="modal-card">
+        <div class="modal-body">
+          <div class="celebration-badge">
+            <div class="celebration-icon">⚡</div>
+            <h2 id="chapter-title" class="celebration-title">GRID RESTORED</h2>
+            <p class="celebration-desc">Chapter 1 Complete: Initial Ignition verified. Auxiliary substation power is online. Continue deeper into the yard.</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-chapter-replay" class="icon-btn" aria-label="Replay Black Start">↺ REPLAY</button>
+          <button id="btn-chapter-continue" class="icon-btn btn-accent" aria-label="Continue to Split Bus">CONTINUE TO SPLIT-BUS ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Campaign Complete / Dawn Sequence Modal -->
+    <div id="campaign-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="campaign-title">
+      <div class="modal-card">
+        <div class="modal-body">
+          <div class="celebration-badge">
+            <div class="celebration-icon">🌅</div>
+            <h2 id="campaign-title" class="celebration-title">THE YARD AWAKES</h2>
+            <p id="campaign-desc-text" class="celebration-desc">The whole substation is alive. Current hums across all twenty sectors in harmonic synchrony.</p>
+
+            <div class="stats-summary-box">
+              <div>
+                <div id="campaign-restored-count" class="summary-val">20/20</div>
+                <div class="summary-lbl">CIRCUITS RESTORED</div>
+              </div>
+              <div>
+                <div id="campaign-total-moves" class="summary-val">186</div>
+                <div class="summary-lbl">TOTAL BEST MOVES</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 14px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border-panel); padding-top: 10px;">
+              <strong style="color: var(--copper-light);">YARD CREW:</strong> System Operator LUMEN-7 • Chief Relay Engineer • DeepMind Arcade Unit
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-campaign-map" class="icon-btn" aria-label="Open Circuit Map">🗂️ BOARD MAP</button>
+          <button id="btn-campaign-replay" class="icon-btn btn-accent" aria-label="Replay Dawn Sequence">↺ REPLAY CIRCUIT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Single Level Victory Modal -->
+    <div id="level-win-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="level-win-title">
+      <div class="modal-card">
+        <div class="modal-body">
+          <div class="celebration-badge">
+            <div class="celebration-icon">⚡</div>
+            <h2 id="level-win-title" class="celebration-title">CIRCUIT RESTORED</h2>
+            <div class="stats-summary-box">
+              <div>
+                <div id="level-win-moves" class="summary-val">0</div>
+                <div class="summary-lbl">MOVES TAKEN</div>
+              </div>
+              <div>
+                <div id="level-win-best" class="summary-val">0</div>
+                <div class="summary-lbl">BEST RECORD</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-win-replay" class="icon-btn" aria-label="Replay Level">↺ REPLAY</button>
+          <button id="btn-win-next" class="icon-btn btn-accent" aria-label="Next Circuit">NEXT CIRCUIT ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="settings-title" class="modal-title">⚙️ SYSTEM CONFIGURATION</h2>
+          <button id="btn-close-settings" class="icon-btn" aria-label="Close Settings">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-title">Audio Synthesizer</span>
+              <span class="setting-desc">Procedural mechanical and electrical audio feedback</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-sound" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <span class="setting-title">Motion Effects</span>
+              <span class="setting-desc">Smooth transitions, screen tremors, and energy surge waves</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-motion" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div style="margin-top: 14px;">
+            <span class="setting-title">Control Directives</span>
+            <table class="keybinds-table">
+              <tr><td><span class="key-badge">WASD</span> / <span class="key-badge">Arrows</span></td><td>Walk & Push Relays</td></tr>
+              <tr><td><span class="key-badge">Touch Swipe / Tap</span></td><td>Mobile Movement</td></tr>
+              <tr><td><span class="key-badge">U</span> / <span class="key-badge">Backspace</span> / <span class="key-badge">Ctrl+Z</span></td><td>Undo Move</td></tr>
+              <tr><td><span class="key-badge">R</span></td><td>Restart Current Circuit</td></tr>
+              <tr><td><span class="key-badge">M</span> / <span class="key-badge">Esc</span></td><td>Circuit Map / Close Dialogs</td></tr>
+              <tr><td><span class="key-badge">Gamepad</span></td><td>D-Pad/Stick: Walk, A: Select, B/X: Undo, Start: Restart</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="game.js"></script>
+</body>
+</html>

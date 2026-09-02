@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SHOAL - Tide Pool Deduction</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Background Animated Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Header / HUD -->
+    <header id="hud">
+      <div class="hud-left">
+        <div class="hud-badge pool-badge">
+          <span class="label">POOL</span>
+          <span class="value" id="hud-pool">1</span>
+        </div>
+        <div class="hud-badge urchin-badge">
+          <span class="urchin-icon" aria-hidden="true">✹</span>
+          <span class="value" id="hud-urchins">0</span>
+        </div>
+      </div>
+
+      <!-- Host Creature Area -->
+      <div id="host-container" title="Tide pool companion">
+        <canvas id="host-canvas" width="90" height="90"></canvas>
+      </div>
+
+      <div class="hud-right">
+        <div class="hud-badge pearls-badge">
+          <span class="pearl-icon" aria-hidden="true">✦</span>
+          <span class="value" id="hud-pearls">0</span>
+        </div>
+        <button id="btn-restart-hud" class="hud-btn" title="Restart run (R)" aria-label="Restart">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Tide Bar -->
+    <div id="tide-bar-container">
+      <div id="tide-bar-fill"></div>
+      <div class="tide-label">TIDE</div>
+    </div>
+
+    <!-- Main Stage / Playfield -->
+    <main id="playfield-wrapper">
+      <div id="grid-scaler">
+        <div id="grid" role="grid" aria-label="Tide pool shells"></div>
+      </div>
+    </main>
+
+    <!-- Quick Tip / Subtle Instruction -->
+    <footer id="footer-status">
+      <div id="status-text">Tap to turn • Hold to plant pennant</div>
+    </footer>
+
+    <!-- Overlay Ceremony / End / Post-Mortem Screen -->
+    <div id="ceremony-overlay" class="hidden">
+      <div class="ceremony-card">
+        <div class="ceremony-header">
+          <div class="ceremony-title" id="ceremony-title">RUN COMPLETED</div>
+          <div class="ceremony-subtitle" id="ceremony-subtitle">The tide settles over the reef.</div>
+        </div>
+
+        <div class="ceremony-stats">
+          <div class="stat-box primary-stat">
+            <span class="stat-label">RANK</span>
+            <span class="stat-value rank-highlight" id="ceremony-rank">Pearl</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">PEARLS</span>
+            <span class="stat-value" id="ceremony-pearls">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-label">BEST</span>
+            <span class="stat-value" id="ceremony-best">0</span>
+          </div>
+          <div class="stat-box signature-box">
+            <span class="stat-label" id="ceremony-sig-label">BIGGEST RIPPLE</span>
+            <span class="stat-value" id="ceremony-sig-val">0 shells</span>
+          </div>
+        </div>
+
+        <div class="rank-ladder" id="ceremony-ladder">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="post-mortem-msg" id="post-mortem-info"></div>
+
+        <button id="btn-ceremony-restart" class="ceremony-btn">
+          <span>DIVE AGAIN</span>
+          <span class="btn-subtext">Tap or press R</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pool Transition Floating Banner -->
+    <div id="pool-clear-banner" class="hidden">
+      <div class="clear-title">POOL CLEARED!</div>
+      <div class="clear-bonus" id="clear-bonus-text">+150 Pearls</div>
+    </div>
+  </div>
+
+  <script src="src/prng.js"></script>
+  <script src="src/solver.js"></script>
+  <script src="src/audio.js"></script>
+  <script src="src/host.js"></script>
+  <script src="src/game.js"></script>
+  <script src="src/bridge.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>

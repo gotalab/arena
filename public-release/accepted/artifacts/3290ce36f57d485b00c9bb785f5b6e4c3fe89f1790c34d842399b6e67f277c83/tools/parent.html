@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!-- Dev-only harness that plays the role of the Arena parent frame. -->
+<html>
+<head><meta charset="utf-8"><title>arena harness</title>
+<style>html,body{margin:0;background:#111;overflow:hidden}iframe{border:0;display:block}</style>
+</head>
+<body>
+<iframe id="frame" src="/index.html" sandbox="allow-scripts" width="390" height="844"></iframe>
+<script>
+  window.__inbox = [];
+  window.__port = null;
+  window.__connect = function (sessionId, generation) {
+    var ch = new MessageChannel();
+    window.__port = ch.port1;
+    ch.port1.onmessage = function (e) { window.__inbox.push(e.data); };
+    ch.port1.start();
+    document.getElementById('frame').contentWindow.postMessage(
+      { protocol: 'arena.game.v1', type: 'connect', sessionId: sessionId, generation: generation },
+      '*', [ch.port2]
+    );
+  };
+  window.__send = function (msg) { window.__port.postMessage(msg); };
+  window.__sizeFrame = function (w, h) {
+    var f = document.getElementById('frame');
+    f.width = w; f.height = h;
+  };
+  // A rogue sender that is not the parent must be ignored by the game.
+  window.__rogueConnect = function () {
+    var ch = new MessageChannel();
+    window.__roguePort = ch.port1;
+    window.__rogueGot = [];
+    ch.port1.onmessage = function (e) { window.__rogueGot.push(e.data); };
+    ch.port1.start();
+    var w = window.open('', 'rogue');
+    return false;
+  };
+</script>
+</body>
+</html>

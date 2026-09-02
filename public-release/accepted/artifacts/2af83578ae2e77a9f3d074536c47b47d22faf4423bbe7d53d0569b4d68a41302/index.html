@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#073d4b">
+  <title>SHOAL</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game" aria-label="Shoal deduction game">
+    <div class="caustics" aria-hidden="true"></div>
+    <header>
+      <div class="brand"><b>SHOAL</b><span id="poolLabel">POOL 1</span></div>
+      <div class="stat"><span>PEARLS</span><strong id="pearls">0</strong></div>
+      <div class="stat urchin-count"><span>URCHINS LEFT</span><strong><i class="mini-urchin"></i><em id="left">0</em></strong></div>
+    </header>
+    <section class="tide-wrap" aria-label="Tide remaining"><div class="tide-label"><span>TIDE</span><span id="tideText">WAITING</span></div><div class="tide-track"><div id="tideFill"></div></div></section>
+    <section id="pool" aria-label="Shell grid"><div id="board"></div></section>
+    <section class="shore">
+      <div id="moki" class="moki curious" aria-hidden="true"><div class="feelers"></div><div class="body"><i></i><i></i><span></span></div></div>
+      <div id="hint"><b>Tap a shell</b><span>Your first ripple is safe</span></div>
+      <button id="sound" aria-label="Toggle sound">♪</button>
+    </section>
+    <div id="toast" aria-live="polite"></div>
+    <section id="ceremony" hidden>
+      <div class="ceremony-card">
+        <small>THE WATER REMEMBERS</small>
+        <h1 id="rank">DRIFTWOOD</h1>
+        <div class="score-row"><div><span>THIS TIDE</span><b id="finalPearls">0</b></div><div><span>SESSION BEST</span><b id="best">0</b></div></div>
+        <div class="brag"><span>DEEPEST POOL</span><b id="deepest">1</b></div>
+        <div id="ladder"></div>
+        <button id="again">TOUCH FOR ANOTHER TIDE</button>
+      </div>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>

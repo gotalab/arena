@@ -68,7 +68,12 @@ test("task search is identity-free, bounded and closed to extra input", async ()
   assert.equal(JSON.stringify(output).includes("configuration"), false);
   assert.throws(() => search.execute({ query: "", provider: "hidden" }), /invalid task search input/);
   assert.throws(() => search.execute({ agentPlay: "any" }), /invalid Agent Play filter/);
-  assert.deepEqual((await search.execute({ agentPlay: "supported" })).structuredContent.tasks, []);
+  const supported = (await search.execute({ agentPlay: "supported" })).structuredContent.tasks;
+  assert.deepEqual(
+    supported.map((task) => task.taskId).sort(),
+    bundle.taskManifests.map((manifest) => manifest.taskId).sort(),
+  );
+  assert.ok(supported.every((task) => task.agentPlay.status === "supported"));
 });
 
 test("task search reports Agent Play policy and open_task changes the visible route", async () => {

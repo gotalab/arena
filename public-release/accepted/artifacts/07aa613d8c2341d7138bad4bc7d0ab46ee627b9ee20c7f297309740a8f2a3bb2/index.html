@@ -1,0 +1,2631 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#081116">
+  <title>Lumen Yard — Power Yard Maintenance</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #081116;
+      --ink-deep: #050c10;
+      --panel: #102229;
+      --panel-raised: #172f37;
+      --panel-line: rgba(166, 209, 191, .15);
+      --panel-line-strong: rgba(166, 209, 191, .28);
+      --paper: #eaf2df;
+      --muted: #91aba4;
+      --quiet: #5d7977;
+      --copper: #c27b4c;
+      --copper-bright: #eda66b;
+      --signal: #79e4c0;
+      --signal-dim: #397f76;
+      --amber: #f5c66e;
+      --danger: #f19b7a;
+      --shadow: rgba(0, 0, 0, .38);
+      --radius-lg: 24px;
+      --radius-md: 15px;
+      --radius-sm: 10px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--ink);
+    }
+
+    body {
+      color: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      letter-spacing: .01em;
+      overscroll-behavior: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+      border: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+    }
+
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid var(--signal);
+      outline-offset: 3px;
+    }
+
+    [hidden] { display: none !important; }
+
+    .game-shell {
+      position: relative;
+      isolation: isolate;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 12px;
+      padding: calc(14px + var(--safe-top)) max(16px, var(--safe-right)) calc(14px + var(--safe-bottom)) max(16px, var(--safe-left));
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 17% 12%, rgba(40, 115, 103, .18), transparent 34%),
+        radial-gradient(ellipse at 92% 88%, rgba(172, 91, 53, .12), transparent 32%),
+        linear-gradient(135deg, #071116 0%, #0a171d 48%, #071015 100%);
+    }
+
+    .game-shell::before,
+    .game-shell::after {
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+      content: "";
+    }
+
+    .game-shell::before {
+      top: 0;
+      left: 12%;
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(transparent, rgba(119, 221, 188, .1), transparent);
+      transform: rotate(19deg);
+      transform-origin: top;
+    }
+
+    .game-shell::after {
+      right: 7%;
+      bottom: -12%;
+      width: 34vw;
+      height: 34vw;
+      max-width: 460px;
+      max-height: 460px;
+      border: 1px solid rgba(194, 123, 76, .12);
+      border-radius: 50%;
+      box-shadow: 0 0 0 22px rgba(194, 123, 76, .025), 0 0 0 44px rgba(194, 123, 76, .018);
+    }
+
+    .topbar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-lockup,
+    .header-actions,
+    .brand-copy,
+    .header-phase,
+    .button-label,
+    .switch-row,
+    .completion-heading,
+    .completion-actions,
+    .metric-row,
+    .rail-title-row,
+    .yard-topline,
+    .yard-footer,
+    .board-toast,
+    .level-row,
+    .drawer-heading,
+    .map-summary,
+    .setting-row {
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-lockup { min-width: 0; gap: 11px; }
+
+    .brand-emblem {
+      position: relative;
+      flex: 0 0 auto;
+      width: 37px;
+      height: 37px;
+      border: 1px solid rgba(121, 228, 192, .48);
+      border-radius: 11px;
+      transform: rotate(45deg);
+      box-shadow: inset 0 0 0 4px rgba(121, 228, 192, .04), 0 0 22px rgba(121, 228, 192, .09);
+    }
+
+    .brand-emblem::before,
+    .brand-emblem::after,
+    .brand-emblem span {
+      position: absolute;
+      content: "";
+      display: block;
+      background: var(--signal);
+    }
+
+    .brand-emblem::before {
+      top: 8px;
+      left: 17px;
+      width: 2px;
+      height: 20px;
+      opacity: .84;
+    }
+
+    .brand-emblem::after {
+      top: 17px;
+      left: 8px;
+      width: 20px;
+      height: 2px;
+      opacity: .84;
+    }
+
+    .brand-emblem span {
+      top: 13px;
+      left: 13px;
+      width: 10px;
+      height: 10px;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 11px rgba(245, 198, 110, .75);
+    }
+
+    .brand-copy { min-width: 0; display: block; }
+
+    .overline,
+    .micro-label,
+    .rail-kicker,
+    .yard-topline,
+    .yard-footer,
+    .level-state,
+    .level-best,
+    .drawer-kicker,
+    .setting-caption,
+    .hint,
+    .metric-label,
+    .completion-kicker,
+    .completion-stat-label {
+      font-size: 9px;
+      font-weight: 750;
+      letter-spacing: .16em;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    .overline {
+      margin: 0 0 1px;
+      color: var(--quiet);
+      white-space: nowrap;
+    }
+
+    h1,
+    h2,
+    p { margin: 0; }
+
+    h1 {
+      color: var(--paper);
+      font-family: "Arial Narrow", "Roboto Condensed", ui-sans-serif, sans-serif;
+      font-size: clamp(19px, 2.15vw, 29px);
+      font-stretch: condensed;
+      font-weight: 850;
+      letter-spacing: .13em;
+      line-height: 1;
+    }
+
+    h1 span {
+      color: var(--copper-bright);
+      font-weight: 550;
+    }
+
+    .header-actions {
+      flex: 0 0 auto;
+      justify-content: flex-end;
+      gap: 7px;
+    }
+
+    .header-phase {
+      gap: 7px;
+      min-height: 36px;
+      padding: 0 11px;
+      border: 1px solid var(--panel-line);
+      border-radius: 11px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal);
+      box-shadow: 0 0 10px rgba(121, 228, 192, .65);
+    }
+
+    .header-phase.is-powered .status-dot {
+      background: var(--amber);
+      box-shadow: 0 0 13px rgba(245, 198, 110, .8);
+    }
+
+    .icon-button,
+    .text-button {
+      min-height: 36px;
+      border: 1px solid var(--panel-line);
+      border-radius: 11px;
+      background: rgba(16, 34, 41, .78);
+      transition: border-color .18s ease, background .18s ease, color .18s ease, transform .18s ease;
+    }
+
+    .icon-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 10px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 720;
+    }
+
+    .icon-button .button-glyph {
+      color: var(--signal);
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .icon-button:hover,
+    .text-button:hover,
+    .icon-button[aria-pressed="true"] {
+      border-color: rgba(121, 228, 192, .45);
+      background: rgba(28, 59, 62, .9);
+      color: var(--paper);
+    }
+
+    .icon-button:active,
+    .text-button:active,
+    .action-button:active,
+    .dpad-button:active { transform: translateY(1px); }
+
+    .game-main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(236px, 286px);
+      gap: 14px;
+    }
+
+    .yard-column,
+    .command-rail,
+    .yard-frame,
+    .yard-viewport {
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .yard-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .yard-frame {
+      position: relative;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(166, 209, 191, .17);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(21, 44, 48, .86), rgba(6, 17, 22, .96));
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .23), inset 0 1px 0 rgba(234, 242, 223, .05);
+      transition: border-color .35s ease, box-shadow .35s ease;
+    }
+
+    .yard-frame.is-complete {
+      border-color: rgba(245, 198, 110, .55);
+      box-shadow: 0 0 45px rgba(245, 198, 110, .11), 0 20px 50px rgba(0, 0, 0, .23), inset 0 1px 0 rgba(245, 198, 110, .11);
+    }
+
+    .yard-topline {
+      flex: 0 0 auto;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 34px;
+      padding: 0 15px;
+      color: var(--quiet);
+      border-bottom: 1px solid rgba(166, 209, 191, .08);
+    }
+
+    .yard-topline strong {
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    #yard-route {
+      overflow: hidden;
+      color: var(--signal);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .yard-viewport {
+      position: relative;
+      flex: 1 1 auto;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: clamp(10px, 2.5vw, 28px);
+      background:
+        radial-gradient(ellipse at 52% 42%, rgba(70, 146, 126, .07), transparent 55%),
+        linear-gradient(180deg, rgba(2, 10, 14, .2), rgba(2, 10, 14, .58));
+      touch-action: none;
+    }
+
+    .yard-viewport::before,
+    .yard-viewport::after {
+      position: absolute;
+      z-index: 0;
+      pointer-events: none;
+      content: "";
+    }
+
+    .yard-viewport::before {
+      top: 0;
+      left: 7%;
+      width: 86%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(194, 123, 76, .23), transparent);
+    }
+
+    .yard-viewport::after {
+      right: 4%;
+      bottom: 4%;
+      width: 18%;
+      height: 28%;
+      border-right: 1px solid rgba(121, 228, 192, .08);
+      border-bottom: 1px solid rgba(121, 228, 192, .08);
+      border-radius: 0 0 30px 0;
+    }
+
+    #yard-svg {
+      position: relative;
+      z-index: 1;
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      min-height: 0;
+      overflow: visible;
+      cursor: crosshair;
+      filter: drop-shadow(0 15px 20px rgba(0, 0, 0, .28));
+      user-select: none;
+    }
+
+    #yard-svg:focus-visible {
+      outline: 2px solid var(--signal);
+      outline-offset: -1px;
+    }
+
+    .yard-footer {
+      flex: 0 0 auto;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 30px;
+      padding: 0 15px;
+      color: var(--quiet);
+      border-top: 1px solid rgba(166, 209, 191, .08);
+      font-size: 9px;
+      letter-spacing: .1em;
+    }
+
+    .yard-footer span:last-child { color: var(--muted); }
+
+    .intro-tag {
+      position: absolute;
+      z-index: 3;
+      top: 12px;
+      left: 50%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border: 1px solid rgba(121, 228, 192, .2);
+      border-radius: 99px;
+      background: rgba(6, 17, 22, .68);
+      color: var(--signal);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .intro-tag span {
+      display: block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 10px rgba(245, 198, 110, .75);
+    }
+
+    .board-toast {
+      position: absolute;
+      z-index: 8;
+      right: 15px;
+      bottom: 15px;
+      max-width: min(280px, calc(100% - 30px));
+      gap: 9px;
+      padding: 9px 11px;
+      border: 1px solid rgba(121, 228, 192, .23);
+      border-radius: 12px;
+      background: rgba(9, 23, 27, .88);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, .26);
+      backdrop-filter: blur(10px);
+      pointer-events: none;
+      transform: translateY(7px);
+      opacity: 0;
+      transition: opacity .18s ease, transform .18s ease;
+    }
+
+    .board-toast.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-icon {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border: 1px solid rgba(121, 228, 192, .38);
+      border-radius: 7px;
+      color: var(--signal);
+      font-size: 13px;
+    }
+
+    .board-toast strong,
+    .board-toast span { display: block; }
+
+    .board-toast strong {
+      color: var(--paper);
+      font-size: 10px;
+      letter-spacing: .11em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .board-toast span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.25;
+    }
+
+    .completion-panel {
+      position: absolute;
+      z-index: 7;
+      right: clamp(10px, 3vw, 28px);
+      bottom: clamp(10px, 3vw, 27px);
+      left: clamp(10px, 3vw, 28px);
+      padding: clamp(14px, 2.3vw, 22px);
+      border: 1px solid rgba(245, 198, 110, .39);
+      border-radius: 18px;
+      background:
+        linear-gradient(135deg, rgba(27, 52, 52, .96), rgba(10, 24, 28, .96)),
+        var(--panel);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, .36), 0 0 35px rgba(245, 198, 110, .12), inset 0 1px 0 rgba(255, 242, 195, .1);
+      backdrop-filter: blur(14px);
+    }
+
+    .completion-heading {
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .completion-kicker {
+      color: var(--amber);
+    }
+
+    .completion-panel h2 {
+      margin-top: 4px;
+      color: var(--paper);
+      font-family: "Arial Narrow", "Roboto Condensed", ui-sans-serif, sans-serif;
+      font-size: clamp(20px, 3.1vw, 31px);
+      font-weight: 850;
+      letter-spacing: .08em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .completion-copy {
+      max-width: 520px;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .completion-seal {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(245, 198, 110, .55);
+      border-radius: 50%;
+      color: var(--amber);
+      font-size: 18px;
+      box-shadow: inset 0 0 0 4px rgba(245, 198, 110, .06), 0 0 18px rgba(245, 198, 110, .14);
+    }
+
+    .completion-stats {
+      display: flex;
+      gap: 8px;
+      margin-top: 13px;
+    }
+
+    .completion-stat {
+      min-width: 84px;
+      padding: 7px 9px;
+      border: 1px solid rgba(166, 209, 191, .13);
+      border-radius: 9px;
+      background: rgba(4, 13, 17, .25);
+    }
+
+    .completion-stat-label { color: var(--quiet); }
+    .completion-stat-value { display: block; margin-top: 2px; color: var(--paper); font-size: 13px; font-weight: 800; }
+
+    .completion-actions {
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 15px;
+    }
+
+    .completion-actions .primary-action,
+    .completion-actions .secondary-action {
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 9px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .primary-action {
+      background: var(--amber);
+      color: #251a0e;
+      box-shadow: 0 5px 16px rgba(245, 198, 110, .16);
+    }
+
+    .primary-action:hover { background: #ffd98b; }
+
+    .secondary-action {
+      border: 1px solid rgba(166, 209, 191, .22);
+      background: rgba(8, 20, 24, .48);
+      color: var(--muted);
+    }
+
+    .secondary-action:hover { border-color: rgba(166, 209, 191, .45); color: var(--paper); }
+
+    .command-rail {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      overflow: auto;
+      scrollbar-color: var(--signal-dim) transparent;
+    }
+
+    .rail-card {
+      flex: 0 0 auto;
+      padding: 14px;
+      border: 1px solid var(--panel-line);
+      border-radius: var(--radius-md);
+      background: linear-gradient(145deg, rgba(20, 44, 50, .86), rgba(10, 23, 28, .86));
+      box-shadow: inset 0 1px 0 rgba(234, 242, 223, .035);
+    }
+
+    .mission-card { padding-bottom: 13px; }
+
+    .rail-title-row {
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .rail-kicker { color: var(--quiet); }
+
+    .phase-chip {
+      padding: 4px 7px;
+      border: 1px solid rgba(121, 228, 192, .2);
+      border-radius: 99px;
+      color: var(--signal);
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .phase-chip.powered {
+      border-color: rgba(245, 198, 110, .35);
+      color: var(--amber);
+    }
+
+    .mission-card h2 {
+      margin-top: 9px;
+      color: var(--paper);
+      font-size: clamp(17px, 1.7vw, 21px);
+      font-weight: 780;
+      letter-spacing: .04em;
+      line-height: 1.05;
+      text-transform: uppercase;
+    }
+
+    .mission-copy {
+      min-height: 34px;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.42;
+    }
+
+    .metric-row {
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .metric {
+      min-width: 0;
+      flex: 1 1 0;
+      padding: 7px 8px;
+      border: 1px solid rgba(166, 209, 191, .11);
+      border-radius: 9px;
+      background: rgba(5, 15, 19, .22);
+    }
+
+    .metric-label { display: block; color: var(--quiet); font-size: 8px; letter-spacing: .11em; }
+    .metric-value { display: block; margin-top: 3px; color: var(--paper); font-size: 15px; font-weight: 800; line-height: 1; }
+    .metric-value.signal { color: var(--signal); }
+    .metric-value.amber { color: var(--amber); }
+
+    .control-card { padding-bottom: 13px; }
+
+    .control-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .control-title strong {
+      color: var(--paper);
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .control-title span { color: var(--quiet); font-size: 9px; }
+
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 5px;
+      width: min(100%, 168px);
+      margin: 0 auto;
+    }
+
+    .dpad-button {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      aspect-ratio: 1;
+      border: 1px solid rgba(121, 228, 192, .17);
+      border-radius: 9px;
+      background: rgba(5, 17, 21, .52);
+      color: var(--signal);
+      font-size: 22px;
+      line-height: 1;
+      transition: border-color .16s ease, background .16s ease, color .16s ease, opacity .16s ease;
+    }
+
+    .dpad-button:hover:not(:disabled) {
+      border-color: rgba(121, 228, 192, .5);
+      background: rgba(38, 83, 78, .55);
+    }
+
+    .dpad-button:disabled { opacity: .22; }
+    .dpad-button[data-direction="up"] { grid-column: 2; grid-row: 1; }
+    .dpad-button[data-direction="left"] { grid-column: 1; grid-row: 2; }
+    .dpad-button[data-direction="right"] { grid-column: 3; grid-row: 2; }
+    .dpad-button[data-direction="down"] { grid-column: 2; grid-row: 3; }
+    .dpad-center { grid-column: 2; grid-row: 2; display: grid; place-items: center; border: 1px solid rgba(194, 123, 76, .18); border-radius: 9px; background: rgba(194, 123, 76, .05); color: var(--copper); font-size: 12px; }
+
+    .hint {
+      margin-top: 10px;
+      color: var(--quiet);
+      font-size: 8px;
+      letter-spacing: .1em;
+      text-align: center;
+    }
+
+    .action-card { padding: 8px; }
+
+    .action-grid { display: grid; gap: 5px; }
+
+    .action-button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 7px;
+      width: 100%;
+      min-height: 39px;
+      padding: 0 9px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--muted);
+      text-align: left;
+      transition: border-color .16s ease, background .16s ease, color .16s ease, opacity .16s ease;
+    }
+
+    .action-button:hover:not(:disabled) {
+      border-color: rgba(166, 209, 191, .18);
+      background: rgba(166, 209, 191, .06);
+      color: var(--paper);
+    }
+
+    .action-button:disabled { color: var(--quiet); opacity: .45; }
+
+    .action-button .button-glyph { flex: 0 0 auto; color: var(--copper-bright); font-size: 16px; }
+    .action-button .button-label { flex: 1 1 auto; justify-content: flex-start; font-size: 10px; font-weight: 760; letter-spacing: .08em; text-transform: uppercase; }
+    .action-detail { color: var(--quiet); font-size: 9px; white-space: nowrap; }
+
+    .keycap {
+      display: inline-grid;
+      place-items: center;
+      min-width: 20px;
+      height: 20px;
+      border: 1px solid rgba(166, 209, 191, .18);
+      border-radius: 5px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 800;
+    }
+
+    .rail-foot {
+      margin-top: auto;
+      padding: 1px 4px 0;
+      color: var(--quiet);
+      font-size: 9px;
+      line-height: 1.45;
+    }
+
+    .rail-foot strong { color: var(--muted); font-weight: 700; }
+
+    .modal-layer {
+      position: fixed;
+      z-index: 30;
+      inset: 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: calc(14px + var(--safe-top)) max(14px, var(--safe-right)) calc(14px + var(--safe-bottom)) max(14px, var(--safe-left));
+      background: rgba(3, 9, 12, .67);
+      backdrop-filter: blur(5px);
+    }
+
+    .drawer {
+      width: min(410px, 100%);
+      height: 100%;
+      max-height: min(760px, calc(100dvh - 28px - var(--safe-top) - var(--safe-bottom)));
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(166, 209, 191, .2);
+      border-radius: 20px;
+      background: linear-gradient(145deg, #142e35, #09191f);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .5);
+    }
+
+    .dialog-small {
+      width: min(360px, 100%);
+      height: auto;
+      align-self: flex-start;
+      padding-bottom: 14px;
+    }
+
+    .drawer-heading {
+      flex: 0 0 auto;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 17px 14px;
+      border-bottom: 1px solid rgba(166, 209, 191, .11);
+    }
+
+    .drawer-kicker { color: var(--copper-bright); }
+    .drawer h2 { margin-top: 4px; color: var(--paper); font-size: 21px; letter-spacing: .05em; text-transform: uppercase; }
+
+    .close-button {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(166, 209, 191, .18);
+      border-radius: 9px;
+      background: rgba(5, 15, 19, .35);
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .close-button:hover { color: var(--paper); border-color: rgba(166, 209, 191, .42); }
+
+    .map-summary {
+      flex: 0 0 auto;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 17px;
+      border-bottom: 1px solid rgba(166, 209, 191, .08);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .map-summary strong { color: var(--signal); font-size: 13px; }
+
+    .level-list {
+      min-height: 0;
+      flex: 1 1 auto;
+      overflow: auto;
+      padding: 8px;
+      scrollbar-color: var(--signal-dim) transparent;
+    }
+
+    .level-row {
+      width: 100%;
+      gap: 10px;
+      min-height: 52px;
+      padding: 7px 9px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      background: transparent;
+      text-align: left;
+      transition: background .16s ease, border-color .16s ease;
+    }
+
+    .level-row:hover,
+    .level-row[aria-current="true"] {
+      border-color: rgba(121, 228, 192, .2);
+      background: rgba(121, 228, 192, .06);
+    }
+
+    .level-row[aria-current="true"] { box-shadow: inset 3px 0 var(--signal); }
+
+    .level-number {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid rgba(166, 209, 191, .17);
+      border-radius: 8px;
+      color: var(--quiet);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .level-row[aria-current="true"] .level-number { border-color: rgba(121, 228, 192, .38); color: var(--signal); }
+
+    .level-copy { min-width: 0; flex: 1 1 auto; }
+    .level-copy strong { display: block; overflow: hidden; color: var(--paper); font-size: 11px; letter-spacing: .07em; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+    .level-copy small { display: block; margin-top: 3px; overflow: hidden; color: var(--quiet); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+    .level-state { flex: 0 0 auto; gap: 4px; color: var(--quiet); font-size: 8px; white-space: nowrap; }
+    .level-state.restored { color: var(--amber); }
+    .level-state.current { color: var(--signal); }
+    .level-state-mark { font-size: 11px; line-height: 1; }
+    .level-best { flex: 0 0 auto; min-width: 42px; color: var(--muted); font-size: 8px; letter-spacing: .08em; text-align: right; }
+
+    .drawer-note {
+      flex: 0 0 auto;
+      padding: 10px 17px 12px;
+      border-top: 1px solid rgba(166, 209, 191, .08);
+      color: var(--quiet);
+      font-size: 10px;
+      line-height: 1.4;
+    }
+
+    .settings-body { padding: 10px 17px 0; }
+
+    .setting-row {
+      justify-content: space-between;
+      gap: 15px;
+      min-height: 55px;
+      border-bottom: 1px solid rgba(166, 209, 191, .1);
+    }
+
+    .setting-row:last-child { border-bottom: 0; }
+    .setting-row strong { display: block; color: var(--paper); font-size: 12px; }
+    .setting-caption { display: block; margin-top: 3px; color: var(--quiet); font-size: 8px; letter-spacing: .1em; }
+
+    .switch-button {
+      position: relative;
+      flex: 0 0 auto;
+      width: 58px;
+      height: 26px;
+      padding: 3px;
+      border: 1px solid rgba(166, 209, 191, .18);
+      border-radius: 99px;
+      background: rgba(3, 12, 16, .65);
+      transition: background .16s ease, border-color .16s ease;
+    }
+
+    .switch-button::before {
+      position: absolute;
+      top: 0;
+      right: 7px;
+      bottom: 0;
+      color: var(--quiet);
+      content: "OFF";
+      font-size: 7px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      line-height: 20px;
+    }
+
+    .switch-button::after {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      display: block;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--quiet);
+      content: "";
+      transition: transform .16s ease, background .16s ease;
+    }
+
+    .switch-button[aria-checked="true"] { border-color: rgba(121, 228, 192, .4); background: rgba(57, 127, 118, .5); }
+    .switch-button[aria-checked="true"]::before { right: auto; left: 8px; color: var(--signal); content: "ON"; }
+    .switch-button[aria-checked="true"]::after { background: var(--signal); transform: translateX(30px); box-shadow: 0 0 10px rgba(121, 228, 192, .5); }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* The yard is an SVG scene. These styles keep its materials legible without making it read like a debug grid. */
+    .yard-svg .yard-surface { fill: url(#yardBg); }
+    .yard-svg .floor-tile { fill: url(#floorFill); stroke: rgba(149, 203, 180, .09); stroke-width: .018; }
+    .yard-svg .floor-tile.alt { fill: url(#floorFillAlt); }
+    .yard-svg .floor-grain { fill: none; stroke: rgba(218, 227, 193, .055); stroke-width: .018; stroke-linecap: round; }
+    .yard-svg .wall-tile { fill: url(#wallFill); stroke: rgba(4, 11, 14, .72); stroke-width: .025; }
+    .yard-svg .wall-face { fill: none; stroke: rgba(201, 157, 104, .11); stroke-width: .027; }
+    .yard-svg .wall-seam { stroke: rgba(2, 9, 12, .5); stroke-width: .035; }
+    .yard-svg .wall-bolt { fill: #68827a; opacity: .45; }
+    .yard-svg .cable-line { fill: none; stroke: rgba(194, 123, 76, .2); stroke-width: .035; stroke-linecap: round; }
+    .yard-svg .cable-node { fill: #c27b4c; opacity: .34; }
+    .yard-svg .live-conduit { fill: none; stroke: rgba(121, 228, 192, .19); stroke-width: .045; stroke-linecap: round; stroke-dasharray: .12 .15; opacity: .55; }
+    .yard-svg.motion-on:not(.complete) .live-conduit { animation: currentTremor 2.8s ease-in-out infinite; }
+    .yard-svg.complete .live-conduit { stroke: rgba(245, 198, 110, .76); opacity: 1; }
+    .yard-svg.motion-on.complete .live-conduit { animation: currentRun 1.25s linear infinite; }
+    .yard-svg.motion-on.rewinding .live-conduit { animation: currentRewind .42s ease-out both; }
+    .yard-svg .socket-shadow { fill: rgba(0, 0, 0, .32); }
+    .yard-svg .socket-plate { fill: #172b2d; stroke: #9f653f; stroke-width: .04; }
+    .yard-svg .socket-ring { fill: none; stroke: #d28b51; stroke-width: .07; }
+    .yard-svg .socket-inner { fill: #091519; stroke: rgba(235, 171, 103, .6); stroke-width: .025; }
+    .yard-svg .socket-cross { fill: none; stroke: rgba(235, 171, 103, .65); stroke-width: .032; stroke-linecap: round; }
+    .yard-svg .socket-powered-ring { fill: none; stroke: #f5c66e; stroke-width: .032; stroke-dasharray: .07 .08; opacity: 0; }
+    .yard-svg .socket-powered-mark { fill: none; stroke: #fff3c6; stroke-width: .05; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+    .yard-svg .socket.powered .socket-powered-ring { opacity: 1; filter: url(#smallGlow); }
+    .yard-svg .socket.powered .socket-powered-mark { opacity: 1; filter: url(#smallGlow); }
+    .yard-svg.motion-on .socket.powered .socket-powered-ring { animation: socketPulse 1.7s ease-in-out infinite; }
+    .yard-svg .relay-shadow { fill: rgba(0, 0, 0, .38); }
+    .yard-svg .relay-body { fill: url(#relayFill); stroke: #a96742; stroke-width: .035; }
+    .yard-svg .relay-side { fill: #73432f; opacity: .9; }
+    .yard-svg .relay-panel { fill: #182f32; stroke: rgba(246, 192, 116, .52); stroke-width: .026; }
+    .yard-svg .relay-coil { fill: none; stroke: #e1a462; stroke-width: .036; stroke-linecap: round; }
+    .yard-svg .relay-coil.cool { stroke: #79d1b1; opacity: .72; }
+    .yard-svg .relay-bolt { fill: #e2c38c; }
+    .yard-svg .relay-seated { fill: none; stroke: #f5c66e; stroke-width: .045; stroke-dasharray: .08 .07; opacity: 0; }
+    .yard-svg .relay-group.seated .relay-seated { opacity: 1; filter: url(#smallGlow); }
+    .yard-svg.motion-on .relay-group.is-moving .relay-motion { animation: relayArrive .3s cubic-bezier(.2,.78,.3,1) both; transform-box: fill-box; transform-origin: center; }
+    .yard-svg.motion-on .relay-group.seated:not(.is-moving) .relay-coil { animation: coilBreath 1.5s ease-in-out infinite; }
+    .yard-svg .robot-shadow { fill: rgba(0, 0, 0, .44); }
+    .yard-svg .robot-feet { fill: #52706b; }
+    .yard-svg .robot-body { fill: url(#robotFill); stroke: #72c6a8; stroke-width: .035; }
+    .yard-svg .robot-head { fill: #1c3e43; stroke: #9bd8b8; stroke-width: .033; }
+    .yard-svg .robot-visor { fill: #08171b; stroke: #78e4c0; stroke-width: .025; }
+    .yard-svg .robot-eye { fill: #f5c66e; filter: url(#smallGlow); }
+    .yard-svg .robot-arm { fill: #315b59; stroke: #72c6a8; stroke-width: .025; }
+    .yard-svg .robot-lamp { fill: #eaf2df; filter: url(#smallGlow); }
+    .yard-svg.motion-on .robot-group.idle .robot-motion { animation: robotIdle 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .yard-svg.motion-on .robot-group.effort .robot-motion { animation: robotEffort .28s cubic-bezier(.3,.8,.3,1) both; transform-box: fill-box; transform-origin: center; }
+    .yard-svg.motion-on .robot-group.undoing .robot-motion { animation: robotUndo .32s ease-out both; transform-box: fill-box; transform-origin: center; }
+    .yard-svg .surge-wash { fill: url(#surgeFill); opacity: 0; pointer-events: none; }
+    .yard-svg.surging .surge-wash { opacity: .5; }
+    .yard-svg.motion-on.surging .surge-wash { animation: surgeWash 1.15s ease-out both; }
+    .yard-svg .surge-wave { fill: none; stroke: rgba(255, 239, 181, .78); stroke-width: .045; stroke-dasharray: .18 .12; opacity: 0; pointer-events: none; }
+    .yard-svg.motion-on.surging .surge-wave { animation: surgeWave 1.25s ease-out both; }
+
+    @keyframes currentRun { to { stroke-dashoffset: -.54; } }
+    @keyframes currentTremor { 0%, 100% { opacity: .32; } 50% { opacity: .62; } }
+    @keyframes currentRewind { from { stroke-dashoffset: 0; opacity: .9; } to { stroke-dashoffset: .48; opacity: .32; } }
+    @keyframes socketPulse { 0%, 100% { opacity: .55; transform: scale(.92); transform-box: fill-box; transform-origin: center; } 50% { opacity: 1; transform: scale(1.1); } }
+    @keyframes relayArrive { 0% { opacity: .5; transform: translateY(-.07px) scale(.95); } 65% { transform: translateY(.025px) scale(1.02); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes coilBreath { 0%, 100% { opacity: .72; } 50% { opacity: 1; } }
+    @keyframes robotIdle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-.025px); } }
+    @keyframes robotEffort { 0% { transform: translateX(0); } 45% { transform: translateX(.08px); } 100% { transform: translateX(0); } }
+    @keyframes robotUndo { 0% { opacity: .7; transform: scale(.95); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes surgeWash { 0% { opacity: 0; } 18% { opacity: .58; } 100% { opacity: 0; } }
+    @keyframes surgeWave { 0% { opacity: 0; stroke-dashoffset: 3; } 28% { opacity: 1; } 100% { opacity: 0; stroke-dashoffset: 0; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; }
+      .yard-svg.motion-on .socket.powered .socket-powered-ring,
+      .yard-svg.motion-on:not(.complete) .live-conduit,
+      .yard-svg.motion-on.complete .live-conduit,
+      .yard-svg.motion-on.rewinding .live-conduit,
+      .yard-svg.motion-on .relay-group.is-moving .relay-motion,
+      .yard-svg.motion-on .relay-group.seated:not(.is-moving) .relay-coil,
+      .yard-svg.motion-on .robot-group.idle .robot-motion,
+      .yard-svg.motion-on .robot-group.effort .robot-motion,
+      .yard-svg.motion-on .robot-group.undoing .robot-motion,
+      .yard-svg.motion-on.surging .surge-wash,
+      .yard-svg.motion-on.surging .surge-wave { animation-duration: .001ms; animation-iteration-count: 1; }
+    }
+
+    @media (max-width: 820px) {
+      .game-shell { padding-right: max(10px, var(--safe-right)); padding-left: max(10px, var(--safe-left)); }
+      .game-main { grid-template-columns: minmax(0, 1fr) minmax(215px, 245px); gap: 9px; }
+      .rail-card { padding: 11px; }
+      .mission-card h2 { font-size: 16px; }
+      .mission-copy { font-size: 10px; }
+      .metric { padding: 6px; }
+      .metric-value { font-size: 14px; }
+      .yard-viewport { padding: 10px; }
+    }
+
+    @media (max-width: 700px) {
+      .game-shell { gap: 8px; padding-top: calc(9px + var(--safe-top)); padding-bottom: calc(9px + var(--safe-bottom)); }
+      .topbar { gap: 8px; }
+      .brand-emblem { width: 31px; height: 31px; border-radius: 9px; }
+      .brand-emblem::before { top: 6px; left: 14px; height: 17px; }
+      .brand-emblem::after { top: 14px; left: 6px; width: 17px; }
+      .brand-emblem span { top: 10px; left: 10px; width: 9px; height: 9px; }
+      .overline { font-size: 8px; }
+      h1 { font-size: 18px; }
+      .header-phase { display: none; }
+      .icon-button { min-height: 33px; padding: 0 8px; }
+      .icon-button .button-text { display: none; }
+      .game-main { display: flex; flex-direction: column; gap: 7px; }
+      .yard-column { flex: 1 1 auto; gap: 6px; }
+      .yard-frame { border-radius: 18px; }
+      .yard-topline { min-height: 28px; padding: 0 11px; }
+      .yard-topline, #yard-route { font-size: 8px; }
+      .yard-footer { display: none; }
+      .yard-viewport { padding: 7px; }
+      .intro-tag { top: 8px; padding: 6px 8px; font-size: 8px; }
+      .command-rail { flex: 0 1 auto; max-height: min(245px, 45vh); display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto auto; gap: 7px; overflow-y: auto; overflow-x: hidden; }
+      .mission-card { grid-column: 1 / -1; grid-row: 1; padding: 9px 10px; }
+      .mission-card h2 { margin-top: 4px; font-size: 14px; }
+      .mission-copy { display: none; }
+      .metric-row { margin-top: 8px; gap: 5px; }
+      .metric { padding: 5px 6px; }
+      .metric-label { font-size: 7px; }
+      .metric-value { margin-top: 2px; font-size: 13px; }
+      .control-card { grid-column: 2; grid-row: 2; padding: 7px; }
+      .control-title { display: none; }
+      .dpad { width: 132px; gap: 4px; }
+      .dpad-button { border-radius: 8px; font-size: 19px; }
+      .dpad-center { border-radius: 8px; }
+      .hint { display: none; }
+      .action-card { grid-column: 1; grid-row: 2; align-self: stretch; padding: 7px; }
+      .action-grid { height: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+      .action-button { min-height: 0; justify-content: center; flex-direction: column; gap: 2px; padding: 4px 2px; border-radius: 8px; text-align: center; }
+      .action-button .button-label { flex: 0 0 auto; justify-content: center; font-size: 8px; letter-spacing: .05em; }
+      .action-button .button-glyph { font-size: 14px; }
+      .action-detail, .keycap { display: none; }
+      .rail-foot { display: none; }
+      .completion-panel { right: 9px; bottom: 9px; left: 9px; padding: 13px; border-radius: 15px; }
+      .completion-panel h2 { font-size: 21px; }
+      .completion-copy { margin-top: 6px; font-size: 11px; }
+      .completion-seal { width: 35px; height: 35px; font-size: 15px; }
+      .completion-stats { margin-top: 9px; }
+      .completion-stat { min-width: 0; flex: 1 1 0; padding: 5px 7px; }
+      .completion-actions { margin-top: 10px; gap: 5px; }
+      .completion-actions .primary-action, .completion-actions .secondary-action { min-height: 34px; padding: 0 8px; font-size: 8px; }
+      .board-toast { right: 9px; bottom: 9px; }
+      .modal-layer { align-items: flex-end; padding: 8px; }
+      .drawer { width: 100%; max-height: calc(100dvh - 16px); border-radius: 18px; }
+      .dialog-small { align-self: flex-end; }
+    }
+
+    @media (max-width: 700px) and (max-height: 600px) {
+      .game-shell { gap: 5px; padding-top: calc(5px + var(--safe-top)); padding-bottom: calc(5px + var(--safe-bottom)); }
+      .brand-emblem { width: 27px; height: 27px; }
+      .brand-emblem::before { top: 5px; left: 12px; height: 15px; }
+      .brand-emblem::after { top: 12px; left: 5px; width: 15px; }
+      .brand-emblem span { top: 9px; left: 9px; width: 7px; height: 7px; border-width: 1px; }
+      h1 { font-size: 16px; }
+      .yard-topline { min-height: 24px; }
+      .yard-frame { border-radius: 15px; }
+      .mission-card { padding: 6px 8px; }
+      .metric-row { margin-top: 5px; }
+      .control-card, .action-card { padding: 5px; }
+      .dpad { width: 108px; }
+      .dpad-button { font-size: 16px; }
+      .action-button .button-glyph { font-size: 12px; }
+      .action-button .button-label { font-size: 7px; }
+    }
+
+    @media (min-width: 1000px) and (min-height: 700px) {
+      .game-shell { padding-right: max(28px, var(--safe-right)); padding-left: max(28px, var(--safe-left)); }
+      .yard-viewport { padding: 27px; }
+      .rail-card { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-shell" id="game-shell">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <div class="brand-emblem" aria-hidden="true"><span></span></div>
+        <div class="brand-copy">
+          <p class="overline">MAINTENANCE NETWORK / NIGHT SHIFT</p>
+          <h1>LUMEN <span>YARD</span></h1>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="header-phase" id="header-phase"><span class="status-dot"></span><span id="header-phase-label">GRID LIVE</span></div>
+        <button class="icon-button" id="sound-toggle" type="button" aria-pressed="true" aria-label="Toggle sound">
+          <span class="button-glyph" id="sound-glyph" aria-hidden="true">◖</span><span class="button-text" id="sound-label">Sound on</span>
+        </button>
+        <button class="icon-button" id="settings-open" type="button" aria-label="Open settings">
+          <span class="button-glyph" aria-hidden="true">✦</span><span class="button-text">Settings</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="game-main">
+      <section class="yard-column" aria-label="Live power yard">
+        <div class="yard-frame" id="yard-frame">
+          <div class="yard-topline"><span><strong id="yard-index">01</strong> / 20 &nbsp; <span id="yard-name-top">FIRST LIGHT</span></span><span id="yard-route">SOURCE TREMOR / LIVE</span></div>
+          <div class="yard-viewport" id="yard-viewport">
+            <svg id="yard-svg" tabindex="0" role="img" aria-label="Lumen Yard board" aria-describedby="yard-instructions"></svg>
+            <div class="intro-tag" id="intro-tag"><span></span><strong>RESTORE THE GRID</strong></div>
+            <div class="board-toast" id="board-toast" role="status" aria-live="polite" hidden>
+              <div class="toast-icon" id="toast-icon" aria-hidden="true">↯</div>
+              <div><strong id="toast-title">PATH REFUSED</strong><span id="toast-detail">The relay needs room.</span></div>
+            </div>
+            <section class="completion-panel" id="completion-panel" aria-live="polite" hidden>
+              <div class="completion-heading">
+                <div><p class="completion-kicker" id="completion-kicker">CIRCUIT RESTORED</p><h2 id="completion-title">POWERED</h2></div>
+                <div class="completion-seal" id="completion-seal" aria-hidden="true">✦</div>
+              </div>
+              <p class="completion-copy" id="completion-copy"></p>
+              <div class="completion-stats" id="completion-stats"></div>
+              <div class="completion-actions" id="completion-actions"></div>
+            </section>
+          </div>
+          <div class="yard-footer"><span id="yard-instructions">Tap an adjacent tile, swipe, or use the arrow pad.</span><span id="yard-footer-state">CABLES WAITING</span></div>
+        </div>
+      </section>
+
+      <aside class="command-rail" aria-label="Yard controls">
+        <section class="rail-card mission-card">
+          <div class="rail-title-row"><span class="rail-kicker">CURRENT CIRCUIT</span><span class="phase-chip" id="phase-chip">PLAYING</span></div>
+          <h2 id="level-name">FIRST LIGHT</h2>
+          <p class="mission-copy" id="mission-copy">A quiet yard is waiting for one deliberate push.</p>
+          <div class="metric-row">
+            <div class="metric"><span class="metric-label">Moves</span><span class="metric-value" id="moves-value">0</span></div>
+            <div class="metric"><span class="metric-label">Pushes</span><span class="metric-value" id="pushes-value">0</span></div>
+            <div class="metric"><span class="metric-label">Sockets</span><span class="metric-value signal" id="sockets-value">0 / 1</span></div>
+            <div class="metric"><span class="metric-label">Best</span><span class="metric-value amber" id="best-value">—</span></div>
+          </div>
+        </section>
+
+        <section class="rail-card control-card">
+          <div class="control-title"><strong>Move the robot</strong><span>tap / arrows</span></div>
+          <div class="dpad" aria-label="Movement controls">
+            <button class="dpad-button" type="button" data-direction="up" aria-label="Move up">↑</button>
+            <button class="dpad-button" type="button" data-direction="left" aria-label="Move left">←</button>
+            <div class="dpad-center" aria-hidden="true">·</div>
+            <button class="dpad-button" type="button" data-direction="right" aria-label="Move right">→</button>
+            <button class="dpad-button" type="button" data-direction="down" aria-label="Move down">↓</button>
+          </div>
+          <p class="hint">ARROWS / WASD &nbsp; • &nbsp; U UNDO</p>
+        </section>
+
+        <section class="rail-card action-card">
+          <div class="action-grid">
+            <button class="action-button" id="undo-button" type="button" disabled>
+              <span class="button-glyph" aria-hidden="true">↶</span><span class="button-label">Undo</span><span class="keycap">U</span><span class="action-detail" id="undo-detail">empty</span>
+            </button>
+            <button class="action-button" id="restart-button" type="button">
+              <span class="button-glyph" aria-hidden="true">↻</span><span class="button-label">Restart</span><span class="keycap">R</span>
+            </button>
+            <button class="action-button" id="map-open" type="button">
+              <span class="button-glyph" aria-hidden="true">▦</span><span class="button-label">Board map</span><span class="action-detail" id="map-detail">01 / 20</span>
+            </button>
+          </div>
+        </section>
+
+        <p class="rail-foot"><strong id="attempt-label">ATTEMPT 01</strong> &nbsp;•&nbsp; Every relay has weight. Read the route before you commit.</p>
+      </aside>
+    </main>
+  </div>
+
+  <div class="modal-layer" id="map-layer" hidden>
+    <section class="drawer" role="dialog" aria-modal="true" aria-labelledby="map-title">
+      <header class="drawer-heading">
+        <div><p class="drawer-kicker">CAMPAIGN / 20 CIRCUITS</p><h2 id="map-title">Board map</h2></div>
+        <button class="close-button" id="map-close" type="button" aria-label="Close board map">×</button>
+      </header>
+      <div class="map-summary"><span><strong id="map-completed">0 / 20</strong> restored</span><span id="map-best-summary">Best moves are saved locally</span></div>
+      <div class="level-list" id="level-list" role="list"></div>
+      <p class="drawer-note">Restored circuits keep their best move count. Selecting a board starts a fresh attempt there.</p>
+    </section>
+  </div>
+
+  <div class="modal-layer" id="settings-layer" hidden>
+    <section class="drawer dialog-small" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <header class="drawer-heading">
+        <div><p class="drawer-kicker">YARD CONSOLE</p><h2 id="settings-title">Settings</h2></div>
+        <button class="close-button" id="settings-close" type="button" aria-label="Close settings">×</button>
+      </header>
+      <div class="settings-body">
+        <div class="setting-row"><div><strong>Sound</strong><span class="setting-caption">Steps, relays, and current</span></div><button class="switch-button" id="sound-switch" type="button" role="switch" aria-checked="true" aria-label="Sound"></button></div>
+        <div class="setting-row"><div><strong>Motion</strong><span class="setting-caption">Decorative movement and surge</span></div><button class="switch-button" id="motion-switch" type="button" role="switch" aria-checked="true" aria-label="Motion"></button></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="sr-only" id="live-region" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const PROTOCOL = 'arena.game.v1';
+      const SAVE_KEY = 'lumen-yard-save-v1';
+      const DIRECTIONS = {
+        up: { row: -1, col: 0, angle: 0 },
+        right: { row: 0, col: 1, angle: 90 },
+        down: { row: 1, col: 0, angle: 180 },
+        left: { row: 0, col: -1, angle: -90 }
+      };
+      const DIRECTION_ORDER = ['up', 'down', 'left', 'right'];
+
+      const LEVEL_ROWS = [
+        ['first-light', [
+          '#######',
+          '#...o.#',
+          '#.....#',
+          '#..$..#',
+          '#.@...#',
+          '#.....#',
+          '#######'
+        ]],
+        ['crossfeed', [
+          '########',
+          '#..oo..#',
+          '#......#',
+          '#.$.$..#',
+          '#...@..#',
+          '#......#',
+          '########'
+        ]],
+        ['black-start', [
+          '########',
+          '#.o.o.o#',
+          '#......#',
+          '#.$.$$.#',
+          '#...@..#',
+          '#......#',
+          '########'
+        ]],
+        ['split-bus', [
+          '########',
+          '#.o..o.#',
+          '#......#',
+          '#..##..#',
+          '#.$..$.#',
+          '#...@..#',
+          '#......#',
+          '########'
+        ]],
+        ['relay-bend', [
+          '########',
+          '#..o...#',
+          '#....o.#',
+          '#..#...#',
+          '#.$.$..#',
+          '#..@...#',
+          '#......#',
+          '########'
+        ]],
+        ['service-loop', [
+          '#########',
+          '#..o.o..#',
+          '#.......#',
+          '#.#...#.#',
+          '#.$.$...#',
+          '#...@...#',
+          '#.......#',
+          '#########'
+        ]],
+        ['cold-iron', [
+          '#########',
+          '#..o..o.#',
+          '#o......#',
+          '#...#...#',
+          '#.$$.$..#',
+          '#...@...#',
+          '#.......#',
+          '#########'
+        ]],
+        ['brownout', [
+          '#########',
+          '#..ooo..#',
+          '#.......#',
+          '#..#.#..#',
+          '#.$.$.$.#',
+          '#...@...#',
+          '#.......#',
+          '#########'
+        ]],
+        ['dead-bus', [
+          '#########',
+          '#..ooo..#',
+          '#.#...#.#',
+          '#.......#',
+          '#.$$.$..#',
+          '#....@..#',
+          '#.......#',
+          '#########'
+        ]],
+        ['copper-maze', [
+          '#########',
+          '#o..o..o#',
+          '#.......#',
+          '#.#.#.#.#',
+          '#.$.$.$.#',
+          '#...@...#',
+          '#.......#',
+          '#########'
+        ]],
+        ['backfeed', [
+          '#########',
+          '#o.o....#',
+          '#...o...#',
+          '#.#...#.#',
+          '#.$.$.$.#',
+          '#..@....#',
+          '#.......#',
+          '#########'
+        ]],
+        ['load-shed', [
+          '#########',
+          '#..o.o..#',
+          '#o......#',
+          '#..##...#',
+          '#.$.$.$.#',
+          '#....@..#',
+          '#.......#',
+          '#########'
+        ]],
+        ['last-circuit', [
+          '##########',
+          '#..o.oo..#',
+          '#....o...#',
+          '#..##....#',
+          '#.$.$.$..#',
+          '#...$@...#',
+          '#........#',
+          '##########'
+        ]],
+        ['switchyard', [
+          '#########',
+          '#..oooo.#',
+          '#.......#',
+          '#.#.#...#',
+          '#.$.$.$.#',
+          '#..$@...#',
+          '#.......#',
+          '#########'
+        ]],
+        ['phase-lock', [
+          '#########',
+          '#o.o.o..#',
+          '#.......#',
+          '#..###..#',
+          '#.$...$.#',
+          '#...$@..#',
+          '#.......#',
+          '#########'
+        ]],
+        ['auxiliary', [
+          '##########',
+          '#..o.oo..#',
+          '#o.......#',
+          '#..#..#..#',
+          '#.$.$.$..#',
+          '#...$@...#',
+          '#........#',
+          '##########'
+        ]],
+        ['redline', [
+          '##########',
+          '#o.o..o.o#',
+          '#........#',
+          '#.#....#.#',
+          '#.$.$.$..#',
+          '#...$@...#',
+          '#........#',
+          '##########'
+        ]],
+        ['island-mode', [
+          '##########',
+          '#..oooo..#',
+          '#........#',
+          '#..#..#..#',
+          '#.$.$.$..#',
+          '#..$..@..#',
+          '#........#',
+          '##########'
+        ]],
+        ['cascade', [
+          '##########',
+          '#o..oo..o#',
+          '#........#',
+          '#.#.##.#.#',
+          '#.$.$.$..#',
+          '#....$@..#',
+          '#........#',
+          '##########'
+        ]],
+        ['dawn-sequence', [
+          '##########',
+          '#o..oo..o#',
+          '#...##...#',
+          '#........#',
+          '#.$.$.$..#',
+          '#...$@...#',
+          '#........#',
+          '##########'
+        ]]
+      ];
+
+      const LEVEL_NOTES = [
+        'opening circuit',
+        'two relay order',
+        'shared-yard start',
+        'split access',
+        'around the bend',
+        'service route',
+        'cold storage',
+        'load balance',
+        'dead channel',
+        'conduit maze',
+        'return current',
+        'shed the load',
+        'final bank',
+        'switch control',
+        'phase alignment',
+        'auxiliary feed',
+        'redline route',
+        'island relay',
+        'cascade path',
+        'the last dawn'
+      ];
+
+      function point(row, col) { return { row, col }; }
+      function key(row, col) { return row + ',' + col; }
+      function copyPoint(p) { return { row: p.row, col: p.col }; }
+      function copyPoints(points) { return points.map(copyPoint); }
+      function sortPoints(points) { return points.slice().sort((a, b) => a.row - b.row || a.col - b.col); }
+      function equalPoint(a, b) { return a && b && a.row === b.row && a.col === b.col; }
+
+      function parseLevel(id, rows) {
+        const height = rows.length;
+        const width = rows[0].length;
+        const walls = [];
+        const goals = [];
+        const crates = [];
+        let player = null;
+        rows.forEach((row, rowIndex) => {
+          if (row.length !== width) throw new Error('Invalid board width: ' + id);
+          Array.from(row).forEach((cell, colIndex) => {
+            const here = point(rowIndex, colIndex);
+            if (cell === '#') walls.push(here);
+            if (cell === 'o') goals.push(here);
+            if (cell === '$') crates.push(here);
+            if (cell === '@') player = here;
+          });
+        });
+        if (!player || !goals.length || goals.length !== crates.length) throw new Error('Invalid board pieces: ' + id);
+        return {
+          id,
+          rows: rows.slice(),
+          width,
+          height,
+          walls: sortPoints(walls),
+          goals: sortPoints(goals),
+          startCrates: sortPoints(crates),
+          startPlayer: copyPoint(player),
+          wallSet: new Set(walls.map(p => key(p.row, p.col))),
+          goalSet: new Set(goals.map(p => key(p.row, p.col)))
+        };
+      }
+
+      const LEVELS = LEVEL_ROWS.map(([id, rows]) => parseLevel(id, rows));
+      const LEVEL_BY_ID = new Map(LEVELS.map(level => [level.id, level]));
+
+      function levelNumber(id) {
+        return LEVELS.findIndex(level => level.id === id) + 1;
+      }
+
+      function displayName(id) {
+        return id.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+      }
+
+      function currentLevel() { return LEVEL_BY_ID.get(internal.levelId); }
+
+      function makeAttempt(id) {
+        const level = LEVEL_BY_ID.get(id);
+        return {
+          levelId: id,
+          player: copyPoint(level.startPlayer),
+          crates: copyPoints(level.startCrates),
+          moveCount: 0,
+          pushCount: 0,
+          phase: 'playing',
+          outcome: null,
+          history: []
+        };
+      }
+
+      function safeMotionPreference() {
+        try {
+          return !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        } catch (error) {
+          return true;
+        }
+      }
+
+      function defaultSave() {
+        return { completed: {}, bests: {}, lastLevel: 'first-light', soundOn: true, motionOn: safeMotionPreference() };
+      }
+
+      function readSave() {
+        const fallback = defaultSave();
+        try {
+          const raw = window.localStorage && window.localStorage.getItem(SAVE_KEY);
+          if (!raw) return fallback;
+          const parsed = JSON.parse(raw);
+          return {
+            completed: parsed && parsed.completed && typeof parsed.completed === 'object' ? parsed.completed : {},
+            bests: parsed && parsed.bests && typeof parsed.bests === 'object' ? parsed.bests : {},
+            lastLevel: parsed && LEVEL_BY_ID.has(parsed.lastLevel) ? parsed.lastLevel : fallback.lastLevel,
+            soundOn: parsed && typeof parsed.soundOn === 'boolean' ? parsed.soundOn : fallback.soundOn,
+            motionOn: parsed && typeof parsed.motionOn === 'boolean' ? parsed.motionOn : fallback.motionOn
+          };
+        } catch (error) {
+          return fallback;
+        }
+      }
+
+      let saveData = readSave();
+      let canPersist = true;
+      let replaySeed = null;
+      let revision = 0;
+      let attempt = 1;
+      let internal = makeAttempt(saveData.lastLevel);
+      let introVisible = internal.levelId === 'first-light';
+      let lastDirection = 'down';
+      let visualEffect = null;
+      let effectTimer = null;
+      let toastTimer = null;
+      let audioContext = null;
+      let audioUnlocked = false;
+      let previousFocus = null;
+      let activeModal = null;
+      let pointerStart = null;
+      let activeBridge = null;
+
+      const els = {
+        shell: document.getElementById('game-shell'),
+        frame: document.getElementById('yard-frame'),
+        viewport: document.getElementById('yard-viewport'),
+        svg: document.getElementById('yard-svg'),
+        intro: document.getElementById('intro-tag'),
+        toast: document.getElementById('board-toast'),
+        toastIcon: document.getElementById('toast-icon'),
+        toastTitle: document.getElementById('toast-title'),
+        toastDetail: document.getElementById('toast-detail'),
+        completion: document.getElementById('completion-panel'),
+        completionKicker: document.getElementById('completion-kicker'),
+        completionTitle: document.getElementById('completion-title'),
+        completionCopy: document.getElementById('completion-copy'),
+        completionSeal: document.getElementById('completion-seal'),
+        completionStats: document.getElementById('completion-stats'),
+        completionActions: document.getElementById('completion-actions'),
+        yardIndex: document.getElementById('yard-index'),
+        yardNameTop: document.getElementById('yard-name-top'),
+        yardRoute: document.getElementById('yard-route'),
+        yardFooterState: document.getElementById('yard-footer-state'),
+        headerPhase: document.getElementById('header-phase'),
+        headerPhaseLabel: document.getElementById('header-phase-label'),
+        soundToggle: document.getElementById('sound-toggle'),
+        soundGlyph: document.getElementById('sound-glyph'),
+        soundLabel: document.getElementById('sound-label'),
+        levelName: document.getElementById('level-name'),
+        phaseChip: document.getElementById('phase-chip'),
+        missionCopy: document.getElementById('mission-copy'),
+        moves: document.getElementById('moves-value'),
+        pushes: document.getElementById('pushes-value'),
+        sockets: document.getElementById('sockets-value'),
+        best: document.getElementById('best-value'),
+        undo: document.getElementById('undo-button'),
+        undoDetail: document.getElementById('undo-detail'),
+        restart: document.getElementById('restart-button'),
+        mapOpen: document.getElementById('map-open'),
+        mapDetail: document.getElementById('map-detail'),
+        attemptLabel: document.getElementById('attempt-label'),
+        mapLayer: document.getElementById('map-layer'),
+        mapClose: document.getElementById('map-close'),
+        levelList: document.getElementById('level-list'),
+        mapCompleted: document.getElementById('map-completed'),
+        mapBestSummary: document.getElementById('map-best-summary'),
+        settingsLayer: document.getElementById('settings-layer'),
+        settingsOpen: document.getElementById('settings-open'),
+        settingsClose: document.getElementById('settings-close'),
+        soundSwitch: document.getElementById('sound-switch'),
+        motionSwitch: document.getElementById('motion-switch'),
+        liveRegion: document.getElementById('live-region')
+      };
+
+      function persist() {
+        if (!canPersist) return;
+        try {
+          window.localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+        } catch (error) {
+          canPersist = false;
+        }
+      }
+
+      function completedCount() {
+        return LEVELS.reduce((count, level) => count + (saveData.completed[level.id] ? 1 : 0), 0);
+      }
+
+      function campaignComplete() {
+        return completedCount() === LEVELS.length;
+      }
+
+      function totalBestMoves() {
+        return LEVELS.reduce((sum, level) => sum + (Number.isInteger(saveData.bests[level.id]) ? saveData.bests[level.id] : 0), 0);
+      }
+
+      function crateIndexAt(row, col) {
+        return internal.crates.findIndex(crate => crate.row === row && crate.col === col);
+      }
+
+      function inBounds(row, col) {
+        const level = currentLevel();
+        return row >= 0 && row < level.height && col >= 0 && col < level.width;
+      }
+
+      function isWall(row, col) {
+        return !inBounds(row, col) || currentLevel().wallSet.has(key(row, col));
+      }
+
+      function poweredGoalCount() {
+        const goals = currentLevel().goalSet;
+        return internal.crates.reduce((count, crate) => count + (goals.has(key(crate.row, crate.col)) ? 1 : 0), 0);
+      }
+
+      function moveCheck(direction) {
+        const delta = DIRECTIONS[direction];
+        if (!delta) return { legal: false, code: 'invalid_direction', message: 'Unknown movement direction.' };
+        if (internal.phase !== 'playing') return { legal: false, code: 'post_completion', message: 'This yard is powered. Undo or restart to move.' };
+        const next = point(internal.player.row + delta.row, internal.player.col + delta.col);
+        if (isWall(next.row, next.col)) return { legal: false, code: 'blocked_move', message: 'That route is closed.' };
+        const crateIndex = crateIndexAt(next.row, next.col);
+        if (crateIndex < 0) return { legal: true, push: false, next, crateIndex: -1 };
+        const beyond = point(next.row + delta.row, next.col + delta.col);
+        if (isWall(beyond.row, beyond.col) || crateIndexAt(beyond.row, beyond.col) >= 0) {
+          return { legal: false, code: 'blocked_push', message: 'The relay needs room beyond it.' };
+        }
+        return { legal: true, push: true, next, beyond, crateIndex };
+      }
+
+      function captureHistory() {
+        return {
+          player: copyPoint(internal.player),
+          crates: copyPoints(internal.crates),
+          moveCount: internal.moveCount,
+          pushCount: internal.pushCount,
+          phase: internal.phase,
+          outcome: internal.outcome
+        };
+      }
+
+      function restoreHistory(previous) {
+        internal.player = copyPoint(previous.player);
+        internal.crates = copyPoints(previous.crates);
+        internal.moveCount = previous.moveCount;
+        internal.pushCount = previous.pushCount;
+        internal.phase = previous.phase;
+        internal.outcome = previous.outcome;
+      }
+
+      function errorWithCode(code, message) {
+        const error = new Error(message);
+        error.code = code;
+        return error;
+      }
+
+      function visibleState() {
+        const level = currentLevel();
+        return {
+          revision,
+          attempt,
+          phase: internal.phase,
+          outcome: internal.outcome,
+          levelId: internal.levelId,
+          width: level.width,
+          height: level.height,
+          walls: copyPoints(level.walls),
+          goals: copyPoints(level.goals),
+          crates: copyPoints(sortPoints(internal.crates)),
+          player: copyPoint(internal.player),
+          poweredGoals: poweredGoalCount(),
+          moveCount: internal.moveCount,
+          pushCount: internal.pushCount,
+          undoAvailable: internal.history.length > 0,
+          legalActions: legalActions()
+        };
+      }
+
+      function legalActions() {
+        const actions = [];
+        if (internal.phase === 'playing') {
+          DIRECTION_ORDER.forEach(direction => {
+            if (moveCheck(direction).legal) actions.push({ type: 'move', direction });
+          });
+        }
+        if (internal.history.length > 0) actions.push({ type: 'undo' });
+        LEVELS.forEach(level => actions.push({ type: 'select_level', levelId: level.id }));
+        return actions;
+      }
+
+      function clearEffectSoon(delay = 520) {
+        if (effectTimer) window.clearTimeout(effectTimer);
+        effectTimer = window.setTimeout(() => {
+          visualEffect = null;
+          renderScene();
+        }, delay);
+      }
+
+      function markCompleted() {
+        const id = internal.levelId;
+        saveData.completed[id] = true;
+        const existing = saveData.bests[id];
+        if (!Number.isInteger(existing) || internal.moveCount < existing) saveData.bests[id] = internal.moveCount;
+        saveData.lastLevel = id;
+        persist();
+      }
+
+      function commitMove(direction, source) {
+        const check = moveCheck(direction);
+        if (!check.legal) throw errorWithCode(check.code, check.message);
+        dismissToast();
+        introVisible = false;
+        internal.history.push(captureHistory());
+        internal.player = copyPoint(check.next);
+        lastDirection = direction;
+        internal.moveCount += 1;
+        if (check.push) {
+          internal.crates[check.crateIndex] = copyPoint(check.beyond);
+          internal.pushCount += 1;
+        }
+        let completedNow = false;
+        if (poweredGoalCount() === currentLevel().goals.length) {
+          internal.phase = 'complete';
+          internal.outcome = 'powered';
+          completedNow = true;
+          markCompleted();
+        }
+        saveData.lastLevel = internal.levelId;
+        persist();
+        revision += 1;
+        visualEffect = { kind: completedNow ? 'surge' : (check.push ? 'push' : 'step'), target: check.push ? check.beyond : check.next };
+        renderAll();
+        if (completedNow && source === 'human') {
+          window.setTimeout(() => {
+            const primary = els.completionActions.querySelector ? els.completionActions.querySelector('.primary-action') : null;
+            if (primary) primary.focus();
+          }, 0);
+        }
+        clearEffectSoon(completedNow ? 1450 : 480);
+        if (source === 'human') {
+          if (completedNow) playSound('surge');
+          else if (check.push && poweredGoalCount() > 0 && currentLevel().goalSet.has(key(check.beyond.row, check.beyond.col))) playSound('seat');
+          else playSound(check.push ? 'push' : 'step');
+        }
+        return visibleState();
+      }
+
+      function commitUndo(source) {
+        if (!internal.history.length) throw errorWithCode('nothing_to_undo', 'There is no move to undo.');
+        dismissToast();
+        const previous = internal.history.pop();
+        restoreHistory(previous);
+        revision += 1;
+        saveData.lastLevel = internal.levelId;
+        persist();
+        visualEffect = { kind: 'undo', target: copyPoint(internal.player) };
+        renderAll();
+        clearEffectSoon(440);
+        if (source === 'human') playSound('undo');
+        return visibleState();
+      }
+
+      function commitSelect(levelId, source) {
+        if (!LEVEL_BY_ID.has(levelId)) throw errorWithCode('unknown_level', 'That board does not exist.');
+        dismissToast();
+        internal = makeAttempt(levelId);
+        attempt += 1;
+        lastDirection = 'down';
+        introVisible = false;
+        saveData.lastLevel = levelId;
+        persist();
+        revision += 1;
+        visualEffect = { kind: 'select', target: null };
+        renderAll();
+        clearEffectSoon(260);
+        if (source === 'human') playSound('select');
+        return visibleState();
+      }
+
+      function commitRestart(source) {
+        dismissToast();
+        internal = makeAttempt(internal.levelId);
+        attempt += 1;
+        lastDirection = 'down';
+        introVisible = false;
+        saveData.lastLevel = internal.levelId;
+        persist();
+        revision += 1;
+        visualEffect = { kind: 'restart', target: null };
+        renderAll();
+        clearEffectSoon(260);
+        if (source === 'human') playSound('select');
+        return visibleState();
+      }
+
+      function acceptAction(action, source) {
+        if (!action || typeof action !== 'object' || typeof action.type !== 'string') {
+          throw errorWithCode('illegal_action', 'Action shape is not recognized.');
+        }
+        if (action.type === 'move') {
+          if (typeof action.direction !== 'string' || !DIRECTIONS[action.direction]) throw errorWithCode('invalid_direction', 'Movement direction is not recognized.');
+          return commitMove(action.direction, source);
+        }
+        if (action.type === 'undo') {
+          return commitUndo(source);
+        }
+        if (action.type === 'select_level') {
+          if (typeof action.levelId !== 'string') throw errorWithCode('unknown_level', 'A board id is required.');
+          return commitSelect(action.levelId, source);
+        }
+        throw errorWithCode('illegal_action', 'That action is not available.');
+      }
+
+      function resetGame(seed) {
+        dismissToast();
+        replaySeed = seed;
+        revision = 0;
+        attempt = 1;
+        internal = makeAttempt('first-light');
+        lastDirection = 'down';
+        introVisible = true;
+        visualEffect = null;
+        if (effectTimer) window.clearTimeout(effectTimer);
+        saveData.lastLevel = 'first-light';
+        persist();
+        renderAll();
+        return visibleState();
+      }
+
+      function beginInput() {
+        if (introVisible) {
+          introVisible = false;
+          renderScene();
+        }
+        unlockAudio();
+      }
+
+      function tryMove(direction) {
+        beginInput();
+        try {
+          return acceptAction({ type: 'move', direction }, 'human');
+        } catch (error) {
+          showRefusal(error);
+          return null;
+        }
+      }
+
+      function tryUndo() {
+        beginInput();
+        try {
+          return acceptAction({ type: 'undo' }, 'human');
+        } catch (error) {
+          showRefusal(error);
+          return null;
+        }
+      }
+
+      function tryRestart() {
+        beginInput();
+        return commitRestart('human');
+      }
+
+      function trySelect(levelId) {
+        beginInput();
+        try {
+          const result = acceptAction({ type: 'select_level', levelId }, 'human');
+          closeModal();
+          return result;
+        } catch (error) {
+          showRefusal(error);
+          return null;
+        }
+      }
+
+      function showRefusal(error) {
+        const code = error && error.code;
+        if (code === 'blocked_push') showToast('PUSH REFUSED', 'The relay needs room beyond it.', '×');
+        else if (code === 'blocked_move') showToast('PATH REFUSED', 'A wall closes that route.', '×');
+        else if (code === 'post_completion') showToast('YARD IS POWERED', 'Undo or restart to keep working.', '✦');
+        else if (code === 'nothing_to_undo') showToast('CURRENT HOLDS', 'Make a move before rewinding.', '↶');
+        else showToast('ACTION REFUSED', error && error.message ? error.message : 'That action is not available.', '×');
+        playSound('blocked');
+      }
+
+      function showToast(title, detail, icon) {
+        if (toastTimer) window.clearTimeout(toastTimer);
+        els.toastIcon.textContent = icon || '↯';
+        els.toastTitle.textContent = title;
+        els.toastDetail.textContent = detail;
+        els.toast.hidden = false;
+        requestAnimationFrame(() => els.toast.classList.add('visible'));
+        els.liveRegion.textContent = title + '. ' + detail;
+        toastTimer = window.setTimeout(() => {
+          els.toast.classList.remove('visible');
+          window.setTimeout(() => { if (!els.toast.classList.contains('visible')) els.toast.hidden = true; }, 200);
+        }, 1800);
+      }
+
+      function dismissToast() {
+        if (toastTimer) window.clearTimeout(toastTimer);
+        toastTimer = null;
+        els.toast.classList.remove('visible');
+        els.toast.hidden = true;
+      }
+
+      function countBestLabel(id) {
+        return Number.isInteger(saveData.bests[id]) ? String(saveData.bests[id]) : '—';
+      }
+
+      function renderScene() {
+        const level = currentLevel();
+        const power = internal.phase === 'complete';
+        const effectKind = visualEffect && visualEffect.kind;
+        const svgClasses = ['yard-svg', saveData.motionOn ? 'motion-on' : 'motion-off'];
+        if (power) svgClasses.push('complete');
+        if (effectKind === 'surge') svgClasses.push('surging');
+        if (effectKind === 'undo') svgClasses.push('rewinding');
+        els.svg.setAttribute('viewBox', '0 0 ' + level.width + ' ' + level.height);
+        els.svg.setAttribute('aria-label', displayName(level.id) + ' power yard. ' + poweredGoalCount() + ' of ' + level.goals.length + ' sockets powered.');
+        els.svg.setAttribute('class', svgClasses.join(' '));
+        els.frame.classList.toggle('is-complete', power);
+        els.intro.hidden = !(introVisible && internal.levelId === 'first-light' && internal.phase === 'playing');
+
+        const bits = [];
+        bits.push('<defs>');
+        bits.push('<linearGradient id="yardBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#132c31"/><stop offset=".55" stop-color="#0b1e24"/><stop offset="1" stop-color="#071217"/></linearGradient>');
+        bits.push('<linearGradient id="floorFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d3939"/><stop offset="1" stop-color="#12292d"/></linearGradient>');
+        bits.push('<linearGradient id="floorFillAlt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#203d3c"/><stop offset="1" stop-color="#132b30"/></linearGradient>');
+        bits.push('<linearGradient id="wallFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#203238"/><stop offset="1" stop-color="#111f26"/></linearGradient>');
+        bits.push('<linearGradient id="relayFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d09459"/><stop offset=".22" stop-color="#9e5d3c"/><stop offset="1" stop-color="#55352c"/></linearGradient>');
+        bits.push('<linearGradient id="robotFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#83d4b1"/><stop offset=".42" stop-color="#367c70"/><stop offset="1" stop-color="#1b4143"/></linearGradient>');
+        bits.push('<radialGradient id="surgeFill" cx="50%" cy="45%" r="70%"><stop offset="0" stop-color="#fff2bd" stop-opacity=".8"/><stop offset=".5" stop-color="#f5c66e" stop-opacity=".18"/><stop offset="1" stop-color="#f5c66e" stop-opacity="0"/></radialGradient>');
+        bits.push('<filter id="smallGlow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation=".045" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>');
+        bits.push('</defs>');
+        bits.push('<rect class="yard-surface" x="0" y="0" width="' + level.width + '" height="' + level.height + '" rx=".18"/>');
+        bits.push('<g class="conduits">' + renderConduits(level) + '</g>');
+        bits.push('<g class="tiles">');
+        level.rows.forEach((row, rowIndex) => {
+          Array.from(row).forEach((cell, colIndex) => {
+            if (cell === '#') bits.push(renderWall(colIndex, rowIndex));
+            else bits.push(renderFloor(colIndex, rowIndex, (rowIndex * 5 + colIndex * 3) % 3 === 0));
+          });
+        });
+        bits.push('</g>');
+        bits.push('<g class="goals">' + level.goals.map(goal => renderGoal(goal, level.goalSet.has(key(goal.row, goal.col)) && crateIndexAt(goal.row, goal.col) >= 0)).join('') + '</g>');
+        bits.push('<g class="relays">' + sortPoints(internal.crates).map(crate => {
+          const seated = level.goalSet.has(key(crate.row, crate.col));
+          const moving = visualEffect && (visualEffect.kind === 'push' || visualEffect.kind === 'undo') && equalPoint(visualEffect.target, crate);
+          return renderCrate(crate, seated, moving);
+        }).join('') + '</g>');
+        const angle = DIRECTIONS[lastDirection].angle;
+        const robotMode = visualEffect && visualEffect.kind === 'push' ? 'effort' : (visualEffect && visualEffect.kind === 'undo' ? 'undoing' : 'idle');
+        bits.push('<g class="robot-group ' + robotMode + '" transform="translate(' + internal.player.col + ' ' + internal.player.row + ') rotate(' + angle + ' .5 .5)"><g class="robot-motion">');
+        bits.push('<ellipse class="robot-shadow" cx=".5" cy=".86" rx=".35" ry=".1"/>');
+        bits.push('<rect class="robot-feet" x=".25" y=".68" width=".16" height=".18" rx=".05"/><rect class="robot-feet" x=".59" y=".68" width=".16" height=".18" rx=".05"/>');
+        bits.push('<rect class="robot-body" x=".19" y=".31" width=".62" height=".47" rx=".16"/>');
+        bits.push('<rect class="robot-arm" x=".1" y=".42" width=".14" height=".28" rx=".06"/><rect class="robot-arm" x=".76" y=".42" width=".14" height=".28" rx=".06"/>');
+        bits.push('<rect class="robot-head" x=".24" y=".12" width=".52" height=".35" rx=".13"/>');
+        bits.push('<rect class="robot-visor" x=".3" y=".2" width=".4" height=".11" rx=".04"/><circle class="robot-eye" cx=".4" cy=".255" r=".035"/><circle class="robot-eye" cx=".6" cy=".255" r=".035"/>');
+        bits.push('<rect class="robot-lamp" x=".455" y=".055" width=".09" height=".08" rx=".035"/>');
+        bits.push('</g></g>');
+        if (power) {
+          bits.push('<g class="surge-layer"><rect class="surge-wash" x="0" y="0" width="' + level.width + '" height="' + level.height + '"/><path class="surge-wave" d="M-.4 ' + (level.height * .72).toFixed(2) + ' C' + (level.width * .22).toFixed(2) + ' ' + (level.height * .15).toFixed(2) + ', ' + (level.width * .56).toFixed(2) + ' ' + (level.height * .92).toFixed(2) + ', ' + (level.width + .4) + ' ' + (level.height * .25).toFixed(2) + '"/></g>');
+        }
+        els.svg.innerHTML = bits.join('');
+      }
+
+      function renderConduits(level) {
+        const bits = [];
+        level.rows.forEach((row, rowIndex) => {
+          let start = null;
+          for (let col = 0; col <= level.width; col += 1) {
+            const open = col < level.width && row[col] !== '#';
+            if (open && start === null) start = col;
+            if ((!open || col === level.width) && start !== null) {
+              const end = col - 1;
+              if (end - start >= 1) bits.push('<path class="cable-line" d="M' + (start + .13) + ' ' + (rowIndex + .82) + ' H' + (end + .87) + '"/><path class="live-conduit" d="M' + (start + .15) + ' ' + (rowIndex + .78) + ' H' + (end + .85) + '"/>');
+              start = null;
+            }
+          }
+        });
+        for (let col = 0; col < level.width; col += 2) {
+          let start = null;
+          for (let row = 0; row <= level.height; row += 1) {
+            const open = row < level.height && level.rows[row][col] !== '#';
+            if (open && start === null) start = row;
+            if ((!open || row === level.height) && start !== null) {
+              const end = row - 1;
+              if (end - start >= 2) bits.push('<path class="cable-line" d="M' + (col + .18) + ' ' + (start + .13) + ' V' + (end + .87) + '"/><path class="live-conduit" d="M' + (col + .22) + ' ' + (start + .15) + ' V' + (end + .85) + '"/>');
+              start = null;
+            }
+          }
+        }
+        return bits.join('');
+      }
+
+      function renderFloor(col, row, alternate) {
+        const grain = row % 2 === 0 ? '<path class="floor-grain" d="M' + (col + .18) + ' ' + (row + .25) + ' h.18 M' + (col + .63) + ' ' + (row + .65) + ' h.14"/>' : '<path class="floor-grain" d="M' + (col + .42) + ' ' + (row + .22) + ' h.2 M' + (col + .12) + ' ' + (row + .7) + ' h.12"/>';
+        return '<g><rect class="floor-tile' + (alternate ? ' alt' : '') + '" x="' + col + '" y="' + row + '" width="1" height="1"/><g>' + grain + '</g></g>';
+      }
+
+      function renderWall(col, row) {
+        const top = row === 0 || currentLevel().rows[row - 1][col] !== '#';
+        const left = col === 0 || currentLevel().rows[row][col - 1] !== '#';
+        const seam = '<path class="wall-seam" d="M' + col + ' ' + (row + .5) + ' h1"/><path class="wall-seam" d="M' + (col + .5) + ' ' + row + ' v1"/>';
+        const bolt = (top || left) ? '<circle class="wall-bolt" cx="' + (col + (left ? .2 : .78)) + '" cy="' + (row + (top ? .2 : .78)) + '" r=".035"/>' : '';
+        return '<g><rect class="wall-tile" x="' + col + '" y="' + row + '" width="1" height="1"/><rect class="wall-face" x="' + (col + .07) + '" y="' + (row + .07) + '" width=".86" height=".86" rx=".07"/>' + seam + bolt + '</g>';
+      }
+
+      function renderGoal(goal, powered) {
+        const state = powered ? ' powered' : '';
+        return '<g class="socket' + state + '" transform="translate(' + goal.col + ' ' + goal.row + ')"><circle class="socket-shadow" cx=".5" cy=".57" r=".38"/><circle class="socket-plate" cx=".5" cy=".5" r=".34"/><circle class="socket-ring" cx=".5" cy=".5" r=".28"/><circle class="socket-inner" cx=".5" cy=".5" r=".17"/><path class="socket-cross" d="M.42 .5 h.16 M.5 .42 v.16"/><circle class="socket-powered-ring" cx=".5" cy=".5" r=".37"/><path class="socket-powered-mark" d="M.42 .51 l.05 .05 .11 -.13"/></g>';
+      }
+
+      function renderCrate(crate, seated, moving) {
+        return '<g class="relay-group' + (seated ? ' seated' : '') + (moving ? ' is-moving' : '') + '" transform="translate(' + crate.col + ' ' + crate.row + ')"><g class="relay-motion"><ellipse class="relay-shadow" cx=".5" cy=".84" rx=".37" ry=".1"/><rect class="relay-body" x=".13" y=".16" width=".74" height=".64" rx=".13"/><path class="relay-side" d="M.13 .29 h.1 v.42 h-.1z M.77 .29 h-.1 v.42 h.1z"/><rect class="relay-panel" x=".27" y=".28" width=".46" height=".4" rx=".06"/><path class="relay-coil" d="M.36 .39 c.07 -.08 .14 -.08 .21 0 s.14 .08 .21 0 M.36 .51 c.07 -.08 .14 -.08 .21 0 s.14 .08 .21 0 M.36 .61 c.07 -.08 .14 -.08 .21 0 s.14 .08 .21 0"/><path class="relay-coil cool" d="M.47 .28 v.4"/><circle class="relay-bolt" cx=".22" cy=".25" r=".035"/><circle class="relay-bolt" cx=".78" cy=".25" r=".035"/><circle class="relay-bolt" cx=".22" cy=".71" r=".035"/><circle class="relay-bolt" cx=".78" cy=".71" r=".035"/><circle class="relay-seated" cx=".5" cy=".5" r=".43"/></g></g>';
+      }
+
+      function renderHud() {
+        const level = currentLevel();
+        const index = levelNumber(level.id);
+        const powered = poweredGoalCount();
+        const complete = internal.phase === 'complete';
+        const best = saveData.bests[level.id];
+        els.yardIndex.textContent = String(index).padStart(2, '0');
+        els.yardNameTop.textContent = displayName(level.id).toUpperCase();
+        els.yardRoute.textContent = complete ? 'ALL CABLES / CARRYING' : 'SOURCE TREMOR / LIVE';
+        els.yardFooterState.textContent = complete ? 'GRID RESTORED' : (powered ? powered + ' SOCKET' + (powered === 1 ? '' : 'S') + ' ONLINE' : 'CABLES WAITING');
+        els.headerPhaseLabel.textContent = complete ? 'GRID POWERED' : 'GRID LIVE';
+        els.headerPhase.classList.toggle('is-powered', complete);
+        els.levelName.textContent = displayName(level.id).toUpperCase();
+        els.phaseChip.textContent = complete ? 'POWERED' : 'PLAYING';
+        els.phaseChip.classList.toggle('powered', complete);
+        if (complete) els.missionCopy.textContent = 'Every relay is seated. Current is moving through the yard.';
+        else if (internal.moveCount === 0) els.missionCopy.textContent = 'A quiet yard is waiting for one deliberate push.';
+        else els.missionCopy.textContent = 'Read the open routes, then commit. A relay cannot be pulled.';
+        els.moves.textContent = internal.moveCount;
+        els.pushes.textContent = internal.pushCount;
+        els.sockets.textContent = powered + ' / ' + level.goals.length;
+        els.best.textContent = Number.isInteger(best) ? best : '—';
+        els.undo.disabled = internal.history.length === 0;
+        els.undoDetail.textContent = internal.history.length ? 'ready' : 'empty';
+        document.querySelectorAll('.dpad-button').forEach(button => { button.disabled = complete; });
+        els.mapDetail.textContent = String(index).padStart(2, '0') + ' / 20';
+        els.attemptLabel.textContent = 'ATTEMPT ' + String(attempt).padStart(2, '0');
+        els.soundToggle.setAttribute('aria-pressed', String(saveData.soundOn));
+        els.soundLabel.textContent = saveData.soundOn ? 'Sound on' : 'Sound off';
+        els.soundGlyph.textContent = saveData.soundOn ? '◖' : '×';
+        els.soundSwitch.setAttribute('aria-checked', String(saveData.soundOn));
+        els.motionSwitch.setAttribute('aria-checked', String(saveData.motionOn));
+      }
+
+      function renderMap() {
+        const restored = completedCount();
+        els.mapCompleted.textContent = restored + ' / 20';
+        els.mapBestSummary.textContent = restored ? (canPersist ? 'Best moves are saved locally' : 'Best moves kept for this visit') : 'No circuits restored yet';
+        els.levelList.innerHTML = LEVELS.map((level, index) => {
+          const current = level.id === internal.levelId;
+          const done = !!saveData.completed[level.id];
+          const state = current ? '<span class="level-state current"><span class="level-state-mark">●</span> CURRENT' + (done ? ' / RESTORED' : '') + '</span>' : (done ? '<span class="level-state restored"><span class="level-state-mark">✓</span> RESTORED</span>' : '<span class="level-state"><span class="level-state-mark">○</span> SLEEPING</span>');
+          const best = Number.isInteger(saveData.bests[level.id]) ? '<span class="level-best">BEST ' + saveData.bests[level.id] + '</span>' : '<span class="level-best">—</span>';
+          return '<button class="level-row" type="button" data-level-id="' + level.id + '" aria-current="' + String(current) + '"><span class="level-number">' + String(index + 1).padStart(2, '0') + '</span><span class="level-copy"><strong>' + displayName(level.id) + '</strong><small>' + LEVEL_NOTES[index] + '</small></span>' + state + best + '</button>';
+        }).join('');
+      }
+
+      function completionMarkup() {
+        const level = currentLevel();
+        const index = levelNumber(level.id);
+        const best = countBestLabel(level.id);
+        const allDone = campaignComplete();
+        let kicker = 'CIRCUIT RESTORED';
+        let title = 'POWERED';
+        let copy = 'The final relay seats with a heavy click. Copper wakes under your feet.';
+        let seal = '✦';
+        let actions = '';
+        if (allDone) {
+          kicker = 'CAMPAIGN COMPLETE';
+          title = 'DAWN IS HERE';
+          copy = 'Twenty circuits restored. The sleeping yard is a living place again. Keep the lights on, yard crew.';
+          seal = '☼';
+          actions = '<button class="primary-action" type="button" data-completion-action="replay-campaign">Replay</button><button class="secondary-action" type="button" data-completion-action="map">Board map</button>';
+        } else if (level.id === 'black-start') {
+          kicker = 'CHAPTER ONE COMPLETE';
+          title = 'GRID RESTORED';
+          copy = 'The first three circuits are carrying current. The yard beyond the service gate is ready for your next shift.';
+          seal = '✓';
+          actions = '<button class="primary-action" type="button" data-completion-action="next">Continue to split-bus&nbsp; →</button><button class="secondary-action" type="button" data-completion-action="replay">Replay board</button><button class="secondary-action" type="button" data-completion-action="map">Board map</button>';
+        } else if (level.id === 'dawn-sequence') {
+          kicker = 'FINAL CIRCUIT ONLINE';
+          title = 'DAWN-SEQUENCE';
+          copy = 'This circuit is awake, but the campaign is not. Return to the board map and find the unfinished lines.';
+          seal = '☼';
+          actions = '<button class="primary-action" type="button" data-completion-action="map">Return to board map</button><button class="secondary-action" type="button" data-completion-action="replay">Replay board</button>';
+        } else {
+          const next = LEVELS[index];
+          const nextText = next ? 'Next: ' + displayName(next.id) + '&nbsp; →' : 'Board map&nbsp; →';
+          actions = (next ? '<button class="primary-action" type="button" data-completion-action="next">' + nextText + '</button>' : '<button class="primary-action" type="button" data-completion-action="map">Board map&nbsp; →</button>') + '<button class="secondary-action" type="button" data-completion-action="replay">Replay board</button><button class="secondary-action" type="button" data-completion-action="map">Board map</button>';
+        }
+        return { kicker, title, copy, seal, actions, best, index, allDone };
+      }
+
+      function renderCompletion() {
+        if (internal.phase !== 'complete') {
+          els.completion.hidden = true;
+          els.completionActions.innerHTML = '';
+          return;
+        }
+        const content = completionMarkup();
+        els.completionKicker.textContent = content.kicker;
+        els.completionTitle.textContent = content.title;
+        els.completionCopy.textContent = content.copy;
+        els.completionSeal.textContent = content.seal;
+        if (content.allDone) {
+          els.completionStats.innerHTML = '<div class="completion-stat"><span class="completion-stat-label">Restored</span><span class="completion-stat-value">20 / 20</span></div><div class="completion-stat"><span class="completion-stat-label">Best total</span><span class="completion-stat-value">' + totalBestMoves() + ' moves</span></div>';
+        } else {
+          els.completionStats.innerHTML = '<div class="completion-stat"><span class="completion-stat-label">Moves</span><span class="completion-stat-value">' + internal.moveCount + '</span></div><div class="completion-stat"><span class="completion-stat-label">Best</span><span class="completion-stat-value">' + content.best + '</span></div><div class="completion-stat"><span class="completion-stat-label">Sockets</span><span class="completion-stat-value">' + currentLevel().goals.length + ' / ' + currentLevel().goals.length + '</span></div>';
+        }
+        els.completionActions.innerHTML = content.actions;
+        els.completion.hidden = false;
+      }
+
+      function renderAll() {
+        renderScene();
+        renderHud();
+        renderMap();
+        renderCompletion();
+      }
+
+      function toggleSound() {
+        saveData.soundOn = !saveData.soundOn;
+        persist();
+        renderHud();
+        if (saveData.soundOn) unlockAudio();
+      }
+
+      function toggleMotion() {
+        saveData.motionOn = !saveData.motionOn;
+        persist();
+        renderAll();
+      }
+
+      function openModal(layer, focusTarget) {
+        if (activeModal && activeModal !== layer) closeModal();
+        previousFocus = document.activeElement;
+        activeModal = layer;
+        layer.hidden = false;
+        if (focusTarget) window.setTimeout(() => focusTarget.focus(), 0);
+      }
+
+      function closeModal() {
+        if (!activeModal) return;
+        const layer = activeModal;
+        layer.hidden = true;
+        activeModal = null;
+        if (previousFocus && typeof previousFocus.focus === 'function') window.setTimeout(() => previousFocus.focus(), 0);
+      }
+
+      function openMap() {
+        renderMap();
+        openModal(els.mapLayer, els.mapClose);
+      }
+
+      function openSettings() {
+        openModal(els.settingsLayer, els.settingsClose);
+      }
+
+      function handleCompletionAction(action) {
+        if (action === 'next') {
+          const index = levelNumber(internal.levelId);
+          if (LEVELS[index]) trySelect(LEVELS[index].id);
+        } else if (action === 'replay') {
+          closeModal();
+          tryRestart();
+        } else if (action === 'replay-campaign') {
+          closeModal();
+          trySelect('first-light');
+        } else if (action === 'map') {
+          openMap();
+        }
+      }
+
+      function pointFromEvent(event) {
+        try {
+          if (els.svg.createSVGPoint && els.svg.getScreenCTM()) {
+            const svgPoint = els.svg.createSVGPoint();
+            svgPoint.x = event.clientX;
+            svgPoint.y = event.clientY;
+            const local = svgPoint.matrixTransform(els.svg.getScreenCTM().inverse());
+            return { x: local.x, y: local.y };
+          }
+        } catch (error) { /* use the proportional fallback */ }
+        const rect = els.svg.getBoundingClientRect();
+        const level = currentLevel();
+        const levelAspect = level.width / level.height;
+        const rectAspect = rect.width / rect.height;
+        let drawWidth = rect.width;
+        let drawHeight = rect.height;
+        let offsetX = 0;
+        let offsetY = 0;
+        if (rectAspect > levelAspect) {
+          drawWidth = rect.height * levelAspect;
+          offsetX = (rect.width - drawWidth) / 2;
+        } else {
+          drawHeight = rect.width / levelAspect;
+          offsetY = (rect.height - drawHeight) / 2;
+        }
+        return { x: ((event.clientX - rect.left - offsetX) / drawWidth) * level.width, y: ((event.clientY - rect.top - offsetY) / drawHeight) * level.height };
+      }
+
+      function handleBoardPointerUp(event) {
+        if (!pointerStart) return;
+        const start = pointerStart;
+        pointerStart = null;
+        const dx = event.clientX - start.x;
+        const dy = event.clientY - start.y;
+        const distance = Math.hypot(dx, dy);
+        const threshold = Math.max(22, Math.min(window.innerWidth, window.innerHeight) * .045);
+        if (distance > threshold) {
+          tryMove(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'));
+          return;
+        }
+        const local = pointFromEvent(event);
+        const targetRow = Math.floor(local.y);
+        const targetCol = Math.floor(local.x);
+        const deltaRow = targetRow - internal.player.row;
+        const deltaCol = targetCol - internal.player.col;
+        if (Math.abs(deltaRow) + Math.abs(deltaCol) === 1) {
+          tryMove(deltaRow ? (deltaRow > 0 ? 'down' : 'up') : (deltaCol > 0 ? 'right' : 'left'));
+        } else {
+          beginInput();
+        }
+      }
+
+      function handleKeydown(event) {
+        const target = event.target;
+        const typing = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+        if (event.key === 'Escape' && activeModal) {
+          event.preventDefault();
+          closeModal();
+          return;
+        }
+        if (activeModal || typing) return;
+        const keyName = event.key.toLowerCase();
+        const direction = { arrowup: 'up', w: 'up', arrowdown: 'down', s: 'down', arrowleft: 'left', a: 'left', arrowright: 'right', d: 'right' }[keyName];
+        if (direction) {
+          event.preventDefault();
+          tryMove(direction);
+        } else if (keyName === 'u' || keyName === 'backspace') {
+          event.preventDefault();
+          tryUndo();
+        } else if (keyName === 'r') {
+          event.preventDefault();
+          tryRestart();
+        } else if (keyName === 'm') {
+          event.preventDefault();
+          openMap();
+        }
+      }
+
+      function unlockAudio() {
+        audioUnlocked = true;
+        if (!saveData.soundOn) return;
+        const AudioCtor = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtor) return;
+        try {
+          if (!audioContext) audioContext = new AudioCtor();
+          if (audioContext.state === 'suspended' && audioContext.resume) {
+            const resumeResult = audioContext.resume();
+            if (resumeResult && resumeResult.catch) resumeResult.catch(() => {});
+          }
+        } catch (error) { /* sound remains optional */ }
+      }
+
+      function tone(frequency, duration, type, volume, offset, endFrequency) {
+        if (!audioUnlocked || !saveData.soundOn || !audioContext) return;
+        try {
+          const now = audioContext.currentTime + (offset || 0);
+          const oscillator = audioContext.createOscillator();
+          const gain = audioContext.createGain();
+          oscillator.type = type || 'sine';
+          oscillator.frequency.setValueAtTime(frequency, now);
+          if (endFrequency) oscillator.frequency.exponentialRampToValueAtTime(Math.max(24, endFrequency), now + duration);
+          gain.gain.setValueAtTime(.0001, now);
+          gain.gain.exponentialRampToValueAtTime(volume, now + .012);
+          gain.gain.exponentialRampToValueAtTime(.0001, now + duration);
+          oscillator.connect(gain);
+          gain.connect(audioContext.destination);
+          oscillator.start(now);
+          oscillator.stop(now + duration + .025);
+        } catch (error) { /* audio is decorative */ }
+      }
+
+      function playSound(kind) {
+        if (!audioUnlocked || !saveData.soundOn || !audioContext) return;
+        if (kind === 'step') {
+          tone(168, .09, 'triangle', .025, 0, 125);
+          tone(334, .06, 'sine', .013, .015, 276);
+        } else if (kind === 'push') {
+          tone(92, .18, 'sine', .06, 0, 57);
+          tone(185, .12, 'triangle', .027, .025, 108);
+        } else if (kind === 'blocked') {
+          tone(116, .11, 'square', .025, 0, 78);
+          tone(80, .11, 'square', .02, .08, 55);
+        } else if (kind === 'undo') {
+          tone(420, .16, 'triangle', .035, 0, 230);
+          tone(210, .13, 'sine', .02, .04, 130);
+        } else if (kind === 'seat') {
+          tone(250, .18, 'sine', .045, 0, 420);
+          tone(510, .24, 'triangle', .04, .08, 660);
+        } else if (kind === 'surge') {
+          tone(196, .48, 'sine', .045, 0, 392);
+          tone(294, .55, 'triangle', .035, .08, 588);
+          tone(440, .72, 'sine', .03, .18, 880);
+        } else if (kind === 'select') {
+          tone(270, .09, 'triangle', .025, 0, 330);
+        }
+      }
+
+      function setupGamepad() {
+        if (!navigator.getGamepads || !window.setInterval) return;
+        const previous = new Map();
+        window.setInterval(() => {
+          const pads = navigator.getGamepads();
+          const pad = pads && Array.from(pads).find(Boolean);
+          if (!pad) return;
+          const pressed = index => !!(pad.buttons[index] && pad.buttons[index].pressed);
+          const edge = index => pressed(index) && !previous.get(index);
+          const primaryEdge = edge(0);
+          const secondaryEdge = edge(1);
+          const startEdge = edge(9);
+          let direction = null;
+          if (edge(12) || (pad.axes[1] < -.65 && !(previous.get('axis-up')))) direction = 'up';
+          if (edge(13) || (pad.axes[1] > .65 && !(previous.get('axis-down')))) direction = 'down';
+          if (edge(14) || (pad.axes[0] < -.65 && !(previous.get('axis-left')))) direction = 'left';
+          if (edge(15) || (pad.axes[0] > .65 && !(previous.get('axis-right')))) direction = 'right';
+          [0, 1, 9, 12, 13, 14, 15].forEach(index => previous.set(index, pressed(index)));
+          previous.set('axis-up', pad.axes[1] < -.65);
+          previous.set('axis-down', pad.axes[1] > .65);
+          previous.set('axis-left', pad.axes[0] < -.65);
+          previous.set('axis-right', pad.axes[0] > .65);
+          if (direction && !activeModal) tryMove(direction);
+          if (secondaryEdge) {
+            if (activeModal) closeModal();
+            else tryUndo();
+          }
+          if (primaryEdge) {
+            const active = document.activeElement;
+            if (active && typeof active.click === 'function' && active !== document.body) active.click();
+            else if (!activeModal) tryMove('up');
+          }
+          if (startEdge) {
+            if (activeModal) closeModal();
+            else openMap();
+          }
+        }, 120);
+      }
+
+      function connectBridge(event) {
+        if (event.source !== window.parent) return;
+        const data = event.data;
+        if (!data || data.protocol !== PROTOCOL || data.type !== 'connect' || typeof data.sessionId !== 'string' || !Number.isInteger(data.generation) || !event.ports || event.ports.length !== 1 || !event.ports[0]) return;
+        const port = event.ports[0];
+        const sessionId = data.sessionId;
+        const generation = data.generation;
+        const seenRequestIds = new Set();
+        if (activeBridge) activeBridge.active = false;
+        const connection = { port, sessionId, generation, active: true };
+        activeBridge = connection;
+        const post = envelope => {
+          try { port.postMessage(envelope); } catch (error) { /* disconnected host */ }
+        };
+        const response = (requestId, accepted, error) => {
+          const packet = { protocol: PROTOCOL, type: 'response', requestId, sessionId, generation, accepted, revision, state: visibleState() };
+          if (error) packet.error = { code: error.code || 'request_rejected', message: error.message || 'Request rejected.' };
+          post(packet);
+        };
+        post({ protocol: PROTOCOL, type: 'ready', sessionId, generation, accepted: true, revision, state: visibleState() });
+        port.onmessage = messageEvent => {
+          if (!connection.active || activeBridge !== connection) return;
+          const request = messageEvent.data;
+          if (!request || request.protocol !== PROTOCOL || request.sessionId !== sessionId || request.generation !== generation) return;
+          const requestId = Object.prototype.hasOwnProperty.call(request, 'requestId') ? request.requestId : null;
+          if (requestId === null || requestId === undefined) {
+            response(null, false, errorWithCode('invalid_request', 'requestId is required.'));
+            return;
+          }
+          if (seenRequestIds.has(requestId)) {
+            response(requestId, false, errorWithCode('duplicate_action', 'This request has already been handled.'));
+            return;
+          }
+          seenRequestIds.add(requestId);
+          if (request.command === 'observe') {
+            response(requestId, true);
+            return;
+          }
+          if (request.command !== 'act' && request.command !== 'restart') {
+            response(requestId, false, errorWithCode('invalid_command', 'Command is not recognized.'));
+            return;
+          }
+          if (!Number.isInteger(request.expectedRevision)) {
+            response(requestId, false, errorWithCode('invalid_revision', 'expectedRevision is required.'));
+            return;
+          }
+          if (request.expectedRevision !== revision) {
+            response(requestId, false, errorWithCode('stale_revision', 'The visible state has changed. Observe again.'));
+            return;
+          }
+          try {
+            if (request.command === 'restart') {
+              commitRestart('arena');
+            } else {
+              if (!request.action || typeof request.action !== 'object') throw errorWithCode('illegal_action', 'An action is required.');
+              acceptAction(request.action, 'arena');
+            }
+            // commitMove/Undo/Select/Restart render synchronously before this response is posted.
+            response(requestId, true);
+          } catch (error) {
+            response(requestId, false, error);
+          }
+        };
+        if (port.start) port.start();
+      }
+
+      function handleCompletionClick(event) {
+        const button = event.target.closest && event.target.closest('[data-completion-action]');
+        if (button) handleCompletionAction(button.getAttribute('data-completion-action'));
+      }
+
+      els.svg.addEventListener('pointerdown', event => {
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
+        pointerStart = { x: event.clientX, y: event.clientY };
+        try { els.svg.setPointerCapture(event.pointerId); } catch (error) { /* optional */ }
+      });
+      els.svg.addEventListener('pointerup', handleBoardPointerUp);
+      els.svg.addEventListener('pointercancel', () => { pointerStart = null; });
+      window.addEventListener('keydown', handleKeydown);
+      window.addEventListener('message', connectBridge);
+      els.completionActions.addEventListener('click', handleCompletionClick);
+      document.querySelectorAll('.dpad-button').forEach(button => button.addEventListener('click', () => tryMove(button.dataset.direction)));
+      els.undo.addEventListener('click', tryUndo);
+      els.restart.addEventListener('click', tryRestart);
+      els.mapOpen.addEventListener('click', openMap);
+      els.mapClose.addEventListener('click', closeModal);
+      els.settingsOpen.addEventListener('click', openSettings);
+      els.settingsClose.addEventListener('click', closeModal);
+      els.soundToggle.addEventListener('click', toggleSound);
+      els.soundSwitch.addEventListener('click', toggleSound);
+      els.motionSwitch.addEventListener('click', toggleMotion);
+      els.mapLayer.addEventListener('click', event => { if (event.target === els.mapLayer) closeModal(); });
+      els.settingsLayer.addEventListener('click', event => { if (event.target === els.settingsLayer) closeModal(); });
+      els.levelList.addEventListener('click', event => {
+        const row = event.target.closest && event.target.closest('[data-level-id]');
+        if (row) trySelect(row.getAttribute('data-level-id'));
+      });
+
+      renderAll();
+      setupGamepad();
+
+      window.__ARENA_GAME__ = {
+        reset(seed) { return resetGame(seed); },
+        snapshot() { return visibleState(); },
+        act(action) { return acceptAction(action, 'arena'); },
+        restart() { return commitRestart('arena'); }
+      };
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#082f49">
+  <title>SHOAL</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game" aria-label="SHOAL tide pool game">
+    <div class="water-light" aria-hidden="true"></div>
+    <header class="hud">
+      <div class="brand"><b>SHOAL</b><span id="poolLabel">POOL 1</span></div>
+      <div class="score"><span>PEARLS</span><strong id="pearls">0</strong></div>
+      <div class="counter" aria-label="Urchins remaining"><i class="mini-urchin"></i><strong id="left">0</strong></div>
+    </header>
+    <div class="tide-wrap"><div id="tide" class="tide"></div><span>TIDE</span></div>
+    <section class="scene">
+      <div id="host" class="host calm" aria-hidden="true"><i class="antenna a"></i><i class="antenna b"></i><div class="host-body"><i class="eye e1"></i><i class="eye e2"></i><i class="mouth"></i></div></div>
+      <div id="board" class="board" role="grid" aria-label="Tide pool shells"></div>
+      <div id="toast" class="toast" aria-live="polite"></div>
+    </section>
+    <p id="hint" class="hint">Tap a shell to begin</p>
+    <div id="ceremony" class="ceremony" hidden>
+      <div class="card">
+        <p class="eyebrow">THE WATER REMEMBERS</p>
+        <h1 id="rank">DRIFTWOOD</h1>
+        <div class="results"><div><span>PEARLS</span><b id="finalPearls">0</b></div><div><span>SESSION BEST</span><b id="best">0</b></div></div>
+        <p id="story" class="story"></p>
+        <div id="ladder" class="ladder"></div>
+        <button id="again">ONE MORE TIDE</button>
+        <small>Tap anywhere to return</small>
+      </div>
+    </div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>

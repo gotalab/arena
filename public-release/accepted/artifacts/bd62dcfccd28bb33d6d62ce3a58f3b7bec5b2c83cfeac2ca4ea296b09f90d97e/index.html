@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#071517">
+  <title>Lumen Yard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="game-shell" id="game">
+    <header class="topbar">
+      <div class="brand" aria-label="Lumen Yard">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M16 2 5 8v16l11 6 11-6V8L16 2Z"/>
+          <path d="m16 7-5 9h4l-1 9 7-11h-4l2-7h-3Z"/>
+        </svg>
+        <div><span>LUMEN</span><strong>YARD</strong></div>
+      </div>
+      <button class="icon-button" id="mapButton" type="button" aria-haspopup="dialog" aria-label="Open board map">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 6 5-2 8 2 5-2v14l-5 2-8-2-5 2V6Zm5-2v14m8-12v14"/></svg>
+      </button>
+    </header>
+
+    <section class="yard-card" aria-labelledby="levelName">
+      <div class="status-row">
+        <div class="level-heading">
+          <span id="levelIndex">Circuit 01</span>
+          <h1 id="levelName">First Light</h1>
+        </div>
+        <div class="meters" aria-label="Attempt statistics">
+          <div><span>Moves</span><strong id="moves">0</strong></div>
+          <div><span>Pushes</span><strong id="pushes">0</strong></div>
+          <div><span>Power</span><strong id="power">0/1</strong></div>
+        </div>
+      </div>
+
+      <div class="board-wrap" id="boardWrap">
+        <div class="skyline" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="board" id="board" role="grid" aria-label="Power yard puzzle board"></div>
+        <div class="surge" id="surge" aria-hidden="true"></div>
+        <div class="invitation" id="invitation">
+          <span class="pulse-ring" aria-hidden="true"></span>
+          <p>Restore the grid.</p>
+          <small>Swipe or tap beside Pip</small>
+        </div>
+      </div>
+
+      <div class="control-row">
+        <button id="undoButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8H4V3M4.5 8.5A8 8 0 1 1 5 17"/></svg>
+          <span>Undo</span><kbd>U</kbd>
+        </button>
+        <div class="signal" id="signal" aria-live="polite"><i></i><span>Source idling</span></div>
+        <button id="restartButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7V2l-3 3a8 8 0 1 0 2 11"/></svg>
+          <span>Restart</span><kbd>R</kbd>
+        </button>
+      </div>
+    </section>
+
+    <footer class="campaign-strip">
+      <button id="campaignButton" type="button" aria-haspopup="dialog">
+        <span class="campaign-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span><small>Restoration record</small><strong id="campaignProgress">0 of 20 circuits</strong></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+      <button id="settingsButton" class="settings-button" type="button" aria-haspopup="dialog" aria-label="Settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM19 13.5l2-1.5-2-1.5-.5-2 1-2-2-1-2 .5L13 4h-2L9.5 6 7.5 5.5l-2 1 1 2-.5 2L4 12l2 1.5.5 2-1 2 2 1 2-.5 1.5 2h2l1.5-2 2 .5 2-1-1-2 .5-2Z"/></svg>
+      </button>
+    </footer>
+  </main>
+
+  <dialog id="mapDialog" class="sheet">
+    <div class="sheet-head">
+      <div><span>RESTORATION RECORD</span><h2>Board Map</h2></div>
+      <button class="close-button" data-close="mapDialog" type="button" aria-label="Close board map">×</button>
+    </div>
+    <div class="map-summary"><strong id="mapProgress">0/20</strong><span>circuits restored</span><i><b id="mapBar"></b></i></div>
+    <div class="level-grid" id="levelGrid"></div>
+  </dialog>
+
+  <dialog id="settingsDialog" class="sheet settings-sheet">
+    <div class="sheet-head">
+      <div><span>CONTROL PANEL</span><h2>Settings</h2></div>
+      <button class="close-button" data-close="settingsDialog" type="button" aria-label="Close settings">×</button>
+    </div>
+    <label class="toggle-row"><span><strong>Sound</strong><small>Steps, relays &amp; current</small></span><input id="soundToggle" type="checkbox"><i></i></label>
+    <label class="toggle-row"><span><strong>Motion</strong><small>Ambient yard movement</small></span><input id="motionToggle" type="checkbox"><i></i></label>
+    <p class="key-help">Arrow keys / WASD move · U undo · R restart</p>
+  </dialog>
+
+  <dialog id="completeDialog" class="complete-dialog">
+    <div class="completion-symbol" aria-hidden="true"><i></i><svg viewBox="0 0 64 64"><path d="M32 3 9 16v32l23 13 23-13V16L32 3Z"/><path d="m33 14-11 20h9l-2 16 14-24h-9l4-12h-5Z"/></svg></div>
+    <span id="completeKicker">CIRCUIT RESTORED</span>
+    <h2 id="completeTitle">Current is flowing.</h2>
+    <p id="completeCopy">The yard hums a little brighter.</p>
+    <div class="complete-stats" id="completeStats"></div>
+    <div class="complete-actions">
+      <button id="nextButton" class="primary-button" type="button">Next circuit <span>→</span></button>
+      <button id="replayButton" type="button">Replay</button>
+      <button id="endingMapButton" type="button">Board Map</button>
+    </div>
+    <small id="crewCredit" class="crew-credit">Built with care by the night yard crew.</small>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="game.js"></script>
+</body>
+</html>

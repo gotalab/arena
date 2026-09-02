@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>SHOAL</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Ambient caustics canvas -->
+    <canvas id="caustics-canvas"></canvas>
+
+    <!-- Top HUD -->
+    <header class="hud">
+      <div class="top-bar">
+        <div class="brand-section">
+          <span class="logo-text">SHOAL</span>
+          <span id="pool-badge" class="pool-badge">Pool 1</span>
+        </div>
+
+        <div class="stats-section">
+          <!-- Urchin Counter -->
+          <div class="stat-pill stat-urchins" title="Sleeping Urchins Remaining">
+            <svg viewBox="0 0 32 32" fill="none" class="stat-icon">
+              <circle cx="16" cy="16" r="7" fill="#a855f7" stroke="#e9d5ff" stroke-width="1.5"/>
+              <path d="M16 2V7 M16 25V30 M2 16H7 M25 16H30 M6 6L9.5 9.5 M22.5 22.5L26 26 M6 26L9.5 22.5 M22.5 9.5L26 6" stroke="#c084fc" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span id="urchin-val" class="stat-value">4</span>
+          </div>
+
+          <!-- Pearl Counter -->
+          <div class="stat-pill stat-pearls" title="Pearls Collected">
+            <svg viewBox="0 0 32 32" fill="none" class="stat-icon">
+              <circle cx="16" cy="16" r="8" fill="#fef08a" stroke="#ffffff" stroke-width="1.5"/>
+              <circle cx="13" cy="12" r="2.5" fill="#ffffff" fill-opacity="0.8"/>
+            </svg>
+            <span id="pearl-val" class="stat-value">0</span>
+          </div>
+
+          <!-- Audio mute toggle -->
+          <button id="sound-toggle" class="sound-toggle" aria-label="Toggle Sound" title="Toggle Sound">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tide Meter -->
+      <div class="tide-meter-container">
+        <div class="tide-label-bar">
+          <span>Tide Bonus</span>
+        </div>
+        <div class="tide-track">
+          <div id="tide-fill" class="tide-fill"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Playfield -->
+    <main class="play-area">
+      <!-- Host creature -->
+      <div class="host-wrapper" title="Barnaby the Tide Pool Host">
+        <canvas id="host-canvas"></canvas>
+      </div>
+
+      <!-- Board Frame -->
+      <div id="board" class="board-container"></div>
+
+      <!-- Title / First Turn Prompt -->
+      <div id="title-prompt" class="title-prompt">
+        <span>Tap any shell to dive in</span>
+      </div>
+    </main>
+
+    <!-- Ceremony & Post-Mortem Overlay -->
+    <div id="ceremony-overlay" class="ceremony-overlay" style="display: none;">
+      <div class="ceremony-card">
+        <div class="ceremony-title">Tide Broken</div>
+        
+        <div class="rank-badge-container">
+          <span class="rank-label">Rank Awarded</span>
+          <span id="ceremony-rank" class="rank-name">Sea Glass</span>
+        </div>
+
+        <div class="ceremony-stats-grid">
+          <div class="ceremony-stat-box">
+            <span class="ceremony-stat-label">Pearls</span>
+            <span id="ceremony-pearls" class="ceremony-stat-val">0</span>
+          </div>
+          <div class="ceremony-stat-box">
+            <span class="ceremony-stat-label">Session Best</span>
+            <span id="ceremony-best" class="ceremony-stat-val">0</span>
+          </div>
+        </div>
+
+        <div class="signature-stat-box">
+          <span id="signature-label" class="signature-label">Greatest Ripple</span>
+          <span id="signature-val" class="signature-val">12 shells</span>
+        </div>
+
+        <div class="ceremony-prompt">Tap anywhere or press R to dive again</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

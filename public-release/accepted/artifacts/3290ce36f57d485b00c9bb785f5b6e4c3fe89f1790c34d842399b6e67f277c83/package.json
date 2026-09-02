@@ -1,0 +1,17 @@
+{
+  "name": "shoal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SHOAL - a tide pool deduction game. The game itself has no dependencies; these are for the verification harness only.",
+  "scripts": {
+    "test": "node tools/test-rules.js && node tools/test-browser.js",
+    "test:rules": "node tools/test-rules.js",
+    "test:browser": "node tools/test-browser.js",
+    "bench": "node tools/gen-bench.js",
+    "economy": "node tools/economy.js",
+    "serve": "node tools/serve.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  }
+}

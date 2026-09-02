@@ -1,0 +1,281 @@
+/* SHOAL - frame, overlays and the ceremony. The pool itself is canvas. */
+
+:root {
+  --cream: #f6ecd9;
+  --aqua: #8ff3ff;
+  --gold: #ffd166;
+  --coral: #ff6a48;
+  --deep: #04202a;
+  --font: "Trebuchet MS", "Avenir Next", ui-rounded, system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--deep);
+  color: var(--cream);
+  font-family: var(--font);
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+#app {
+  position: fixed;
+  left: 0; top: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+#stage {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ title */
+
+#title {
+  justify-content: flex-start;
+  padding-top: 16vh;
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+#title.gone {
+  opacity: 0;
+  transform: translateY(-14px) scale(0.98);
+}
+#title .mark {
+  font-size: clamp(38px, 13vw, 78px);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  color: var(--cream);
+  text-shadow: 0 0 26px rgba(143, 243, 255, 0.45), 0 6px 22px rgba(0, 0, 0, 0.5);
+}
+#title .mark-rule {
+  width: clamp(120px, 42vw, 260px);
+  height: 8px;
+  margin: 6px 0 10px;
+  background:
+    radial-gradient(circle at 10% 50%, rgba(143,243,255,0.9) 0 2px, transparent 2px),
+    radial-gradient(circle at 50% 50%, rgba(143,243,255,0.9) 0 2px, transparent 2px),
+    radial-gradient(circle at 90% 50%, rgba(143,243,255,0.9) 0 2px, transparent 2px),
+    linear-gradient(90deg, transparent, rgba(143,243,255,0.45), transparent);
+  border-radius: 4px;
+}
+#title .start {
+  font-size: clamp(13px, 4vw, 19px);
+  letter-spacing: 0.16em;
+  color: rgba(198, 240, 250, 0.82);
+  animation: breathe 2.6s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
+/* ------------------------------------------------------------------ toast */
+
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: 15.5%;
+  transform: translate(-50%, 8px);
+  padding: 7px 15px;
+  border-radius: 999px;
+  background: rgba(4, 30, 39, 0.86);
+  border: 1px solid rgba(143, 243, 255, 0.22);
+  color: rgba(230, 248, 252, 0.94);
+  font-size: clamp(11px, 3.4vw, 14px);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease, transform 260ms ease;
+  z-index: 4;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* -------------------------------------------------------------- ceremony */
+
+#ceremony {
+  justify-content: flex-end;
+  pointer-events: auto;
+  background: linear-gradient(to bottom, rgba(3, 18, 24, 0) 30%, rgba(3, 18, 24, 0.55) 62%, rgba(3, 18, 24, 0.86) 100%);
+  animation: fadein 420ms ease both;
+}
+#ceremony.hidden { display: none; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+#ceremony .panel {
+  width: min(94%, 460px);
+  margin: 0 auto 2.2vh;
+  padding: clamp(10px, 2.4vh, 20px) clamp(12px, 4vw, 24px) clamp(10px, 2vh, 18px);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(9, 52, 64, 0.94), rgba(4, 26, 34, 0.96));
+  border: 1px solid rgba(143, 243, 255, 0.26);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  text-align: center;
+  animation: rise 480ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+@keyframes rise { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.cer-head {
+  font-size: clamp(11px, 3.2vw, 13px);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(190, 238, 246, 0.6);
+}
+.cer-pearls {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+.cer-pearls span {
+  font-size: clamp(34px, 11vw, 54px);
+  font-weight: 700;
+  color: var(--gold);
+  text-shadow: 0 0 22px rgba(255, 209, 102, 0.35);
+  line-height: 1.05;
+}
+.cer-pearls em {
+  font-style: normal;
+  font-size: clamp(11px, 3.2vw, 14px);
+  letter-spacing: 0.2em;
+  color: rgba(246, 236, 217, 0.7);
+}
+.cer-flag {
+  font-size: clamp(10px, 3vw, 12px);
+  letter-spacing: 0.14em;
+  color: rgba(190, 238, 246, 0.72);
+  margin-bottom: 6px;
+}
+.cer-flag.fresh {
+  color: var(--gold);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.cer-rank {
+  font-size: clamp(17px, 5.4vw, 24px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--aqua);
+  text-transform: uppercase;
+}
+.ladder {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 8px;
+  margin: 6px 0 10px;
+}
+.ladder .rung {
+  font-size: clamp(8px, 2.5vw, 10px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(190, 238, 246, 0.34);
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.ladder .rung.on {
+  color: var(--deep);
+  background: var(--aqua);
+  border-color: var(--aqua);
+  font-weight: 700;
+}
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.stat {
+  flex: 1 1 0;
+  padding: 7px 4px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.stat span {
+  display: block;
+  font-size: clamp(16px, 5vw, 22px);
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1.1;
+}
+.stat label {
+  display: block;
+  margin-top: 2px;
+  font-size: clamp(8px, 2.4vw, 10px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(190, 238, 246, 0.55);
+}
+.stat.sig {
+  background: rgba(255, 209, 102, 0.13);
+  border-color: rgba(255, 209, 102, 0.35);
+}
+.stat.sig span { color: var(--gold); }
+.cer-go {
+  font-size: clamp(11px, 3.4vw, 14px);
+  letter-spacing: 0.18em;
+  color: rgba(230, 248, 252, 0.9);
+  animation: breathe 2.2s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------- mute */
+
+#mute {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 5;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 243, 255, 0.2);
+  background: rgba(4, 30, 39, 0.6);
+  color: rgba(198, 240, 250, 0.75);
+  font-family: var(--font);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+#mute:active { transform: scale(0.95); }
+/* the ceremony owns the bottom of the screen while it is up */
+#ceremony:not(.hidden) ~ #mute { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  #title .start, .cer-go { animation: none; opacity: 0.9; }
+}

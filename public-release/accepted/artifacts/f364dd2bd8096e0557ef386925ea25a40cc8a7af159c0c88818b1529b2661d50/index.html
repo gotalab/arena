@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#082f42">
+  <title>SHOAL</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game" aria-label="Shoal tide-pool deduction game">
+    <div class="water-light" aria-hidden="true"></div>
+    <header class="topbar">
+      <section class="brand"><h1>SHOAL</h1><span id="poolLabel">POOL 01</span></section>
+      <section class="score"><span>PEARLS</span><strong id="pearls">0</strong></section>
+    </header>
+
+    <section class="tide-wrap" aria-label="Tide remaining">
+      <div class="tide-copy"><span>TIDE</span><span id="tideText">WAITING</span></div>
+      <div class="tide-track"><i id="tideFill"></i></div>
+    </section>
+
+    <section class="pool-stage">
+      <div id="host" class="host curious" aria-hidden="true">
+        <i class="antenna a1"></i><i class="antenna a2"></i>
+        <b class="eye e1"></b><b class="eye e2"></b><span class="mouth"></span>
+      </div>
+      <div id="board" class="board" role="grid" aria-label="Tide pool shells"></div>
+      <div id="rippleLayer" class="ripple-layer" aria-hidden="true"></div>
+    </section>
+
+    <footer>
+      <div class="counter"><span class="pennant-mini">◆</span><strong id="left">0</strong><small>URCHINS LEFT</small></div>
+      <div id="hint" class="hint">TAP A SHELL TO BEGIN</div>
+      <button id="sound" class="sound" type="button" aria-label="Toggle sound">♪</button>
+    </footer>
+
+    <div id="toast" class="toast" aria-live="polite"></div>
+    <section id="ceremony" class="ceremony" aria-hidden="true">
+      <div class="result-card">
+        <p class="eyebrow">THE POOL REMEMBERS</p>
+        <h2 id="resultTitle">A SHARP LESSON</h2>
+        <div class="rank-orb"><span>RANK</span><strong id="rank">DRIFT</strong></div>
+        <div class="result-scores">
+          <div><span>THIS TIDE</span><strong id="finalPearls">0</strong></div>
+          <div><span>SESSION BEST</span><strong id="best">0</strong></div>
+        </div>
+        <div class="signature"><span>DEEPEST POOL</span><strong id="deepest">1</strong></div>
+        <p class="restart-copy">TAP ANYWHERE FOR ONE MORE TIDE</p>
+      </div>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>

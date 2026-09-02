@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#07090f">
+<title>Lumen Yard</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <header id="hud" class="hud">
+    <button id="btn-banner" class="banner" aria-label="Open board browser">
+      <span id="hud-index" class="hud-index">01</span>
+      <span class="hud-divider" aria-hidden="true"></span>
+      <span id="hud-name" class="hud-name">First Light</span>
+      <span id="hud-powered" class="hud-powered"><i aria-hidden="true"></i><span id="hud-powered-count">0/1</span></span>
+    </button>
+    <div class="hud-counters" aria-hidden="true">
+      <span class="count"><b id="hud-moves">0</b><span class="lbl">moves</span></span>
+      <span class="count count-best"><b id="hud-best">—</b><span class="lbl">best</span></span>
+      <span class="count"><b id="hud-pushes">0</b><span class="lbl">pushes</span></span>
+    </div>
+  </header>
+
+  <main id="stage" class="stage">
+    <div class="board-frame">
+      <canvas id="board" role="img" aria-label="Lumen Yard power yard board"></canvas>
+    </div>
+    <div id="title-band" class="title-band" aria-hidden="true">
+      <div class="title-inner">
+        <h1 id="title-word">LUMEN YARD</h1>
+        <p id="title-tag" class="title-tag">Restore the grid.</p>
+        <p id="title-sub" class="title-sub"></p>
+        <p class="title-hint">swipe · tap · arrows</p>
+      </div>
+    </div>
+  </main>
+
+  <footer id="controls" class="controls">
+    <button id="btn-boards" class="ctrl">Boards</button>
+    <button id="btn-undo" class="ctrl ctrl-primary" disabled>Undo</button>
+    <button id="btn-restart" class="ctrl">Restart</button>
+    <button id="btn-settings" class="ctrl ctrl-icon" aria-label="Settings">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
+  </footer>
+
+  <div id="drawer" class="drawer" hidden>
+    <div class="drawer-scrim"></div>
+    <section class="sheet" role="dialog" aria-label="Board browser">
+      <header class="sheet-head">
+        <h2>Boards</h2>
+        <span id="drawer-progress"></span>
+        <button id="btn-drawer-close" class="sheet-close" aria-label="Close board browser">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <div id="board-grid" class="board-grid"></div>
+    </section>
+  </div>
+
+  <div id="settings" class="settings" hidden>
+    <div class="settings-scrim"></div>
+    <section class="sheet sheet-small" role="dialog" aria-label="Settings">
+      <header class="sheet-head">
+        <h2>Settings</h2>
+        <button id="btn-settings-close" class="sheet-close" aria-label="Close settings">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </header>
+      <label class="toggle-row"><span>Sound</span>
+        <button id="toggle-sound" class="toggle" role="switch" aria-checked="true"><span class="knob"></span></button>
+      </label>
+      <label class="toggle-row"><span>Motion</span>
+        <button id="toggle-motion" class="toggle" role="switch" aria-checked="false"><span class="knob"></span></button>
+      </label>
+      <p class="settings-note">Reduced motion calms decorative effects while keeping every result readable.</p>
+    </section>
+  </div>
+
+  <div id="completion" class="overlay-card" hidden>
+    <div class="card">
+      <p id="comp-eyebrow" class="eyebrow"></p>
+      <h2 id="comp-title"></h2>
+      <p id="comp-sub" class="sub"></p>
+      <div id="comp-stats" class="comp-stats"></div>
+      <div id="comp-actions" class="comp-actions"></div>
+      <p id="comp-credit" class="credit"></p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+</div>
+
+<script src="js/boards.js"></script>
+<script src="js/state.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/render.js"></script>
+<script src="js/input.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/arena.js"></script>
+<script src="js/main.js"></script>
+<script>
+  Lumen.main.init();
+</script>
+</body>
+</html>

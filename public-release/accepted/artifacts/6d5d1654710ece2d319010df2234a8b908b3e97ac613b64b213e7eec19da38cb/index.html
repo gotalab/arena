@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#071419">
+  <title>Lumen Yard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <header class="topbar">
+      <button id="mapBtn" class="icon-btn" aria-label="Open board map" aria-expanded="false"><span class="grid-icon" aria-hidden="true">▦</span><span>Boards</span></button>
+      <div class="brand"><b>LUMEN YARD</b><small id="chapter">OPENING CIRCUIT</small></div>
+      <button id="settingsBtn" class="icon-btn" aria-label="Open settings" aria-expanded="false"><span aria-hidden="true">⚙</span><span>Settings</span></button>
+    </header>
+
+    <section class="yard-card" aria-label="Power yard game">
+      <div class="level-line">
+        <div><span id="levelNo">01</span><h1 id="levelName">First Light</h1></div>
+        <div class="socket-readout"><span class="lamp" aria-hidden="true"></span><strong id="powered">0 / 1</strong><small>SOCKETS</small></div>
+      </div>
+      <div id="boardWrap">
+        <canvas id="board" role="application" aria-label="Lumen Yard board. Swipe or tap an adjacent tile to move." tabindex="0"></canvas>
+        <div id="invitation" class="invitation">Restore the grid.</div>
+        <div id="completion" class="completion" hidden>
+          <div class="completion-inner">
+            <span class="surge-mark" aria-hidden="true">⌁</span>
+            <p id="completeKicker">CIRCUIT ONLINE</p>
+            <h2 id="completeTitle">Yard Powered</h2>
+            <p id="completeCopy"></p>
+            <div id="summary" class="summary" hidden></div>
+            <div class="completion-actions">
+              <button id="replayBtn" class="secondary">Replay</button>
+              <button id="nextBtn" class="primary">Next Board</button>
+              <button id="finishMapBtn" class="secondary" hidden>Board Map</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="status" aria-live="polite" id="status">Current trembles at the source…</div>
+      <div class="meter-row">
+        <div><small>MOVES</small><strong id="moves">0</strong></div>
+        <div><small>PUSHES</small><strong id="pushes">0</strong></div>
+        <div><small>BEST</small><strong id="best">—</strong></div>
+      </div>
+      <div class="controls">
+        <button id="undoBtn"><span aria-hidden="true">↶</span> Undo</button>
+        <div class="dpad" aria-label="Movement controls">
+          <button data-dir="up" aria-label="Move up">▲</button>
+          <button data-dir="left" aria-label="Move left">◀</button>
+          <button data-dir="down" aria-label="Move down">▼</button>
+          <button data-dir="right" aria-label="Move right">▶</button>
+        </div>
+        <button id="restartBtn"><span aria-hidden="true">↻</span> Restart</button>
+      </div>
+    </section>
+    <footer>Night shift log <span>•</span> Yard crew 07</footer>
+  </main>
+
+  <div id="scrim" class="scrim" hidden></div>
+  <aside id="mapDrawer" class="drawer" aria-hidden="true" aria-labelledby="mapTitle">
+    <div class="drawer-head"><div><small>RESTORATION LOG</small><h2 id="mapTitle">Board Map</h2></div><button class="close" data-close aria-label="Close board map">×</button></div>
+    <p class="progress"><strong id="progressText">0 / 20</strong> circuits restored</p>
+    <div id="levelGrid" class="level-grid"></div>
+  </aside>
+  <aside id="settingsDrawer" class="drawer settings" aria-hidden="true" aria-labelledby="settingsTitle">
+    <div class="drawer-head"><div><small>CONTROL CABINET</small><h2 id="settingsTitle">Settings</h2></div><button class="close" data-close aria-label="Close settings">×</button></div>
+    <label class="toggle"><span><b>Sound</b><small>Steps, relays and current</small></span><input id="soundToggle" type="checkbox"><i></i></label>
+    <label class="toggle"><span><b>Motion</b><small>Ambient yard animation</small></span><input id="motionToggle" type="checkbox"><i></i></label>
+    <div class="key-help"><b>Controls</b><p>Swipe, tap an adjacent tile, or use arrows / WASD. U undoes; R restarts.</p></div>
+  </aside>
+  <script src="game.js"></script>
+</body>
+</html>

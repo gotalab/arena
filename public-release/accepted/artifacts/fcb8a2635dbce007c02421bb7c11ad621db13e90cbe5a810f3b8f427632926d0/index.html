@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Lumen Yard - a twenty board puzzle about restoring a sleeping power yard one deliberate push at a time.">
+<meta name="theme-color" content="#05070d">
+<title>Lumen Yard</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a1119'/%3E%3Ccircle cx='16' cy='16' r='6' fill='none' stroke='%237fe9ff' stroke-width='3'/%3E%3Cpath d='M16 3v5M16 24v5M3 16h5M24 16h5' stroke='%23c98b4b' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app" id="app">
+
+  <header class="hud">
+    <div class="hud__brand">
+      <span class="hud__mark" aria-hidden="true"></span>
+      <span class="hud__wordmark">Lumen<span>Yard</span></span>
+    </div>
+    <div class="hud__board">
+      <span class="hud__num" id="boardNum">01</span>
+      <span class="hud__names">
+        <span class="hud__name" id="boardName">First Light</span>
+        <span class="hud__note" id="boardNote">One core. One socket.</span>
+      </span>
+    </div>
+    <button class="iconbtn" id="btnSettings" type="button" aria-label="Settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+        <path d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.5-2-3.4-2.4 1a7.6 7.6 0 0 0-1.7-1L15 3.5H9.9l-.3 2.6a7.6 7.6 0 0 0-1.7 1l-2.4-1-2 3.4L5.4 11a7.6 7.6 0 0 0 0 2l-2 1.5 2 3.4 2.4-1c.5.4 1.1.8 1.7 1l.3 2.6H15l.3-2.6c.6-.2 1.2-.6 1.7-1l2.4 1 2-3.4z"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="stats" role="group" aria-label="Yard readout">
+    <div class="stat"><span class="stat__k">Moves</span><span class="stat__v" id="statMoves">0</span></div>
+    <div class="stat"><span class="stat__k">Pushes</span><span class="stat__v" id="statPushes">0</span></div>
+    <div class="stat stat--sockets">
+      <span class="stat__k">Sockets</span>
+      <span class="stat__v" id="statSockets">0/1</span>
+      <div class="meter" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuenow="0" aria-valuemax="1"><i></i></div>
+    </div>
+    <div class="stat"><span class="stat__k">Best</span><span class="stat__v" id="statBest">--</span></div>
+  </div>
+
+  <main class="stage" id="stage">
+    <canvas id="yard" role="img" aria-label="The yard"></canvas>
+
+    <div class="titlecard" id="titleCard">
+      <div class="titlecard__inner">
+        <h1 class="titlecard__title">Lumen<span>Yard</span></h1>
+        <p class="titlecard__line">Restore the grid.</p>
+      </div>
+    </div>
+
+    <section class="banner" id="banner" aria-hidden="true" inert aria-live="polite">
+      <p class="banner__eyebrow" id="bannerEyebrow">Circuit live</p>
+      <h2 class="banner__title" id="bannerTitle">Restored</h2>
+      <p class="banner__body" id="bannerBody"></p>
+      <p class="banner__stats" id="bannerStats"></p>
+      <div class="banner__actions" id="bannerActions"></div>
+      <p class="banner__credit" id="bannerCredit" hidden>
+        Yard crew — night lead <b>Ines Barlow</b> · maintenance unit <b>LM&#8209;04</b> ·
+        substation chorus by the humming transformers · built for the long shift.
+      </p>
+    </section>
+  </main>
+
+  <footer class="controls">
+    <button class="btn btn--ctrl" id="btnUndo" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 7H5V3M5.6 7.2A7.5 7.5 0 1 1 4.5 13" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Undo</span>
+    </button>
+    <button class="btn btn--ctrl" id="btnRestart" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 7h4V3M18.4 7.2A7.5 7.5 0 1 0 19.5 13" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Restart</span>
+    </button>
+    <button class="btn btn--ctrl btn--map" id="btnMap" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5h6v6H4zM14 5h6v6h-6zM4 13h6v6H4zM14 13h6v6h-6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      <span>Boards</span>
+      <span class="chip" id="mapCount">0/20</span>
+    </button>
+  </footer>
+
+  <div class="scrim" id="scrim"></div>
+
+  <section class="sheet" id="sheetMap" aria-hidden="true" inert aria-label="Board map">
+    <header class="sheet__head">
+      <div>
+        <h2 class="sheet__title">Board map</h2>
+        <p class="sheet__sub"><span id="mapProgress">0 / 20 restored</span> · <span id="mapTotal"></span></p>
+      </div>
+      <button class="iconbtn" type="button" data-close-sheet aria-label="Close board map">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </header>
+    <div class="boardlist" id="boardList"></div>
+  </section>
+
+  <section class="sheet sheet--small" id="sheetSettings" aria-hidden="true" inert aria-label="Settings">
+    <header class="sheet__head">
+      <div>
+        <h2 class="sheet__title">Settings</h2>
+        <p class="sheet__sub">Local only. Nothing leaves this device.</p>
+      </div>
+      <button class="iconbtn" type="button" data-close-sheet aria-label="Close settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </header>
+    <div class="settings">
+      <button class="switch" id="toggleSound" type="button" role="switch" aria-checked="true">
+        <span class="switch__text">
+          <span class="switch__name">Sound</span>
+          <span class="switch__hint">Steps, pushes, and the surge</span>
+        </span>
+        <span class="switch__track" aria-hidden="true"><i></i></span>
+        <span class="switch__label">On</span>
+      </button>
+      <button class="switch" id="toggleMotion" type="button" role="switch" aria-checked="true">
+        <span class="switch__text">
+          <span class="switch__name">Motion</span>
+          <span class="switch__hint">Decorative movement only; state stays readable</span>
+        </span>
+        <span class="switch__track" aria-hidden="true"><i></i></span>
+        <span class="switch__label">On</span>
+      </button>
+      <div class="keys">
+        <h3>Controls</h3>
+        <ul>
+          <li><span>Move</span><b>Swipe, tap a neighbouring tile, arrows or WASD</b></li>
+          <li><span>Undo</span><b>U, Backspace or the Undo control</b></li>
+          <li><span>Restart</span><b>R or the Restart control</b></li>
+          <li><span>Boards</span><b>B or the Boards control</b></li>
+          <li><span>Gamepad</span><b>D&#8209;pad or stick, A confirms, B undoes, Start opens boards</b></li>
+        </ul>
+      </div>
+      <button class="btn btn--danger" id="btnWipe" type="button">Clear saved progress</button>
+    </div>
+  </section>
+
+  <p class="sr-only" id="live" aria-live="polite" role="status"></p>
+</div>
+
+<noscript>
+  <p style="color:#dbe6f2;font:16px system-ui;padding:24px">Lumen Yard needs JavaScript to run the yard.</p>
+</noscript>
+
+<script src="src/levels.js"></script>
+<script src="src/game.js"></script>
+<script src="src/audio.js"></script>
+<script src="src/render.js"></script>
+<script src="src/arena.js"></script>
+<script src="src/ui.js"></script>
+</body>
+</html>

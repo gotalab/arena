@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<title>Lumen Yard</title>
+<meta name="description" content="Restore a sleeping power yard, one deliberate push at a time.">
+<meta name="theme-color" content="#05080f">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+
+  <header id="hud">
+    <button id="btn-boards" class="icon-btn" aria-haspopup="true" aria-expanded="false" aria-controls="drawer-boards">Board Map</button>
+    <div id="hud-center">
+      <div id="board-name">Lumen Yard</div>
+      <div id="hud-stats">
+        <span>Moves <span id="stat-moves" class="stat-value">0</span></span>
+        <span>Pushes <span id="stat-pushes" class="stat-value">0</span></span>
+        <span>Power <span id="stat-power" class="stat-value">0/0</span></span>
+      </div>
+    </div>
+    <button id="btn-settings" class="icon-btn" aria-haspopup="true" aria-expanded="false" aria-controls="drawer-settings">Settings</button>
+  </header>
+
+  <main id="stage-wrap">
+    <canvas id="stage" tabindex="0" aria-label="Lumen Yard puzzle board. Use arrow keys, WASD, swipe, or tap an adjacent tile to move the robot."></canvas>
+    <div id="invitation">Restore the grid.</div>
+    <div id="completion-panel" hidden></div>
+    <div id="live-region" class="sr-only" aria-live="polite"></div>
+  </main>
+
+  <footer id="controls">
+    <button id="btn-undo" disabled>Undo</button>
+    <button id="btn-restart">Restart</button>
+  </footer>
+
+  <div id="scrim" hidden></div>
+
+  <div id="drawer-boards" class="drawer" hidden role="dialog" aria-modal="true" aria-labelledby="boards-title">
+    <div class="drawer-header">
+      <h2 id="boards-title">Board Map</h2>
+      <button class="drawer-close" id="close-boards" aria-label="Close board map">&#10005;</button>
+    </div>
+    <div class="drawer-body">
+      <div id="board-grid"></div>
+    </div>
+  </div>
+
+  <div id="drawer-settings" class="drawer" hidden role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="drawer-header">
+      <h2 id="settings-title">Settings</h2>
+      <button class="drawer-close" id="close-settings" aria-label="Close settings">&#10005;</button>
+    </div>
+    <div class="drawer-body">
+      <div class="setting-row">
+        <span>Sound</span>
+        <button id="toggle-sound" class="toggle-btn" aria-pressed="true">Sound: On</button>
+      </div>
+      <div class="setting-row">
+        <span>Motion</span>
+        <button id="toggle-motion" class="toggle-btn" aria-pressed="true">Motion: On</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="levels.js"></script>
+<script src="engine.js"></script>
+<script src="render.js"></script>
+<script src="audio.js"></script>
+<script src="input.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

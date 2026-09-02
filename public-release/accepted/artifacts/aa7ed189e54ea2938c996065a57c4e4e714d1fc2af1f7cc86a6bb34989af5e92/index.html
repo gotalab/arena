@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Lumen Yard - a one-screen puzzle about restoring a sleeping power yard, one deliberate push at a time.">
+<meta name="theme-color" content="#05070d">
+<title>Lumen Yard</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23070c14'/%3E%3Cpath d='M18 4 L9 18h6l-1 10 9-14h-6z' fill='%2382e6ff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="booting">
+
+<div id="app">
+
+  <header class="hud" id="hud">
+    <div class="hud-board">
+      <span class="hud-index" id="hud-index">01</span>
+      <span class="hud-name" id="hud-name">First Light</span>
+    </div>
+    <div class="hud-stats" role="group" aria-label="Yard status">
+      <div class="stat stat--sockets">
+        <span class="stat-k">Sockets</span>
+        <span class="stat-v" id="stat-sockets">0/1</span>
+      </div>
+      <div class="stat">
+        <span class="stat-k">Moves</span>
+        <span class="stat-v" id="stat-moves">0</span>
+      </div>
+      <div class="stat stat--push">
+        <span class="stat-k">Pushes</span>
+        <span class="stat-v" id="stat-pushes">0</span>
+      </div>
+      <div class="stat stat--best">
+        <span class="stat-k">Best</span>
+        <span class="stat-v" id="stat-best">&mdash;</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+    <canvas id="yard" role="img" aria-label="The power yard"></canvas>
+
+    <div class="banner" id="banner" aria-hidden="true">
+      <span class="banner-name" id="banner-name"></span>
+      <span class="banner-line" id="banner-line"></span>
+    </div>
+
+    <button class="veil" id="veil" type="button">
+      <span class="veil-inner">
+        <span class="title-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M13 2.5 5.5 13.5H11l-1 8 8-11.5h-5.5z"/>
+          </svg>
+        </span>
+        <span class="title">Lumen Yard</span>
+        <span class="invite">Restore the grid.</span>
+        <span class="veil-pulse" aria-hidden="true"></span>
+      </span>
+    </button>
+
+    <section class="result" id="result" hidden aria-labelledby="result-title"></section>
+  </main>
+
+  <footer class="dock" id="dock">
+    <button class="btn" id="btn-undo" type="button" aria-keyshortcuts="U">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7H15a5 5 0 0 1 0 10H8"/><path d="M11.5 3.5 8 7l3.5 3.5"/></svg>
+      <span class="btn-label">Undo</span>
+    </button>
+    <button class="btn" id="btn-restart" type="button" aria-keyshortcuts="R">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v4.5h-4.5"/></svg>
+      <span class="btn-label">Restart</span>
+    </button>
+    <button class="btn" id="btn-map" type="button" aria-haspopup="dialog" aria-expanded="false">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+      <span class="btn-label">Boards</span>
+      <span class="btn-badge" id="map-badge">0/20</span>
+    </button>
+    <button class="btn" id="btn-settings" type="button" aria-haspopup="dialog" aria-expanded="false">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h10M18 8h2M4 16h4M12 16h8"/><circle cx="16" cy="8" r="2.4"/><circle cx="10" cy="16" r="2.4"/></svg>
+      <span class="btn-label">Settings</span>
+    </button>
+  </footer>
+
+</div>
+
+<!-- Board map: never covers the live yard until the player opens it. -->
+<div class="sheet" id="sheet-map" hidden>
+  <div class="sheet-scrim" data-close="map"></div>
+  <section class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="map-title" id="map-panel">
+    <header class="sheet-head">
+      <div>
+        <h2 class="sheet-title" id="map-title">Board map</h2>
+        <p class="sheet-sub" id="map-sub">0 of 20 circuits restored</p>
+      </div>
+      <button class="icon-btn" type="button" data-close="map" aria-label="Close board map">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </header>
+    <div class="map-grid" id="map-grid"></div>
+  </section>
+</div>
+
+<div class="sheet sheet--small" id="sheet-settings" hidden>
+  <div class="sheet-scrim" data-close="settings"></div>
+  <section class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="settings-title" id="settings-panel">
+    <header class="sheet-head">
+      <h2 class="sheet-title" id="settings-title">Settings</h2>
+      <button class="icon-btn" type="button" data-close="settings" aria-label="Close settings">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </header>
+    <div class="toggle-list">
+      <button class="toggle" id="toggle-sound" type="button" aria-pressed="true">
+        <span class="toggle-text">
+          <span class="toggle-name">Sound</span>
+          <span class="toggle-note">Yard hum, pushes and the final surge</span>
+        </span>
+        <span class="switch" aria-hidden="true"><span class="knob"></span></span>
+        <span class="toggle-state" id="state-sound">On</span>
+      </button>
+      <button class="toggle" id="toggle-motion" type="button" aria-pressed="true">
+        <span class="toggle-text">
+          <span class="toggle-name">Motion</span>
+          <span class="toggle-note">Decorative movement only; every state stays readable</span>
+        </span>
+        <span class="switch" aria-hidden="true"><span class="knob"></span></span>
+        <span class="toggle-state" id="state-motion">On</span>
+      </button>
+    </div>
+    <p class="sheet-foot" id="save-note">Progress is kept on this device.</p>
+  </section>
+</div>
+
+<p id="live" class="visually-hidden" role="status" aria-live="polite"></p>
+<p id="help" class="visually-hidden">Swipe or tap a neighbouring tile to move. Arrow keys or W A S D also move. U undoes, R restarts.</p>
+
+<script src="src/levels.js"></script>
+<script src="src/engine.js"></script>
+<script src="src/storage.js"></script>
+<script src="src/audio.js"></script>
+<script src="src/render.js"></script>
+<script src="src/arena.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>

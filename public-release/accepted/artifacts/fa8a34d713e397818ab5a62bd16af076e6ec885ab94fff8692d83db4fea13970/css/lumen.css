@@ -1,0 +1,486 @@
+:root {
+  color-scheme: dark;
+  --void: #070b14;
+  --panel: #121a26;
+  --panel-2: #182232;
+  --line: #3a2a18;
+  --copper: #d08a40;
+  --copper-hot: #ffc56a;
+  --ink: #e8dfd2;
+  --muted: #9aa3b2;
+  --live: #7ee0c4;
+  --danger: #e8a23a;
+  --focus: #ffd48a;
+  --font: "Segoe UI", "Avenir Next", "Trebuchet MS", ui-sans-serif, system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--void);
+  color: var(--ink);
+  font-family: var(--font);
+  overflow: hidden;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  position: fixed;
+  inset: 0;
+  user-select: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: #1c2634;
+  border: 1px solid #4a3822;
+  border-radius: 8px;
+  min-height: 44px;
+  padding: 0.45rem 0.8rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+button:focus-visible,
+.toggle:focus-visible,
+.map-cell:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+html {
+  overscroll-behavior: none;
+}
+
+#app {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
+
+.chrome {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "brand tools"
+    "readout readout";
+  gap: 0.35rem 0.7rem;
+  padding: 0.55rem 0.75rem 0.45rem;
+  border-bottom: 1px solid #2a2116;
+  background: linear-gradient(180deg, #101826, #0c121c);
+}
+
+.brand {
+  grid-area: brand;
+  min-width: 0;
+}
+
+.wordmark {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--copper-hot);
+}
+
+.shift {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tools {
+  grid-area: tools;
+  display: flex;
+  gap: 0.4rem;
+  align-items: start;
+}
+
+.tools button {
+  min-height: 40px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.readout {
+  grid-area: readout;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 1rem;
+}
+
+.board {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+}
+
+.meters {
+  list-style: none;
+  display: flex;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.meters .k {
+  display: block;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.meters strong {
+  font-size: 0.95rem;
+}
+
+.stage {
+  position: relative;
+  min-height: 0;
+  background: #070b14;
+}
+
+#yard-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+#yard {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.float-copy {
+  position: absolute;
+  left: 50%;
+  top: 8%;
+  transform: translateX(-50%);
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 8px 24px #000;
+  transition: opacity 0.35s ease;
+}
+
+.float-copy.is-gone {
+  opacity: 0;
+}
+
+.float-copy .title {
+  margin: 0;
+  font-size: 0.7rem;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--copper-hot);
+}
+
+.float-copy .line {
+  margin: 0.2rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+
+.plaque {
+  position: absolute;
+  left: 50%;
+  bottom: 0.6rem;
+  transform: translateX(-50%);
+  width: min(34rem, calc(100% - 1rem));
+  background: rgba(12, 18, 28, 0.92);
+  border: 1px solid #5a4020;
+  border-radius: 12px;
+  padding: 0.85rem 0.95rem 0.9rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 200, 120, 0.12);
+  backdrop-filter: blur(8px);
+  max-height: 48%;
+  overflow: auto;
+  z-index: 4;
+}
+
+.plaque.chapter {
+  border-color: var(--copper-hot);
+}
+
+.plaque.finale {
+  border-color: var(--live);
+}
+
+.plaque .eyebrow {
+  margin: 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--copper);
+}
+
+.plaque h2 {
+  margin: 0.15rem 0 0.25rem;
+  font-size: 1.35rem;
+  letter-spacing: 0.08em;
+}
+
+.plaque .body,
+.plaque .meta {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.plaque .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.7rem;
+}
+
+.plaque .actions button {
+  flex: 1 1 8rem;
+  background: #2a2118;
+  border-color: var(--copper);
+}
+
+.plaque .actions button.primary {
+  background: #3a2a16;
+  color: var(--copper-hot);
+}
+
+.dock {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.45rem 0.7rem 0.6rem;
+  background: #0c121c;
+  border-top: 1px solid #2a2116;
+}
+
+.dock button {
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+}
+
+.glyph {
+  margin-right: 0.35rem;
+  color: var(--copper);
+}
+
+.sheet {
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  max-height: min(58%, 28rem);
+  overflow: auto;
+  background: #121a26;
+  border: 1px solid #4a3822;
+  border-radius: 14px;
+  padding: 0.75rem;
+  z-index: 5;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.5);
+  overscroll-behavior: contain;
+}
+
+.sheet-small {
+  max-height: 16rem;
+  bottom: auto;
+  top: 4.6rem;
+  left: auto;
+  right: 0.5rem;
+  width: min(20rem, calc(100% - 1rem));
+}
+
+.sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+}
+
+.sheet-tools {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.sheet-tools button {
+  min-height: 40px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sheet-head h2 {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.icon-close {
+  min-height: 40px;
+}
+
+.sheet-note {
+  margin: 0 0 0.7rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.map-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.map-cell {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 0.45rem;
+  text-align: left;
+  padding: 0.45rem 0.5rem;
+  background: #161f2c;
+  min-height: 52px;
+}
+
+.map-cell .num {
+  grid-row: 1 / span 2;
+  font-variant-numeric: tabular-nums;
+  color: var(--copper);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding-top: 0.1rem;
+}
+
+.map-cell .name {
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.map-cell .detail {
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.map-cell.is-current {
+  border-color: var(--copper-hot);
+  box-shadow: inset 0 0 0 1px var(--copper-hot);
+}
+
+.map-cell.is-live .detail {
+  color: var(--live);
+}
+
+.map-cell .mark {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.toggles {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: #161f2c;
+}
+
+.toggle[aria-pressed="true"] .toggle-state {
+  color: var(--live);
+}
+
+.toggle[aria-pressed="false"] .toggle-state {
+  color: var(--muted);
+}
+
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (min-width: 640px) {
+  .chrome {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "brand readout tools";
+    align-items: center;
+  }
+
+  .map-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .float-copy .line {
+    font-size: 1.4rem;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .chrome {
+    padding: 0.28rem 0.6rem;
+  }
+
+  .shift,
+  .meters .k {
+    display: none;
+  }
+
+  .board {
+    font-size: 0.9rem;
+  }
+
+  .dock {
+    padding: 0.28rem 0.5rem;
+  }
+
+  .dock button,
+  .tools button {
+    min-height: 36px;
+  }
+
+  .plaque {
+    padding: 0.55rem 0.7rem;
+  }
+
+  .plaque h2 {
+    font-size: 1.05rem;
+  }
+
+  .sheet {
+    max-height: min(78%, 22rem);
+  }
+}

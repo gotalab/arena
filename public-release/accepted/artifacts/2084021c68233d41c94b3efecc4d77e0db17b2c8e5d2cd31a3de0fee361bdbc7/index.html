@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>SHOAL</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="stage"></canvas>
+
+  <div id="title" class="overlay">
+    <div class="mark">SHOAL</div>
+    <div class="mark-rule"></div>
+    <div class="start">tap a shell</div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <div id="ceremony" class="overlay hidden">
+    <div class="panel">
+      <div class="cer-head">the tide turns</div>
+      <div class="cer-pearls"><span id="cerPearls">0</span><em>pearls</em></div>
+      <div class="cer-flag" id="cerFlag"></div>
+      <div class="cer-rank" id="cerRank">Pebble</div>
+      <div class="ladder" id="cerLadder"></div>
+      <div class="stats">
+        <div class="stat sig"><span id="cerRipple">0</span><label>widest ripple</label></div>
+        <div class="stat"><span id="cerPool">1</span><label>deepest pool</label></div>
+        <div class="stat"><span id="cerShells">0</span><label>shells turned</label></div>
+      </div>
+      <div class="cer-go">tap to dive again</div>
+    </div>
+  </div>
+
+  <button id="mute" type="button" aria-pressed="false">sound on</button>
+</div>
+
+<script src="js/rng.js"></script>
+<script src="js/solver.js"></script>
+<script src="js/board.js"></script>
+<script src="js/game.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/view.js"></script>
+<script src="js/input.js"></script>
+<script src="js/bridge.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

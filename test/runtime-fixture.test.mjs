@@ -42,7 +42,7 @@ function setDigest(values) {
     .digest("hex");
 }
 
-test("current public projection has three tasks and the complete ordered assignment set", () => {
+test("current public projection has five tasks and the complete ordered assignment set", () => {
   const output = projectRuntimeFixture(accepted);
   const rows = assignmentRows(output.fixture);
   const playableByTask = new Map();
@@ -65,11 +65,11 @@ test("current public projection has three tasks and the complete ordered assignm
     }
   }
 
-  assert.equal(output.tasks.length, 3);
+  assert.equal(output.tasks.length, 5);
   assert.deepEqual(output.tasks.map((task) => task.id), accepted.catalog.map((task) => task.id));
-  assert.equal(rows.length, 444);
-  assert.equal(output.manifest.assignmentCount, 444);
-  assert.equal(output.manifest.artifactCount, 38);
+  assert.equal(rows.length, 732);
+  assert.equal(output.manifest.assignmentCount, 732);
+  assert.equal(output.manifest.artifactCount, 63);
   assert.deepEqual(rows.map((row) => row.id), expectedIds);
   assert.equal(new Set(rows.map((row) => row.id)).size, rows.length);
   assert.equal(output.manifest.assignmentSetSha256, setDigest(expectedIds));
@@ -119,6 +119,14 @@ test("private root data is ignored while malformed or protected public projectio
   const protectedCatalog = structuredClone(accepted);
   protectedCatalog.catalog[0].prompt = "private-instruction";
   assert.throws(() => projectRuntimeFixture(protectedCatalog), /protected_field:prompt/);
+
+  const spacedDisplayTitle = structuredClone(accepted);
+  spacedDisplayTitle.catalog[0].name = spacedDisplayTitle.catalog[0].name.split("").join(" ");
+  assert.doesNotThrow(() => projectRuntimeFixture(spacedDisplayTitle));
+
+  const mismatchedTitle = structuredClone(accepted);
+  mismatchedTitle.catalog[0].name = "Different game";
+  assert.throws(() => projectRuntimeFixture(mismatchedTitle), /task_title_mismatch/);
 });
 
 test("a twelve-hex prefix collision stops generation before SQL is produced", () => {

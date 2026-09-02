@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a3d52">
+<title>SHOAL</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage" class="ready">
+  <canvas id="pool"></canvas>
+
+  <div id="hud" aria-hidden="true">
+    <div class="hud-row">
+      <div class="hud-left">
+        <div class="pool-chip"><span id="poolNo">1</span></div>
+        <div class="hud-stat pearls"><span class="pearl-ico"></span><span id="pearls">0</span></div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-stat urchins"><span class="urchin-ico"></span><span id="urchins">0</span></div>
+      </div>
+    </div>
+    <div class="tide-wrap"><div id="tideFill" class="tide-fill"></div></div>
+  </div>
+
+  <div id="toast" aria-hidden="true"></div>
+  <div id="hint" aria-hidden="true"></div>
+
+  <div id="title">
+    <div class="t-name">SHOAL</div>
+    <div class="t-line">tap a shell to begin</div>
+  </div>
+
+  <div id="ceremony" hidden>
+    <div class="cer-card">
+      <div class="cer-kicker" id="cerKicker">THE TIDE TURNS</div>
+      <div class="cer-rank" id="cerRank">Pebble</div>
+      <div class="cer-pearls">
+        <span class="pearl-ico big"></span><span id="cerPearls">0</span>
+        <span class="cer-best">best <b id="cerBest">0</b></span>
+      </div>
+      <div class="cer-stats">
+        <div class="cer-stat"><span class="cer-stat-label">deepest pool</span><span class="cer-stat-val" id="cerPool">1</span></div>
+        <div class="cer-stat"><span class="cer-stat-label">biggest ripple</span><span class="cer-stat-val" id="cerRipple">0</span></div>
+        <div class="cer-stat"><span class="cer-stat-label">fastest clear</span><span class="cer-stat-val" id="cerFast">—</span></div>
+      </div>
+      <div class="cer-ladder" id="cerLadder"></div>
+      <div class="cer-note" id="cerNote"></div>
+      <div class="cer-tap">tap anywhere to dive again</div>
+    </div>
+  </div>
+</div>
+
+<script src="core.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

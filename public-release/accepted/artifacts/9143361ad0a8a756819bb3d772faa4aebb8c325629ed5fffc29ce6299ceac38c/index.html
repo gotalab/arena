@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071416">
+  <title>Lumen Yard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app" class="app" aria-label="Lumen Yard puzzle game">
+    <header class="topbar">
+      <button id="mapBtn" class="brand button-plain" type="button" aria-label="Open board map">
+        <span class="brand-mark" aria-hidden="true">⌁</span>
+        <span><strong>LUMEN YARD</strong><small id="levelIndex">Circuit 01 / 20</small></span>
+      </button>
+      <button id="settingsBtn" class="icon-btn" type="button" aria-label="Open settings">⚙</button>
+    </header>
+
+    <section class="yard-panel" aria-labelledby="levelName">
+      <div class="yard-heading">
+        <div>
+          <p class="eyebrow" id="chapterLabel">OPENING RESTORATION</p>
+          <h1 id="levelName">First Light</h1>
+        </div>
+        <div class="power-readout" aria-label="Powered sockets">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <strong id="powerCount">0 / 1</strong><small>POWERED</small>
+        </div>
+      </div>
+
+      <div id="boardFrame" class="board-frame">
+        <div class="skyline" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <div id="surge" class="surge" aria-hidden="true"></div>
+        <div id="board" class="board" role="grid" aria-label="Power yard board"></div>
+        <div id="invitation" class="invitation"><strong>Restore the grid.</strong><span>Swipe or tap beside Pip to move</span></div>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="stats" aria-label="Attempt statistics">
+        <span><small>MOVES</small><strong id="moves">0</strong></span>
+        <span><small>PUSHES</small><strong id="pushes">0</strong></span>
+        <span><small>BEST</small><strong id="best">—</strong></span>
+      </div>
+    </section>
+
+    <nav class="controls" aria-label="Game controls">
+      <button id="undoBtn" type="button"><span aria-hidden="true">↶</span> Undo</button>
+      <button id="restartBtn" type="button"><span aria-hidden="true">↻</span> Restart</button>
+      <button id="boardsBtn" class="accent" type="button"><span aria-hidden="true">▦</span> Board Map</button>
+    </nav>
+
+    <footer><span id="statusLine">Current hum: faint</span><span>YARD CREW · NIGHT SHIFT</span></footer>
+  </main>
+
+  <dialog id="mapDialog" class="sheet">
+    <div class="sheet-head"><div><p class="eyebrow">YARD SCHEMATIC</p><h2>Board Map</h2></div><button class="close-btn" type="button" data-close="mapDialog" aria-label="Close board map">×</button></div>
+    <p class="sheet-copy" id="campaignProgress">0 of 20 circuits restored</p>
+    <div id="levelGrid" class="level-grid"></div>
+  </dialog>
+
+  <dialog id="settingsDialog" class="sheet settings-sheet">
+    <div class="sheet-head"><div><p class="eyebrow">WORKBENCH</p><h2>Settings</h2></div><button class="close-btn" type="button" data-close="settingsDialog" aria-label="Close settings">×</button></div>
+    <label class="toggle-row"><span><strong>Sound</strong><small>Synthesized yard tones</small></span><input id="soundToggle" type="checkbox" checked><i aria-hidden="true"></i></label>
+    <label class="toggle-row"><span><strong>Motion</strong><small>Ambient sparks and movement</small></span><input id="motionToggle" type="checkbox" checked><i aria-hidden="true"></i></label>
+    <p class="keys">Keys: arrows / WASD · U undo · R restart</p>
+  </dialog>
+
+  <dialog id="completeDialog" class="complete-dialog">
+    <div class="completion-glow" aria-hidden="true"></div>
+    <p class="eyebrow" id="completeKicker">CIRCUIT ONLINE</p>
+    <h2 id="completeTitle">Power Restored</h2>
+    <p id="completeCopy">The relay is seated. The next circuit is waiting.</p>
+    <div id="summary" class="summary" hidden></div>
+    <div class="completion-actions">
+      <button id="completionUndoBtn" type="button">Undo</button>
+      <button id="replayBtn" type="button">Replay</button>
+      <button id="nextBtn" class="accent" type="button">Next Circuit</button>
+      <button id="completeMapBtn" type="button">Board Map</button>
+    </div>
+  </dialog>
+
+  <script src="game.js"></script>
+</body>
+</html>

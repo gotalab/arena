@@ -11,6 +11,8 @@ function controller(overrides = {}) {
     overview: {
       state: { taskIds: [], harnesses: [], models: [], efforts: [], playableOnly: false, chartTaskId: "combined" },
       setState() {},
+      focusRequest: null,
+      requestFocus() {},
     },
     task: {
       state: {
@@ -21,6 +23,8 @@ function controller(overrides = {}) {
         check: { ids: [], categories: [], groups: [], outcomes: [], blockingOnly: false, differencesOnly: false },
       },
       setState() {},
+      focusRequest: null,
+      requestFocus() {},
     },
     ...overrides,
   };
@@ -132,8 +136,10 @@ test("open_task starts a review only from 2 to 4 playable Builds selected on the
 
 test("Benchmark tool mutates the shared controller and returns a bounded compact page", async () => {
   let visibleState = null;
+  let focused = false;
   const benchmarkController = controller();
   benchmarkController.overview.setState = (state) => { visibleState = state; benchmarkController.overview.state = state; };
+  benchmarkController.overview.requestFocus = () => { focused = true; };
   const tools = arenaToolDefinitions(context({
     route: "benchmark",
     identityAvailable: true,
@@ -149,6 +155,7 @@ test("Benchmark tool mutates the shared controller and returns a bounded compact
   assert.equal(output.structuredContent.agents.length <= 2, true);
   assert.deepEqual(output.structuredContent.taskIds, [taskId]);
   assert.equal(JSON.stringify(output).includes("checks"), false);
+  assert.equal(focused, true);
 });
 
 test("task Build tool supports arbitrary selection, staged rows and explicit explanations", async () => {
@@ -156,8 +163,10 @@ test("task Build tool supports arbitrary selection, staged rows and explicit exp
   const builds = bundle.release.builds.filter((build) => build.taskId === taskId);
   assert.ok(builds.length >= 6);
   let visibleState = null;
+  const focusRequests = [];
   const benchmarkController = controller();
   benchmarkController.task.setState = (state) => { visibleState = state; benchmarkController.task.state = state; };
+  benchmarkController.task.requestFocus = (focusedTaskId, target, checkIds = []) => { focusRequests.push({ taskId: focusedTaskId, target, checkIds }); };
   const tools = arenaToolDefinitions(context({
     route: "task",
     activeTaskId: taskId,
@@ -174,9 +183,12 @@ test("task Build tool supports arbitrary selection, staged rows and explicit exp
   assert.equal(summary.structuredContent.summary.selectedBuildCount, 6);
   assert.equal(summary.structuredContent.rows.length, 0);
   assert.equal(summary.structuredContent.evidence.length, 0);
+  assert.deepEqual(summary.structuredContent.uiFocus, { target: "results", checkIds: [] });
+  assert.equal(focusRequests.at(-1).target, "results");
   const rows = await compare.execute({ stage: "rows", limit: 2 });
   assert.equal(rows.structuredContent.rows.length <= 2, true);
   assert.ok(rows.structuredContent.rows.every((row) => row.cells.length === 6));
+  assert.equal(focusRequests.at(-1).target, "rows");
   assert.equal(JSON.stringify(rows.structuredContent.rows).includes("explanation"), false);
   const buildPage = await compare.execute({ stage: "rows", limit: 1, buildLimit: 2 });
   assert.equal(buildPage.structuredContent.builds.length, 2);
@@ -185,6 +197,7 @@ test("task Build tool supports arbitrary selection, staged rows and explicit exp
   assert.equal(Object.hasOwn(buildPage.structuredContent, "activeState"), false);
   const criteria = await compare.execute({ stage: "criteria", limit: 2 });
   assert.equal(criteria.structuredContent.criteria.length, 2);
+  assert.equal(focusRequests.at(-1).target, "criteria");
   assert.equal(criteria.structuredContent.rows.length, 0);
   const focused = await compare.execute({ check: { ids: [criteria.structuredContent.criteria[0].checkId] }, stage: "summary", includeBuildDetails: true });
   assert.deepEqual(visibleState.check.ids, [criteria.structuredContent.criteria[0].checkId]);
@@ -195,6 +208,7 @@ test("task Build tool supports arbitrary selection, staged rows and explicit exp
     const evidence = await compare.execute({ stage: "evidence", checkIds: [checkId], limit: 2 });
     assert.equal(evidence.structuredContent.evidence.length <= 2, true);
     assert.ok(evidence.structuredContent.evidence.every((entry) => Object.hasOwn(entry, "explanation")));
+    assert.deepEqual(focusRequests.at(-1), { taskId, target: "evidence", checkIds: [checkId] });
   }
 });
 

@@ -191,7 +191,7 @@ function openTaskTool(context: ArenaToolContext): WebMcpTool {
 function filterBenchmarkTool(context: ArenaToolContext): WebMcpTool {
   return {
     name: "filter_benchmark_results",
-    description: "Change the visible Benchmark task and agent filters. The Leaderboard, score-cost chart, task list and URL update together.",
+    description: "Change the visible Benchmark task and agent filters. The Leaderboard, score-cost chart, task list and URL update together, and the viewport follows the filter controls.",
     inputSchema: {
       type: "object",
       properties: {
@@ -228,6 +228,7 @@ function filterBenchmarkTool(context: ArenaToolContext): WebMcpTool {
       };
       const next = normalizeBenchmarkOverviewState(stateInput, context.release, context.games);
       context.benchmarkController.overview.setState(next);
+      context.benchmarkController.overview.requestFocus();
       const page = createBenchmarkOverviewResult(context.release, context.games, next, {
         limit: numberValue(value.limit, "limit"),
         cursor: cursorValue(value.cursor),
@@ -257,7 +258,7 @@ function filterBenchmarkTool(context: ArenaToolContext): WebMcpTool {
 function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
   return {
     name: "compare_task_builds",
-    description: "Focus the visible Build table and evaluator matrix. Start with summary, page criteria, inspect bounded rows, then request evidence for exact check ids; include Build details only after narrowing candidates.",
+    description: "Focus the visible Build table and evaluator matrix. The viewport follows the requested stage; evidence opens and highlights exact check rows. Start with summary, page criteria, inspect bounded rows, then request evidence for exact check ids; include Build details only after narrowing candidates.",
     inputSchema: {
       type: "object",
       properties: {
@@ -321,7 +322,6 @@ function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
       };
       const taskId = context.activeTaskId;
       const next = normalizeTaskComparisonState(stateInput, context.release, taskId);
-      context.benchmarkController.task.setState(next);
       const requestedLimit = numberValue(value.limit, "limit") ?? 20;
       const requestedBuildLimit = numberValue(value.buildLimit, "buildLimit") ?? 20;
       const includeBuildDetails = booleanValue(value.includeBuildDetails, "includeBuildDetails") ?? false;
@@ -334,6 +334,11 @@ function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
       if (requestedCheckIds?.some((checkId) => !knownCheckIds.has(checkId))) throw new Error("checkIds must name published checks for the active task");
       const evidenceBuildIds = stringArray(value.evidenceBuildIds, "evidenceBuildIds");
       if (evidenceBuildIds?.some((buildId) => !taskBuildIds.has(buildId))) throw new Error("evidenceBuildIds must belong to the active public task");
+      context.benchmarkController.task.setState(next);
+      const focusTarget = stage === "summary"
+        ? "results"
+        : stage ?? (value.check !== undefined || (requestedCheckIds?.length ?? 0) > 0 ? "rows" : "results");
+      context.benchmarkController.task.requestFocus(taskId, focusTarget, focusTarget === "evidence" ? requestedCheckIds : []);
       const page = createTaskComparisonResult(context.release, taskId, next, {
         stage: stage ?? "summary",
         limit: cellBoundedLimit,
@@ -370,6 +375,7 @@ function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
         buildNextCursor: page.buildNextCursor,
         buildContinuation: page.buildContinuation,
         outputCellBudget: TOOL_CELL_BUDGET,
+        uiFocus: { target: focusTarget, checkIds: focusTarget === "evidence" ? requestedCheckIds ?? [] : [] },
       });
     },
   };

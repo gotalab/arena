@@ -35,7 +35,12 @@ import {
 import { blindRelease, games as tasks, publication, taskManifests } from "./lib/publication";
 import type { PublicBuild, PublicRelease } from "./public-types";
 import type { ArenaToolRoute } from "./lib/arena-tools";
-import type { ArenaBenchmarkController } from "./lib/benchmark-controller";
+import type {
+  ArenaBenchmarkController,
+  BenchmarkFocusRequest,
+  TaskComparisonFocusRequest,
+  TaskComparisonFocusTarget,
+} from "./lib/benchmark-controller";
 
 const navItems = [
   { id: "play", label: "Play" },
@@ -124,6 +129,9 @@ export function App() {
     efforts: [],
     check: { ids: [], categories: [], groups: [], outcomes: [], blockingOnly: false, differencesOnly: false },
   });
+  const [benchmarkFocusRequest, setBenchmarkFocusRequest] = useState<BenchmarkFocusRequest | null>(null);
+  const [taskFocusRequest, setTaskFocusRequest] = useState<TaskComparisonFocusRequest | null>(null);
+  const focusSequence = useRef(0);
   const webMcpProbe = (import.meta.env.DEV || import.meta.env.VITE_WEBMCP_PROBE === "true")
     && new URLSearchParams(window.location.search).get("webmcp-probe") === "1";
 
@@ -175,6 +183,7 @@ export function App() {
 
   const updateBenchmarkState = useCallback((next: BenchmarkOverviewState) => {
     if (!namedRelease || route !== "benchmark") return;
+    setBenchmarkFocusRequest(null);
     const normalized = normalizeBenchmarkOverviewState(next, namedRelease, tasks);
     const query = benchmarkOverviewQueryString(normalized, namedRelease, tasks);
     window.history.replaceState(null, "", `${locationPath(location)}${query ? `?${query}` : ""}`);
@@ -183,11 +192,22 @@ export function App() {
 
   const updateTaskComparisonState = useCallback((next: TaskComparisonState) => {
     if (!namedRelease || !slugTask || !["task", "build"].includes(route)) return;
+    setTaskFocusRequest(null);
     const normalized = normalizeTaskComparisonState(next, namedRelease, slugTask.id);
     const query = serializeTaskComparisonSearchParams(normalized, namedRelease, slugTask.id).toString();
     window.history.replaceState(null, "", `${locationPath(location)}${query ? `?${query}` : ""}`);
     setTaskComparisonState(normalized);
   }, [location, namedRelease, route, slugTask]);
+
+  const requestBenchmarkFocus = useCallback(() => {
+    focusSequence.current += 1;
+    setBenchmarkFocusRequest({ sequence: focusSequence.current, target: "filters" });
+  }, []);
+
+  const requestTaskFocus = useCallback((taskId: string, target: TaskComparisonFocusTarget, checkIds: readonly string[] = []) => {
+    focusSequence.current += 1;
+    setTaskFocusRequest({ sequence: focusSequence.current, taskId, target, checkIds: [...checkIds] });
+  }, []);
 
   // The global record names every configuration. Preserve that provenance so
   // a later comparison is playable but cannot be recorded as a blind choice.
@@ -216,6 +236,8 @@ export function App() {
   }, [route, slugTask, namedBuild, namedRelease]);
 
   const navigate = useCallback((route: string, taskId?: string, trial?: PublicBuild | null) => {
+    setBenchmarkFocusRequest(null);
+    setTaskFocusRequest(null);
     const slug = taskId
       ? tasks.find((task) => task.id === taskId)?.slug ?? null
       : null;
@@ -252,9 +274,19 @@ export function App() {
   const toolAuthorizationRef = useRef(toolAuthorizationKey);
   toolAuthorizationRef.current = toolAuthorizationKey;
   const benchmarkController = useMemo<ArenaBenchmarkController>(() => ({
-    overview: { state: benchmarkState, setState: updateBenchmarkState },
-    task: { state: taskComparisonState, setState: updateTaskComparisonState },
-  }), [benchmarkState, taskComparisonState, updateBenchmarkState, updateTaskComparisonState]);
+    overview: {
+      state: benchmarkState,
+      setState: updateBenchmarkState,
+      focusRequest: benchmarkFocusRequest,
+      requestFocus: requestBenchmarkFocus,
+    },
+    task: {
+      state: taskComparisonState,
+      setState: updateTaskComparisonState,
+      focusRequest: taskFocusRequest,
+      requestFocus: requestTaskFocus,
+    },
+  }), [benchmarkFocusRequest, benchmarkState, requestBenchmarkFocus, requestTaskFocus, taskComparisonState, taskFocusRequest, updateBenchmarkState, updateTaskComparisonState]);
   const arenaToolContext = useMemo(() => ({
     route: (webMcpProbe ? "not-found" : route) as ArenaToolRoute,
     activeTaskId: activeToolTaskId,
@@ -381,6 +413,7 @@ export function App() {
         {(route === "task" || route === "build") && slugTask && namedRelease && (route !== "build" || namedBuild) && (
           <GameDetail
             comparison={comparison}
+            focusRequest={benchmarkController.task.focusRequest}
             gameToolsManifest={slugTaskManifest}
             initialBuild={namedBuild}
             initialBrowse={browseRequestedTask === slugTask.id}
@@ -432,6 +465,7 @@ export function App() {
         })()}
         {route === "benchmark" && namedRelease && (
           <ResultsView
+            focusRequest={benchmarkController.overview.focusRequest}
             onOpenGame={openTask}
             onStateChange={benchmarkController.overview.setState}
             release={namedRelease}

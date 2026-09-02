@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { checkOutcome } from "../../lib/checks";
 import type { TaskCheckComparison } from "../../lib/task-comparison";
 import { ArenaIcon } from "../ArenaIcon";
@@ -13,6 +13,7 @@ const GLYPHS: Record<string, string> = {
 };
 
 interface ChecksTableProps {
+  focusedCheckIds?: readonly string[];
   model: TaskCheckComparison;
   open?: boolean;
   taskName: string;
@@ -34,8 +35,14 @@ function outcomeCounts(cells: readonly { outcome: string }[]) {
  * instead of being printed into the grid, which buried the pattern the table
  * exists to show.
  */
-export function ChecksTable({ model, open = false, taskName }: ChecksTableProps) {
+export function ChecksTable({ focusedCheckIds = [], model, open = false, taskName }: ChecksTableProps) {
   const [openRows, setOpenRows] = useState<ReadonlySet<string>>(new Set());
+  const focusedChecks = new Set(focusedCheckIds);
+  const focusedKey = focusedCheckIds.join("\0");
+  useEffect(() => {
+    if (!focusedKey) return;
+    setOpenRows((open) => new Set([...open, ...focusedKey.split("\0")]));
+  }, [focusedKey]);
   if (model.totalBeforeFilters === 0) return null;
 
   const toggle = (id: string) => {
@@ -77,7 +84,12 @@ export function ChecksTable({ model, open = false, taskName }: ChecksTableProps)
             {group.rows.map((row) => {
               const counts = outcomeCounts(row.cells);
               return (
-                <details className="checks__stackItem" key={row.id}>
+                <details
+                  className={focusedChecks.has(row.id) ? "checks__stackItem is-webmcp-focus" : "checks__stackItem"}
+                  data-check-id={row.id}
+                  key={row.id}
+                  open={focusedChecks.has(row.id) || undefined}
+                >
                   <summary>
                     <span className="checks__stackName">{row.label}</span>
                     <span className="checks__stackMarks">
@@ -152,7 +164,10 @@ export function ChecksTable({ model, open = false, taskName }: ChecksTableProps)
                   first = false;
                   return (
                     <Fragment key={row.id}>
-                      <tr className={row.differences ? "is-different" : undefined}>
+                      <tr
+                        className={[row.differences ? "is-different" : "", focusedChecks.has(row.id) ? "is-webmcp-focus" : ""].filter(Boolean).join(" ") || undefined}
+                        data-check-id={row.id}
+                      >
                         {categoryCell}
                         <th scope="row">
                           <button

@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+import type { BenchmarkFocusRequest } from "../../lib/benchmark-controller";
 import { configurationParts, configurationSummaries, releaseReady } from "../../lib/configurations";
 import { formatRunDateRange } from "../../lib/format";
 import { compareByScore, scoreValue } from "../../lib/score";
@@ -14,6 +16,7 @@ import { FilterSelect } from "./FilterSelect";
 import { Leaderboard } from "./Leaderboard";
 
 interface ResultsViewProps {
+  focusRequest: BenchmarkFocusRequest | null;
   tasks: Game[];
   /** Open that game's Benchmark detail. */
   onOpenGame: (taskId: string) => void;
@@ -32,7 +35,13 @@ function toggleValue(values: readonly string[], value: string): string[] {
  * the ranking; the reader's own pick lives on that game's detail page and
  * the Play reveal.
  */
-export function ResultsView({ tasks, onOpenGame, release, state, onStateChange }: ResultsViewProps) {
+export function ResultsView({ focusRequest, tasks, onOpenGame, release, state, onStateChange }: ResultsViewProps) {
+  const filtersRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (focusRequest?.target === "filters") {
+      filtersRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [focusRequest]);
   // A stock harness's strength is a dated claim: the scope line says when
   // these runs actually executed.
   const runDates = formatRunDateRange(release.builds.map((trial) => trial.startedAt));
@@ -71,7 +80,7 @@ export function ResultsView({ tasks, onOpenGame, release, state, onStateChange }
         </p>
       </header>
 
-      <div aria-label="Benchmark filters" className="filter-row benchmark-filters" role="group">
+      <div aria-label="Benchmark filters" className="filter-row benchmark-filters" ref={filtersRef} role="group">
         <FilterSelect
           label="Task"
           onToggle={(value) => update({ taskIds: toggleValue(normalized.taskIds, value) })}

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { hasBlindVerdict, isTaskOpen, preferredTrialId } from "../../lib/blind";
+import type { TaskComparisonFocusRequest } from "../../lib/benchmark-controller";
 import { configurationParts, configurationsById, operationalForCell, seriesOf } from "../../lib/configurations";
 import type { ConfigurationParts } from "../../lib/configurations";
 import { formatCompactTokens, formatCost, formatRunDate, formatSeconds, formatTokens } from "../../lib/format";
@@ -23,6 +24,7 @@ import {
 } from "../../lib/task-comparison";
 
 interface GameDetailProps {
+  focusRequest: TaskComparisonFocusRequest | null;
   task: Game;
   gameToolsManifest: PublicTaskManifest | null;
   comparison: ComparisonState;
@@ -66,10 +68,11 @@ interface BuildResultRow {
  * come from the blind flow, and the page stays masked until the reader has
  * either played blind or explicitly asked to see results.
  */
-export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, initialBrowse = false, onBrowseHandled, onCompare, onOpenBenchmark, onOpenBuild, onReveal, release, state, onStateChange }: GameDetailProps) {
+export function GameDetail({ task, gameToolsManifest, comparison, focusRequest, initialBuild, initialBrowse = false, onBrowseHandled, onCompare, onOpenBenchmark, onOpenBuild, onReveal, release, state, onStateChange }: GameDetailProps) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const evidenceRef = useRef<HTMLDivElement | null>(null);
+  const criteriaRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const criterionTrackingReady = useRef(false);
   const previousCriterionKey = useRef("");
@@ -223,6 +226,28 @@ export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, 
       evidenceRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [criterionKey]);
+
+  useEffect(() => {
+    if (!focusRequest || focusRequest.taskId !== task.id) return;
+    if (focusRequest.target === "results") {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    if (focusRequest.target === "criteria") {
+      criteriaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    if (focusRequest.target === "evidence" && focusRequest.checkIds.length > 0) {
+      const wanted = new Set(focusRequest.checkIds);
+      const visibleRow = [...(evidenceRef.current?.querySelectorAll<HTMLElement>("[data-check-id]") ?? [])]
+        .find((element) => element.offsetParent !== null && wanted.has(element.dataset.checkId ?? ""));
+      if (visibleRow) {
+        visibleRow.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+    }
+    evidenceRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focusRequest, task.id]);
 
   // Walking the stage follows the table's ranked order.
   const step = (delta: number) => {
@@ -443,7 +468,7 @@ export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, 
             ) : null}
 
             <div className="detail__evidence" ref={evidenceRef}>
-              <div aria-label="Evaluator check filters" className="filter-row check-filters" role="group">
+              <div aria-label="Evaluator check filters" className="filter-row check-filters" ref={criteriaRef} role="group">
                 <FilterSelect
                   label="Criteria"
                   onToggle={(value) => updateCheck({ ids: toggleValue(normalizedState.check.ids, value) })}
@@ -480,7 +505,12 @@ export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, 
               <p aria-live="polite" className="benchmark-filter-summary">
                 Comparing {rows.length} {rows.length === 1 ? "Build" : "Builds"}; showing {checkModel.total} of {checkModel.totalBeforeFilters} evaluator checks.
               </p>
-              <ChecksTable model={checkModel} open={normalizedState.check.ids.length > 0} taskName={task.name} />
+              <ChecksTable
+                focusedCheckIds={focusRequest?.taskId === task.id && focusRequest.target === "evidence" ? focusRequest.checkIds : []}
+                model={checkModel}
+                open={normalizedState.check.ids.length > 0 || (focusRequest?.taskId === task.id && ["rows", "evidence"].includes(focusRequest.target))}
+                taskName={task.name}
+              />
               <TaskPrompt taskId={task.id} taskName={task.name} />
             </div>
           </>

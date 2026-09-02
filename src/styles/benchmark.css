@@ -666,6 +666,19 @@ th.board__rank { width: 34px; }
 .checks__table tbody tr.is-different > td {
   background: color-mix(in srgb, var(--accent) 7%, transparent);
 }
+.checks__stackItem.is-webmcp-focus,
+.checks__table tbody tr.is-webmcp-focus > th,
+.checks__table tbody tr.is-webmcp-focus > td {
+  background: color-mix(in srgb, var(--accent) 18%, var(--paper));
+}
+.checks__stackItem.is-webmcp-focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.checks__table tbody tr.is-webmcp-focus > th:first-child {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+[data-check-id] { scroll-margin-block: 96px; }
 .checks__empty {
   margin: 12px 0 0;
   padding: 14px 16px;

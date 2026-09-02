@@ -2,6 +2,7 @@ import "./typescript.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createBenchmarkOverviewResult, normalizeBenchmarkOverviewState, parseBenchmarkOverviewSearchParams, selectBenchmarkOverviewRows, selectRankableTasks, selectVisibleConfigurationIds, selectVisibleTasks, serializeBenchmarkOverviewSearchParams } from "../src/lib/benchmark-view.ts";
+import { chartView } from "../src/lib/chart.ts";
 import { configurationSummaries } from "../src/lib/configurations.ts";
 
 function releaseFixture() {
@@ -201,5 +202,36 @@ test("a task attempted without a valid build completes coverage and contributes 
   assert.equal(cursor.score.replicasHeldInvalid, 3);
   assert.equal(cursor.score.gatesPassed, false);
   assert.deepEqual(cursor.score.gateFailures, ["gate.loads", "gate.valid_build"]);
-  assert.equal(cursor.time, null);
+  assert.equal(cursor.time, 1);
+});
+
+test("operational summaries average reported data without giving partial cost a chart position", () => {
+  const partial = structuredClone(release);
+  const cell = partial.cells.find(
+    (candidate) => candidate.taskId === "task-a" && candidate.configurationId === "cfg-codex",
+  );
+  cell.operational = {
+    runs: 3,
+    time: { mean: 150, reported: 2 },
+    tokens: { mean: 1_500, reported: 2 },
+    estimatedCost: { mean: 1.5, reported: 2 },
+    costAtListPrice: false,
+  };
+
+  const summary = configurationSummaries(partial, games)
+    .find((candidate) => candidate.configuration.id === "cfg-codex");
+  assert.ok(summary);
+  assert.equal(summary.time, (150 + 1 + 1) / 3);
+  assert.equal(summary.tokens, (1_500 + 10 + 10) / 3);
+  assert.equal(summary.estimatedCost, (1.5 + 0.1 + 0.1) / 3);
+  assert.equal(summary.costCoverage, 4);
+  assert.equal(summary.metricRunCount, 5);
+
+  const taskChart = chartView(partial, games, "task-a");
+  assert.ok(taskChart.costless.some((point) => point.configurationId === "cfg-codex"));
+  assert.ok(!taskChart.points.some((point) => point.configurationId === "cfg-codex"));
+
+  const combinedChart = chartView(partial, games, "combined");
+  assert.ok(combinedChart.costless.some((point) => point.configurationId === "cfg-codex"));
+  assert.ok(!combinedChart.points.some((point) => point.configurationId === "cfg-codex"));
 });

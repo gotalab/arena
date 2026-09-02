@@ -96,9 +96,9 @@ export function configurationSummary(
   const timeCoverage = cells.reduce((sum, cell) => sum + cell.operational.time.reported, 0);
   const tokenCoverage = cells.reduce((sum, cell) => sum + cell.operational.tokens.reported, 0);
   const costCoverage = cells.reduce((sum, cell) => sum + cell.operational.estimatedCost.reported, 0);
-  const completeTime = cells.length === taskIds.size && cells.every((cell) => cell.operational.time.mean != null);
-  const completeTokens = cells.length === taskIds.size && cells.every((cell) => cell.operational.tokens.mean != null);
-  const completeCost = cells.length === taskIds.size && cells.every((cell) => cell.operational.estimatedCost.mean != null);
+  const timedCells = cells.filter((cell) => cell.operational.time.mean != null);
+  const tokenCells = cells.filter((cell) => cell.operational.tokens.mean != null);
+  const costedCells = cells.filter((cell) => cell.operational.estimatedCost.mean != null);
   const passed = trials.reduce((sum, trial) => sum + trial.requirements.passed, 0);
   const applicable = trials.reduce((sum, trial) => sum + trial.requirements.applicable, 0);
   const notEvaluated = trials.reduce((sum, trial) => sum + trial.requirements.notEvaluated, 0);
@@ -118,24 +118,23 @@ export function configurationSummary(
     // counts against the share like any other unmet one; its count is
     // disclosed separately.
     requirementsRate: applicable > 0 ? passed / applicable : null,
-    // Each task contributes one avg/run with equal weight. A partial mean
-    // would silently favor the tasks that reported, so it is withheld unless
-    // coverage is complete; the counters keep the gap on record.
-    time: completeTime
-      ? cells.reduce((sum, cell) => sum + (cell.operational.time.mean ?? 0), 0) / cells.length
+    // Operational metrics describe observed resource use; they do not affect
+    // the score. Each task with a reported mean contributes once, missing
+    // values are never zero, and the coverage counters preserve the gap.
+    time: timedCells.length > 0
+      ? timedCells.reduce((sum, cell) => sum + (cell.operational.time.mean ?? 0), 0) / timedCells.length
       : null,
     timeCoverage,
-    tokens: completeTokens
-      ? cells.reduce((sum, cell) => sum + (cell.operational.tokens.mean ?? 0), 0) / cells.length
+    tokens: tokenCells.length > 0
+      ? tokenCells.reduce((sum, cell) => sum + (cell.operational.tokens.mean ?? 0), 0) / tokenCells.length
       : null,
     tokenCoverage,
-    estimatedCost: completeCost
-      ? cells.reduce((sum, cell) => sum + (cell.operational.estimatedCost.mean ?? 0), 0) / cells.length
+    estimatedCost: costedCells.length > 0
+      ? costedCells.reduce((sum, cell) => sum + (cell.operational.estimatedCost.mean ?? 0), 0) / costedCells.length
       : null,
     costCoverage,
     metricRunCount,
-    // The ~ marker qualifies a shown total; a withheld total has nothing to mark.
-    costAtListPrice: completeCost && cells.some((cell) => cell.operational.costAtListPrice),
+    costAtListPrice: costedCells.length > 0 && costedCells.some((cell) => cell.operational.costAtListPrice),
     tasksCovered: new Set([
       ...cells.map((cell) => cell.taskId),
       ...zeroBuildAttempts.map((attempt) => attempt.taskId),

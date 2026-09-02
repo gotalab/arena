@@ -3885,11 +3885,11 @@
             "reported": 3
           },
           "tokens": {
-            "mean": null,
+            "mean": 693088,
             "reported": 1
           },
           "estimatedCost": {
-            "mean": null,
+            "mean": 0.302531,
             "reported": 1
           },
           "costAtListPrice": false
@@ -4895,11 +4895,11 @@
             "reported": 3
           },
           "tokens": {
-            "mean": null,
+            "mean": 555714,
             "reported": 2
           },
           "estimatedCost": {
-            "mean": null,
+            "mean": 0.26696,
             "reported": 2
           },
           "costAtListPrice": false

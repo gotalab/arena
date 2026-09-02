@@ -89,6 +89,9 @@ function trialPoints(release: Release, task: { id: string; name: string }): Char
       const parts = configurationParts(configurations.get(trial.configurationId));
       const score = cellScore(release, trial.taskId, trial.configurationId);
       const operational = operationalForCell(release, trial.taskId, trial.configurationId);
+      const chartCost = operational.estimatedCost.reported === operational.runs
+        ? operational.estimatedCost.mean
+        : null;
       return {
         trialId: trial.id,
         taskId: trial.taskId,
@@ -98,8 +101,10 @@ function trialPoints(release: Release, task: { id: string; name: string }): Char
         configurationName: parts.name,
         configurationId: trial.configurationId,
         provider: configurations.get(trial.configurationId)?.harnessId ?? null,
-        cost: operational.estimatedCost.mean,
-        costBasis: operational.estimatedCost.mean == null
+        // The result table may show a reported-run average. A chart position
+        // implies full comparability, so partial cost coverage stays off-axis.
+        cost: chartCost,
+        costBasis: chartCost == null
           ? null
           : operational.costAtListPrice ? "list-price" : "provider",
         rate: score.mean,
@@ -144,10 +149,10 @@ function combinedPoints(release: Release, tasks: Array<{ id: string }>): {
     configurationName: configurationParts(summary.configuration).name,
     configurationId: summary.configuration.id,
     provider: summary.configuration.harnessId ?? null,
-    // A total cost exists only when every run in the total reported one; a
-    // partial sum has no honest position on the axis.
-    cost: summary.estimatedCost,
-    costBasis: summary.estimatedCost != null
+    // Tables may show a reported-run average; the combined plot still needs
+    // every included run to report cost before assigning an x coordinate.
+    cost: summary.costCoverage === summary.metricRunCount ? summary.estimatedCost : null,
+    costBasis: summary.costCoverage === summary.metricRunCount && summary.estimatedCost != null
       ? (summary.costAtListPrice ? "list-price" : "provider")
       : null,
     rate: summary.score.mean,

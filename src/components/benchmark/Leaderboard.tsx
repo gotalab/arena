@@ -74,7 +74,11 @@ export function Leaderboard({ tasks, release, configurationIds }: { tasks: Game[
           markup change can silently break. The wrapper owns the sticky-header
           scroll region, so a long table keeps its top rows in view. */}
       <div className="board__scroll">
-        <table className="board__table" aria-label="Agents ranked by requirements met">
+        <table
+          aria-describedby="leaderboard-notes"
+          aria-label="Agents ranked by requirements met"
+          className="board__table"
+        >
           <thead>
             <tr className="board__row">
               <th scope="col" className="board__rank">#</th>
@@ -109,11 +113,11 @@ export function Leaderboard({ tasks, release, configurationIds }: { tasks: Game[
           />
         ))}
       </ol>
-      <ul className="board__legend" aria-label="Table legend">
+      <ul className="board__legend" aria-label="Table legend" id="leaderboard-notes">
         {!rowEvidence ? (
           <li><b>Score</b> mean over {ranked.length} tasks, every run counted</li>
         ) : null}
-        <li><b>Task averages</b> runs are averaged within each task, then tasks are weighted equally; a missing run meter withholds the mean</li>
+        <li><b>Operational averages</b> use reported runs only, averaging within each task before tasks; missing values are never zero</li>
         {partial.length > 0 ? (
           <li><b>–</b> unranked: builds for only some tasks</li>
         ) : null}
@@ -138,7 +142,6 @@ function BoardRow({
 }) {
   const parts = configurationParts(summary.configuration);
   const rate = summary.score.mean;
-  const metricCoverage = metricCoverageFor(summary);
 
   return (
     <tr className="board__row">
@@ -162,16 +165,15 @@ function BoardRow({
         </span>
       </td>
       <td className="board__num">
-        {formatSeconds(summary.time)}
-        {metricCoverage(summary.timeCoverage) ? <small>{metricCoverage(summary.timeCoverage)}</small> : null}
+        {summary.time == null ? "—" : formatSeconds(summary.time)}
       </td>
       <td className="board__num">
-        {formatTokens(summary.tokens)}
-        {metricCoverage(summary.tokenCoverage) ? <small>{metricCoverage(summary.tokenCoverage)}</small> : null}
+        {summary.tokens == null ? "—" : formatTokens(summary.tokens)}
       </td>
       <td className="board__num">
-        {summary.costAtListPrice ? "~" : ""}{formatCost(summary.estimatedCost)}
-        {metricCoverage(summary.costCoverage) ? <small>{metricCoverage(summary.costCoverage)}</small> : null}
+        {summary.estimatedCost == null
+          ? "—"
+          : `${summary.costAtListPrice ? "~" : ""}${formatCost(summary.estimatedCost)}`}
       </td>
     </tr>
   );
@@ -190,12 +192,6 @@ function MobileBoardRow({
 }) {
   const parts = configurationParts(summary.configuration);
   const rate = summary.score.mean;
-  const metricCoverage = metricCoverageFor(summary);
-  const coverageNotes = [
-    metricCoverage(summary.timeCoverage),
-    metricCoverage(summary.tokenCoverage),
-    metricCoverage(summary.costCoverage),
-  ].filter((value): value is string => value != null);
 
   return (
     <li className="board-mobile-row">
@@ -214,19 +210,12 @@ function MobileBoardRow({
         </span>
       </span>
       <span className="board-mobile-row__metrics" aria-label="Average time, tokens, and cost per task">
-        <span>{formatSeconds(summary.time)}</span>
-        <span>{formatCompactTokens(summary.tokens)}</span>
-        <span>{summary.costAtListPrice ? "~" : ""}{formatCost(summary.estimatedCost)}</span>
+        <span>{summary.time == null ? "—" : formatSeconds(summary.time)}</span>
+        <span>{summary.tokens == null ? "—" : formatCompactTokens(summary.tokens)}</span>
+        <span>{summary.estimatedCost == null
+          ? "—"
+          : `${summary.costAtListPrice ? "~" : ""}${formatCost(summary.estimatedCost)}`}</span>
       </span>
-      {coverageNotes.length > 0 ? (
-        <small className="board-mobile-row__coverage">{coverageNotes.join("; ")}</small>
-      ) : null}
     </li>
   );
-}
-
-function metricCoverageFor(summary: ConfigurationSummary) {
-  return (reported: number) => reported === summary.metricRunCount
-    ? null
-    : `${reported} / ${summary.metricRunCount} runs reported`;
 }

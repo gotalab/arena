@@ -39,14 +39,10 @@ interface GameDetailProps {
   onStateChange: (state: TaskComparisonState) => void;
 }
 
-const metricCoverage = (reported: number, runs: number) =>
-  reported === runs ? null : `${reported} / ${runs} runs reported`;
-
 interface BuildResultRow {
   compactTokens: string;
   cost: string;
   costAtListPrice: boolean;
-  costCoverage: string | null;
   evidence: string | null;
   parts: ConfigurationParts;
   playing: boolean;
@@ -55,8 +51,6 @@ interface BuildResultRow {
   runTimestamp: string | null;
   score: string;
   time: string;
-  timeCoverage: string | null;
-  tokenCoverage: string | null;
   tokens: string;
   trial: Trial;
 }
@@ -154,10 +148,11 @@ export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, 
     const score = cellScoreForTrial(release, trial);
     const operational = operationalForCell(release, trial.taskId, trial.configurationId);
     return {
-      compactTokens: formatCompactTokens(operational.tokens.mean),
-      cost: `${operational.costAtListPrice ? "~" : ""}${formatCost(operational.estimatedCost.mean)}`,
+      compactTokens: operational.tokens.mean == null ? "—" : formatCompactTokens(operational.tokens.mean),
+      cost: operational.estimatedCost.mean == null
+        ? "—"
+        : `${operational.costAtListPrice ? "~" : ""}${formatCost(operational.estimatedCost.mean)}`,
       costAtListPrice: operational.costAtListPrice,
-      costCoverage: metricCoverage(operational.estimatedCost.reported, operational.runs),
       evidence: score && uniformRuns == null ? scoreEvidence(score, "runs") : null,
       parts: seriesOf(release, trial.configurationId).parts,
       playing: trial.id === activeTrialId,
@@ -165,10 +160,8 @@ export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, 
       runDate: formatRunDate(trial.startedAt),
       runTimestamp: trial.startedAt ?? null,
       score: score ? scoreValue(score) : summary.requirements.rateLabel,
-      time: formatSeconds(operational.time.mean),
-      timeCoverage: metricCoverage(operational.time.reported, operational.runs),
-      tokenCoverage: metricCoverage(operational.tokens.reported, operational.runs),
-      tokens: formatTokens(operational.tokens.mean),
+      time: operational.time.mean == null ? "—" : formatSeconds(operational.time.mean),
+      tokens: operational.tokens.mean == null ? "—" : formatTokens(operational.tokens.mean),
       trial,
     };
   });
@@ -347,8 +340,26 @@ export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, 
                 </button>
               ) : null}
             </div>
-            <p className="buildresults__metric-note">Time, tokens, and cost are averages per run.</p>
             <BuildResults rows={resultRows} onToggle={openBuild} />
+            <div aria-label="Result notes" aria-live="polite" className="buildresults__notes" id="agent-results-notes" role="note">
+              <p>
+                {!played ? "Results were revealed without a vote, so they no longer count as blind picks. " : null}
+                {uniformRuns != null ? `Scores average ${uniformRuns} runs, failures included. ` : null}
+                Time, tokens, and cost average reported runs only; missing values are never zero.
+              </p>
+              {hiddenCount > 0 ? (
+                <p>Filters hide {hiddenCount} {hiddenCount === 1 ? "row" : "rows"}.</p>
+              ) : null}
+              {unfinished.length > 0 ? (
+                <p>
+                  {unfinished.map((attempt) => {
+                    const name = configurationParts(configurations.get(attempt.configurationId)).name;
+                    return `${name} finished 0 of ${attempt.attempted} attempted ${attempt.attempted === 1 ? "run" : "runs"}; ${attempt.attempted === 1 ? "it scores" : "they score"} zero in the Benchmark total`;
+                  }).join("; ")}
+                  , so there is no game to play.
+                </p>
+              ) : null}
+            </div>
             </div>
             {normalizedState.check.ids.length > 0 ? (
               <section aria-live="polite" className="evaluation-lens">
@@ -367,26 +378,6 @@ export function GameDetail({ task, gameToolsManifest, comparison, initialBuild, 
                   View results for these criteria
                 </button>
               </section>
-            ) : null}
-            {!played ? (
-              <p className="detail__note">You revealed these results without voting, so comparisons stay playable but no longer count as blind picks.</p>
-            ) : null}
-            {uniformRuns != null ? (
-              <p className="detail__note">Each score is the mean over {uniformRuns} runs, failures included.</p>
-            ) : null}
-            {hiddenCount > 0 ? (
-              <p className="detail__note">
-                Filters hide {hiddenCount} {hiddenCount === 1 ? "row" : "rows"}.
-              </p>
-            ) : null}
-            {unfinished.length > 0 ? (
-              <p className="detail__note">
-                {unfinished.map((attempt) => {
-                  const name = configurationParts(configurations.get(attempt.configurationId)).name;
-                  return `${name} finished 0 of ${attempt.attempted} attempted ${attempt.attempted === 1 ? "run" : "runs"}; ${attempt.attempted === 1 ? "it scores" : "they score"} zero in the Benchmark total`;
-                }).join("; ")}
-                , so there is no game to play.
-              </p>
             ) : null}
 
             {active ? (
@@ -503,7 +494,7 @@ function BuildResults({ rows, onToggle }: { rows: BuildResultRow[]; onToggle: (t
   return (
     <>
       <div className="buildtable__scroll">
-        <table className="buildtable">
+        <table aria-describedby="agent-results-notes" className="buildtable">
           <thead>
             <tr>
               <th scope="col">Agent</th>
@@ -530,11 +521,9 @@ function BuildResults({ rows, onToggle }: { rows: BuildResultRow[]; onToggle: (t
                 </td>
                 <td className="buildtable__num">
                   {row.time}
-                  {row.timeCoverage ? <small>{row.timeCoverage}</small> : null}
                 </td>
                 <td className="buildtable__num">
                   {row.tokens}
-                  {row.tokenCoverage ? <small>{row.tokenCoverage}</small> : null}
                 </td>
                 <td
                   className="buildtable__num"
@@ -543,7 +532,6 @@ function BuildResults({ rows, onToggle }: { rows: BuildResultRow[]; onToggle: (t
                     : undefined}
                 >
                   {row.cost}
-                  {row.costCoverage ? <small>{row.costCoverage}</small> : null}
                 </td>
                 <td className="buildtable__num" title={row.runTimestamp ?? undefined}>{row.runDate}</td>
                 <td><BuildPlayButton onClick={() => onToggle(row.playing ? null : row.trial.id)} playing={row.playing} /></td>
@@ -553,10 +541,8 @@ function BuildResults({ rows, onToggle }: { rows: BuildResultRow[]; onToggle: (t
         </table>
       </div>
 
-      <ol className="buildresults__compact" aria-label="Agent results">
+      <ol aria-describedby="agent-results-notes" className="buildresults__compact" aria-label="Agent results">
         {rows.map((row, index) => {
-          const coverage = [row.timeCoverage, row.tokenCoverage, row.costCoverage]
-            .filter((value): value is string => value != null);
           return (
             <li className={row.playing ? "buildresult is-playing" : "buildresult"} key={row.trial.id}>
               <span className="buildresult__rank" aria-label={`Rank ${index + 1}`}>{index + 1}</span>
@@ -582,9 +568,6 @@ function BuildResults({ rows, onToggle }: { rows: BuildResultRow[]; onToggle: (t
                 onClick={() => onToggle(row.playing ? null : row.trial.id)}
                 playing={row.playing}
               />
-              {coverage.length > 0 ? (
-                <small className="buildresult__coverage">{coverage.join("; ")}</small>
-              ) : null}
             </li>
           );
         })}

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { allPanesPlayable, type PaneStatus } from "../lib/artifact-frame";
 import type { BlindPaneStatus, BlindSide } from "../lib/blind-tools";
-import { revealLines, sideIndex, sideLabel } from "../lib/blind";
+import { canRecordBlindChoice, revealLines, sideIndex, sideLabel } from "../lib/blind";
 import { blindPairReady as isReleaseReady, seriesOf } from "../lib/configurations";
 import { cellScoreForTrial } from "../lib/score";
 import { artifactSrc, trialsByIds } from "../lib/trials";
@@ -118,18 +118,22 @@ export function GameBrowser({
   const [assignment, setAssignment] = useState<Assignment | null>(null);
   const [choiceError, setChoiceError] = useState("");
   const [choicePending, setChoicePending] = useState(false);
+  const [personalChoice, setPersonalChoice] = useState<string | undefined>(undefined);
   const [activeSide, setActiveSide] = useState(0);
   // A side is judged only after its iframe has painted. Tabbing onto a blank
   // or 404 frame used to unlock the vote; pane status is the real gate.
   const [paneStatus, setPaneStatus] = useState<Readonly<Record<string, PaneStatus>>>({});
   const playerHeading = useRef<HTMLHeadingElement | null>(null);
   const releaseReady = isReleaseReady(release, selectedTask.id);
+  const effectiveChoice = choice ?? personalChoice;
+  const recordsBlindChoice = canRecordBlindChoice(identitySeen);
 
   useEffect(() => {
     setAssignment(null);
     setActiveSide(0);
     setPaneStatus({});
     setChoiceError("");
+    setPersonalChoice(undefined);
     // Re-entering a game whose last pair is already answered must not
     // resurrect that pair as the only Play. Clear the freeze so the next
     // assignmentFor mints a new unvoted pair. A vote in this sitting does
@@ -157,28 +161,28 @@ export function GameBrowser({
 
   const trials = useMemo(() => trialsByIds(release, assignment?.trialIds), [assignment, release]);
   const revealedTrials = useMemo(() => {
-    if (!choice || !revealRelease) return [];
+    if (!effectiveChoice || !revealRelease) return [];
     return trials.map((blindTrial) => (
       revealRelease.builds.find((trial) => trial.artifact.sha256 === blindTrial.artifact.sha256)
     )).filter((trial): trial is PublicBuild => Boolean(trial));
-  }, [choice, revealRelease, trials]);
+  }, [effectiveChoice, revealRelease, trials]);
 
   const showSide = useCallback((index: number) => {
     setActiveSide(index);
   }, []);
 
   const blindToolContext = useMemo(() => {
-    if (!assignment || choice || trials.length !== 2) return null;
+    if (!assignment || effectiveChoice || trials.length !== 2) return null;
     const statusFor = (index: number): BlindPaneStatus => paneStatus[trials[index].id] ?? "idle";
     return {
       taskId: selectedTask.id,
       taskName: selectedTask.name,
       activeSide: sideLabel(activeSide) as BlindSide,
-      blindChoiceAvailable: !identitySeen,
+      blindChoiceAvailable: recordsBlindChoice,
       sideStatus: { A: statusFor(0), B: statusFor(1) },
       openSide: (side: BlindSide) => showSide(side === "A" ? 0 : 1),
     };
-  }, [activeSide, assignment, choice, identitySeen, paneStatus, selectedTask.id, selectedTask.name, showSide, trials]);
+  }, [activeSide, assignment, effectiveChoice, paneStatus, recordsBlindChoice, selectedTask.id, selectedTask.name, showSide, trials]);
   useBlindWebMcpTools(blindToolContext);
 
   const onPaneStatus = useCallback((id: string, status: PaneStatus) => {
@@ -197,12 +201,21 @@ export function GameBrowser({
     }
   };
 
+  const choose = (value: string) => {
+    if (!recordsBlindChoice) {
+      setPersonalChoice(value);
+      return;
+    }
+    void submitChoice(value);
+  };
+
   const playNextPair = () => {
     onNextBattle();
     setAssignment(null);
     setActiveSide(0);
     setPaneStatus({});
     setChoiceError("");
+    setPersonalChoice(undefined);
   };
 
   const closeControl = onCloseStage ? (
@@ -223,17 +236,17 @@ export function GameBrowser({
   );
 
   if (playerOpen) {
-    const reveal = choice && revealRelease && revealedTrials.length === trials.length
-      ? revealLines(choice, revealedTrials, revealRelease)
+    const reveal = effectiveChoice && revealRelease && revealedTrials.length === trials.length
+      ? revealLines(effectiveChoice, revealedTrials, revealRelease)
       : null;
-    const pickedSide = sideIndex(choice);
+    const pickedSide = sideIndex(effectiveChoice);
     const bothReady = allPanesPlayable(paneStatus, trials.map((trial) => trial.id));
     const aSideFailed = trials.some((trial) => {
       const status = paneStatus[trial.id];
       return status === "missing" || status === "error";
     });
     return (
-      <section className={choice ? "arena" : "arena arena--live"} aria-labelledby="comparison-title">
+      <section className={effectiveChoice ? "arena" : "arena arena--live"} aria-labelledby="comparison-title">
         <div className="arena__bar">
           {closeControl}
           <div className="arena__title">
@@ -265,17 +278,10 @@ export function GameBrowser({
               tabLabel: sideLabel(index),
             }))}
           />
-          {!choice ? (
+          {!effectiveChoice ? (
             <section className="verdict" aria-labelledby="choice-heading">
-              {/* The question is asked only where it can be answered. A
-                  reader who has already seen the results gets a statement,
-                  not a question with no controls under it. */}
-              <h2 id="choice-heading">
-                {identitySeen ? "You've seen the results" : "Which would you keep playing?"}
-              </h2>
-              {identitySeen ? (
-                <p className="verdict__locked">Both builds stay playable, but a pick here can't count as blind. Compare them by name from the results page.</p>
-              ) : bothReady ? (
+              <h2 id="choice-heading">Which would you keep playing?</h2>
+              {bothReady ? (
                 <>
                   <div className="verdict__options">
                     {choiceOptions.map(([value, label]) => (
@@ -283,7 +289,7 @@ export function GameBrowser({
                         className={value === "A" || value === "B" ? "verdict__beat" : "verdict__side"}
                         disabled={choicePending}
                         key={value}
-                        onClick={() => submitChoice(value)}
+                        onClick={() => choose(value)}
                         type="button"
                       >
                         {label}
@@ -291,7 +297,11 @@ export function GameBrowser({
                     ))}
                   </div>
                   {choiceError && <p className="verdict__error" role="alert">{choiceError}</p>}
-                  <p className="verdict__note">Names and scores appear after you choose.</p>
+                  <p className="verdict__note">
+                    {identitySeen
+                      ? "You've seen the names, so this personal pick won't count in Blind results."
+                      : "Names and scores appear after you choose."}
+                  </p>
                 </>
               ) : (
                 <p className="verdict__locked" data-testid="verdict-locked">
@@ -304,8 +314,8 @@ export function GameBrowser({
           ) : null}
         </div>
 
-        {choice && !reveal ? <p className="reveal__loading">Loading published results.</p> : null}
-        {choice && reveal && revealRelease ? (
+        {effectiveChoice && !reveal ? <p className="reveal__loading">Loading published results.</p> : null}
+        {effectiveChoice && reveal && revealRelease ? (
           <section className="reveal" aria-live="polite">
             <p className="reveal__kicker">{reveal.kicker}</p>
             <h2 className={reveal.subject ? "reveal__headline" : "reveal__headline reveal__headline--sentence"}>
@@ -345,6 +355,9 @@ export function GameBrowser({
               </a>
               <ShareLink name={selectedTask.name} slug={selectedTask.slug} />
             </div>
+            {personalChoice ? (
+              <p className="reveal__provenance">This personal pick was not recorded as Blind evidence because the names were already visible.</p>
+            ) : null}
           </section>
         ) : null}
       </section>

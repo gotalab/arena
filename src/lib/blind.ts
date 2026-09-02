@@ -25,6 +25,13 @@ export interface RevealLines {
   subject: string | null;
 }
 
+/** Seeing named results permanently changes this comparison from Blind evidence
+ * into a personal preference. The UI may still let the reader choose, but only
+ * a choice made before identity exposure can be recorded as Blind. */
+export function canRecordBlindChoice(identitySeen: boolean): boolean {
+  return !identitySeen;
+}
+
 /** The letter a run is shown under in the reader's randomized side order. */
 export function sideLabel(index: number): string {
   return SIDE_LETTERS[index] ?? String(index + 1);

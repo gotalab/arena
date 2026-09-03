@@ -101,6 +101,7 @@ export function selectedReviewToolDefinitions(context: SelectedReviewToolContext
           taskName: context.taskName,
           humanChoice: context.humanChoice,
           outcome: context.humanChoice == null ? "none" : "candidate",
+          selectedCriteria: context.selectedCriteria,
           candidates: context.revealedCandidates,
           provenance: "agent_selected_anonymous_review",
           affectsPublicBenchmark: false,

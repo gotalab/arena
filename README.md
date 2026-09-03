@@ -60,7 +60,7 @@ The tools follow the page you are on:
 - Selected review exposes `get_selected_review` and
   `open_review_candidate`; it never exposes a tool that makes the human choice.
   After the person chooses in the UI, `get_selected_review_result` becomes
-  available with the revealed identities and scores.
+  available with the review criteria, revealed identities and scores.
 - Game controls appear only after the active frame completes the trusted
   `arena.game.v1` handshake.
 

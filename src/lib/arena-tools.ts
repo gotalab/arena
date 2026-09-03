@@ -258,7 +258,7 @@ function filterBenchmarkTool(context: ArenaToolContext): WebMcpTool {
 function compareTaskBuildsTool(context: ArenaToolContext): WebMcpTool {
   return {
     name: "compare_task_builds",
-    description: "Focus the visible Build table and evaluator matrix. The viewport follows the requested stage; evidence opens and highlights exact check rows. Start with summary, page criteria, inspect bounded rows, then request evidence for exact check ids; include Build details only after narrowing candidates.",
+    description: "Focus the visible Build table and evaluator matrix. The viewport follows the requested stage; evidence opens and highlights exact check rows. Start with summary, page criteria, inspect bounded rows, then request evidence for exact check ids. For a use-case-specific review, map the user's stated goal to exact check ids and apply them with check.ids before selecting 2–4 Builds; do not optimize for cost, model or harness diversity unless the user asked for it. Include Build details only after narrowing candidates.",
     inputSchema: {
       type: "object",
       properties: {

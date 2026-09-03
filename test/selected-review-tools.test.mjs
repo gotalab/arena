@@ -49,6 +49,7 @@ test("review result becomes readable only after the human choice", async () => {
   assert.deepEqual(tools.map((tool) => tool.name), ["get_selected_review", "open_review_candidate", "get_selected_review_result"]);
   const output = (await tools[2].execute({})).structuredContent;
   assert.equal(output.humanChoice, 2);
+  assert.deepEqual(output.selectedCriteria, ["Gate progress changes", "Board states read at a glance"]);
   assert.deepEqual(output.candidates, revealedCandidates);
   assert.equal(output.affectsPublicBenchmark, false);
   assert.equal(output.affectsBlindRecord, false);

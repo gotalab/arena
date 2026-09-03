@@ -5,20 +5,24 @@ import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const output = join(root, "public", "assets", "og", "default.png");
-const evidence = `data:image/png;base64,${readFileSync(join(root, "docs", "images", "read-evidence.png")).toString("base64")}`;
+const overview = `data:image/png;base64,${readFileSync(join(root, "docs", "images", "overview-codex.png")).toString("base64")}`;
 const svg = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs><clipPath id="screen"><rect width="1200" height="492"/></clipPath></defs>
-  <g clip-path="url(#screen)">
-    <image href="${evidence}" x="0" y="0" width="1200" height="675" preserveAspectRatio="xMidYMid slice"/>
+  <defs><clipPath id="arena"><rect x="400" width="800" height="630"/></clipPath></defs>
+  <rect width="1200" height="630" fill="#151515"/>
+  <g clip-path="url(#arena)">
+    <image href="${overview}" x="97" y="0" width="1120" height="630" preserveAspectRatio="none"/>
   </g>
-  <rect y="492" width="1200" height="138" fill="#f5f2ed"/>
-  <g transform="translate(156 522) scale(3.1)" fill="#e64c30">
-    <path d="M1 1h14v2H1zm0 12h14v2H1zM1 3h2v10H1zm12 0h2v10h-2zM5 9h4v4H5z"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="150" y="118" fill="#a6a6a6" font-size="22" font-weight="650">CODEX</text>
+    <text x="150" y="210" fill="#f7f7f7" font-size="27" font-weight="600">What should I</text>
+    <text x="150" y="247" fill="#f7f7f7" font-size="27" font-weight="600">pay extra</text>
+    <text x="150" y="284" fill="#f7f7f7" font-size="27" font-weight="600">attention to when</text>
+    <text x="150" y="321" fill="#f7f7f7" font-size="27" font-weight="600">building a</text>
+    <text x="150" y="358" fill="#f7f7f7" font-size="27" font-weight="600">replayable</text>
+    <text x="150" y="395" fill="#f7f7f7" font-size="27" font-weight="600">strategy game?</text>
+    <text x="150" y="514" fill="#8f8f8f" font-size="18" font-weight="650">WEBMCP</text>
   </g>
-  <text x="218" y="563" fill="#1b1b19" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="750">Playable Arena</text>
-  <text x="1030" y="553" text-anchor="end" fill="#5f5c57" font-family="Inter, Arial, sans-serif" font-size="24">Turn benchmark evidence</text>
-  <text x="1030" y="586" text-anchor="end" fill="#5f5c57" font-family="Inter, Arial, sans-serif" font-size="24">into the next agent run.</text>
 </svg>`;
 
 const png = new Resvg(svg, {

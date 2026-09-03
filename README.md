@@ -23,14 +23,13 @@ remains fixed.
 | **3. Human chooses blind** | **4. Improve the next agent run** |
 | [![Arena returns control to the human for an anonymous choice](./docs/images/human-choice.webp)](./docs/images/human-choice.webp) | [![The reviewer turns the result into acceptance checks for the next run](./docs/images/next-run.webp)](./docs/images/next-run.webp) |
 
-## Judge quick start
+## Try it
 
 No Arena account or credentials are required. In ChatGPT's in-app browser,
 there is no MCP server URL to add and no manual connection step: open the live
 site and Arena registers the tools for the current page. In Google Chrome 149+
 you can instead enable `chrome://flags/#enable-webmcp-testing` and restart the
-browser. These are the two testing paths specified by the
-[WebMCP Challenge rules](https://webmcp.devpost.com/rules).
+browser.
 
 Then try this prompt:
 
@@ -46,8 +45,6 @@ and read the result, but it cannot make the human choice or reveal identities
 early.
 
 ## Why WebMCP
-
-The challenge asks every submission to answer four questions. For Arena:
 
 - **Why this is a strong fit:** a benchmark contains more detailed checks than
   most people can compare by hand, while its playable outputs also have

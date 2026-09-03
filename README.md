@@ -1,20 +1,19 @@
 # Playable Arena
 
-Playable Arena turns a fixed coding-agent benchmark into a shared improvement
-loop. Multiple coding-agent configurations receive the same game brief. Arena
-publishes their scores, detailed check results, and the playable games they
-actually shipped.
+Leaderboards tell you who won—not what will work for you. Playable Arena turns
+a fixed coding-agent benchmark into a personal improvement loop. Multiple
+coding-agent configurations receive the same game brief, and Arena publishes
+their scores, detailed check results, and the playable games they actually
+shipped.
 
-A leaderboard shows who won the fixed test. It cannot decide which strengths
-matter for the game you are about to build, and a score cannot establish how a
-game feels to play. With WebMCP, a reviewer agent can work inside the same Arena
-page as the person: read the relevant evidence, update the visible comparison,
-open and play the real builds under comparable conditions, and prepare a 2–4
-Build anonymous review. The person then plays the same shortlist and makes the
-subjective choice in the UI; only then does Arena reveal identities and
-published scores. The reviewer turns the combined evidence into concrete review
-stages and acceptance checks for the next coding-agent run, while the published
-benchmark itself remains fixed.
+With WebMCP, a reviewer agent can work inside the same Arena page as the person:
+read the relevant evidence, update the visible comparison, open and play the
+real builds under comparable conditions, and prepare a 2–4 Build anonymous
+review. The person then plays the same shortlist and makes the subjective choice
+in the UI; only then does Arena reveal identities and published scores. The
+reviewer turns the combined evidence into concrete review stages and acceptance
+checks for the next coding-agent run, while the published benchmark itself
+remains fixed.
 
 **[Open Playable Arena](https://arena.gotalab.dev)**
 

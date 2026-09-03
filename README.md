@@ -1,27 +1,25 @@
 # Playable Arena
 
-Leaderboards tell you who won—not what will work for you. Playable Arena turns
-a fixed coding-agent benchmark into a personal improvement loop. Multiple
-coding-agent configurations receive the same game brief, and Arena publishes
-their scores, detailed check results, and the playable games they actually
-shipped.
+Playable Arena turns benchmark results into an improvement loop for the agent
+workflow you actually use. Its current public benchmark gives multiple
+coding-agent configurations the same game brief, then publishes their scores,
+detailed check results, and the playable games they actually shipped.
 
-With WebMCP, a reviewer agent can work inside the same Arena page as the person:
-read the relevant evidence, update the visible comparison, open and play the
-real builds under comparable conditions, and prepare a 2–4 Build anonymous
-review. The person then plays the same shortlist and makes the subjective choice
-in the UI; only then does Arena reveal identities and published scores. The
-reviewer turns the combined evidence into concrete review stages and acceptance
-checks for the next coding-agent run, while the published benchmark itself
-remains fixed.
+With WebMCP, the AI agent in your browser can continue the evaluation inside the
+same Arena page. It reads the relevant evidence, updates the visible comparison,
+and tests the real builds under comparable conditions. You then play the same
+shortlist and make the subjective choice in the UI; only then does Arena reveal
+identities and published scores. Arena turns the combined evidence into concrete
+review stages and acceptance checks for your next agent run, while the published
+benchmark itself remains fixed.
 
 **[Open Playable Arena](https://arena.gotalab.dev)**
 
 | 1. Read the relevant evidence | 2. Agent plays the live Builds |
 | --- | --- |
-| [![The reviewer narrows the detailed benchmark checks](./docs/images/read-evidence.webp)](./docs/images/read-evidence.webp) | [![The reviewer completes the same level through Agent Play](./docs/images/agent-play.webp)](./docs/images/agent-play.webp) |
+| [![The agent narrows the detailed benchmark checks](./docs/images/read-evidence.webp)](./docs/images/read-evidence.webp) | [![The agent completes the same level through Agent Play](./docs/images/agent-play.webp)](./docs/images/agent-play.webp) |
 | **3. Human chooses blind** | **4. Improve the next agent run** |
-| [![Arena returns control to the human for an anonymous choice](./docs/images/human-choice.webp)](./docs/images/human-choice.webp) | [![The reviewer turns the result into acceptance checks for the next run](./docs/images/next-run.webp)](./docs/images/next-run.webp) |
+| [![Arena returns control to the human for an anonymous choice](./docs/images/human-choice.webp)](./docs/images/human-choice.webp) | [![Arena turns the result into acceptance checks for the next run](./docs/images/next-run.webp)](./docs/images/next-run.webp) |
 
 ## Try it
 
@@ -38,11 +36,10 @@ Then try this prompt:
 > relevant candidates, and prepare an anonymous review. Do not choose for me.
 
 A complete run should visibly move between the Benchmark, detailed checks, and
-the playable Builds. The reviewer agent should complete the same comparable
-level in each selected Build before opening the anonymous review. Then play the
-candidates yourself and choose in the UI. The reviewer can prepare the evidence
-and read the result, but it cannot make the human choice or reveal identities
-early.
+the playable Builds. The agent should complete the same comparable level in each
+selected Build before opening the anonymous review. Then play the candidates
+yourself and choose in the UI. The agent can prepare the evidence and read the
+result, but it cannot make the human choice or reveal identities early.
 
 ## Why WebMCP
 
@@ -50,14 +47,14 @@ early.
   most people can compare by hand, while its playable outputs also have
   qualities such as clarity, feedback, and feel that the aggregate score cannot
   settle for a particular use case.
-- **How it improves the experience:** the reviewer agent reads and filters the
+- **How it improves the experience:** the agent in the browser reads and filters the
   evidence, opens the actual Builds, and plays them while the person watches the
   same Arena UI update. Analysis and product state do not disappear into a
   detached API response.
 - **What people and agents can do together:** the agent handles breadth,
   interpretation, and repeatable live checks across the shortlist. The person
   then plays the same candidates blind and makes the subjective choice. The
-  reviewer uses all three evidence layers to produce review stages and
+  Arena then uses all three evidence layers to produce review stages and
   acceptance checks for the person's next agent run. Neither side substitutes
   for the other, and Arena does not claim one configuration is universally best.
 - **How it is implemented:** each route registers only its current tools through

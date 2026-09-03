@@ -21,8 +21,9 @@ export function HomeView({ configurationCount, firstComparisonBlind, onBrowse, o
           <p className="home__eyebrow">{tasks.length} published {tasks.length === 1 ? "task" : "tasks"}</p>
           <h1 id="home-heading">Compare coding agents by feel.</h1>
           <p>
-            One brief, every agent out of the box. Play what they ship side
-            by side and see how your taste lines up with the verified scores.
+            One brief, every agent out of the box. Your agent inspects the
+            evidence and tests what they ship; you choose blind, and Arena
+            turns the result into checks for the next run.
           </p>
           {first ? (
             <div className="home__actions">

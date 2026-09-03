@@ -28,7 +28,7 @@ During the August 25–September 3, 2026 submission period, I turned that founda
 2. The agent selects the relevant benchmark evidence.
 3. The agent plays the shortlisted builds under comparable conditions.
 4. The person plays the same builds anonymously and chooses by feel.
-5. The result becomes review stages and acceptance checks for the next coding-agent run.
+5. The result becomes review stages and acceptance checks for the next agent run.
 
 <details>
 <summary><strong>Technical cutoff and commit evidence</strong></summary>

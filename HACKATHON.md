@@ -1,10 +1,35 @@
-# WebMCP Challenge work
+# What changed for the WebMCP Challenge
 
-Arena existed before the WebMCP Challenge as a private benchmark that gave multiple coding-agent configurations the same game brief, measured their builds, and let people compare playable results blind. The submitted public repository is a clean product export rather than a rewrite of that private history.
+Arena existed before the challenge as a private playable benchmark. It already gave multiple coding-agent configurations the same game brief, evaluated the resulting builds, and let people compare two games blind.
 
-Work added during the August 25–September 3, 2026 submission period includes the clean public/evaluation repository boundary, route-scoped WebMCP exploration tools, the isolated `arena.game.v1` broker and probe, Agent Play capability evidence, an Agent-selected anonymous human review that reveals identities only after a UI choice, public schemas and leak scanners, and the complete public Worker/D1 runtime. The clean export and all subsequent commits together carry this challenge delta relative to the attested private baseline.
+During the August 25–September 3, 2026 submission period, I turned that benchmark into a public WebMCP product where a person and an agent can continue the evaluation together.
 
-The private baseline identifiers below prove the cutoff without publishing the private tree. Its timestamp is August 25 at 3:42 a.m. Pacific, before the August 25 at 11:00 a.m. Pacific submission start. Before publication, the product history was consolidated to remove production identifiers. Inspect the clean export with `git show 646f9164` and its subsequent attestations with `git log 646f9164..HEAD`.
+## Before the challenge
+
+- Coding agents received the same game brief.
+- Arena evaluated and published their playable results.
+- A person could compare two builds blind and reveal their identities afterward.
+
+## Added during the challenge
+
+- **WebMCP benchmark exploration:** the agent can read detailed results and change the visible comparison on the page.
+- **Agent Play:** the agent can open compatible games, read their live state, send validated actions, reject stale revisions, and complete a comparable run.
+- **Agent-selected human review:** the agent can prepare two to four anonymous candidates, but it cannot choose or reveal them for the person.
+- **Post-choice improvement loop:** after the human choice, the agent can combine the published evidence, Agent Play, and human preference into checks for the next agent run.
+- **Public, reproducible delivery:** this repository adds the sanitized public data boundary, public schemas, leak scanners, tests, and the Cloudflare Worker/D1 runtime.
+
+## The new end-to-end flow
+
+1. The person describes what matters for their use case.
+2. The agent selects the relevant benchmark evidence.
+3. The agent plays the shortlisted builds under comparable conditions.
+4. The person plays the same builds anonymously and chooses by feel.
+5. The result becomes review stages and acceptance checks for the next coding-agent run.
+
+<details>
+<summary><strong>Technical cutoff and commit evidence</strong></summary>
+
+The private baseline below was committed on August 25 at 3:42 a.m. Pacific, before the 11:00 a.m. submission-period start. It proves the cutoff without publishing the private evaluation tree. The clean public export begins at `646f9164`; inspect subsequent work with `git log 646f9164..HEAD`.
 
 <!-- arena.hackathon.v1:start -->
 ```json
@@ -42,7 +67,11 @@ The private baseline identifiers below prove the cutoff without publishing the p
 ```
 <!-- arena.hackathon.v1:end -->
 
-The evaluation pipeline, execution harness, private briefs and rubrics, controls, raw Trials and logs, production database history, credentials, and deployment receipts are intentionally not part of the submitted project or its public history.
+</details>
+
+## Intentionally not included
+
+The evaluation pipeline, execution harness, private briefs and rubrics, controls, raw Trials and logs, production database history, credentials, and deployment receipts are intentionally not part of this public product repository or its history.
 
 ## Trademark note for the demo
 

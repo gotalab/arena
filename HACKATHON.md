@@ -1,26 +1,27 @@
 # What changed for the WebMCP Challenge
 
-Arena existed before the challenge as a private playable benchmark. It already gave multiple coding-agent configurations the same game brief, evaluated the resulting builds, and let people compare two games blind.
+Arena existed before the challenge as a private playable benchmark. It already gave multiple coding-agent configurations the same brief, evaluated the resulting builds with fixed checks, kept those outputs playable, and let people compare two games blind.
 
-During the August 25–September 3, 2026 submission period, I turned that foundation into a public WebMCP product where a person and an agent can continue the evaluation together. The private agent/evaluation pipeline remained the foundation; the public benchmark content, product UI, WebMCP workflow, Agent Play, human handoff, and production runtime were added or substantially rebuilt for the challenge.
+During the August 25–September 3, 2026 submission period, I built or substantially rebuilt the public product around that foundation. The private agent/evaluation pipeline and the original human blind comparison remained the starting point. The WebMCP workflow, Agent Play, agent-to-human handoff, next-run checks, public UI, expanded benchmark content, and production runtime were challenge-period work.
 
 ## Before the challenge
 
-- Coding agents received the same game brief.
-- Arena evaluated and published their playable results.
+- Coding-agent configurations received the same brief.
+- Arena evaluated their builds with fixed checks and kept the results playable.
 - A person could compare two builds blind and reveal their identities afterward.
+- There were no WebMCP tools, no agent-operated evidence review, no validated Agent Play, and no path from the human choice to checks for the next run.
 
 ## Added during the challenge
 
+- **WebMCP follow-up evaluation:** route-scoped tools let the agent read detailed evidence, change the visible comparison, and continue evaluating the published benchmark on the same page as the person.
+- **Validated Agent Play:** the agent can open compatible games, read their live state, send task-owned actions, reject stale revisions without mutation, and complete the same comparable run across a shortlist.
+- **Agent-to-human handoff:** the agent can prepare two to four anonymous candidates, but Arena exposes no tool that can choose or reveal them for the person.
+- **Next-run checks:** after the human choice, Arena can combine the fixed benchmark, live verification, and human preference into review stages and acceptance checks for the next agent run.
+- **Public, reproducible delivery:** I added the sanitized public repository boundary, public schemas, leak scanners, tests, sandboxed Artifact boundary, and Cloudflare Worker/D1 runtime.
+- **A rebuilt public product experience:** the Benchmark, task detail, comparison, responsive/mobile layouts, navigation, evidence disclosure, and shared UI controls were redesigned for public exploration and agent operation.
 - **A larger public benchmark:** the public challenge history grew from 3 tasks, 39 builds, and 13 Agent configurations to 5 tasks, 70 builds, and 15 configurations.
 - **Two new playable tasks:** LUMEN YARD and SHOAL were added to make stateful strategy, recovery, visual feedback, and Agent Play directly inspectable.
 - **New Agent configurations:** Antigravity + Gemini 3.8 Flash and fx + GPT-5.6 Sol were added alongside the existing harness/model combinations.
-- **A rebuilt public product experience:** the Benchmark, task detail, comparison, responsive/mobile layouts, navigation, evidence disclosure, and shared UI controls were redesigned for public exploration and agent operation.
-- **WebMCP benchmark exploration:** the agent can read detailed results and change the visible comparison on the page.
-- **Agent Play:** the agent can open compatible games, read their live state, send validated actions, reject stale revisions, and complete a comparable run.
-- **Agent-selected human review:** the agent can prepare two to four anonymous candidates, but it cannot choose or reveal them for the person.
-- **Post-choice improvement loop:** after the human choice, the agent can combine the published evidence, Agent Play, and human preference into checks for the next agent run.
-- **Public, reproducible delivery:** this repository adds the sanitized public data boundary, public schemas, leak scanners, tests, and the Cloudflare Worker/D1 runtime.
 
 ## The new end-to-end flow
 

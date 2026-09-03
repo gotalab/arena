@@ -1,17 +1,21 @@
 # Playable Arena
 
-Playable Arena turns benchmark results into an improvement loop for the agent
-workflow you actually use. Its current public benchmark gives multiple
-coding-agent configurations the same game brief, then publishes their scores,
-detailed check results, and the playable games they actually shipped.
+Playable Arena is a benchmark you can keep evaluating after the leaderboard is
+published. Its current release gives multiple coding-agent configurations the
+same game brief, measures their work with fixed checks, and keeps the resulting
+games playable. The public record contains five tasks and 70 benchmarked Builds.
 
-With WebMCP, the AI agent in your browser can continue the evaluation inside the
+Fixed checks establish what each Build does. Playable outputs preserve what a
+score cannot settle for you: clarity, responsiveness, taste, and fit for a
+particular audience.
+
+WebMCP lets the AI agent in your browser continue that evaluation inside the
 same Arena page. It reads the relevant evidence, updates the visible comparison,
-and tests the real builds under comparable conditions. You then play the same
+and tests the real Builds under comparable conditions. You then play the same
 shortlist and make the subjective choice in the UI; only then does Arena reveal
-identities and published scores. Arena turns the combined evidence into concrete
-review stages and acceptance checks for your next agent run, while the published
-benchmark itself remains fixed.
+identities and published scores. Arena turns the fixed benchmark, live
+verification, and your decision into acceptance checks for your next agent run.
+The published score never changes.
 
 **[Open Playable Arena](https://arena.gotalab.dev)**
 

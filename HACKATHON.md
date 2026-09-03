@@ -2,7 +2,7 @@
 
 Arena existed before the challenge as a private playable benchmark. It already gave multiple coding-agent configurations the same game brief, evaluated the resulting builds, and let people compare two games blind.
 
-During the August 25–September 3, 2026 submission period, I turned that benchmark into a public WebMCP product where a person and an agent can continue the evaluation together.
+During the August 25–September 3, 2026 submission period, I turned that foundation into a public WebMCP product where a person and an agent can continue the evaluation together. The private agent/evaluation pipeline remained the foundation; the public benchmark content, product UI, WebMCP workflow, Agent Play, human handoff, and production runtime were added or substantially rebuilt for the challenge.
 
 ## Before the challenge
 
@@ -12,6 +12,10 @@ During the August 25–September 3, 2026 submission period, I turned that benchm
 
 ## Added during the challenge
 
+- **A larger public benchmark:** the public challenge history grew from 3 tasks, 39 builds, and 13 Agent configurations to 5 tasks, 70 builds, and 15 configurations.
+- **Two new playable tasks:** LUMEN YARD and SHOAL were added to make stateful strategy, recovery, visual feedback, and Agent Play directly inspectable.
+- **New Agent configurations:** Antigravity + Gemini 3.8 Flash and fx + GPT-5.6 Sol were added alongside the existing harness/model combinations.
+- **A rebuilt public product experience:** the Benchmark, task detail, comparison, responsive/mobile layouts, navigation, evidence disclosure, and shared UI controls were redesigned for public exploration and agent operation.
 - **WebMCP benchmark exploration:** the agent can read detailed results and change the visible comparison on the page.
 - **Agent Play:** the agent can open compatible games, read their live state, send validated actions, reject stale revisions, and complete a comparable run.
 - **Agent-selected human review:** the agent can prepare two to four anonymous candidates, but it cannot choose or reveal them for the person.

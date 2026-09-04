@@ -1,5 +1,7 @@
 # Playable Arena
 
+**The benchmark already ran. Your product question didn't.**
+
 Playable Arena is a benchmark you can keep evaluating after the leaderboard is
 published. Its current release gives multiple coding-agent configurations the
 same game brief, measures their work with fixed checks, and keeps the resulting

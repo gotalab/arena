@@ -269,8 +269,7 @@ export function App() {
     || (route === "compare" && slugTask && comparison.choices[slugTask.id])
   ));
   const activeToolTaskId = ["task", "build", "compare", "review"].includes(route) ? slugTask?.id ?? null : null;
-  const visibleToolState = route === "benchmark" ? benchmarkState : ["task", "build"].includes(route) ? taskComparisonState : null;
-  const toolAuthorizationKey = `${webMcpProbe ? "probe" : route}:${activeToolTaskId ?? "all"}:${identityAvailable}:${namedRelease?.releaseId ?? ""}:${JSON.stringify(visibleToolState)}`;
+  const toolAuthorizationKey = `${webMcpProbe ? "probe" : route}:${activeToolTaskId ?? "all"}:${identityAvailable}:${namedRelease?.releaseId ?? ""}`;
   const toolAuthorizationRef = useRef(toolAuthorizationKey);
   toolAuthorizationRef.current = toolAuthorizationKey;
   const benchmarkController = useMemo<ArenaBenchmarkController>(() => ({
@@ -303,7 +302,7 @@ export function App() {
     },
     authorized: () => toolAuthorizationRef.current === toolAuthorizationKey,
   }), [activeToolTaskId, benchmarkController, identityAvailable, namedRelease, navigate, route, toolAuthorizationKey, webMcpProbe]);
-  useArenaWebMcpTools(arenaToolContext);
+  useArenaWebMcpTools(arenaToolContext, toolAuthorizationKey);
 
   if (!artifactAccessReady) {
     return (

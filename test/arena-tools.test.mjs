@@ -3,6 +3,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { arenaToolDefinitions } from "../src/lib/arena-tools.ts";
+import { createLiveArenaToolContext } from "../src/lib/live-arena-tool-context.ts";
 
 const bundle = JSON.parse(readFileSync(new URL("../public-release/accepted/bundle.json", import.meta.url), "utf8"));
 
@@ -237,6 +238,30 @@ test("stale route authorization rejects execution even with an old handle", () =
   const [search] = arenaToolDefinitions(context({ authorized: () => active }));
   active = false;
   assert.throws(() => search.execute({}), /route changed/);
+});
+
+test("same-route tool handles read the latest comparison state without re-registration", async () => {
+  let scopeAuthorized = true;
+  const benchmarkController = controller();
+  benchmarkController.overview.setState = (state) => { benchmarkController.overview.state = state; };
+  let current = context({
+    route: "benchmark",
+    identityAvailable: true,
+    release: bundle.release,
+    benchmarkController,
+  });
+  const live = createLiveArenaToolContext(() => current, () => scopeAuthorized);
+  const filter = arenaToolDefinitions(live).find((tool) => tool.name === "filter_benchmark_results");
+  const taskId = bundle.release.tasks[0].id;
+
+  await filter.execute({ taskIds: [taskId], chartTaskId: taskId });
+  current = { ...current, benchmarkController };
+  const second = await filter.execute({ playableOnly: true });
+
+  assert.deepEqual(second.structuredContent.taskIds, [taskId]);
+  assert.equal(second.structuredContent.activeFilters.playableOnly, true);
+  scopeAuthorized = false;
+  assert.throws(() => filter.execute({}), /route changed/);
 });
 
 test("legacy named Build search and two-Build comparison tools are removed", () => {

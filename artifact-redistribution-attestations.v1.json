@@ -1,6 +1,6 @@
 {
   "schema": "arena.artifact-redistribution-attestations.v1",
-  "attestedBy": "Gota",
+  "attestedBy": "gotalab",
   "attestedAt": "2026-09-03",
   "ownerDirection": "License entrant-owned generated builds in the sanitized public product under MIT; separately noticed third-party brand assets are excluded.",
   "artifacts": [

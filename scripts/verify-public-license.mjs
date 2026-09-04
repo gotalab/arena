@@ -34,7 +34,7 @@ const EXTERNAL_REFERENCE = /https?:\/\/(?!localhost(?::(?:\d+|\$\{[A-Za-z_][A-Za
 const RIGHTS_MARKER = /\b(?:copyright|all rights reserved|licensed? under|spdx-license-identifier)\b/i;
 const MIT_LICENSE = `MIT License
 
-Copyright (c) 2026 Gota
+Copyright (c) 2026 gotalab
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -89,7 +89,7 @@ const assetPolicies = {
 };
 
 function owned(description, basis = "Owner-authored Arena asset") {
-  return { kind: "owned", owner: "Gota", source: "Created for Arena", license: "MIT", mitApplies: true, attestationBasis: basis, notice: description };
+  return { kind: "owned", owner: "gotalab", source: "Created for Arena", license: "MIT", mitApplies: true, attestationBasis: basis, notice: description };
 }
 
 function brand(owner, source, notice) {
@@ -210,7 +210,7 @@ function generateManifest() {
   const attestationDocument = JSON.parse(attestationsBytes);
   const attestationRootKeys = ["schema", "attestedBy", "attestedAt", "ownerDirection", "artifacts"];
   if (!attestationDocument || typeof attestationDocument !== "object" || Array.isArray(attestationDocument) || Object.keys(attestationDocument).sort().join() !== [...attestationRootKeys].sort().join()) throw new Error("license_manifest:artifact_attestation_root");
-  if (attestationDocument.schema !== "arena.artifact-redistribution-attestations.v1" || attestationDocument.attestedBy !== "Gota" || !/^2026-\d{2}-\d{2}$/.test(attestationDocument.attestedAt) || typeof attestationDocument.ownerDirection !== "string" || !Array.isArray(attestationDocument.artifacts)) throw new Error("license_manifest:artifact_attestation_identity");
+  if (attestationDocument.schema !== "arena.artifact-redistribution-attestations.v1" || attestationDocument.attestedBy !== "gotalab" || !/^2026-\d{2}-\d{2}$/.test(attestationDocument.attestedAt) || typeof attestationDocument.ownerDirection !== "string" || !Array.isArray(attestationDocument.artifacts)) throw new Error("license_manifest:artifact_attestation_identity");
   const attestationByHash = new Map();
   const rowKeys = ["treeSha256", "taskId", "buildId", "configurationId", "license", "redistributionAttested", "basis"];
   for (const row of attestationDocument.artifacts) {
@@ -296,7 +296,7 @@ function generateManifest() {
 
   return {
     schema: "arena.public-license-manifest.v1",
-    copyright: "Copyright (c) 2026 Gota",
+    copyright: "Copyright (c) 2026 gotalab",
     codeLicense: "MIT",
     assets,
     artifactTrees,

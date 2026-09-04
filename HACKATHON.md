@@ -23,6 +23,8 @@ During the August 25–September 3, 2026 submission period, I built or substanti
 - **Two new playable tasks:** LUMEN YARD and SHOAL were added to make stateful strategy, recovery, visual feedback, and Agent Play directly inspectable.
 - **New Agent configurations:** Antigravity + Gemini 3.8 Flash and fx + GPT-5.6 Sol were added alongside the existing harness/model combinations.
 
+Adding a task meant more than adding another game to the catalogue. For each task, I had to write one shared brief, define checks that could be applied fairly to every result, run multiple independent Agent configurations, preserve every accepted result as a playable Build, and add a small shared set of named actions so the browser Agent could repeat the same scenario across implementations that shared no code. LUMEN YARD and SHOAL were designed to expose differences in strategy, recovery, board readability, and action feedback that a top-line score alone cannot explain.
+
 ## The new end-to-end flow
 
 1. The person describes what matters for their use case.
